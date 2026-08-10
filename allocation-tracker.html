@@ -1,0 +1,2117 @@
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Asset Allocation Tracker</title>
+<!--
+  Asset Allocation Tracker — single-file, offline, zero-network.
+  Spec: asset-allocation-tool-spec.md (v1.2). Build: full v1 (M1–M6).
+
+  Structure of this file:
+    <style>   — all CSS, driven by :root custom properties (design tokens)
+    <body>    — app shell (mounted by JS)
+    <script>  — TAXONOMY, SEED_MAP, schema/migration, calc, render, persistence
+
+  No CDN, no fetch, no external fonts. Verifiable offline.
+-->
+<style>
+  /* ============================================================
+     "Industry" design system — inlined, zero-network (spec §10).
+     Source of truth for tokens/components was the Design project's
+     styles.css; the Google-Fonts @import is intentionally dropped so
+     the file makes NO network requests. Barlow/Barlow Condensed stay
+     in the stack for users who have them; otherwise system-ui.
+     ============================================================ */
+  :root {
+    --color-bg: #f2f2f3;
+    --color-surface: #e9e9ea;
+    --color-text: #1d1f20;
+    --color-accent: #5980a6;
+    --color-accent-2: #728fab;
+    --color-divider: color-mix(in srgb, #1d1f20 16%, transparent);
+
+    --color-neutral-100: #f5f5f8; --color-neutral-200: #e7e7ea;
+    --color-neutral-300: #d4d4d7; --color-neutral-400: #b7b7ba;
+    --color-neutral-500: #98989b; --color-neutral-600: #7a7a7d;
+    --color-neutral-700: #5d5d60; --color-neutral-800: #424244;
+    --color-neutral-900: #2b2b2d;
+
+    --color-accent-100: #eef6ff; --color-accent-200: #d6ebff;
+    --color-accent-300: #b5d9fd; --color-accent-400: #94bce3;
+    --color-accent-500: #749dc4; --color-accent-600: #597ea3;
+    --color-accent-700: #416180; --color-accent-800: #2c455d;
+    --color-accent-900: #1d2d3d;
+
+    --color-accent-2-100: #eef6ff; --color-accent-2-200: #d6ebff;
+    --color-accent-2-300: #bdd8f2; --color-accent-2-400: #9ebbd8;
+    --color-accent-2-500: #7e9cb8; --color-accent-2-600: #627d98;
+    --color-accent-2-700: #486077; --color-accent-2-800: #314457;
+    --color-accent-2-900: #1f2d3a;
+
+    /* status — kept muted to sit in the blueprint palette */
+    --color-ok:   #4a7a5c;
+    --color-warn: #a6772f;
+    --color-crit: #a6493f;
+
+    /* rollup-group chart colors (6) — mockup legend order */
+    --g-stocks:      #1d2d3d;  /* accent-900 */
+    --g-bonds:       #416180;  /* accent-700 */
+    --g-real_assets: #749dc4;  /* accent-500 */
+    --g-crypto:      #94bce3;  /* accent-400 */
+    --g-cash:        #b5d9fd;  /* accent-300 */
+    --g-blend_other: #b7b7ba;  /* neutral-400 */
+
+    /* 14 detail-class chart colors — grouped by family for a coherent detail donut */
+    --c-us_large:  #14212e; --c-us_mid:  #24384a; --c-us_small: #34506a;
+    --c-us_total:  #1d2d3d; --c-intl_dev:#5a83a8; --c-em:       #7ea7cc;
+    --c-us_bond:   #314457; --c-intl_bond:#5e7d97;
+    --c-reit:      #6f97b9; --c-commod:  #9ebbd8;
+    --c-crypto:    #94bce3;
+    --c-cash:      #98989b;
+    --c-blend:     #b7b7ba; --c-other:   #d4d4d7;
+
+    --font-heading: "Barlow Condensed", system-ui, "Segoe UI", sans-serif;
+    --font-heading-weight: 600;
+    --font-body: "Barlow", system-ui, "Segoe UI", Roboto, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+    --space-1: 3.4px; --space-2: 6.8px; --space-3: 10.2px;
+    --space-4: 13.6px; --space-6: 20.4px; --space-8: 27.2px;
+
+    --radius-sm: 2px; --radius-md: 4px; --radius-lg: 7px;
+
+    --shadow-sm: 0 1px 2px color-mix(in srgb, #2b2b2d 14%, transparent);
+    --shadow-md: 0 3px 10px color-mix(in srgb, #2b2b2d 16%, transparent);
+    --shadow-lg: 0 12px 32px color-mix(in srgb, #2b2b2d 22%, transparent);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--color-bg); color: var(--color-text);
+    font-family: var(--font-body); font-size: 15px; line-height: 1.55; font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading); font-weight: var(--font-heading-weight);
+    line-height: 1.12; letter-spacing: -0.015em; margin: 0 0 var(--space-2);
+  }
+  h1 { font-size: 42px; } h2 { font-size: 30px; } h3 { font-size: 24px; }
+  h4 { font-size: 20px; } h5 { font-size: 16px; }
+  h6 { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; margin: 0; }
+  p { margin: 0 0 var(--space-3); }
+  a { color: var(--color-accent); text-underline-offset: 3px; }
+  a:hover { color: var(--color-accent-700); }
+  .mono { font-family: var(--mono); }
+  .tnum { font-variant-numeric: tabular-nums; }
+  .text-muted { color: color-mix(in srgb, var(--color-text) 55%, transparent); }
+  .kicker { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: color-mix(in srgb, var(--color-text) 55%, transparent); }
+  :focus { outline: none; }
+  :focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+  ::selection { background: color-mix(in srgb, var(--color-accent) 30%, transparent); }
+  .hr { height: 1px; border: 0; margin: var(--space-4) 0; background: var(--color-divider); }
+
+  /* — blueprint frame + corner registration marks — */
+  .blueprint { position: relative; border: 1px solid var(--color-divider); border-radius: 0; background: transparent; }
+  .blueprint > .corner { position: absolute; width: 11px; height: 11px; color: color-mix(in srgb, var(--color-text) 55%, transparent); }
+  .blueprint > .corner::before, .blueprint > .corner::after { content: ""; position: absolute; background: currentColor; }
+  .blueprint > .corner::before { left: 5px; top: 0; width: 1px; height: 100%; }
+  .blueprint > .corner::after  { top: 5px; left: 0; width: 100%; height: 1px; }
+  .blueprint > .corner.tl { top: -6px; left: -6px; }
+  .blueprint > .corner.tr { top: -6px; right: -6px; }
+  .blueprint > .corner.bl { bottom: -6px; left: -6px; }
+  .blueprint > .corner.br { bottom: -6px; right: -6px; }
+
+  /* — buttons — */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    cursor: pointer; text-decoration: none;
+    font-family: var(--font-heading); font-weight: var(--font-heading-weight);
+    font-size: 14px; line-height: 1.2; color: var(--color-text);
+    background: transparent; border: 1px solid var(--color-divider);
+    padding: var(--space-2) calc(var(--space-3) * 1.2); border-radius: 0;
+  }
+  .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+  .btn-primary { background: var(--color-accent); color: var(--color-bg); border-color: var(--color-accent); }
+  .btn-primary:hover { background: var(--color-accent-600); }
+  .btn-primary:active { background: var(--color-accent-700); }
+  .btn-secondary:hover { background: color-mix(in srgb, var(--color-text) 7%, transparent); }
+  .btn-secondary:active { background: color-mix(in srgb, var(--color-text) 14%, transparent); }
+  .btn-ghost { color: var(--color-accent); border-color: transparent; padding-inline: var(--space-2); }
+  .btn-ghost:hover { background: color-mix(in srgb, var(--color-accent) 10%, transparent); }
+  .btn-danger { color: var(--color-crit); border-color: color-mix(in srgb, var(--color-crit) 45%, transparent); }
+  .btn-danger:hover { background: color-mix(in srgb, var(--color-crit) 10%, transparent); }
+  .btn-sm { font-size: 12.5px; padding: 4px 9px; }
+  .btn-block { width: 100%; }
+
+  /* — forms — */
+  .field > label { display: block; font-size: 12px; margin-bottom: 5px; color: color-mix(in srgb, var(--color-text) 70%, transparent); }
+  .input {
+    width: 100%; min-height: 36px; padding: 6px 10px; font: inherit; font-size: 14px;
+    color: var(--color-text); caret-color: var(--color-accent);
+    background: var(--color-surface); border: 1px solid var(--color-divider); border-radius: 0;
+  }
+  .input:hover { border-color: color-mix(in srgb, var(--color-text) 45%, transparent); }
+  .input:focus-visible { border-color: var(--color-accent); outline-offset: 0; }
+  select.input { min-height: 34px; }
+  textarea.input { min-height: 80px; resize: vertical; line-height: 1.5; }
+  .seg { display: inline-flex; overflow: hidden; border: 1px solid var(--color-divider); border-radius: 0; }
+  .seg-opt { display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; font-size: 13px; cursor: pointer; user-select: none; }
+  .seg-opt + .seg-opt { border-left: 1px solid var(--color-divider); }
+  .seg-opt input { position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none; }
+  .seg-opt:has(input:checked) { background: var(--color-accent); color: var(--color-bg); }
+  .seg-opt:not(:has(input:checked)):hover { background: color-mix(in srgb, var(--color-text) 7%, transparent); }
+
+  /* — cards / tags — */
+  .card { display: flex; flex-direction: column; gap: var(--space-2); padding: var(--space-3); border-radius: 0; background: transparent; border: 1px solid var(--color-divider); }
+  .card-kicker { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-accent); }
+  .card-title { font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 17px; line-height: 1.2; }
+  .card-meta { display: flex; align-items: center; gap: 6px; font-size: 11px; color: color-mix(in srgb, var(--color-text) 50%, transparent); }
+  .tag { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; letter-spacing: 0.02em; padding: 3px 10px; border-radius: 0; }
+  .tag-accent  { background: var(--color-accent-100); color: var(--color-accent-800); }
+  .tag-accent-2{ background: var(--color-accent-2-100); color: var(--color-accent-2-800); }
+  .tag-neutral { background: var(--color-neutral-100); color: var(--color-neutral-800); }
+  .tag-outline { border: 1px solid var(--color-accent); color: var(--color-accent); }
+  .tag-ok   { background: color-mix(in srgb, var(--color-ok) 16%, transparent);   color: var(--color-ok); }
+  .tag-warn { background: color-mix(in srgb, var(--color-warn) 16%, transparent); color: var(--color-warn); }
+  .tag-crit { background: color-mix(in srgb, var(--color-crit) 16%, transparent); color: var(--color-crit); }
+
+  /* — nav / tables — */
+  .nav { display: flex; align-items: center; gap: var(--space-4); padding: var(--space-3) var(--space-6); border-bottom: 1px solid var(--color-divider); }
+  .nav-brand { font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 18px; }
+  .nav a { color: inherit; text-decoration: none; font-size: 14px; cursor: pointer; }
+  .nav a:hover, .nav a[aria-current='page'] { color: var(--color-accent); }
+  .table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .table th { text-align: left; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: color-mix(in srgb, var(--color-text) 60%, transparent); padding: var(--space-2); border-bottom: 1px solid var(--color-divider); }
+  .table td { padding: var(--space-2); border-bottom: 1px solid color-mix(in srgb, var(--color-text) 8%, transparent); }
+  .table tbody tr:hover { background: color-mix(in srgb, var(--color-text) 4%, transparent); }
+
+  /* — dialog — */
+  .dialog-backdrop { position: fixed; inset: 0; z-index: 40; display: grid; place-items: center; padding: var(--space-6); background: color-mix(in srgb, var(--color-neutral-900) 50%, transparent); }
+  .dialog { width: min(560px, 100%); max-height: 88vh; overflow: auto; display: flex; flex-direction: column; gap: var(--space-3); padding: var(--space-6); border-radius: 0; background: var(--color-bg); border: 1px solid var(--color-text); box-shadow: var(--shadow-lg); }
+  .dialog-title { font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 22px; }
+  .dialog-actions { display: flex; justify-content: flex-end; gap: var(--space-2); margin-top: var(--space-2); }
+
+  /* — app shell / layout — */
+  #app { min-height: 100vh; display: flex; flex-direction: column; }
+  .shell { max-width: 1280px; width: 100%; margin: 0 auto; }
+  .view { padding: var(--space-6) var(--space-6) var(--space-8); display: flex; flex-direction: column; gap: var(--space-6); }
+  .panel { border: 1px solid var(--color-divider); }
+  .panel-hd { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3) var(--space-4); border-bottom: 1px solid var(--color-divider); }
+  .panel-hd h4 { margin: 0; }
+  .grid-kpi { display: grid; grid-template-columns: repeat(4, 1fr); border: 1px solid var(--color-divider); }
+  .kpi { padding: var(--space-4) var(--space-6); border-right: 1px solid var(--color-divider); }
+  .kpi:last-child { border-right: 0; }
+  .kpi-val { font-family: var(--font-heading); font-size: 32px; line-height: 1.1; }
+  .toolbar { display: flex; align-items: center; gap: var(--space-4); padding: var(--space-3) var(--space-4); border: 1px solid var(--color-divider); }
+  .crumb { display: flex; align-items: center; gap: 8px; font-family: var(--font-heading); font-size: 16px; }
+  .crumb .sep { color: color-mix(in srgb, var(--color-text) 40%, transparent); }
+  .crumb a { cursor: pointer; }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px 18px; }
+  .legend-item { display: flex; align-items: center; gap: 7px; font-size: 12px; }
+  .swatch { width: 10px; height: 10px; flex: none; display: inline-block; }
+  .drift-row { display: grid; grid-template-columns: 130px 1fr 150px; align-items: center; gap: 12px; }
+  .empty { max-width: 640px; margin: 8vh auto; text-align: center; display: flex; flex-direction: column; gap: var(--space-4); align-items: center; }
+  .step-dots { display: flex; gap: 8px; align-items: center; }
+  .step-dot { width: 9px; height: 9px; border: 1px solid var(--color-accent); }
+  .step-dot.on { background: var(--color-accent); }
+  .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 60; background: var(--color-text); color: var(--color-bg); padding: 10px 16px; font-family: var(--font-heading); font-size: 14px; box-shadow: var(--shadow-lg); }
+  .save-dirty { background: var(--color-accent); color: var(--color-bg); border-color: var(--color-accent); }
+
+  /* — print / F7 report (spec §10) — */
+  .report { display: none; }
+  @media print {
+    @page { margin: 14mm; }
+    body { background: #fff; }
+    .no-print, .nav, .toolbar, .toast, .dialog-backdrop { display: none !important; }
+    .app-body > *:not(.report) { display: none !important; }
+    .report { display: block !important; }
+    .report .rep-section { break-inside: avoid; page-break-inside: avoid; }
+    .report .page-break { break-before: page; page-break-before: always; }
+    .blueprint > .corner { display: none; }
+    a { color: var(--color-text); text-decoration: none; }
+  }
+</style>
+
+<div id="app"></div>
+
+<script>
+"use strict";
+/* ================================================================
+   PX4-unrelated. Asset Allocation Tracker — application script.
+   Everything below is vanilla JS. No build step, no dependencies.
+   ================================================================ */
+
+/* ---------------------------------------------------------------
+   TAXONOMY — the 14 detail classes and their rollup groups (spec §4a)
+   --------------------------------------------------------------- */
+const TAXONOMY = {
+  // id: stable key stored in data; label: display; group: rollup; cssVar: color token
+  detail: [
+    { id: 'us_large',  label: 'US Large Cap',            group: 'stocks',      cssVar: '--c-uslarge'  },
+    { id: 'us_mid',    label: 'US Mid Cap',              group: 'stocks',      cssVar: '--c-usmid'    },
+    { id: 'us_small',  label: 'US Small Cap',            group: 'stocks',      cssVar: '--c-ussmall'  },
+    { id: 'us_total',  label: 'US Total Market',         group: 'stocks',      cssVar: '--c-ustotal'  },
+    { id: 'intl_dev',  label: 'International Developed',  group: 'stocks',      cssVar: '--c-intl'     },
+    { id: 'em',        label: 'Emerging Markets',        group: 'stocks',      cssVar: '--c-em'       },
+    { id: 'us_bond',   label: 'US Bonds',                group: 'bonds',       cssVar: '--c-usbond'   },
+    { id: 'intl_bond', label: 'International Bonds',      group: 'bonds',       cssVar: '--c-intlbond' },
+    { id: 'reit',      label: 'Real Estate / REITs',     group: 'real_assets', cssVar: '--c-reit'     },
+    { id: 'commod',    label: 'Commodities',             group: 'real_assets', cssVar: '--c-commod'   },
+    { id: 'crypto',    label: 'Crypto',                  group: 'crypto',      cssVar: '--c-crypto'   },
+    { id: 'cash',      label: 'Cash & Equivalents',      group: 'cash',        cssVar: '--c-cash'     },
+    { id: 'blend',     label: 'Target Date / Blend',     group: 'blend_other', cssVar: '--c-blend'    },
+    { id: 'other',     label: 'Other / Alternatives',    group: 'blend_other', cssVar: '--c-other'    },
+  ],
+  groups: [
+    { id: 'stocks',      label: 'Stocks'       },
+    { id: 'bonds',       label: 'Bonds'        },
+    { id: 'real_assets', label: 'Real Assets'  },
+    { id: 'crypto',      label: 'Crypto'       },
+    { id: 'cash',        label: 'Cash'         },
+    { id: 'blend_other', label: 'Blend/Other'  },
+  ],
+};
+
+const DETAIL_BY_ID = Object.fromEntries(TAXONOMY.detail.map(d => [d.id, d]));
+const GROUP_BY_ID  = Object.fromEntries(TAXONOMY.groups.map(g => [g.id, g]));
+function detailLabel(id) { return (DETAIL_BY_ID[id] || {}).label || id; }
+function cssVarValue(name, fallback) {
+  const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  return v || fallback;
+}
+function detailColor(id) { return cssVarValue('--c-' + id, '#b7b7ba'); }
+function rollupOf(detailId) { return (DETAIL_BY_ID[detailId] || {}).group || 'blend_other'; }
+
+const ACCOUNT_CATEGORIES = ['Retirement', '529', 'Non-Retirement', 'Other'];
+const TAX_TREATMENTS = ['Pre-tax', 'Roth', 'Taxable', 'Tax-free'];
+
+/* ---------------------------------------------------------------
+   SEED TICKER MAP (spec §9 / §11) — best-effort, user-overridable.
+   Keys are UPPERCASE tickers; values are detail-class ids above.
+   This is DATA, not logic. The user's own tickerMap always wins.
+   Coverage target: the common ~90% of retail holdings.
+   --------------------------------------------------------------- */
+const SEED_MAP = {
+  // ---- US Total Market ----
+  VTI:'us_total', ITOT:'us_total', SCHB:'us_total', FSKAX:'us_total', FZROX:'us_total',
+  VTSAX:'us_total', SWTSX:'us_total', IWV:'us_total',
+
+  // ---- US Large Cap (S&P500 / large-cap blend) ----
+  VOO:'us_large', SPY:'us_large', IVV:'us_large', FXAIX:'us_large', SWPPX:'us_large',
+  VFIAX:'us_large', SPLG:'us_large', VV:'us_large', SCHX:'us_large', SPYG:'us_large',
+  SPYV:'us_large', VUG:'us_large', VTV:'us_large', MGK:'us_large', IWB:'us_large',
+  QQQ:'us_large', QQQM:'us_large', ONEQ:'us_large', IWF:'us_large', IWD:'us_large',
+  DIA:'us_large', SCHG:'us_large', SCHD:'us_large', DGRO:'us_large', VIG:'us_large',
+  VYM:'us_large', NOBL:'us_large',
+  // mega-cap single stocks → US Large Cap
+  AAPL:'us_large', MSFT:'us_large', GOOG:'us_large', GOOGL:'us_large', AMZN:'us_large',
+  NVDA:'us_large', META:'us_large', TSLA:'us_large', BRK_B:'us_large', 'BRK.B':'us_large',
+  JPM:'us_large', V:'us_large', MA:'us_large', UNH:'us_large', JNJ:'us_large',
+  XOM:'us_large', PG:'us_large', HD:'us_large', COST:'us_large', WMT:'us_large',
+  KO:'us_large', PEP:'us_large', DIS:'us_large', NFLX:'us_large', ADBE:'us_large',
+  CRM:'us_large', AMD:'us_large', INTC:'us_large', CSCO:'us_large', ORCL:'us_large',
+  BAC:'us_large', WFC:'us_large', T:'us_large', VZ:'us_large', PFE:'us_large',
+  MRK:'us_large', ABBV:'us_large', LLY:'us_large', AVGO:'us_large', TXN:'us_large',
+  QCOM:'us_large', HON:'us_large', UNP:'us_large', LOW:'us_large', MCD:'us_large',
+  NKE:'us_large', SBUX:'us_large', BA:'us_large', CAT:'us_large', GE:'us_large',
+
+  // ---- US Mid Cap ----
+  VO:'us_mid', IJH:'us_mid', VIMAX:'us_mid', IWR:'us_mid', SCHM:'us_mid',
+  MDY:'us_mid', VMBS:'us_mid', FSMDX:'us_mid', IWS:'us_mid', IWP:'us_mid',
+
+  // ---- US Small Cap ----
+  VB:'us_small', IJR:'us_small', AVUV:'us_small', VBR:'us_small', VBK:'us_small',
+  IWM:'us_small', SCHA:'us_small', VSMAX:'us_small', VTWO:'us_small', FSSNX:'us_small',
+  IJS:'us_small', IJT:'us_small', DFSV:'us_small',
+
+  // ---- International Developed ----
+  VEA:'intl_dev', IEFA:'intl_dev', VXUS:'intl_dev', IXUS:'intl_dev', VTIAX:'intl_dev',
+  FTIHX:'intl_dev', SCHF:'intl_dev', EFA:'intl_dev', VGK:'intl_dev', VPL:'intl_dev',
+  IEUR:'intl_dev', FZILX:'intl_dev', VT:'intl_dev', ACWI:'intl_dev', VEU:'intl_dev',
+  IDEV:'intl_dev', SWISX:'intl_dev', VWIGX:'intl_dev', EFV:'intl_dev', EFG:'intl_dev',
+  VYMI:'intl_dev', VXF:'us_mid',
+
+  // ---- Emerging Markets ----
+  VWO:'em', IEMG:'em', EEM:'em', VEMAX:'em', SCHE:'em',
+  SPEM:'em', FPADX:'em', EMXC:'em', VWOB:'intl_bond',
+
+  // ---- US Bonds ----
+  BND:'us_bond', AGG:'us_bond', VBTLX:'us_bond', FXNAX:'us_bond', SCHZ:'us_bond',
+  BNDW:'us_bond', SPAB:'us_bond', GOVT:'us_bond', IEF:'us_bond', TLT:'us_bond',
+  SHY:'us_bond', SHV:'us_bond', VGIT:'us_bond', VGLT:'us_bond', VGSH:'us_bond',
+  BIV:'us_bond', BSV:'us_bond', VCIT:'us_bond', VCSH:'us_bond', LQD:'us_bond',
+  HYG:'us_bond', JNK:'us_bond', TIP:'us_bond', VTIP:'us_bond', SCHP:'us_bond',
+  MUB:'us_bond', VTEB:'us_bond', VWIUX:'us_bond', MBB:'us_bond', VMBS_B:'us_bond',
+  FBND:'us_bond', BIL:'us_bond', SGOV:'us_bond', USFR:'us_bond',
+
+  // ---- International Bonds ----
+  BNDX:'intl_bond', VTABX:'intl_bond', IAGG:'intl_bond', BWX:'intl_bond',
+  EMB:'intl_bond', PCY:'intl_bond',
+
+  // ---- Real Estate / REITs ----
+  VNQ:'reit', SCHH:'reit', IYR:'reit', VNQI:'reit', VGSLX:'reit',
+  USRT:'reit', REET:'reit', RWR:'reit', XLRE:'reit', FREL:'reit',
+  O:'reit', SPG:'reit', PLD:'reit', AMT:'reit', PSA:'reit', EQIX:'reit',
+  VICI:'reit', DLR:'reit', WELL:'reit', AVB:'reit',
+
+  // ---- Commodities ----
+  GLD:'commod', IAU:'commod', SGOL:'commod', GLDM:'commod', PDBC:'commod',
+  DBC:'commod', GSG:'commod', SLV:'commod', PPLT:'commod', DJP:'commod',
+  USO:'commod', UNG:'commod', COMT:'commod', BCI:'commod',
+
+  // ---- Crypto ----
+  BTC:'crypto', ETH:'crypto', 'BTC-USD':'crypto', 'ETH-USD':'crypto',
+  IBIT:'crypto', FBTC:'crypto', GBTC:'crypto', BITB:'crypto', ARKB:'crypto',
+  ETHE:'crypto', ETHA:'crypto', BITO:'crypto', SOL:'crypto', 'SOL-USD':'crypto',
+  ADA:'crypto', DOGE:'crypto', XRP:'crypto', LTC:'crypto', COIN:'us_large',
+  MSTR:'us_large',
+
+  // ---- Cash & Equivalents ----
+  CASH:'cash', MM:'cash', MMF:'cash', HYSA:'cash', SAVINGS:'cash',
+  VMFXX:'cash', VMRXX:'cash', SPAXX:'cash', FDRXX:'cash', FZFXX:'cash',
+  SWVXX:'cash', SNVXX:'cash', SPRXX:'cash', VUSXX:'cash', SNSXX:'cash',
+  CD:'cash', TBILL:'cash', 'T-BILL':'cash',
+
+  // ---- Target Date / Blend ----
+  // Vanguard target-date (representative years)
+  VFFVX:'blend', VLXVX:'blend', VTTSX:'blend', VFORX:'blend', VTHRX:'blend',
+  VTWNX:'blend', VTINX:'blend', VTIVX:'blend', VTTVX:'blend',
+  // Fidelity Freedom / index
+  FDKLX:'blend', FDEWX:'blend', FFFHX:'blend', FDEEX:'blend', FIPFX:'blend',
+  // balanced / allocation
+  VBIAX:'blend', VWELX:'blend', VWINX:'blend', AOR:'blend', AOA:'blend',
+  AOM:'blend', AOK:'blend', VASGX:'blend', VSMGX:'blend', VTWAX:'intl_dev',
+};
+
+/* ---------------------------------------------------------------
+   SCHEMA + MIGRATION (spec §10)
+   --------------------------------------------------------------- */
+const SCHEMA_VERSION = 1;
+
+function emptyPortfolio() {
+  return {
+    meta: { schemaVersion: SCHEMA_VERSION, driftBandPct: 5 },
+    children: [],
+    accounts: [],
+    holdings: [],
+    snapshots: [],
+    goals: [],
+    glidePaths: [],
+    tickerMap: {},
+  };
+}
+
+// Reject newer-major files; migrate older ones silently.
+function migrate(data) {
+  if (!data || typeof data !== 'object') throw new Error('Not a portfolio file.');
+  const v = (data.meta && data.meta.schemaVersion) || 0;
+  if (v > SCHEMA_VERSION) {
+    throw new Error(
+      `This file was made by a newer version (schema ${v}). ` +
+      `Update the tracker to open it.`
+    );
+  }
+  // migration stubs land here as versions advance, e.g.:
+  // if (v < 2) { ...transform...; data.meta.schemaVersion = 2; }
+  const base = emptyPortfolio();
+  const merged = Object.assign(base, data);
+  merged.meta = Object.assign(base.meta, data.meta || {});
+  merged.meta.schemaVersion = SCHEMA_VERSION;
+  return merged;
+}
+
+/* ---------------------------------------------------------------
+   ID helper — crypto.randomUUID with fallback (offline-safe)
+   --------------------------------------------------------------- */
+function uid(prefix) {
+  const rnd = (self.crypto && self.crypto.randomUUID)
+    ? self.crypto.randomUUID()
+    : 'xxxxxxxxyxxxx'.replace(/[xy]/g, c => {
+        const r = (self.crypto ? self.crypto.getRandomValues(new Uint8Array(1))[0] : Math.floor(Math.random()*256)) & 15;
+        const val = c === 'x' ? r : (r & 0x3) | 0x8;
+        return val.toString(16);
+      });
+  return (prefix ? prefix + '_' : '') + rnd;
+}
+
+/* ---------------------------------------------------------------
+   CLASSIFICATION — user map wins over seed (spec §9)
+   --------------------------------------------------------------- */
+function classifyTicker(ticker, tickerMap) {
+  if (!ticker) return null;
+  const key = String(ticker).trim().toUpperCase();
+  if (!key) return null;
+  if (tickerMap && Object.prototype.hasOwnProperty.call(tickerMap, key)) return tickerMap[key];
+  if (Object.prototype.hasOwnProperty.call(SEED_MAP, key)) return SEED_MAP[key];
+  return null; // unknown → caller prompts with 14-class picker
+}
+
+/* ---------------------------------------------------------------
+   In-memory state + dirty tracking (single object, spec §10)
+   --------------------------------------------------------------- */
+let portfolio = emptyPortfolio();
+let dirty = false;
+let fileHandle = null;      // File System Access API handle when available
+let fileName = 'my-portfolio.json';
+
+function markDirty() { dirty = true; updateDirtyIndicator(); }
+function updateDirtyIndicator() { /* wired to UI in the render layer (M2+) */ }
+
+/* ===============================================================
+   CALC LAYER — pure functions over the portfolio object.
+   No DOM, no side effects. Everything the dashboard/report needs.
+   =============================================================== */
+
+function accountById(id)  { return portfolio.accounts.find(a => a.id === id) || null; }
+function childById(id)    { return portfolio.children.find(c => c.id === id) || null; }
+
+function sortedSnapshots() {
+  return portfolio.snapshots.slice().sort((a, b) => a.date.localeCompare(b.date));
+}
+function latestSnapshot() {
+  const s = sortedSnapshots();
+  return s.length ? s[s.length - 1] : null;
+}
+function snapshotByDate(date) {
+  return portfolio.snapshots.find(s => s.date === date) || null;
+}
+
+/* Map holdingId -> {marketValue, costBasis} for a snapshot. */
+function valueIndex(snapshot) {
+  const idx = {};
+  if (snapshot) for (const v of snapshot.values) idx[v.holdingId] = v;
+  return idx;
+}
+
+/* Active (non-archived) holdings, optionally scoped to an account. */
+function activeHoldings(accountId) {
+  return portfolio.holdings.filter(h =>
+    h.status !== 'archived' &&
+    (accountId == null || h.accountId === accountId)
+  );
+}
+
+/* Holdings belonging to accounts matching a predicate. */
+function holdingsWhereAccount(pred) {
+  const ok = new Set(portfolio.accounts.filter(pred).map(a => a.id));
+  return portfolio.holdings.filter(h => ok.has(h.accountId));
+}
+
+/*
+  Allocation for a set of holdings against a snapshot's values.
+  Returns { detail:{id:value}, group:{id:value}, total, byHolding:[...] }.
+  Only holdings with a positive value in the snapshot contribute.
+*/
+function allocate(holdings, snapshot) {
+  const idx = valueIndex(snapshot);
+  const detail = {};
+  const group = {};
+  const byHolding = [];
+  let total = 0;
+  for (const h of holdings) {
+    const v = idx[h.id];
+    if (!v) continue;
+    const mv = Number(v.marketValue) || 0;
+    if (mv === 0) continue;
+    const cls = h.assetClass || 'other';
+    const grp = rollupOf(cls);
+    detail[cls] = (detail[cls] || 0) + mv;
+    group[grp] = (group[grp] || 0) + mv;
+    total += mv;
+    const cb = (v.costBasis != null ? Number(v.costBasis)
+             : (h.costBasis != null ? Number(h.costBasis) : null));
+    byHolding.push({
+      holding: h, marketValue: mv, costBasis: cb,
+      gain: cb != null ? mv - cb : null,
+      gainPct: (cb != null && cb !== 0) ? (mv - cb) / cb : null,
+    });
+  }
+  return { detail, group, total, byHolding };
+}
+
+/* Convert a {id:value} map + total into sorted [{id,label,color,value,pct}]. */
+function toRows(valueMap, total, level /* 'detail'|'group' */) {
+  const order = level === 'group'
+    ? TAXONOMY.groups.map(g => g.id)
+    : TAXONOMY.detail.map(d => d.id);
+  const rows = [];
+  for (const id of order) {
+    const value = valueMap[id] || 0;
+    if (value === 0) continue;
+    rows.push({
+      id,
+      label: level === 'group' ? GROUP_BY_ID[id].label : detailLabel(id),
+      color: level === 'group' ? groupColor(id) : detailColor(id),
+      value,
+      pct: total > 0 ? (value / total) * 100 : 0,
+    });
+  }
+  return rows;
+}
+/* Rollup-group color comes from its own token (mockup legend order). */
+function groupColor(groupId) { return cssVarValue('--g-' + groupId, '#b7b7ba'); }
+
+/* ---- Scopes (spec §4/§5): household EXCLUDES 529 (measured vs glide). ---- */
+function householdHoldings() {
+  return holdingsWhereAccount(a => a.status !== 'archived' && a.category !== '529')
+    .filter(h => h.status !== 'archived');
+}
+function categoryHoldings(category) {
+  return holdingsWhereAccount(a => a.status !== 'archived' && a.category === category)
+    .filter(h => h.status !== 'archived');
+}
+function accountHoldings(accountId) {
+  return activeHoldings(accountId);
+}
+
+/* ---- Goals (append-only journal; active = latest effective <= date) ---- */
+function activeGoal(asOfDate) {
+  const eligible = portfolio.goals
+    .filter(g => !asOfDate || g.effectiveDate <= asOfDate)
+    .sort((a, b) => a.effectiveDate.localeCompare(b.effectiveDate));
+  return eligible.length ? eligible[eligible.length - 1] : null;
+}
+
+/*
+  Drift = actual% - target%. Positive = overweight.
+  targets keyed by the same level as actualRows (detail or group ids).
+  Returns [{id,label,actualPct,targetPct,driftPct,breach,valueDelta}].
+*/
+function computeDrift(actualRows, total, targets, band) {
+  const bandPct = band != null ? band : (portfolio.meta.driftBandPct || 5);
+  const byId = Object.fromEntries(actualRows.map(r => [r.id, r]));
+  const ids = new Set([...Object.keys(targets || {}), ...actualRows.map(r => r.id)]);
+  const out = [];
+  for (const id of ids) {
+    const targetPct = (targets && targets[id]) || 0;
+    const r = byId[id];
+    const actualPct = r ? r.pct : 0;
+    const driftPct = actualPct - targetPct;
+    out.push({
+      id,
+      label: GROUP_BY_ID[id] ? GROUP_BY_ID[id].label : detailLabel(id),
+      color: GROUP_BY_ID[id] ? groupColor(id) : detailColor(id),
+      actualPct, targetPct, driftPct,
+      breach: Math.abs(driftPct) > bandPct,
+      valueDelta: total * (driftPct / 100), // ≈ $ over/under target
+    });
+  }
+  // stable order by taxonomy
+  const rank = {};
+  TAXONOMY.groups.forEach((g, i) => rank[g.id] = i);
+  TAXONOMY.detail.forEach((d, i) => rank[d.id] = 100 + i);
+  out.sort((a, b) => (rank[a.id] ?? 999) - (rank[b.id] ?? 999));
+  return out;
+}
+
+/* ---- 529 glide paths: child age → matching band's targets ---- */
+function childAge(birthYear, asOfDate) {
+  const year = asOfDate ? Number(asOfDate.slice(0, 4)) : new Date().getFullYear();
+  return Math.max(0, year - Number(birthYear));
+}
+function glideTargets(childId, asOfDate) {
+  const gp = portfolio.glidePaths.find(g => g.childId === childId);
+  if (!gp) return null;
+  const child = childById(childId);
+  if (!child) return null;
+  const age = childAge(child.birthYear, asOfDate);
+  const band = (gp.bands || []).find(b => age >= b.ageFrom && age <= b.ageTo);
+  return band ? { targets: band.targets, age, band, rationale: gp.rationale } : { targets: null, age };
+}
+
+/* ---- History: per-snapshot rollup series for the stacked area (F4) ---- */
+function historySeries(scope /* 'household'|category|null=all */) {
+  const snaps = sortedSnapshots();
+  const pickHoldings = scope == null || scope === 'all'
+    ? () => portfolio.holdings.filter(h => h.status !== 'archived')
+    : scope === 'household' ? householdHoldings
+    : () => categoryHoldings(scope);
+  return snaps.map(s => {
+    const a = allocate(pickHoldings(), s);
+    return { date: s.date, total: a.total, group: a.group, detail: a.detail };
+  });
+}
+
+/* ===============================================================
+   CSV EXPORT (F6/F7) — plain, Excel-friendly.
+   =============================================================== */
+function csvEscape(v) {
+  const s = String(v == null ? '' : v);
+  return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+}
+function toCSV(rows) { return rows.map(r => r.map(csvEscape).join(',')).join('\r\n'); }
+
+function snapshotCSV(snapshot) {
+  const idx = valueIndex(snapshot);
+  const rows = [['Account', 'Category', 'Ticker', 'Name', 'Asset Class', 'Rollup', 'Market Value', 'Cost Basis', 'Unrealized Gain']];
+  for (const h of portfolio.holdings) {
+    const v = idx[h.id];
+    if (!v) continue;
+    const acct = accountById(h.accountId) || {};
+    const cb = v.costBasis != null ? v.costBasis : (h.costBasis != null ? h.costBasis : '');
+    const gain = (cb !== '' && cb != null) ? (Number(v.marketValue) - Number(cb)) : '';
+    rows.push([
+      acct.name || '', acct.category || '', h.ticker || '', h.name || '',
+      detailLabel(h.assetClass), GROUP_BY_ID[rollupOf(h.assetClass)].label,
+      v.marketValue, cb, gain,
+    ]);
+  }
+  return toCSV(rows);
+}
+
+/* ===============================================================
+   PERSISTENCE (spec §10) — file is the source of truth.
+   File System Access API on Chrome/Edge; download/upload fallback.
+   =============================================================== */
+const HAS_FSA = typeof window !== 'undefined'
+  && 'showSaveFilePicker' in window && 'showOpenFilePicker' in window;
+
+function serialize() { return JSON.stringify(portfolio, null, 2); }
+
+function triggerDownload(text, name, mime) {
+  const blob = new Blob([text], { type: mime || 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+async function saveFile(forceNew) {
+  const text = serialize();
+  if (HAS_FSA) {
+    try {
+      if (!fileHandle || forceNew) {
+        fileHandle = await window.showSaveFilePicker({
+          suggestedName: fileName,
+          types: [{ description: 'Portfolio JSON', accept: { 'application/json': ['.json'] } }],
+        });
+        fileName = fileHandle.name || fileName;
+      }
+      const w = await fileHandle.createWritable();
+      await w.write(text); await w.close();
+      dirty = false; updateDirtyIndicator();
+      return { ok: true, via: 'fsa' };
+    } catch (e) {
+      if (e && e.name === 'AbortError') return { ok: false, aborted: true };
+      // fall through to download
+    }
+  }
+  triggerDownload(text, fileName, 'application/json');
+  dirty = false; updateDirtyIndicator();
+  return { ok: true, via: 'download' };
+}
+
+async function openFile() {
+  if (HAS_FSA) {
+    try {
+      const [handle] = await window.showOpenFilePicker({
+        types: [{ description: 'Portfolio JSON', accept: { 'application/json': ['.json'] } }],
+      });
+      const file = await handle.getFile();
+      const data = JSON.parse(await file.text());
+      portfolio = migrate(data);
+      fileHandle = handle; fileName = handle.name || fileName;
+      dirty = false;
+      return { ok: true };
+    } catch (e) {
+      if (e && e.name === 'AbortError') return { ok: false, aborted: true };
+      return { ok: false, error: e.message };
+    }
+  }
+  // fallback: hidden <input type=file>
+  return new Promise(resolve => {
+    const input = document.createElement('input');
+    input.type = 'file'; input.accept = '.json,application/json';
+    input.onchange = async () => {
+      const file = input.files && input.files[0];
+      if (!file) return resolve({ ok: false, aborted: true });
+      try {
+        const data = JSON.parse(await file.text());
+        portfolio = migrate(data);
+        fileHandle = null; fileName = file.name || fileName; dirty = false;
+        resolve({ ok: true });
+      } catch (e) { resolve({ ok: false, error: e.message }); }
+    };
+    input.click();
+  });
+}
+
+/* Autosave reminder if there are unsaved changes (spec §10). */
+window.addEventListener('beforeunload', (e) => {
+  if (dirty) { e.preventDefault(); e.returnValue = ''; return ''; }
+});
+
+/* ===============================================================
+   DEMO DATA (spec: blank + one-click demo). Deterministic-ish
+   sample household so charts render immediately; "Start fresh" clears.
+   =============================================================== */
+function loadDemoData() {
+  const p = emptyPortfolio();
+  const kid = { id: uid('child'), label: 'Maya', birthYear: 2018 };
+  p.children.push(kid);
+
+  const A = (name, institution, category, extra) =>
+    Object.assign({ id: uid('acct'), name, institution, category, sortOrder: p.accounts.length, status: 'active' }, extra || {});
+
+  const a401k  = A('401(k)',        'Fidelity', 'Retirement',     { taxTreatment: 'Pre-tax' });
+  const aRoth  = A('Roth IRA',      'Vanguard', 'Retirement',     { taxTreatment: 'Roth' });
+  const a529   = A('529 — Maya',    'Vanguard', '529',            { childId: kid.id, taxTreatment: 'Tax-free' });
+  const aBrok  = A('Brokerage',     'Schwab',   'Non-Retirement', { taxTreatment: 'Taxable' });
+  p.accounts.push(a401k, aRoth, a529, aBrok);
+
+  const H = (accountId, ticker, assetClass, name) =>
+    ({ id: uid('hold'), accountId, ticker, name: name || '', assetClass, status: 'active' });
+
+  const holds = [
+    H(a401k.id, 'FXAIX', 'us_large'),
+    H(a401k.id, 'FSMDX', 'us_mid'),
+    H(a401k.id, 'FTIHX', 'intl_dev'),
+    H(a401k.id, 'FXNAX', 'us_bond'),
+    H(aRoth.id, 'VTI',   'us_total'),
+    H(aRoth.id, 'VXUS',  'intl_dev'),
+    H(a529.id,  'VTTSX', 'blend'),
+    H(aBrok.id, 'VOO',   'us_large'),
+    H(aBrok.id, 'VNQ',   'reit'),
+    H(aBrok.id, 'IBIT',  'crypto', 'Bitcoin ETF'),
+    H(aBrok.id, 'VMFXX', 'cash'),
+  ];
+  p.holdings.push(...holds);
+
+  const byT = Object.fromEntries(holds.map(h => [h.ticker, h.id]));
+  const snap = (date, mult) => ({
+    date,
+    note: '',
+    values: [
+      { holdingId: byT.FXAIX, marketValue: Math.round(82000 * mult) },
+      { holdingId: byT.FSMDX, marketValue: Math.round(18000 * mult) },
+      { holdingId: byT.FTIHX, marketValue: Math.round(24000 * mult) },
+      { holdingId: byT.FXNAX, marketValue: Math.round(20000 * mult) },
+      { holdingId: byT.VTI,   marketValue: Math.round(41000 * mult), costBasis: 30000 },
+      { holdingId: byT.VXUS,  marketValue: Math.round(12000 * mult), costBasis: 11000 },
+      { holdingId: byT.VTTSX, marketValue: Math.round(15000 * mult) },
+      { holdingId: byT.VOO,   marketValue: Math.round(38000 * mult), costBasis: 25000 },
+      { holdingId: byT.VNQ,   marketValue: Math.round(9000  * mult), costBasis: 10000 },
+      { holdingId: byT.IBIT,  marketValue: Math.round(7000  * mult), costBasis: 4000 },
+      { holdingId: byT.VMFXX, marketValue: Math.round(14000 * mult) },
+    ],
+  });
+  p.snapshots.push(snap('2025-08-15', 0.86), snap('2025-11-15', 0.92), snap('2026-02-15', 0.97), snap('2026-05-15', 1.0));
+
+  p.goals.push({
+    effectiveDate: '2025-01-01',
+    targets: { stocks: 70, bonds: 15, real_assets: 5, crypto: 3, cash: 7 },
+    rationale: 'Baseline growth-tilted household target for a long horizon.',
+  });
+  p.goals.push({
+    effectiveDate: '2026-02-01',
+    targets: { stocks: 65, bonds: 18, real_assets: 5, crypto: 5, cash: 7 },
+    rationale: 'Trimmed equities 5% into bonds as we near the home-fund milestone; nudged crypto ceiling up slightly.',
+  });
+
+  p.glidePaths.push({
+    childId: kid.id,
+    rationale: 'Standard age-based 529 glide — de-risk toward matriculation.',
+    bands: [
+      { ageFrom: 0,  ageTo: 5,  targets: { stocks: 90, bonds: 10 } },
+      { ageFrom: 6,  ageTo: 10, targets: { stocks: 75, bonds: 20, cash: 5 } },
+      { ageFrom: 11, ageTo: 14, targets: { stocks: 60, bonds: 32, cash: 8 } },
+      { ageFrom: 15, ageTo: 17, targets: { stocks: 40, bonds: 45, cash: 15 } },
+      { ageFrom: 18, ageTo: 30, targets: { stocks: 20, bonds: 50, cash: 30 } },
+    ],
+  });
+
+  portfolio = p;
+  dirty = true;
+}
+
+/* ===============================================================
+   UI STATE + small helpers
+   =============================================================== */
+const ui = {
+  view: 'dashboard',       // dashboard | checkin | history | goal | report | accounts
+  snapDate: null,          // selected snapshot (null → latest)
+  level: 'group',          // group (rollup 6) | detail (14)
+  drill: { level: 'household', category: null, accountId: null },
+  checkin: null,           // draft snapshot during a check-in
+  checkinExpanded: null,   // accountId expanded in the check-in
+  checkinNetWorth: '',     // optional sanity number the user types
+  historyTab: 'value',     // value | pct | growth
+  dialog: null,            // active modal descriptor
+};
+
+const CATEGORY_ORDER = ['Retirement', '529', 'Non-Retirement', 'Other'];
+
+function esc(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+function todayISO() {
+  const d = new Date();
+  const p = n => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
+}
+function parseNum(v) {
+  if (v == null) return null;
+  const s = String(v).replace(/[$,\s]/g, '');
+  if (s === '') return null;
+  const n = Number(s);
+  return Number.isFinite(n) ? n : null;
+}
+function fmtMoney(n)  { return '$' + Math.round(Number(n) || 0).toLocaleString('en-US'); }
+function fmtMoneySigned(n) { const v = Math.round(Number(n) || 0); return (v >= 0 ? '+' : '−') + '$' + Math.abs(v).toLocaleString('en-US'); }
+function fmtPct(n, dp) { return (Number(n) || 0).toFixed(dp == null ? 1 : dp) + '%'; }
+function fmtPctSigned(n) { const v = Number(n) || 0; return (v > 0 ? '+' : v < 0 ? '−' : '±') + Math.abs(v).toFixed(1) + '%'; }
+function accountsSorted(pred) {
+  return portfolio.accounts
+    .filter(a => a.status !== 'archived' && (!pred || pred(a)))
+    .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
+}
+function grandTotal(snap) { return allocate(portfolio.holdings.filter(h => h.status !== 'archived'), snap).total; }
+
+/* Current snapshot given ui.snapDate (fallback latest). */
+function currentSnapshot() {
+  return (ui.snapDate ? snapshotByDate(ui.snapDate) : null) || latestSnapshot();
+}
+
+/* ===============================================================
+   SVG CHART BUILDERS — hand-rolled, no library (spec §10)
+   =============================================================== */
+const CIRC = 2 * Math.PI * 70; // r=70 circumference for the main donut
+
+function donutSVG(rows, opts) {
+  opts = opts || {};
+  const size = opts.size || 170, r = 70, C = CIRC;
+  const total = rows.reduce((s, x) => s + x.value, 0);
+  let off = 0, slices = '';
+  if (total > 0) {
+    for (const row of rows) {
+      const len = (row.value / total) * C;
+      slices += `<circle cx="90" cy="90" r="${r}" fill="none" stroke-width="20" stroke="${row.color}" `
+        + `stroke-dasharray="${len.toFixed(2)} ${(C - len).toFixed(2)}" stroke-dashoffset="${(-off).toFixed(2)}"></circle>`;
+      off += len;
+    }
+  } else {
+    slices = `<circle cx="90" cy="90" r="${r}" fill="none" stroke-width="20" stroke="var(--color-neutral-300)"></circle>`;
+  }
+  const top = esc(opts.label || 'ACTUAL');
+  const sub = opts.sub ? `<text x="90" y="104" text-anchor="middle" style="font-family:var(--font-heading);font-size:13px;fill:var(--color-accent-700);">${esc(opts.sub)}</text>` : '';
+  const ty = opts.sub ? 86 : 96;
+  return `<svg viewBox="0 0 180 180" width="${size}" height="${size}" role="img" aria-label="${top} allocation donut">
+    <g transform="rotate(-90 90 90)">${slices}</g>
+    <text x="90" y="${ty}" text-anchor="middle" style="font-family:var(--font-heading);font-size:15px;fill:var(--color-text);">${top}</text>${sub}
+  </svg>`;
+}
+
+function miniArcSVG(pct) {
+  const r = 24, C = 2 * Math.PI * r, len = (Math.max(0, Math.min(100, pct)) / 100) * C;
+  return `<svg viewBox="0 0 60 60" width="52" height="52" role="img" aria-hidden="true">
+    <g transform="rotate(-90 30 30)" fill="none" stroke-width="9">
+      <circle cx="30" cy="30" r="${r}" stroke="var(--color-neutral-300)" stroke-dasharray="${C.toFixed(1)} ${C.toFixed(1)}"></circle>
+      <circle cx="30" cy="30" r="${r}" stroke="var(--color-accent-700)" stroke-dasharray="${len.toFixed(1)} ${C.toFixed(1)}"></circle>
+    </g></svg>`;
+}
+
+/* One drift bar: zero-centred, shaded band, darkens on breach. */
+function driftTrackSVG(driftPct, band) {
+  const W = 320, cx = 160, px = 12.5;
+  const bandW = Math.min(band * px * 2, W);
+  const bandX = cx - Math.min(band * px, W / 2);
+  const w = Math.max(Math.min(Math.abs(driftPct) * px, 160), driftPct === 0 ? 0 : 2);
+  const barX = driftPct >= 0 ? cx : cx - w;
+  const breach = Math.abs(driftPct) > band;
+  const fill = breach ? 'var(--color-accent-900)' : 'var(--color-accent-500)';
+  return `<svg viewBox="0 0 320 26" height="26" style="width:100%;" role="img" aria-label="drift ${fmtPctSigned(driftPct)}">
+    <rect x="${bandX.toFixed(1)}" y="3" width="${bandW.toFixed(1)}" height="20" fill="var(--color-accent-100)"></rect>
+    <line x1="${cx}" y1="0" x2="${cx}" y2="26" stroke="var(--color-text)" stroke-width="1" opacity="0.45"></line>
+    <rect x="${barX.toFixed(1)}" y="7" width="${w.toFixed(1)}" height="12" fill="${fill}"></rect>
+  </svg>`;
+}
+
+/* Stacked area of value by group across snapshots. */
+function stackedAreaSVG(series, opts) {
+  opts = opts || {};
+  const W = 320, H = 110, base = H, n = series.length;
+  if (n === 0) return '<div class="text-muted" style="padding:20px;">No snapshots yet.</div>';
+  const maxTotal = Math.max(1, ...series.map(s => s.total));
+  const xOf = i => n === 1 ? W / 2 : (i / (n - 1)) * W;
+  const yOf = v => base - (v / maxTotal) * (H - 6);
+  const keys = TAXONOMY.groups.map(g => g.id);
+  let polys = '';
+  const cum = series.map(() => 0);
+  for (const k of keys) {
+    const tops = [], bots = [];
+    let any = false;
+    for (let i = 0; i < n; i++) {
+      const bottom = cum[i];
+      const val = (series[i].group[k] || 0);
+      const top = bottom + val;
+      if (val > 0) any = true;
+      bots.push([xOf(i), yOf(bottom)]);
+      tops.push([xOf(i), yOf(top)]);
+      cum[i] = top;
+    }
+    if (!any) continue;
+    const pts = tops.map(p => `${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(' ')
+      + ' ' + bots.reverse().map(p => `${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(' ');
+    polys += `<polygon points="${pts}" fill="${groupColor(k)}"></polygon>`;
+  }
+  const labels = n > 1
+    ? `<text x="0" y="124">${esc(series[0].date)}</text><text x="${(W - 44).toFixed(0)}" y="124">${esc(series[n - 1].date)}</text>`
+    : `<text x="0" y="124">${esc(series[0].date)}</text>`;
+  return `<svg viewBox="0 0 320 130" style="width:100%;height:180px;" role="img" aria-label="Stacked area of value by asset class">
+    <line x1="0" y1="${base}" x2="320" y2="${base}" stroke="var(--color-divider)"></line>
+    ${polys}
+    <g style="font-size:9px;fill:var(--color-text);opacity:0.55;font-family:var(--font-body);">${labels}</g>
+  </svg>`;
+}
+
+/* Multi-line chart: lines = [{label,color,points:[v...]}] over shared x. */
+function multiLineSVG(dates, lines) {
+  const W = 320, H = 110, base = H, n = dates.length;
+  if (n === 0) return '<div class="text-muted" style="padding:20px;">No snapshots yet.</div>';
+  const allV = lines.flatMap(l => l.points);
+  const maxV = Math.max(1, ...allV);
+  const xOf = i => n === 1 ? W / 2 : (i / (n - 1)) * W;
+  const yOf = v => base - (v / maxV) * (H - 6);
+  let paths = '';
+  for (const l of lines) {
+    const pts = l.points.map((v, i) => `${xOf(i).toFixed(1)},${yOf(v).toFixed(1)}`).join(' ');
+    paths += `<polyline points="${pts}" fill="none" stroke="${l.color}" stroke-width="2"></polyline>`;
+    const last = l.points.length - 1;
+    paths += `<circle cx="${xOf(last).toFixed(1)}" cy="${yOf(l.points[last]).toFixed(1)}" r="2.5" fill="${l.color}"></circle>`;
+  }
+  const labels = n > 1
+    ? `<text x="0" y="124">${esc(dates[0])}</text><text x="${(W - 44).toFixed(0)}" y="124">${esc(dates[n - 1])}</text>`
+    : `<text x="0" y="124">${esc(dates[0])}</text>`;
+  return `<svg viewBox="0 0 320 130" style="width:100%;height:180px;" role="img" aria-label="Growth lines">
+    <line x1="0" y1="${base}" x2="320" y2="${base}" stroke="var(--color-divider)"></line>
+    ${paths}
+    <g style="font-size:9px;fill:var(--color-text);opacity:0.55;font-family:var(--font-body);">${labels}</g>
+  </svg>`;
+}
+
+/* Small 100% stacked bar for allocation-% over time (one bar per snapshot). */
+function pctStackSVG(series) {
+  const n = series.length;
+  if (n === 0) return '<div class="text-muted" style="padding:20px;">No snapshots yet.</div>';
+  const W = 320, H = 110, gap = 6;
+  const bw = (W - gap * (n - 1)) / n;
+  const keys = TAXONOMY.groups.map(g => g.id);
+  let bars = '';
+  series.forEach((s, i) => {
+    const x = i * (bw + gap);
+    let y = 0;
+    for (const k of keys) {
+      const v = s.group[k] || 0;
+      if (v <= 0 || s.total <= 0) continue;
+      const h = (v / s.total) * H;
+      bars += `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${bw.toFixed(1)}" height="${h.toFixed(1)}" fill="${groupColor(k)}"></rect>`;
+      y += h;
+    }
+  });
+  const labels = n > 1
+    ? `<text x="0" y="124">${esc(series[0].date)}</text><text x="${(W - 44).toFixed(0)}" y="124">${esc(series[n - 1].date)}</text>`
+    : `<text x="0" y="124">${esc(series[0].date)}</text>`;
+  return `<svg viewBox="0 0 320 130" style="width:100%;height:180px;" role="img" aria-label="Allocation percent over time">
+    ${bars}
+    <g style="font-size:9px;fill:var(--color-text);opacity:0.55;font-family:var(--font-body);">${labels}</g>
+  </svg>`;
+}
+
+function corners() { return '<i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>'; }
+
+/* ===============================================================
+   RENDER ROUTER + SHELL
+   =============================================================== */
+function rerender() { render(); }
+
+function render() {
+  const app = document.getElementById('app');
+  const hasData = portfolio.accounts.some(a => a.status !== 'archived');
+  if (!hasData) { app.innerHTML = shellHTML(emptyStateHTML()); afterRender(); return; }
+
+  let body;
+  switch (ui.view) {
+    case 'checkin':  body = renderCheckin();  break;
+    case 'history':  body = renderHistory();  break;
+    case 'goal':     body = renderGoal();     break;
+    case 'report':   body = renderReport();   break;
+    case 'accounts': body = renderAccounts(); break;
+    default:         body = renderDashboard();
+  }
+  // The report markup is always in the DOM (hidden) so print + preview share it.
+  const reportHidden = ui.view === 'report' ? '' : reportHTML(currentSnapshot());
+  app.innerHTML = shellHTML(navHTML() + `<div class="app-body">${body}${reportHidden ? `<div class="report">${reportHidden}</div>` : ''}</div>`);
+  afterRender();
+}
+
+function shellHTML(inner) { return `<div class="shell">${inner}</div>`; }
+
+function navHTML() {
+  const tabs = [['dashboard', 'Dashboard'], ['checkin', 'Check-in'], ['history', 'History'], ['goal', 'Goal'], ['report', 'Report'], ['accounts', 'Accounts']];
+  const links = tabs.map(([v, label]) =>
+    `<a data-act="nav" data-view="${v}" ${ui.view === v ? 'aria-current="page"' : ''}>${label}</a>`).join('');
+  const saveCls = dirty ? 'btn btn-sm save-dirty' : 'btn btn-sm btn-secondary';
+  const savedNote = dirty ? 'unsaved changes' : (HAS_FSA && fileHandle ? esc(fileName) : esc(fileName));
+  return `<div class="nav no-print">
+    <span class="nav-brand">Allocation Tracker</span>
+    <div style="display:flex;gap:20px;align-items:center;margin-right:auto;margin-left:24px;">${links}</div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <span class="text-muted" style="font-size:12px;">${savedNote}</span>
+      <button class="${saveCls}" data-act="save">Save</button>
+      <button class="btn btn-sm btn-secondary" data-act="open">Open</button>
+      <button class="btn btn-sm btn-primary" data-act="new-checkin">New check-in</button>
+    </div>
+  </div>`;
+}
+
+function emptyStateHTML() {
+  return `<div class="nav no-print"><span class="nav-brand">Allocation Tracker</span></div>
+  <div class="empty">
+    <span class="tag tag-outline">Local · offline · your data never leaves this file</span>
+    <h1 style="margin:0;">See what you actually own.</h1>
+    <p class="text-muted" style="max-width:56ch;">Track true asset allocation across every account, compare it to a goal, and watch it over time. No accounts, no cloud — a single file you keep and can hand to a friend.</p>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px;">
+      <button class="btn btn-primary" data-act="onboard-start">Start — add your first account</button>
+      <button class="btn btn-secondary" data-act="load-demo">Load demo data</button>
+      <button class="btn btn-secondary" data-act="open">Open a saved file</button>
+    </div>
+    <p class="text-muted" style="font-size:12px;margin-top:16px;">Three steps, about three minutes: add one account, add one holding, set one goal.</p>
+  </div>`;
+}
+
+/* ===============================================================
+   DASHBOARD (F2 / F3 / F4)
+   =============================================================== */
+function renderDashboard() {
+  const snap = currentSnapshot();
+  if (!snap) return dashNoSnapshotHTML();
+
+  const drill = ui.drill;
+  const is529 = drill.level === 'category' && drill.category === '529';
+  let holdings, scopeLabel, goalTargets, goalNote, glideInfo = null;
+
+  if (drill.level === 'household') { holdings = householdHoldings(); scopeLabel = 'Household'; }
+  else if (drill.level === 'category') {
+    holdings = categoryHoldings(drill.category); scopeLabel = drill.category;
+  } else {
+    holdings = accountHoldings(drill.accountId);
+    const acct = accountById(drill.accountId); scopeLabel = acct ? acct.name : 'Account';
+  }
+
+  const alloc = allocate(holdings, snap);
+  const level = ui.level;
+  const actualRows = toRows(level === 'group' ? alloc.group : alloc.detail, alloc.total, level);
+
+  // goal / glide targets for this scope
+  const goal = activeGoal(snap.date);
+  if (drill.level === 'account') {
+    const acct = accountById(drill.accountId);
+    if (acct && acct.category === '529' && acct.childId) {
+      glideInfo = glideTargets(acct.childId, snap.date);
+      goalTargets = glideInfo && glideInfo.targets; goalNote = '529 glide band';
+    } else { goalTargets = goal && rollupTargets(goal, level); goalNote = goal ? 'Household goal ' + goal.effectiveDate : null; }
+  } else if (is529) {
+    goalTargets = null; goalNote = 'Per-child glide (drill into a child account)';
+  } else {
+    goalTargets = goal && rollupTargets(goal, level); goalNote = goal ? 'Household goal ' + goal.effectiveDate : null;
+  }
+
+  const band = portfolio.meta.driftBandPct || 5;
+  const drift = goalTargets ? computeDrift(actualRows, alloc.total, goalTargets, band) : [];
+  const breaches = drift.filter(d => d.breach);
+
+  return `
+    ${dashToolbarHTML(snap)}
+    ${dashKpiHTML(snap, alloc, goal, band, breaches.length)}
+    <div class="panel" style="display:grid;grid-template-columns:1fr 1fr;">
+      ${dashDonutsHTML(actualRows, goalTargets, alloc, snap, scopeLabel, goalNote, level, glideInfo)}
+      ${dashDriftHTML(drift, band, breaches, goalTargets)}
+    </div>
+    ${dashCategoriesHTML(snap)}
+    ${dashHistoryStripHTML()}
+  `;
+}
+
+function rollupTargets(goal, level) {
+  // Goals are stored at rollup level; if viewing detail, we still compare
+  // actual-detail against the rollup goal by mapping each detail's group %.
+  if (!goal) return null;
+  if (level === 'group') return goal.targets;
+  // detail view: spread each group target is not meaningful → return null so
+  // detail view shows actual only, no drift bars (avoids fabricated targets).
+  return null;
+}
+
+function dashToolbarHTML(snap) {
+  const snaps = sortedSnapshots().slice().reverse();
+  const opts = snaps.map((s, i) =>
+    `<option value="${s.date}" ${s.date === snap.date ? 'selected' : ''}>${s.date}${i === 0 ? ' (latest)' : ''}</option>`).join('');
+  const d = ui.drill;
+  let crumb = `<a data-act="drill" data-level="household">Household</a>`;
+  if (d.level === 'household') {
+    crumb = `<span>Household</span><span class="sep">›</span><span class="text-muted">Category</span><span class="sep">›</span><span class="text-muted">Account</span>`;
+  } else if (d.level === 'category') {
+    crumb += `<span class="sep">›</span><span>${esc(d.category)}</span><span class="sep">›</span><span class="text-muted">Account</span>`;
+  } else {
+    const acct = accountById(d.accountId);
+    crumb += `<span class="sep">›</span><a data-act="drill" data-level="category" data-category="${esc(acct ? acct.category : '')}">${esc(acct ? acct.category : '')}</a><span class="sep">›</span><span>${esc(acct ? acct.name : '')}</span>`;
+  }
+  return `<div class="toolbar no-print">
+    <div class="crumb">${crumb}</div>
+    <label class="seg" style="margin-left:auto;">
+      <span class="seg-opt"><input type="radio" name="lvl" ${ui.level === 'group' ? 'checked' : ''} data-act="level" data-level="group">Rollup (6)</span>
+      <span class="seg-opt"><input type="radio" name="lvl" ${ui.level === 'detail' ? 'checked' : ''} data-act="level" data-level="detail">Detail (14)</span>
+    </label>
+    <div class="field" style="width:170px;">
+      <select class="input" data-act="pick-snap">${opts}</select>
+    </div>
+  </div>`;
+}
+
+function dashKpiHTML(snap, alloc, goal, band, breachCount) {
+  const snaps = sortedSnapshots();
+  const idx = snaps.findIndex(s => s.date === snap.date);
+  const prev = idx > 0 ? snaps[idx - 1] : null;
+  let deltaHTML = '<div class="text-muted" style="font-size:12px;">first snapshot</div>';
+  if (prev) {
+    const prevAlloc = allocate(householdHoldings(), prev);
+    const d = alloc.total - prevAlloc.total;
+    deltaHTML = `<div class="text-muted" style="font-size:12px;">${fmtMoneySigned(d)} vs ${prev.date}</div>`;
+  }
+  const withBasis = alloc.byHolding.filter(h => h.gain != null);
+  const totalGain = withBasis.reduce((s, h) => s + h.gain, 0);
+  const goalStr = goal ? Object.entries(goal.targets).map(([, v]) => v).join('/') : '—';
+  return `<div class="grid-kpi">
+    <div class="kpi">
+      <div class="kicker">${esc(drillScopeLabel())} total</div>
+      <div class="kpi-val tnum">${fmtMoney(alloc.total)}</div>
+      ${deltaHTML}
+    </div>
+    <div class="kpi">
+      <div class="kicker">Unrealized gain</div>
+      <div class="kpi-val tnum">${withBasis.length ? fmtMoneySigned(totalGain) : '—'}</div>
+      <div class="text-muted" style="font-size:12px;">${withBasis.length} of ${alloc.byHolding.length} holdings with basis</div>
+    </div>
+    <div class="kpi">
+      <div class="kicker">Goal in force</div>
+      <div class="kpi-val tnum">${goal ? esc(goal.effectiveDate) : '—'}</div>
+      <div class="text-muted" style="font-size:12px;">${goal ? goalStr + ' rollup' : 'no goal set'}</div>
+    </div>
+    <div class="kpi">
+      <div class="kicker">Drift band</div>
+      <div class="kpi-val tnum">±${band}%</div>
+      <div style="margin-top:4px;">${breachCount ? `<span class="tag tag-crit">${breachCount} class${breachCount > 1 ? 'es' : ''} breached</span>` : `<span class="tag tag-ok">within band</span>`}</div>
+    </div>
+  </div>`;
+}
+
+function drillScopeLabel() {
+  const d = ui.drill;
+  if (d.level === 'household') return 'Household';
+  if (d.level === 'category') return d.category;
+  const a = accountById(d.accountId); return a ? a.name : 'Account';
+}
+
+function legendHTML(actualRows, goalTargets) {
+  return actualRows.map(r => {
+    const g = goalTargets && goalTargets[r.id];
+    const pair = g != null ? `${r.pct.toFixed(0)} / ${g}` : `${r.pct.toFixed(0)}%`;
+    return `<div class="legend-item"><span class="swatch" style="background:${r.color}"></span><span>${esc(r.label)}</span><span class="text-muted">${pair}</span></div>`;
+  }).join('');
+}
+
+function dashDonutsHTML(actualRows, goalTargets, alloc, snap, scopeLabel, goalNote, level, glideInfo) {
+  const goalRows = goalTargets ? Object.entries(goalTargets).map(([id, pct]) => ({
+    id, color: level === 'group' ? groupColor(id) : detailColor(id), value: pct, pct,
+    label: GROUP_BY_ID[id] ? GROUP_BY_ID[id].label : detailLabel(id),
+  })) : [];
+  const topActual = actualRows[0];
+  const goalDonut = goalTargets
+    ? `<figure class="blueprint" style="padding:16px;display:flex;flex-direction:column;align-items:center;gap:8px;">${corners()}
+        ${donutSVG(goalRows, { label: 'GOAL', sub: goalRows.length ? goalRows[0].label.split(' ')[0] : '' })}
+        <figcaption>${esc(goalNote || 'target')}</figcaption></figure>`
+    : `<figure class="blueprint" style="padding:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;">${corners()}
+        <div class="text-muted" style="text-align:center;font-size:13px;max-width:20ch;">${esc(goalNote || 'No goal for this scope')}</div></figure>`;
+  return `<div style="padding:20px;border-right:1px solid var(--color-divider);">
+    <div class="panel-hd" style="padding:0 0 14px;border:0;"><h4>Actual vs Goal</h4>${glideInfo ? `<span class="tag tag-accent-2" style="margin-left:auto;">age ${glideInfo.age}</span>` : ''}</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+      <figure class="blueprint" style="padding:16px;display:flex;flex-direction:column;align-items:center;gap:8px;">${corners()}
+        ${donutSVG(actualRows, { label: 'ACTUAL', sub: topActual ? `${topActual.pct.toFixed(0)}% ${topActual.label.split(' ')[0].toLowerCase()}` : '' })}
+        <figcaption>${esc(snap.date)} · ${fmtMoney(alloc.total)}</figcaption></figure>
+      ${goalDonut}
+    </div>
+    <div class="legend" style="margin-top:16px;">${legendHTML(actualRows, goalTargets)}</div>
+  </div>`;
+}
+
+function dashDriftHTML(drift, band, breaches, goalTargets) {
+  if (!goalTargets) {
+    return `<div style="padding:20px;">
+      <div class="panel-hd" style="padding:0 0 14px;border:0;"><h4>Drift vs goal</h4></div>
+      <p class="text-muted" style="font-size:13px;">Switch to Rollup (6) or drill into an account to compare against a target. Detail-level goals aren't defined.</p>
+    </div>`;
+  }
+  const rowsHTML = drift.map(d => `
+    <div class="drift-row">
+      <span style="font-size:13px;">${esc(d.label)}</span>
+      ${driftTrackSVG(d.driftPct, band)}
+      <span style="font-size:13px;text-align:right;" class="tnum">${fmtPctSigned(d.driftPct)} <span class="text-muted">${d.targetPct ? '≈ ' + fmtMoney(Math.abs(d.valueDelta)) : ''}</span></span>
+    </div>`).join('');
+  const hints = breaches.sort((a, b) => Math.abs(b.driftPct) - Math.abs(a.driftPct)).map(b => `
+    <div class="blueprint" style="margin-top:12px;padding:14px;">${corners()}
+      <div style="font-family:var(--font-heading);font-size:16px;">${esc(b.label)} ${b.driftPct > 0 ? 'overweight' : 'underweight'} ${fmtPctSigned(b.driftPct)} (≈ ${fmtMoney(Math.abs(b.valueDelta))})</div>
+      <p class="text-muted" style="margin:4px 0 0;font-size:13px;">Consider adjusting inside tax-advantaged accounts first. Informational only — no trade instructions.</p>
+    </div>`).join('');
+  return `<div style="padding:20px;">
+    <div class="panel-hd" style="padding:0 0 14px;border:0;"><h4>Drift vs goal</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">band ±${band}% absolute</span></div>
+    <div style="display:flex;flex-direction:column;gap:10px;">${rowsHTML || '<span class="text-muted">No allocation yet.</span>'}</div>
+    ${hints || `<div class="blueprint" style="margin-top:12px;padding:14px;">${corners()}<div class="text-muted" style="font-size:13px;">All classes within the ±${band}% band. Nothing to rebalance.</div></div>`}
+  </div>`;
+}
+
+function dashCategoriesHTML(snap) {
+  if (ui.drill.level !== 'household') return '';
+  const gt = grandTotal(snap);
+  const cards = [];
+  for (const cat of CATEGORY_ORDER) {
+    const accts = accountsSorted(a => a.category === cat);
+    if (cat === '529') {
+      // one card per child that has a 529 account
+      for (const acct of accts) {
+        const child = childById(acct.childId);
+        const a = allocate(accountHoldings(acct.id), snap);
+        const g = glideTargets(acct.childId, snap.date);
+        const share = gt > 0 ? (a.total / gt) * 100 : 0;
+        const gr = toRows(a.group, a.total, 'group');
+        let meta = 'age ' + (g ? g.age : '?');
+        if (g && g.targets) {
+          const gd = computeDrift(gr, a.total, g.targets, 999).filter(x => x.targetPct > 0);
+          meta = gd.map(x => `${x.label} ${x.actualPct.toFixed(0)}/${x.targetPct}`).slice(0, 2).join(' · ');
+        }
+        cards.push(catCardHTML(`529 · ${child ? child.label : ''} (${g ? g.age : '?'})`, acct.name, a.total, share, meta, { level: 'account', accountId: acct.id }));
+      }
+      continue;
+    }
+    if (!accts.length) continue;
+    const holdings = accts.flatMap(a => accountHoldings(a.id));
+    const a = allocate(holdings, snap);
+    if (a.total === 0 && !accts.length) continue;
+    const share = gt > 0 ? (a.total / gt) * 100 : 0;
+    cards.push(catCardHTML('Category', cat, a.total, share, `${accts.length} account${accts.length > 1 ? 's' : ''}`, { level: 'category', category: cat }));
+  }
+  if (!cards.length) return '';
+  return `<div class="panel">
+    <div class="panel-hd"><h4>Categories — click to drill in</h4></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;padding:20px;">${cards.join('')}</div>
+  </div>`;
+}
+
+function catCardHTML(kicker, name, value, share, meta, drillTarget) {
+  const dattr = drillTarget.level === 'account'
+    ? `data-act="drill" data-level="account" data-account="${esc(drillTarget.accountId)}"`
+    : `data-act="drill" data-level="category" data-category="${esc(drillTarget.category)}"`;
+  return `<div class="card blueprint" style="cursor:pointer;gap:6px;" ${dattr}>${corners()}
+    <span class="card-kicker">${esc(kicker)}</span>
+    <span class="card-title">${esc(name)}</span>
+    <div style="display:flex;align-items:center;gap:12px;margin:2px 0 4px;">
+      ${miniArcSVG(share)}
+      <div>
+        <div style="font-family:var(--font-heading);font-size:20px;line-height:1.1;" class="tnum">${fmtMoney(value)}</div>
+        <div class="text-muted" style="font-size:11px;">${share.toFixed(1)}% of household</div>
+      </div>
+    </div>
+    <div class="card-meta">${esc(meta)}</div>
+  </div>`;
+}
+
+function dashHistoryStripHTML() {
+  const series = historySeries('household');
+  const journal = portfolio.goals.slice().sort((a, b) => b.effectiveDate.localeCompare(a.effectiveDate)).slice(0, 3);
+  const jHTML = journal.length ? journal.map(g => `
+    <div style="display:grid;grid-template-columns:80px 1fr;gap:12px;border-left:1px solid var(--color-divider);padding-left:12px;">
+      <span class="text-muted tnum" style="font-size:12px;">${esc(g.effectiveDate)}</span>
+      <span style="font-size:13px;">${esc(g.rationale || '(no note)')}</span>
+    </div>`).join('') : '<span class="text-muted" style="font-size:13px;">No goal history yet.</span>';
+  return `<div class="panel" style="display:grid;grid-template-columns:1.4fr 1fr;gap:0;">
+    <div style="padding:20px;border-right:1px solid var(--color-divider);">
+      <div class="panel-hd" style="padding:0 0 14px;border:0;"><h4>Value by asset class</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">${series.length} snapshot${series.length > 1 ? 's' : ''}</span></div>
+      <figure class="blueprint" style="padding:14px;">${corners()}${stackedAreaSVG(series)}</figure>
+      <div style="margin-top:12px;"><a data-act="nav" data-view="history" style="font-size:13px;cursor:pointer;">Open full history →</a></div>
+    </div>
+    <div style="padding:20px;">
+      <div class="panel-hd" style="padding:0 0 14px;border:0;"><h4>Goal journal</h4><a data-act="nav" data-view="goal" style="font-size:12px;margin-left:auto;cursor:pointer;">Edit</a></div>
+      <div style="display:flex;flex-direction:column;gap:12px;">${jHTML}</div>
+    </div>
+  </div>`;
+}
+
+function dashNoSnapshotHTML() {
+  return `${dashToolbarStubHTML()}
+  <div class="empty" style="margin:6vh auto;">
+    <span class="tag tag-outline">No snapshots yet</span>
+    <h2 style="margin:0;">You've got accounts — now record what's in them.</h2>
+    <p class="text-muted" style="max-width:50ch;">A check-in captures each holding's current value. The first one takes a few minutes; after that they prefill.</p>
+    <button class="btn btn-primary" data-act="new-checkin">Start your first check-in</button>
+  </div>`;
+}
+function dashToolbarStubHTML() {
+  return `<div class="toolbar no-print"><div class="crumb"><span>Household</span></div></div>`;
+}
+
+/* ===============================================================
+   CHECK-IN (F1) — clone latest, overtype, ≤10 min
+   =============================================================== */
+function startCheckin() {
+  const base = latestSnapshot();
+  const values = {};
+  const activeIds = new Set(activeHoldings().map(h => h.id));
+  if (base) {
+    for (const v of base.values) {
+      if (activeIds.has(v.holdingId)) values[v.holdingId] = { marketValue: v.marketValue, costBasis: v.costBasis };
+    }
+  }
+  // ensure every active holding has an entry
+  for (const h of activeHoldings()) if (!values[h.id]) values[h.id] = { marketValue: '', costBasis: '' };
+  const open = {};
+  const firstAcct = accountsSorted()[0];
+  if (firstAcct) open[firstAcct.id] = true;
+  ui.checkin = { date: todayISO(), baseDate: base ? base.date : null, note: '', values };
+  ui.checkinOpen = open;
+  ui.checkinNetWorth = '';
+  ui.view = 'checkin';
+  render();
+}
+
+function checkinTotal() {
+  let t = 0;
+  for (const h of activeHoldings()) {
+    const v = ui.checkin.values[h.id];
+    const mv = v ? parseNum(v.marketValue) : null;
+    if (mv) t += mv;
+  }
+  return t;
+}
+
+function renderCheckin() {
+  if (!ui.checkin) { startCheckin(); return ''; }
+  const ci = ui.checkin;
+  const baseVals = ci.baseDate ? valueIndex(snapshotByDate(ci.baseDate)) : {};
+  const accts = accountsSorted();
+
+  const acctBlocks = accts.map(acct => {
+    const open = !!ui.checkinOpen[acct.id];
+    const holds = activeHoldings(acct.id);
+    let acctTotal = 0, baseTotal = 0;
+    for (const h of holds) {
+      const mv = parseNum((ci.values[h.id] || {}).marketValue) || 0; acctTotal += mv;
+      const bv = baseVals[h.id] ? Number(baseVals[h.id].marketValue) : 0; baseTotal += bv;
+    }
+    const delta = acctTotal - baseTotal;
+    const head = `<div style="display:flex;align-items:center;gap:12px;padding:12px 20px;${open ? 'background:color-mix(in srgb, var(--color-text) 4%, transparent);' : ''}cursor:pointer;" data-act="ci-toggle" data-account="${esc(acct.id)}">
+      <span class="text-muted" style="font-size:14px;width:12px;">${open ? '–' : '+'}</span>
+      <span style="font-family:var(--font-heading);font-size:18px;">${esc(acct.name)}</span>
+      <span class="tag tag-accent">${esc(acct.categoryLabel || acct.category)}</span>
+      ${acct.taxTreatment ? `<span class="tag tag-outline">${esc(acct.taxTreatment)}</span>` : ''}
+      <span class="text-muted tnum" style="font-size:12px;margin-left:auto;">${fmtMoney(acctTotal)} ${baseTotal ? `<span style="color:var(--color-accent-700);">${fmtMoneySigned(delta)}</span>` : ''}</span>
+    </div>`;
+    if (!open) return `<div style="border-bottom:1px solid var(--color-divider);">${head}</div>`;
+
+    const rows = holds.map(h => {
+      const v = ci.values[h.id] || {};
+      const prev = baseVals[h.id] ? fmtMoney(baseVals[h.id].marketValue) : '—';
+      const mv = parseNum(v.marketValue), cb = parseNum(v.costBasis);
+      const gain = (mv != null && cb != null) ? mv - cb : null;
+      return `<tr>
+        <td style="padding-left:20px;font-family:var(--font-heading);font-size:15px;">${esc(h.ticker)}</td>
+        <td>
+          <span class="tag tag-accent" style="cursor:pointer;gap:6px;" data-act="edit-class" data-hid="${esc(h.id)}">${esc(detailLabel(h.assetClass))}<span class="text-muted" style="font-size:10px;">edit</span></span>
+          ${h.name ? `<span class="text-muted" style="font-size:11px;margin-left:8px;">${esc(h.name)}</span>` : ''}
+        </td>
+        <td class="text-muted tnum" style="text-align:right;">${prev}</td>
+        <td><input class="input tnum" style="min-height:32px;text-align:right;" inputmode="decimal" value="${esc(v.marketValue)}" data-act="ci-val" data-hid="${esc(h.id)}" placeholder="0"></td>
+        <td><input class="input tnum" style="min-height:32px;text-align:right;" inputmode="decimal" value="${esc(v.costBasis)}" data-act="ci-basis" data-hid="${esc(h.id)}" placeholder="—"></td>
+        <td class="tnum" style="text-align:right;padding-right:8px;color:${gain != null && gain < 0 ? 'var(--color-crit)' : 'var(--color-accent-700)'};">${gain != null ? fmtMoneySigned(gain) : '—'}</td>
+        <td style="width:34px;text-align:right;padding-right:16px;"><button class="btn btn-ghost btn-sm" title="Archive holding" data-act="archive-holding" data-hid="${esc(h.id)}">✕</button></td>
+      </tr>`;
+    }).join('');
+
+    return `<div style="border-bottom:1px solid var(--color-divider);">
+      ${head}
+      <table class="table">
+        <thead><tr>
+          <th style="width:96px;padding-left:20px;">Ticker</th>
+          <th>Asset class <span class="text-muted" style="text-transform:none;letter-spacing:0;">auto</span></th>
+          <th style="width:120px;text-align:right;">Last value</th>
+          <th style="width:150px;text-align:right;">Current value</th>
+          <th style="width:130px;text-align:right;">Cost basis <span class="text-muted" style="text-transform:none;letter-spacing:0;">opt.</span></th>
+          <th style="width:120px;text-align:right;">Unrealized</th>
+          <th></th>
+        </tr></thead>
+        <tbody>${rows || '<tr><td colspan="7" class="text-muted" style="padding:14px 20px;">No holdings yet.</td></tr>'}</tbody>
+      </table>
+      <div style="padding:10px 20px;"><button class="btn btn-ghost btn-sm" data-act="add-holding" data-account="${esc(acct.id)}">+ Add holding</button></div>
+    </div>`;
+  }).join('');
+
+  const total = checkinTotal();
+  const nw = parseNum(ui.checkinNetWorth);
+  let sanity = '<span class="text-muted" style="font-size:12px;">Enter your net-worth number to sanity-check.</span>';
+  if (nw != null && nw > 0) {
+    const d = total - nw, pct = (d / nw) * 100;
+    const within = Math.abs(pct) <= 2;
+    sanity = `<span class="tag ${within ? 'tag-ok' : 'tag-warn'}">Off by ${fmtMoney(Math.abs(d))} · ${Math.abs(pct).toFixed(2)}% — ${within ? 'within tolerance' : 'check entries'}</span>`;
+  }
+
+  return `<div class="panel">
+    <div style="display:flex;align-items:flex-end;gap:20px;padding:18px 20px;border-bottom:1px solid var(--color-divider);">
+      <div>
+        <h3 style="margin:0 0 4px;">New check-in</h3>
+        <span class="text-muted" style="font-size:13px;">${ci.baseDate ? `Prefilled from ${esc(ci.baseDate)} · overtype what changed` : 'First snapshot — enter current values'}</span>
+      </div>
+      <div class="field" style="width:150px;margin-left:8px;"><label>Snapshot date</label><input class="input" type="date" value="${esc(ci.date)}" data-act="ci-date"></div>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:10px;">
+        <button class="btn btn-secondary" data-act="ci-discard">Discard</button>
+        <button class="btn btn-secondary" data-act="add-account">+ Account</button>
+        <button class="btn btn-primary" data-act="ci-save">Save snapshot</button>
+      </div>
+    </div>
+    ${acctBlocks || '<div class="text-muted" style="padding:20px;">No accounts. Add one to start.</div>'}
+    <div style="display:flex;align-items:center;gap:20px;padding:18px 20px;flex-wrap:wrap;">
+      <div>
+        <div class="kicker">Snapshot total</div>
+        <div style="font-family:var(--font-heading);font-size:30px;line-height:1.1;" class="tnum">${fmtMoney(total)}</div>
+      </div>
+      <div class="field" style="width:190px;border-left:1px solid var(--color-divider);padding-left:20px;"><label>Net worth tracker says</label><input class="input tnum" inputmode="decimal" placeholder="optional" value="${esc(ui.checkinNetWorth)}" data-act="ci-nw"></div>
+      <div style="align-self:flex-end;padding-bottom:6px;">${sanity}</div>
+      <div class="field" style="margin-left:auto;width:320px;"><label>Snapshot note (optional)</label><input class="input" value="${esc(ci.note)}" data-act="ci-note" placeholder="e.g. Bonds still light after top-up."></div>
+    </div>
+  </div>`;
+}
+
+function saveCheckin() {
+  const ci = ui.checkin;
+  const values = [];
+  for (const h of activeHoldings()) {
+    const v = ci.values[h.id] || {};
+    const mv = parseNum(v.marketValue);
+    if (mv == null) continue; // skip blank
+    const entry = { holdingId: h.id, marketValue: mv };
+    const cb = parseNum(v.costBasis);
+    if (cb != null) entry.costBasis = cb;
+    values.push(entry);
+  }
+  if (!values.length) { toast('Enter at least one value before saving.'); return; }
+  const existing = snapshotByDate(ci.date);
+  if (existing) { existing.values = values; existing.note = ci.note; }
+  else portfolio.snapshots.push({ date: ci.date, values, note: ci.note });
+  markDirty();
+  ui.snapDate = ci.date; ui.checkin = null; ui.view = 'dashboard';
+  render();
+  toast('Snapshot saved · ' + ci.date);
+}
+
+/* ===============================================================
+   HISTORY (F4)
+   =============================================================== */
+function renderHistory() {
+  const series = historySeries('household');
+  const tabs = [['value', 'Value by class'], ['pct', 'Allocation % over time'], ['growth', 'Growth by category']];
+  const tabHTML = tabs.map(([t, l]) =>
+    `<span class="seg-opt"><input type="radio" name="htab" ${ui.historyTab === t ? 'checked' : ''} data-act="htab" data-tab="${t}">${l}</span>`).join('');
+  let chart, legend = '';
+  if (ui.historyTab === 'value') {
+    chart = stackedAreaSVG(series);
+    legend = TAXONOMY.groups.map(g => `<div class="legend-item"><span class="swatch" style="background:${groupColor(g.id)}"></span>${esc(g.label)}</div>`).join('');
+  } else if (ui.historyTab === 'pct') {
+    chart = pctStackSVG(series);
+    legend = TAXONOMY.groups.map(g => `<div class="legend-item"><span class="swatch" style="background:${groupColor(g.id)}"></span>${esc(g.label)}</div>`).join('');
+  } else {
+    const dates = series.map(s => s.date);
+    const cats = ['Retirement', '529', 'Non-Retirement', 'Other'];
+    const palette = ['--color-accent-900', '--color-accent-2-500', '--color-accent-500', '--color-neutral-500'];
+    const lines = cats.map((cat, i) => ({
+      label: cat, color: cssVarValue(palette[i], '#888'),
+      points: series.map(s => allocate(categoryHoldings(cat), snapshotByDate(s.date)).total),
+    })).filter(l => l.points.some(v => v > 0));
+    chart = multiLineSVG(dates, lines);
+    legend = lines.map(l => `<div class="legend-item"><span class="swatch" style="background:${l.color}"></span>${esc(l.label)}</div>`).join('');
+  }
+  return `<div class="toolbar no-print"><div class="crumb"><span>History</span></div>
+    <label class="seg" style="margin-left:auto;">${tabHTML}</label></div>
+    <div class="panel"><div class="panel-hd"><h4>${esc(tabs.find(t => t[0] === ui.historyTab)[1])}</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">${series.length} snapshot${series.length !== 1 ? 's' : ''}</span></div>
+      <figure class="blueprint" style="margin:20px;padding:16px;">${corners()}${chart}</figure>
+      <div class="legend" style="padding:0 20px 20px;">${legend}</div>
+    </div>`;
+}
+
+/* ===============================================================
+   GOAL & JOURNAL (F5)
+   =============================================================== */
+function renderGoal() {
+  const goal = activeGoal(todayISO());
+  const groups = TAXONOMY.groups;
+  const draft = ui.goalDraft || (ui.goalDraft = {
+    date: todayISO(),
+    targets: Object.fromEntries(groups.map(g => [g.id, goal && goal.targets[g.id] != null ? goal.targets[g.id] : 0])),
+    rationale: '',
+  });
+  const sum = groups.reduce((s, g) => s + (Number(draft.targets[g.id]) || 0), 0);
+  const inputs = groups.map(g => `
+    <div class="drift-row" style="grid-template-columns:130px 1fr 70px;">
+      <span style="font-size:14px;"><span class="swatch" style="background:${groupColor(g.id)};margin-right:6px;"></span>${esc(g.label)}</span>
+      <input type="range" min="0" max="100" step="1" value="${draft.targets[g.id]}" data-act="goal-slider" data-gid="${g.id}" style="width:100%;">
+      <input class="input tnum" style="text-align:right;min-height:30px;" inputmode="numeric" value="${draft.targets[g.id]}" data-act="goal-num" data-gid="${g.id}">
+    </div>`).join('');
+  const sumOk = Math.abs(sum - 100) < 0.5;
+  const canSave = sumOk && draft.rationale.trim().length > 0;
+
+  const timeline = portfolio.goals.slice().sort((a, b) => b.effectiveDate.localeCompare(a.effectiveDate)).map((g, i) => `
+    <div style="display:grid;grid-template-columns:100px 1fr;gap:14px;border-left:1px solid var(--color-divider);padding:0 0 14px 14px;position:relative;">
+      <span class="text-muted tnum" style="font-size:12px;">${esc(g.effectiveDate)}${i === 0 ? ' <span class="tag tag-accent">current</span>' : ''}</span>
+      <div>
+        <div style="font-size:13px;font-family:var(--font-heading);">${groups.filter(x => g.targets[x.id]).map(x => `${x.label.split(' ')[0]} ${g.targets[x.id]}`).join(' · ')}</div>
+        <p class="text-muted" style="margin:2px 0 0;font-size:13px;">${esc(g.rationale || '(no rationale recorded)')}</p>
+      </div>
+    </div>`).join('') || '<span class="text-muted">No goals recorded yet.</span>';
+
+  return `<div class="toolbar no-print"><div class="crumb"><span>Goal &amp; journal</span></div></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start;">
+    <div class="panel">
+      <div class="panel-hd"><h4>Household target (rollup)</h4><span class="tnum ${sumOk ? 'text-muted' : ''}" style="margin-left:auto;font-size:13px;color:${sumOk ? '' : 'var(--color-crit)'};">sum ${sum}%</span></div>
+      <div style="padding:20px;display:flex;flex-direction:column;gap:10px;">
+        ${inputs}
+        <div class="field" style="margin-top:10px;"><label>Why is the goal changing? (required — this is the journal)</label>
+          <textarea class="input" data-act="goal-rationale" placeholder="e.g. Trimmed equities 5% into bonds as we near the home-fund milestone.">${esc(draft.rationale)}</textarea></div>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div class="field" style="width:150px;"><label>Effective date</label><input class="input" type="date" value="${esc(draft.date)}" data-act="goal-date"></div>
+          <button class="btn btn-primary" style="margin-left:auto;align-self:flex-end;" data-act="goal-save" ${canSave ? '' : 'disabled'}>Save goal change</button>
+        </div>
+        ${!sumOk ? '<span class="text-muted" style="font-size:12px;color:var(--color-warn);">Targets must sum to 100% to save.</span>' : ''}
+        ${sumOk && !draft.rationale.trim() ? '<span class="text-muted" style="font-size:12px;">A rationale note is required — an empty goal change is not allowed (§7.6).</span>' : ''}
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-hd"><h4>Goal journal</h4></div>
+      <div style="padding:20px;display:flex;flex-direction:column;gap:0;">${timeline}</div>
+    </div>
+  </div>
+  ${renderGlidePaths()}`;
+}
+
+function renderGlidePaths() {
+  if (!portfolio.children.length) {
+    return `<div class="panel"><div class="panel-hd"><h4>529 glide paths</h4></div>
+      <div style="padding:20px;"><span class="text-muted" style="font-size:13px;">Add a child in Accounts to define an age-based 529 glide path.</span></div></div>`;
+  }
+  const blocks = portfolio.children.map(child => {
+    let gp = portfolio.glidePaths.find(g => g.childId === child.id);
+    const bands = gp ? gp.bands.slice().sort((a, b) => a.ageFrom - b.ageFrom) : [];
+    const age = childAge(child.birthYear, todayISO());
+    const rows = bands.map((b, i) => {
+      const active = age >= b.ageFrom && age <= b.ageTo;
+      const t = TAXONOMY.groups.filter(g => b.targets[g.id]).map(g => `${g.label.split(' ')[0]} ${b.targets[g.id]}`).join(' · ');
+      return `<tr ${active ? 'style="background:var(--color-accent-100);"' : ''}>
+        <td class="tnum">${b.ageFrom}–${b.ageTo}${active ? ' <span class="tag tag-accent">now</span>' : ''}</td>
+        <td style="font-size:13px;">${t || '<span class="text-muted">—</span>'}</td>
+        <td style="text-align:right;"><button class="btn btn-ghost btn-sm" data-act="edit-band" data-child="${esc(child.id)}" data-idx="${i}">edit</button><button class="btn btn-ghost btn-sm btn-danger" data-act="del-band" data-child="${esc(child.id)}" data-idx="${i}">✕</button></td>
+      </tr>`;
+    }).join('');
+    return `<div style="border:1px solid var(--color-divider);padding:0;">
+      <div class="panel-hd"><h4>${esc(child.label)} <span class="text-muted" style="font-family:var(--font-body);font-size:13px;">born ${esc(child.birthYear)} · age ${age}</span></h4>
+        <button class="btn btn-ghost btn-sm" style="margin-left:auto;" data-act="add-band" data-child="${esc(child.id)}">+ Add band</button></div>
+      <table class="table"><thead><tr><th style="padding-left:16px;">Age band</th><th>Targets</th><th></th></tr></thead>
+        <tbody>${rows || '<tr><td colspan="3" class="text-muted" style="padding:12px 16px;">No bands yet.</td></tr>'}</tbody></table>
+      <div style="padding:10px 16px;"><input class="input" style="max-width:520px;" placeholder="Glide rationale (optional)" value="${esc(gp ? gp.rationale || '' : '')}" data-act="glide-rationale" data-child="${esc(child.id)}"></div>
+    </div>`;
+  }).join('');
+  return `<div class="panel"><div class="panel-hd"><h4>529 glide paths</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">per child · measured instead of the household goal (§12.3)</span></div>
+    <div style="padding:20px;display:flex;flex-direction:column;gap:20px;">${blocks}</div></div>`;
+}
+
+/* ===============================================================
+   REPORT (F7) — screen preview + print
+   =============================================================== */
+function renderReport() {
+  const snap = currentSnapshot();
+  const snaps = sortedSnapshots().slice().reverse();
+  const opts = snaps.map((s, i) => `<option value="${s.date}" ${snap && s.date === snap.date ? 'selected' : ''}>${s.date}${i === 0 ? ' (latest)' : ''}</option>`).join('');
+  return `<div class="toolbar no-print"><div class="crumb"><span>Allocation report</span></div>
+    <div class="field" style="width:170px;margin-left:auto;"><select class="input" data-act="pick-snap">${opts}</select></div>
+    <button class="btn btn-secondary" data-act="report-csv">Export CSV</button>
+    <button class="btn btn-primary" data-act="print">Print / Save PDF</button>
+  </div>
+  <div class="report show-screen panel" style="padding:28px;">${reportHTML(snap)}</div>`;
+}
+
+function allocTableHTML(rows, goalTargets, band) {
+  const drift = goalTargets ? computeDrift(rows, rows.reduce((s, r) => s + r.value, 0), goalTargets, band) : null;
+  const driftById = drift ? Object.fromEntries(drift.map(d => [d.id, d])) : {};
+  const body = rows.map(r => {
+    const d = driftById[r.id];
+    return `<tr>
+      <td><span class="swatch" style="background:${r.color};margin-right:6px;"></span>${esc(r.label)}</td>
+      <td class="tnum" style="text-align:right;">${fmtMoney(r.value)}</td>
+      <td class="tnum" style="text-align:right;">${fmtPct(r.pct)}</td>
+      <td class="tnum" style="text-align:right;">${goalTargets && goalTargets[r.id] != null ? goalTargets[r.id] + '%' : '—'}</td>
+      <td class="tnum" style="text-align:right;color:${d && d.breach ? 'var(--color-crit)' : ''}">${d ? fmtPctSigned(d.driftPct) + (d.breach ? ' ⚠' : '') : '—'}</td>
+    </tr>`;
+  }).join('');
+  return `<table class="table"><thead><tr><th>Asset class</th><th style="text-align:right;">Value</th><th style="text-align:right;">Actual</th><th style="text-align:right;">Goal</th><th style="text-align:right;">Drift</th></tr></thead><tbody>${body}</tbody></table>`;
+}
+
+function reportSection(title, subtitle, holdings, snap, goalTargets, band, showAccounts) {
+  const a = allocate(holdings, snap);
+  const rollup = toRows(a.group, a.total, 'group');
+  const detail = toRows(a.detail, a.total, 'detail');
+  let accountsHTML = '';
+  if (showAccounts && showAccounts.length) {
+    accountsHTML = '<div style="margin-top:12px;"><div class="kicker" style="margin-bottom:6px;">Accounts</div>' +
+      showAccounts.map(acct => {
+        const av = allocate(accountHoldings(acct.id), snap);
+        return `<div style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0;border-bottom:1px solid color-mix(in srgb,var(--color-text) 8%,transparent);"><span>${esc(acct.name)} <span class="text-muted">${esc(acct.institution || '')}</span></span><span class="tnum">${fmtMoney(av.total)}</span></div>`;
+      }).join('') + '</div>';
+  }
+  return `<section class="rep-section" style="margin-bottom:26px;">
+    <h3 style="margin:0 0 2px;">${esc(title)}</h3>
+    <div class="text-muted" style="font-size:13px;margin-bottom:10px;">${esc(subtitle)} · ${fmtMoney(a.total)}</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+      <div><div class="kicker" style="margin-bottom:6px;">Rollup</div>${allocTableHTML(rollup, goalTargets, band)}</div>
+      <div><div class="kicker" style="margin-bottom:6px;">Detail</div>${allocTableHTML(detail, null, band)}</div>
+    </div>
+    ${accountsHTML}
+  </section>`;
+}
+
+function reportHTML(snap) {
+  if (!snap) return '<p class="text-muted">No snapshot to report on yet.</p>';
+  const band = portfolio.meta.driftBandPct || 5;
+  const goal = activeGoal(snap.date);
+  const gt = goal ? goal.targets : null;
+  let out = `<header style="border-bottom:2px solid var(--color-text);padding-bottom:10px;margin-bottom:20px;">
+    <div class="kicker">Asset Allocation Report</div>
+    <h1 style="margin:2px 0 0;font-size:34px;">As of ${esc(snap.date)}</h1>
+  </header>`;
+
+  out += reportSection('Household', 'Excludes 529s · vs goal', householdHoldings(), snap, gt, band);
+
+  const ret = accountsSorted(a => a.category === 'Retirement');
+  if (ret.length) out += reportSection('Retirement', 'vs household goal', ret.flatMap(a => accountHoldings(a.id)), snap, gt, band, ret);
+
+  for (const acct of accountsSorted(a => a.category === '529')) {
+    const child = childById(acct.childId);
+    const g = glideTargets(acct.childId, snap.date);
+    out += '<div class="page-break"></div>' + reportSection(`529 — ${child ? child.label : acct.name}`, `Age ${g ? g.age : '?'} · vs glide band`, accountHoldings(acct.id), snap, g && g.targets, band, [acct]);
+  }
+
+  const nonret = accountsSorted(a => a.category === 'Non-Retirement');
+  if (nonret.length) out += reportSection('Non-Retirement', 'vs household goal', nonret.flatMap(a => accountHoldings(a.id)), snap, gt, band, nonret);
+
+  // Other categories grouped by label
+  const others = accountsSorted(a => a.category === 'Other');
+  const byLabel = {};
+  for (const a of others) { const k = a.categoryLabel || 'Other'; (byLabel[k] = byLabel[k] || []).push(a); }
+  for (const [label, accts] of Object.entries(byLabel)) {
+    out += reportSection(label, 'Other category · vs household goal', accts.flatMap(a => accountHoldings(a.id)), snap, gt, band, accts);
+  }
+
+  out += `<footer style="border-top:1px solid var(--color-divider);margin-top:20px;padding-top:12px;font-size:12px;" class="text-muted">
+    Snapshot ${esc(snap.date)} · Goal effective ${goal ? esc(goal.effectiveDate) : '—'} · Drift band ±${band}% absolute.
+    ${goal && goal.rationale ? '<br>Latest rationale: ' + esc(goal.rationale) : ''}
+  </footer>`;
+  return out;
+}
+
+/* ===============================================================
+   ACCOUNTS / SETTINGS / DATA CONTROL
+   =============================================================== */
+function renderAccounts() {
+  const band = portfolio.meta.driftBandPct || 5;
+  const catBlocks = CATEGORY_ORDER.map(cat => {
+    const accts = accountsSorted(a => a.category === cat);
+    if (!accts.length) return '';
+    const rows = accts.map((a, i) => `<tr>
+      <td style="font-family:var(--font-heading);font-size:15px;">${esc(a.name)}</td>
+      <td class="text-muted" style="font-size:13px;">${esc(a.institution || '')}</td>
+      <td>${a.taxTreatment ? `<span class="tag tag-outline">${esc(a.taxTreatment)}</span>` : ''} ${a.category === '529' && a.childId ? `<span class="tag tag-accent-2">${esc((childById(a.childId) || {}).label || '')}</span>` : ''}</td>
+      <td class="tnum text-muted" style="font-size:13px;">${activeHoldings(a.id).length} holdings</td>
+      <td style="text-align:right;white-space:nowrap;">
+        <button class="btn btn-ghost btn-sm" data-act="move-acct" data-account="${esc(a.id)}" data-dir="-1" ${i === 0 ? 'disabled' : ''}>↑</button>
+        <button class="btn btn-ghost btn-sm" data-act="move-acct" data-account="${esc(a.id)}" data-dir="1" ${i === accts.length - 1 ? 'disabled' : ''}>↓</button>
+        <button class="btn btn-ghost btn-sm" data-act="edit-account" data-account="${esc(a.id)}">edit</button>
+        <button class="btn btn-ghost btn-sm btn-danger" data-act="archive-account" data-account="${esc(a.id)}">archive</button>
+      </td>
+    </tr>`).join('');
+    return `<div style="margin-bottom:18px;"><div class="kicker" style="margin-bottom:6px;">${esc(cat)}</div>
+      <table class="table"><tbody>${rows}</tbody></table></div>`;
+  }).join('');
+
+  const kids = portfolio.children.map(c => `<span class="tag tag-accent-2" style="gap:8px;">${esc(c.label)} · ${esc(c.birthYear)} <span data-act="del-child" data-child="${esc(c.id)}" style="cursor:pointer;">✕</span></span>`).join(' ') || '<span class="text-muted" style="font-size:13px;">No children yet.</span>';
+
+  return `<div class="toolbar no-print"><div class="crumb"><span>Accounts &amp; settings</span></div>
+    <button class="btn btn-secondary" style="margin-left:auto;" data-act="add-child">+ Child</button>
+    <button class="btn btn-primary" data-act="add-account">+ Account</button></div>
+  <div class="panel"><div class="panel-hd"><h4>Accounts</h4></div><div style="padding:20px;">${catBlocks || '<span class="text-muted">No accounts yet. Add one to begin.</span>'}</div></div>
+  <div class="panel"><div class="panel-hd"><h4>Children (for 529 glide paths)</h4></div><div style="padding:20px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;">${kids}</div></div>
+  <div class="panel"><div class="panel-hd"><h4>Settings &amp; data</h4></div>
+    <div style="padding:20px;display:flex;gap:28px;flex-wrap:wrap;align-items:flex-end;">
+      <div class="field" style="width:160px;"><label>Drift band (± absolute %)</label><input class="input tnum" inputmode="numeric" value="${band}" data-act="set-band"></div>
+      <button class="btn btn-secondary" data-act="save">Save file</button>
+      <button class="btn btn-secondary" data-act="open">Open file</button>
+      <button class="btn btn-secondary" data-act="export-csv">Export snapshot CSV</button>
+      <button class="btn btn-danger" data-act="start-fresh">Start fresh</button>
+    </div>
+    <div style="padding:0 20px 20px;"><span class="text-muted" style="font-size:12px;">This file makes zero network requests. Your data lives only in the JSON file you save — nothing is uploaded.</span></div>
+  </div>`;
+}
+
+/* ===============================================================
+   DIALOGS
+   =============================================================== */
+function openDialog(d) { ui.dialog = d; render(); }
+function closeDialog() { ui.dialog = null; render(); }
+
+function classPickerGrid(selectedId, actAttr) {
+  return `<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px;">` +
+    TAXONOMY.detail.map(d => `<button class="btn btn-sm ${d.id === selectedId ? 'btn-primary' : 'btn-secondary'}" style="justify-content:flex-start;" ${actAttr} data-cls="${d.id}"><span class="swatch" style="background:${detailColor(d.id)};margin-right:6px;"></span>${esc(d.label)}</button>`).join('') +
+    `</div>`;
+}
+
+function dialogHTML() {
+  const d = ui.dialog;
+  if (!d) return '';
+  let inner = '';
+  if (d.type === 'class-pick') {
+    const h = portfolio.holdings.find(x => x.id === d.hid);
+    inner = `<div class="dialog-title">Asset class for ${esc(h ? h.ticker : '')}</div>
+      <div class="dialog-body">Your choice is saved to this file's ticker map and reused next time.</div>
+      ${classPickerGrid(h ? h.assetClass : null, 'data-act="pick-class" data-hid="' + esc(d.hid) + '"')}
+      <div class="dialog-actions"><button class="btn btn-secondary" data-act="close-dialog">Cancel</button></div>`;
+  } else if (d.type === 'account') {
+    const a = d.acctId ? accountById(d.acctId) : null;
+    const catOpts = CATEGORY_ORDER.map(c => `<option ${a && a.category === c ? 'selected' : ''}>${c}</option>`).join('');
+    const childOpts = ['<option value="">— none —</option>'].concat(portfolio.children.map(c => `<option value="${esc(c.id)}" ${a && a.childId === c.id ? 'selected' : ''}>${esc(c.label)}</option>`)).join('');
+    const taxOpts = ['<option value="">— optional —</option>'].concat(TAX_TREATMENTS.map(t => `<option ${a && a.taxTreatment === t ? 'selected' : ''}>${t}</option>`)).join('');
+    inner = `<div class="dialog-title">${a ? 'Edit account' : 'Add account'}</div>
+      <div class="field"><label>Account name</label><input class="input" id="f-name" value="${esc(a ? a.name : '')}" placeholder="e.g. Fidelity 401(k)"></div>
+      <div class="field"><label>Institution (optional)</label><input class="input" id="f-inst" value="${esc(a ? a.institution || '' : '')}" placeholder="e.g. Fidelity"></div>
+      <div style="display:flex;gap:12px;">
+        <div class="field" style="flex:1;"><label>Category</label><select class="input" id="f-cat" data-act="acct-cat">${catOpts}</select></div>
+        <div class="field" style="flex:1;"><label>Tax treatment</label><select class="input" id="f-tax">${taxOpts}</select></div>
+      </div>
+      <div class="field" id="f-other-wrap" style="display:${a && a.category === 'Other' ? 'block' : 'none'};"><label>Category label (required for Other)</label><input class="input" id="f-catlabel" value="${esc(a ? a.categoryLabel || '' : '')}" placeholder="e.g. Family Trust"></div>
+      <div class="field" id="f-child-wrap" style="display:${a && a.category === '529' ? 'block' : 'none'};"><label>Child (529 links to a glide path)</label><select class="input" id="f-child">${childOpts}</select></div>
+      <div class="dialog-actions"><button class="btn btn-secondary" data-act="close-dialog">Cancel</button><button class="btn btn-primary" data-act="save-account" data-acct="${esc(d.acctId || '')}">${a ? 'Save' : 'Add account'}</button></div>`;
+  } else if (d.type === 'child') {
+    inner = `<div class="dialog-title">Add child</div>
+      <div class="field"><label>Name / label</label><input class="input" id="f-clabel" placeholder="e.g. Maya"></div>
+      <div class="field"><label>Birth year</label><input class="input tnum" id="f-cyear" inputmode="numeric" placeholder="e.g. 2018"></div>
+      <div class="dialog-actions"><button class="btn btn-secondary" data-act="close-dialog">Cancel</button><button class="btn btn-primary" data-act="save-child">Add child</button></div>`;
+  } else if (d.type === 'holding') {
+    const clsOpts = ['<option value="">— auto from ticker —</option>'].concat(TAXONOMY.detail.map(c => `<option value="${c.id}">${esc(c.label)}</option>`)).join('');
+    inner = `<div class="dialog-title">Add holding</div>
+      <div class="dialog-body">Type a ticker and value. We'll classify common tickers automatically; pick a class only if asked.</div>
+      <div style="display:flex;gap:12px;">
+        <div class="field" style="flex:1;"><label>Ticker</label><input class="input" id="f-ticker" placeholder="e.g. VOO, BTC, CASH"></div>
+        <div class="field" style="flex:1;"><label>Name (optional)</label><input class="input" id="f-hname" placeholder="e.g. Vanguard S&amp;P 500"></div>
+      </div>
+      <div class="field"><label>Asset class</label><select class="input" id="f-cls">${clsOpts}</select></div>
+      <div style="display:flex;gap:12px;">
+        <div class="field" style="flex:1;"><label>Current value</label><input class="input tnum" id="f-val" inputmode="decimal" placeholder="0"></div>
+        <div class="field" style="flex:1;"><label>Cost basis (optional)</label><input class="input tnum" id="f-basis" inputmode="decimal" placeholder="—"></div>
+      </div>
+      <div class="dialog-actions"><button class="btn btn-secondary" data-act="close-dialog">Cancel</button><button class="btn btn-primary" data-act="save-holding" data-account="${esc(d.acctId)}">Add holding</button></div>`;
+  } else if (d.type === 'band') {
+    const gp = portfolio.glidePaths.find(g => g.childId === d.child);
+    const band = (gp && d.idx != null) ? gp.bands.slice().sort((a, b) => a.ageFrom - b.ageFrom)[d.idx] : null;
+    const t = band ? band.targets : {};
+    const tInputs = TAXONOMY.groups.map(g => `<div class="drift-row" style="grid-template-columns:130px 70px;gap:8px;"><span style="font-size:13px;">${esc(g.label)}</span><input class="input tnum" style="min-height:30px;text-align:right;" id="b-${g.id}" inputmode="numeric" value="${t[g.id] != null ? t[g.id] : ''}" placeholder="0"></div>`).join('');
+    inner = `<div class="dialog-title">${band ? 'Edit' : 'Add'} glide band</div>
+      <div style="display:flex;gap:12px;"><div class="field" style="flex:1;"><label>Age from</label><input class="input tnum" id="b-from" inputmode="numeric" value="${band ? band.ageFrom : ''}"></div>
+        <div class="field" style="flex:1;"><label>Age to</label><input class="input tnum" id="b-to" inputmode="numeric" value="${band ? band.ageTo : ''}"></div></div>
+      <div class="kicker" style="margin-top:6px;">Targets (rollup %, sum 100)</div>
+      <div style="display:flex;flex-direction:column;gap:6px;">${tInputs}</div>
+      <div class="dialog-actions"><button class="btn btn-secondary" data-act="close-dialog">Cancel</button><button class="btn btn-primary" data-act="save-band" data-child="${esc(d.child)}" data-idx="${d.idx != null ? d.idx : ''}">Save band</button></div>`;
+  } else if (d.type === 'confirm') {
+    inner = `<div class="dialog-title">${esc(d.title)}</div><div class="dialog-body">${esc(d.body)}</div>
+      <div class="dialog-actions"><button class="btn btn-secondary" data-act="close-dialog">Cancel</button><button class="btn ${d.danger ? 'btn-danger' : 'btn-primary'}" data-act="confirm-yes">${esc(d.ok || 'Confirm')}</button></div>`;
+  }
+  return `<div class="dialog-backdrop no-print" data-act="backdrop"><div class="dialog" data-stop="1">${inner}</div></div>`;
+}
+
+/* ===============================================================
+   TOAST + afterRender (dialog/toast mounting)
+   =============================================================== */
+let _toastTimer = null;
+function toast(msg) {
+  ui._toast = msg;
+  const app = document.getElementById('app');
+  let el = document.getElementById('toast');
+  if (!el) { el = document.createElement('div'); el.id = 'toast'; el.className = 'toast'; document.body.appendChild(el); }
+  el.textContent = msg; el.style.display = 'block';
+  if (_toastTimer) clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(() => { el.style.display = 'none'; }, 2600);
+}
+
+function afterRender() {
+  const app = document.getElementById('app');
+  const existing = document.getElementById('dialog-mount');
+  if (existing) existing.remove();
+  if (ui.dialog) {
+    const mount = document.createElement('div');
+    mount.id = 'dialog-mount';
+    mount.innerHTML = dialogHTML();
+    app.appendChild(mount);
+    const first = mount.querySelector('input,select,textarea,button');
+    if (first && first.tagName !== 'BUTTON') first.focus();
+  }
+}
+
+/* ===============================================================
+   EVENT DISPATCH (delegated)
+   =============================================================== */
+function boot() {
+  document.addEventListener('click', onClick);
+  document.addEventListener('change', onChange);
+  document.addEventListener('input', onInput);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && ui.dialog) closeDialog(); });
+  render();
+}
+
+function onClick(e) {
+  const t = e.target.closest('[data-act]');
+  if (!t) return;
+  const a = t.dataset.act, ds = t.dataset;
+  switch (a) {
+    case 'nav': ui.view = ds.view; if (ds.view !== 'checkin') ui.checkin = ui.checkin; render(); break;
+    case 'save': saveFile().then(r => { if (r && r.ok) toast('Saved · ' + fileName); render(); }); break;
+    case 'open': doOpen(); break;
+    case 'new-checkin': startCheckin(); break;
+    case 'load-demo': loadDemoData(); ui.view = 'dashboard'; ui.snapDate = null; render(); toast('Demo data loaded'); break;
+    case 'onboard-start': openDialog({ type: 'account' }); break;
+    case 'drill':
+      ui.drill = { level: ds.level, category: ds.category || (ds.level === 'category' ? ds.category : null), accountId: ds.account || null };
+      if (ds.level === 'account') { const ac = accountById(ds.account); ui.drill.category = ac ? ac.category : null; }
+      ui.view = 'dashboard'; render(); break;
+    case 'ci-toggle': ui.checkinOpen[ds.account] = !ui.checkinOpen[ds.account]; render(); break;
+    case 'ci-discard': ui.checkin = null; ui.view = 'dashboard'; render(); break;
+    case 'ci-save': saveCheckin(); break;
+    case 'add-account': openDialog({ type: 'account' }); break;
+    case 'edit-account': openDialog({ type: 'account', acctId: ds.account }); break;
+    case 'add-child': openDialog({ type: 'child' }); break;
+    case 'add-holding': openDialog({ type: 'holding', acctId: ds.account }); break;
+    case 'edit-class': openDialog({ type: 'class-pick', hid: ds.hid }); break;
+    case 'archive-holding': archiveHolding(ds.hid); break;
+    case 'archive-account': confirmArchiveAccount(ds.account); break;
+    case 'move-acct': moveAccount(ds.account, Number(ds.dir)); break;
+    case 'del-child': deleteChild(ds.child); break;
+    case 'pick-class': setHoldingClass(ds.hid, ds.cls); break;
+    case 'save-account': saveAccountFromDialog(ds.acct || null); break;
+    case 'save-child': saveChildFromDialog(); break;
+    case 'save-holding': saveHoldingFromDialog(ds.account); break;
+    case 'add-band': openDialog({ type: 'band', child: ds.child }); break;
+    case 'edit-band': openDialog({ type: 'band', child: ds.child, idx: Number(ds.idx) }); break;
+    case 'del-band': deleteBand(ds.child, Number(ds.idx)); break;
+    case 'save-band': saveBandFromDialog(ds.child, ds.idx === '' ? null : Number(ds.idx)); break;
+    case 'goal-save': saveGoalDraft(); break;
+    case 'start-fresh': openDialog({ type: 'confirm', title: 'Start fresh?', body: 'This clears all accounts, holdings, snapshots and goals in memory. Save your file first if you want to keep it. (Your saved file on disk is not touched.)', ok: 'Start fresh', danger: true, action: 'start-fresh' }); break;
+    case 'export-csv': { const s = currentSnapshot(); if (s) triggerDownload(snapshotCSV(s), `snapshot-${s.date}.csv`, 'text/csv'); else toast('No snapshot to export.'); break; }
+    case 'report-csv': { const s = currentSnapshot(); if (s) triggerDownload(snapshotCSV(s), `report-${s.date}.csv`, 'text/csv'); break; }
+    case 'print': window.print(); break;
+    case 'confirm-yes': handleConfirm(); break;
+    case 'close-dialog': closeDialog(); break;
+    case 'backdrop': if (!e.target.closest('[data-stop]')) closeDialog(); break;
+  }
+}
+
+function onChange(e) {
+  const t = e.target.closest('[data-act]');
+  if (!t) return;
+  const a = t.dataset.act, ds = t.dataset;
+  if (a === 'level') { ui.level = ds.level; render(); }
+  else if (a === 'pick-snap') { ui.snapDate = t.value; render(); }
+  else if (a === 'htab') { ui.historyTab = ds.tab; render(); }
+  else if (a === 'acct-cat') {
+    const other = document.getElementById('f-other-wrap'), child = document.getElementById('f-child-wrap');
+    if (other) other.style.display = t.value === 'Other' ? 'block' : 'none';
+    if (child) child.style.display = t.value === '529' ? 'block' : 'none';
+  }
+}
+
+function onInput(e) {
+  const t = e.target.closest('[data-act]');
+  if (!t) return;
+  const a = t.dataset.act, ds = t.dataset;
+  // check-in fields — mutate draft WITHOUT re-render (preserve focus); recompute totals lazily
+  if (a === 'ci-val')   { ui.checkin.values[ds.hid] = ui.checkin.values[ds.hid] || {}; ui.checkin.values[ds.hid].marketValue = t.value; }
+  else if (a === 'ci-basis') { ui.checkin.values[ds.hid] = ui.checkin.values[ds.hid] || {}; ui.checkin.values[ds.hid].costBasis = t.value; }
+  else if (a === 'ci-note') { ui.checkin.note = t.value; }
+  else if (a === 'ci-date') { ui.checkin.date = t.value; }
+  else if (a === 'ci-nw') { ui.checkinNetWorth = t.value; }
+  else if (a === 'goal-slider' || a === 'goal-num') {
+    const v = Math.max(0, Math.min(100, Math.round(Number(t.value) || 0)));
+    ui.goalDraft.targets[ds.gid] = v; renderGoalLive();
+  }
+  else if (a === 'goal-rationale') { ui.goalDraft.rationale = t.value; toggleGoalSave(); }
+  else if (a === 'goal-date') { ui.goalDraft.date = t.value; }
+  else if (a === 'set-band') { const n = parseNum(t.value); if (n != null) { portfolio.meta.driftBandPct = Math.max(1, Math.min(50, n)); markDirty(); } }
+  else if (a === 'glide-rationale') { const gp = ensureGlide(ds.child); gp.rationale = t.value; markDirty(); }
+}
+
+/* Light-touch updates that avoid a full re-render mid-typing */
+function renderGoalLive() {
+  markDirty();
+  // update the sibling number/slider + sum without stealing focus
+  const groups = TAXONOMY.groups;
+  const sum = groups.reduce((s, g) => s + (Number(ui.goalDraft.targets[g.id]) || 0), 0);
+  document.querySelectorAll('[data-act="goal-slider"]').forEach(el => { el.value = ui.goalDraft.targets[el.dataset.gid]; });
+  document.querySelectorAll('[data-act="goal-num"]').forEach(el => { if (el !== document.activeElement) el.value = ui.goalDraft.targets[el.dataset.gid]; });
+  toggleGoalSave();
+}
+function toggleGoalSave() {
+  const groups = TAXONOMY.groups;
+  const sum = groups.reduce((s, g) => s + (Number(ui.goalDraft.targets[g.id]) || 0), 0);
+  const btn = document.querySelector('[data-act="goal-save"]');
+  if (btn) btn.disabled = !(Math.abs(sum - 100) < 0.5 && ui.goalDraft.rationale.trim().length > 0);
+}
+
+/* ===============================================================
+   MUTATIONS wired from the dispatch
+   =============================================================== */
+async function doOpen() {
+  if (dirty && !confirm('You have unsaved changes. Open another file and discard them?')) return;
+  const r = await openFile();
+  if (r.ok) { ui.view = 'dashboard'; ui.snapDate = null; ui.drill = { level: 'household' }; ui.goalDraft = null; render(); toast('Loaded · ' + fileName); }
+  else if (r.error) toast('Could not open: ' + r.error);
+}
+
+function setHoldingClass(hid, cls) {
+  const h = portfolio.holdings.find(x => x.id === hid);
+  if (h) { h.assetClass = cls; if (h.ticker) portfolio.tickerMap[h.ticker.trim().toUpperCase()] = cls; markDirty(); }
+  closeDialog();
+}
+function archiveHolding(hid) {
+  const h = portfolio.holdings.find(x => x.id === hid);
+  if (h) { h.status = 'archived'; if (ui.checkin) delete ui.checkin.values[hid]; markDirty(); render(); }
+}
+function confirmArchiveAccount(id) {
+  const a = accountById(id);
+  openDialog({ type: 'confirm', title: 'Archive account?', body: `“${a ? a.name : ''}” and its holdings are archived (kept for history, hidden from entry). This never deletes past snapshots.`, ok: 'Archive', danger: true, action: 'archive-account', id });
+}
+function moveAccount(id, dir) {
+  const a = accountById(id);
+  if (!a) return;
+  const sibs = accountsSorted(x => x.category === a.category);
+  const i = sibs.findIndex(x => x.id === id);
+  const j = i + dir;
+  if (j < 0 || j >= sibs.length) return;
+  const tmp = sibs[i].sortOrder ?? i, other = sibs[j].sortOrder ?? j;
+  sibs[i].sortOrder = other; sibs[j].sortOrder = tmp;
+  markDirty(); render();
+}
+function deleteChild(id) {
+  if (portfolio.accounts.some(a => a.childId === id && a.status !== 'archived')) { toast('Reassign or archive this child\'s 529 first.'); return; }
+  portfolio.children = portfolio.children.filter(c => c.id !== id);
+  portfolio.glidePaths = portfolio.glidePaths.filter(g => g.childId !== id);
+  markDirty(); render();
+}
+
+function saveAccountFromDialog(acctId) {
+  const name = document.getElementById('f-name').value.trim();
+  if (!name) { toast('Account name is required.'); return; }
+  const category = document.getElementById('f-cat').value;
+  const institution = document.getElementById('f-inst').value.trim();
+  const taxTreatment = document.getElementById('f-tax').value || undefined;
+  const categoryLabel = category === 'Other' ? document.getElementById('f-catlabel').value.trim() : undefined;
+  const childId = category === '529' ? (document.getElementById('f-child').value || undefined) : undefined;
+  if (category === 'Other' && !categoryLabel) { toast('Other needs a category label.'); return; }
+  if (category === '529' && !childId) { toast('Pick a child for the 529 (add one in Accounts first).'); return; }
+  if (acctId) {
+    const a = accountById(acctId);
+    Object.assign(a, { name, category, institution, taxTreatment, categoryLabel, childId });
+  } else {
+    const maxOrder = Math.max(-1, ...portfolio.accounts.filter(a => a.category === category).map(a => a.sortOrder ?? 0));
+    portfolio.accounts.push({ id: uid('acct'), name, institution, category, categoryLabel, taxTreatment, childId, sortOrder: maxOrder + 1, status: 'active' });
+  }
+  markDirty(); closeDialog();
+}
+function saveChildFromDialog() {
+  const label = document.getElementById('f-clabel').value.trim();
+  const year = parseNum(document.getElementById('f-cyear').value);
+  if (!label || !year) { toast('Name and birth year are required.'); return; }
+  portfolio.children.push({ id: uid('child'), label, birthYear: year });
+  markDirty(); closeDialog();
+}
+function saveHoldingFromDialog(acctId) {
+  const ticker = document.getElementById('f-ticker').value.trim();
+  if (!ticker) { toast('Ticker is required.'); return; }
+  const name = document.getElementById('f-hname').value.trim() || undefined;
+  let cls = document.getElementById('f-cls').value;
+  const val = parseNum(document.getElementById('f-val').value);
+  const basis = parseNum(document.getElementById('f-basis').value);
+  if (!cls) cls = classifyTicker(ticker, portfolio.tickerMap);
+  if (!cls) { toast('Unknown ticker — pick an asset class from the dropdown.'); return; }
+  if (document.getElementById('f-cls').value) portfolio.tickerMap[ticker.toUpperCase()] = cls; // remember explicit pick
+  const h = { id: uid('hold'), accountId: acctId, ticker, name, assetClass: cls, status: 'active' };
+  if (basis != null) h.costBasis = basis;
+  portfolio.holdings.push(h);
+  if (ui.checkin) ui.checkin.values[h.id] = { marketValue: val != null ? String(val) : '', costBasis: basis != null ? String(basis) : '' };
+  markDirty(); closeDialog();
+}
+
+function ensureGlide(childId) {
+  let gp = portfolio.glidePaths.find(g => g.childId === childId);
+  if (!gp) { gp = { childId, bands: [], rationale: '' }; portfolio.glidePaths.push(gp); }
+  return gp;
+}
+function saveBandFromDialog(childId, idx) {
+  const from = parseNum(document.getElementById('b-from').value);
+  const to = parseNum(document.getElementById('b-to').value);
+  if (from == null || to == null || to < from) { toast('Enter a valid age range.'); return; }
+  const targets = {};
+  let sum = 0;
+  for (const g of TAXONOMY.groups) { const v = parseNum(document.getElementById('b-' + g.id).value); if (v) { targets[g.id] = v; sum += v; } }
+  if (Math.abs(sum - 100) > 0.5) { toast('Band targets must sum to 100% (now ' + sum + ').'); return; }
+  const gp = ensureGlide(childId);
+  const sorted = gp.bands.slice().sort((a, b) => a.ageFrom - b.ageFrom);
+  if (idx != null && sorted[idx]) { const band = sorted[idx]; band.ageFrom = from; band.ageTo = to; band.targets = targets; }
+  else gp.bands.push({ ageFrom: from, ageTo: to, targets });
+  markDirty(); closeDialog();
+}
+function deleteBand(childId, idx) {
+  const gp = portfolio.glidePaths.find(g => g.childId === childId);
+  if (!gp) return;
+  const sorted = gp.bands.slice().sort((a, b) => a.ageFrom - b.ageFrom);
+  const band = sorted[idx];
+  gp.bands = gp.bands.filter(b => b !== band);
+  markDirty(); render();
+}
+
+function saveGoalDraft() {
+  const d = ui.goalDraft;
+  const targets = {};
+  for (const g of TAXONOMY.groups) if (d.targets[g.id]) targets[g.id] = d.targets[g.id];
+  portfolio.goals.push({ effectiveDate: d.date, targets, rationale: d.rationale.trim() });
+  ui.goalDraft = null; markDirty(); render(); toast('Goal saved to journal');
+}
+
+function handleConfirm() {
+  const d = ui.dialog;
+  if (!d) return;
+  if (d.action === 'start-fresh') { portfolio = emptyPortfolio(); fileHandle = null; dirty = false; ui.view = 'dashboard'; ui.snapDate = null; ui.drill = { level: 'household' }; ui.goalDraft = null; closeDialog(); toast('Started fresh'); }
+  else if (d.action === 'archive-account') { const a = accountById(d.id); if (a) { a.status = 'archived'; activeHoldings(d.id).forEach(h => h.status = 'archived'); } markDirty(); closeDialog(); }
+  else closeDialog();
+}
+
+document.addEventListener('DOMContentLoaded', boot);
+
+/* Expose internals for console testing during development. */
+window.__AAT__ = {
+  TAXONOMY, SEED_MAP, classifyTicker, migrate, emptyPortfolio, uid,
+  allocate, toRows, computeDrift, activeGoal, glideTargets, historySeries,
+  householdHoldings, categoryHoldings, accountHoldings, latestSnapshot,
+  snapshotCSV, loadDemoData, saveFile, openFile,
+  get portfolio() { return portfolio; },
+};
+</script>
