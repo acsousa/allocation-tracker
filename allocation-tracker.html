@@ -718,6 +718,81 @@ function snapshotCSV(snapshot) {
 const HAS_FSA = typeof window !== 'undefined'
   && 'showSaveFilePicker' in window && 'showOpenFilePicker' in window;
 
+let pendingHandle = null; // remembered file awaiting a permission re-grant
+
+/* Remember the file handle so the app can re-open the same file next launch
+   (Chrome/Edge). IndexedDB stores a FileSystemFileHandle natively. */
+const HANDLE_DB = 'aat-handles', HANDLE_STORE = 'h', HANDLE_KEY = 'portfolio';
+function _idb() {
+  return new Promise((res, rej) => {
+    let r; try { r = indexedDB.open(HANDLE_DB, 1); } catch (e) { return rej(e); }
+    r.onupgradeneeded = () => r.result.createObjectStore(HANDLE_STORE);
+    r.onsuccess = () => res(r.result);
+    r.onerror = () => rej(r.error);
+  });
+}
+async function rememberHandle(handle) {
+  if (!handle) return;
+  try {
+    const db = await _idb();
+    await new Promise((res, rej) => {
+      const tx = db.transaction(HANDLE_STORE, 'readwrite');
+      tx.objectStore(HANDLE_STORE).put(handle, HANDLE_KEY);
+      tx.oncomplete = res; tx.onerror = () => rej(tx.error);
+    });
+  } catch (e) { /* non-fatal — handle just won't be remembered */ }
+}
+async function recallHandle() {
+  try {
+    const db = await _idb();
+    return await new Promise(res => {
+      const rq = db.transaction(HANDLE_STORE, 'readonly').objectStore(HANDLE_STORE).get(HANDLE_KEY);
+      rq.onsuccess = () => res(rq.result || null); rq.onerror = () => res(null);
+    });
+  } catch (e) { return null; }
+}
+
+/* On startup, restore the last file automatically where the browser allows. */
+async function tryAutoload() {
+  if (HAS_FSA) {
+    const handle = await recallHandle();
+    if (handle && typeof handle.queryPermission === 'function') {
+      try {
+        const perm = await handle.queryPermission({ mode: 'readwrite' });
+        if (perm === 'granted') {
+          const file = await handle.getFile();
+          portfolio = migrate(JSON.parse(await file.text()));
+          fileHandle = handle; fileName = handle.name || fileName; dirty = false;
+          return { loaded: true };
+        }
+        if (perm === 'prompt') { pendingHandle = handle; return { needsClick: true, name: handle.name }; }
+      } catch (e) { /* stored handle is stale */ }
+    }
+  }
+  // Served over http(s): auto-fetch a sibling my-portfolio.json. Never attempted
+  // under file:// (browsers block it), so the offline guarantee is preserved.
+  if (typeof location !== 'undefined' && /^https?:$/.test(location.protocol)) {
+    try {
+      const resp = await fetch('./my-portfolio.json', { cache: 'no-store' });
+      if (resp.ok) { portfolio = migrate(await resp.json()); dirty = false; fileName = 'my-portfolio.json'; return { loaded: true }; }
+    } catch (e) { /* not present */ }
+  }
+  return { loaded: false };
+}
+
+async function reopenPending() {
+  if (!pendingHandle) return;
+  try {
+    const perm = await pendingHandle.requestPermission({ mode: 'readwrite' });
+    if (perm !== 'granted') { toast('Permission not granted'); return; }
+    const file = await pendingHandle.getFile();
+    portfolio = migrate(JSON.parse(await file.text()));
+    fileHandle = pendingHandle; fileName = pendingHandle.name || fileName; dirty = false;
+    pendingHandle = null; ui.pendingReopen = null;
+    resetViewState(); render(); toast('Loaded · ' + fileName);
+  } catch (e) { toast('Could not open: ' + e.message); }
+}
+
 function serialize() { return JSON.stringify(portfolio, null, 2); }
 
 function triggerDownload(text, name, mime) {
@@ -743,6 +818,7 @@ async function saveFile(forceNew) {
       const w = await fileHandle.createWritable();
       await w.write(text); await w.close();
       dirty = false; updateDirtyIndicator();
+      rememberHandle(fileHandle);
       return { ok: true, via: 'fsa' };
     } catch (e) {
       if (e && e.name === 'AbortError') return { ok: false, aborted: true };
@@ -765,6 +841,7 @@ async function openFile() {
       portfolio = migrate(data);
       fileHandle = handle; fileName = handle.name || fileName;
       dirty = false;
+      rememberHandle(handle);
       return { ok: true };
     } catch (e) {
       if (e && e.name === 'AbortError') return { ok: false, aborted: true };
@@ -1210,8 +1287,10 @@ function emptyStateHTML() {
     <span class="tag tag-outline">Local · offline · your data never leaves this file</span>
     <h1 style="margin:0;">See what you actually own.</h1>
     <p class="text-muted" style="max-width:56ch;">Track true asset allocation across every account, compare it to a goal, and watch it over time. No accounts, no cloud — a single file you keep and can hand to a friend.</p>
+    ${ui.pendingReopen ? `<div style="margin-top:4px;"><button class="btn btn-primary" data-act="reopen-file">Reopen ${esc(ui.pendingReopen)}</button>
+      <div class="text-muted" style="font-size:12px;margin-top:6px;">Your last file — one click to continue where you left off.</div></div>` : ''}
     <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px;">
-      <button class="btn btn-primary" data-act="onboard-start">Start — add your first account</button>
+      <button class="btn ${ui.pendingReopen ? 'btn-secondary' : 'btn-primary'}" data-act="onboard-start">Start — add your first account</button>
       <button class="btn btn-secondary" data-act="load-demo">Load demo data</button>
       <button class="btn btn-secondary" data-act="open">Open a saved file</button>
     </div>
@@ -2089,6 +2168,12 @@ function boot() {
   });
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && ui.dialog) closeDialog(); });
   render();
+  // Auto-restore the last file where the browser permits (Chrome/Edge handle,
+  // or a served sibling my-portfolio.json). Falls back to the one-click reopen.
+  tryAutoload().then(r => {
+    if (r.loaded) { resetViewState(); render(); toast('Loaded · ' + fileName); }
+    else if (r.needsClick) { ui.pendingReopen = r.name; render(); }
+  }).catch(() => {});
 }
 
 function onClick(e) {
@@ -2102,6 +2187,7 @@ function onClick(e) {
     case 'new-checkin': startCheckin(); break;
     case 'load-demo': loadDemoData(); resetViewState(); render(); toast('Demo data loaded'); break;
     case 'onboard-start': openDialog({ type: 'account' }); break;
+    case 'reopen-file': reopenPending(); break;
     case 'drill':
       ui.drill = { level: ds.level, category: ds.category || null, categoryLabel: ds.categorylabel || null, accountId: ds.account || null };
       if (ds.level === 'account') { const ac = accountById(ds.account); ui.drill.category = ac ? ac.category : null; ui.drill.categoryLabel = ac ? (ac.categoryLabel || null) : null; }
