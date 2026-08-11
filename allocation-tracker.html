@@ -1,6 +1,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Asset Allocation Tracker</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20rx='6'%20fill='%231d2d3d'/%3E%3Cg%20transform='rotate(-90%2016%2016)'%20fill='none'%20stroke-width='5'%3E%3Ccircle%20cx='16'%20cy='16'%20r='10'%20stroke='%2394bce3'%20stroke-dasharray='28%2034.8'/%3E%3Ccircle%20cx='16'%20cy='16'%20r='10'%20stroke='%23749dc4'%20stroke-dasharray='16%2046.8'%20stroke-dashoffset='-28'/%3E%3Ccircle%20cx='16'%20cy='16'%20r='10'%20stroke='%23b5d9fd'%20stroke-dasharray='18.8%2044'%20stroke-dashoffset='-44'/%3E%3C/g%3E%3Ccircle%20cx='16'%20cy='16'%20r='3'%20fill='%23f2f2f3'/%3E%3C/svg%3E" />
 <!--
   Asset Allocation Tracker — single-file, offline, zero-network.
   Spec: asset-allocation-tool-spec.md (v1.2). Build: full v1 (M1–M6).
@@ -383,6 +384,11 @@ const SEED_MAP = {
   AOM:'blend', AOK:'blend', VASGX:'blend', VSMGX:'blend', VTWAX:'intl_dev',
 };
 
+/* Extended seed map — generated from S&P 1500 index constituents (size class =
+   index membership) plus a curated ETF/fund/crypto set. ~1,950 entries. The
+   hand seed above wins on overlap; the user tickerMap always wins over both. */
+const SEED_MAP_EXT = {"A":"us_large","AA":"us_mid","AAAU":"commod","AAL":"us_mid","AAMI":"us_small","AAON":"us_mid","AAP":"us_small","AAPL":"us_large","AAT":"us_small","ABBV":"us_large","ABCB":"us_small","ABG":"us_small","ABM":"us_small","ABNB":"us_large","ABR":"us_small","ABT":"us_large","ACA":"us_small","ACAD":"us_small","ACGL":"us_large","ACHC":"us_small","ACI":"us_mid","ACIW":"us_small","ACLS":"us_small","ACM":"us_mid","ACMR":"us_small","ACN":"us_large","ACT":"us_small","ACWI":"intl_dev","ACWX":"intl_dev","ADA":"crypto","ADAM":"us_small","ADBE":"us_large","ADC":"us_mid","ADEA":"us_small","ADI":"us_large","ADIG":"us_small","ADM":"us_large","ADMA":"us_small","ADNT":"us_small","ADP":"us_large","ADSK":"us_large","ADT":"us_small","ADUS":"us_small","AEE":"us_large","AEIS":"us_mid","AEO":"us_small","AEP":"us_large","AES":"us_large","AESI":"us_small","AFG":"us_mid","AFL":"us_large","AGCO":"us_mid","AGG":"us_bond","AGNT":"us_small","AGO":"us_small","AGX":"us_small","AGYS":"us_small","AHCO":"us_small","AHR":"us_mid","AIG":"us_large","AIN":"us_small","AIR":"us_small","AIT":"us_mid","AIZ":"us_large","AJG":"us_large","AKAM":"us_large","AKR":"us_small","ALB":"us_large","ALG":"us_small","ALGM":"us_mid","ALGN":"us_large","ALGT":"us_small","ALHC":"us_small","ALK":"us_mid","ALKS":"us_small","ALL":"us_large","ALLE":"us_large","ALLY":"us_mid","ALRM":"us_small","ALSN":"us_mid","ALTY":"other","ALV":"us_mid","AM":"us_mid","AMAT":"us_large","AMCR":"us_large","AMD":"us_large","AME":"us_large","AMG":"us_mid","AMGN":"us_large","AMH":"us_mid","AMKR":"us_mid","AMN":"us_small","AMP":"us_large","AMPH":"us_small","AMR":"us_small","AMRX":"us_small","AMSF":"us_small","AMT":"reit","AMTM":"us_small","AMZN":"us_large","AN":"us_mid","ANDE":"us_small","ANET":"us_large","ANF":"us_mid","ANGL":"us_bond","ANIP":"us_small","AOA":"blend","AOK":"blend","AOM":"blend","AON":"us_large","AOR":"blend","AORT":"us_small","AOS":"us_large","AOSL":"us_small","APA":"us_large","APAM":"us_small","APD":"us_large","APG":"us_mid","APH":"us_large","APLE":"us_small","APO":"us_large","APOG":"us_small","APP":"us_large","APPF":"us_mid","APTV":"us_large","AR":"us_mid","ARCB":"us_small","ARE":"reit","ARES":"us_large","ARKB":"crypto","ARLO":"us_small","ARMK":"us_mid","AROC":"us_small","ARR":"us_small","ARW":"us_mid","ARWR":"us_mid","ASB":"us_mid","ASH":"us_mid","ASHR":"em","ASO":"us_small","ASTE":"us_small","ASTH":"us_small","ATEN":"us_small","ATI":"us_mid","ATMU":"us_small","ATO":"us_large","ATR":"us_mid","AUB":"us_small","AVA":"us_small","AVAV":"us_mid","AVB":"reit","AVDE":"intl_dev","AVEM":"em","AVES":"us_small","AVGO":"us_large","AVIV":"intl_dev","AVNT":"us_mid","AVT":"us_mid","AVTR":"us_mid","AVUV":"us_small","AVY":"us_large","AWI":"us_small","AWK":"us_large","AWR":"us_small","AX":"us_small","AXON":"us_large","AXP":"us_large","AXTA":"us_mid","AYI":"us_mid","AZO":"us_large","AZTA":"us_small","AZZ":"us_small","BA":"us_large","BAC":"us_large","BAH":"us_mid","BALL":"us_large","BANC":"us_small","BANF":"us_small","BANR":"us_small","BAR":"commod","BAX":"us_large","BBT":"us_small","BBWI":"us_mid","BBY":"us_large","BC":"us_mid","BCC":"us_small","BCHASH":"crypto","BCI":"commod","BCO":"us_mid","BCPC":"us_small","BDC":"us_mid","BDX":"us_large","BEN":"us_large","BF.B":"us_large","BFAM":"us_small","BFH":"us_small","BFS":"us_small","BG":"us_large","BGC":"us_small","BHE":"us_small","BHF":"us_mid","BIIB":"us_large","BIL":"us_bond","BILL":"us_mid","BIO":"us_mid","BITB":"crypto","BITO":"crypto","BITX":"crypto","BIV":"us_bond","BJ":"us_mid","BJRI":"us_small","BKCH":"crypto","BKE":"us_small","BKH":"us_mid","BKLN":"other","BKNG":"us_large","BKR":"us_large","BKU":"us_small","BL":"us_small","BLDR":"us_large","BLFS":"us_small","BLK":"us_large","BLKB":"us_small","BLOK":"crypto","BMI":"us_small","BMRN":"us_mid","BMY":"us_large","BND":"us_bond","BNDX":"us_bond","BNL":"us_small","BNO":"commod","BNY":"us_large","BOH":"us_small","BOND":"us_bond","BOOT":"us_small","BOX":"us_small","BR":"us_large","BRC":"us_small","BRK.B":"us_large","BRKR":"us_mid","BRO":"us_large","BROS":"us_mid","BRRR":"crypto","BRX":"us_mid","BSV":"us_bond","BSX":"us_large","BSY":"us_mid","BTAL":"other","BTC":"crypto","BTCO":"crypto","BTCW":"crypto","BTSG":"us_mid","BTU":"us_small","BURL":"us_mid","BWA":"us_mid","BWX":"us_bond","BWXT":"us_mid","BX":"us_large","BXMT":"us_small","BXP":"reit","BYD":"us_mid","C":"us_large","CACC":"us_small","CACI":"us_mid","CAG":"us_small","CAH":"us_large","CAKE":"us_small","CALM":"us_small","CALX":"us_small","CALY":"us_small","CAR":"us_mid","CARG":"us_small","CARR":"us_large","CART":"us_mid","CASH":"us_small","CASY":"us_large","CAT":"us_large","CATY":"us_small","CAVA":"us_mid","CB":"us_large","CBOE":"us_large","CBRE":"reit","CBRL":"us_small","CBSH":"us_mid","CBT":"us_mid","CBU":"us_small","CC":"us_small","CCI":"reit","CCK":"us_mid","CCL":"us_large","CCOI":"us_small","CCS":"us_small","CD":"cash","CDE":"us_mid","CDNS":"us_large","CDP":"us_mid","CDW":"us_large","CE":"us_small","CEG":"us_large","CELH":"us_mid","CENT":"us_small","CENTA":"us_small","CENX":"us_small","CERT":"us_small","CETH":"crypto","CF":"us_large","CFFN":"us_small","CFG":"us_large","CFR":"us_mid","CG":"us_mid","CGNX":"us_mid","CHCO":"us_small","CHD":"us_large","CHDN":"us_mid","CHE":"us_mid","CHEF":"us_small","CHH":"us_mid","CHRD":"us_mid","CHRW":"us_large","CHTR":"us_large","CHWY":"us_mid","CI":"us_large","CIBR":"us_large","CIEN":"us_large","CINF":"us_large","CL":"us_large","CLF":"us_mid","CLH":"us_mid","CLSK":"us_small","CLX":"us_large","CMC":"us_mid","CMCSA":"us_large","CME":"us_large","CMG":"us_large","CMI":"us_large","CMS":"us_large","CNC":"us_large","CNH":"us_mid","CNK":"us_small","CNM":"us_mid","CNMD":"us_small","CNO":"us_mid","CNP":"us_large","CNR":"us_small","CNS":"us_small","CNX":"us_mid","CNXC":"us_small","CNXN":"us_small","COCO":"us_small","COF":"us_large","COHR":"us_large","COHU":"us_small","COIN":"us_large","COKE":"us_mid","COLB":"us_mid","COLL":"us_small","COLM":"us_mid","COMT":"commod","CON":"us_small","COO":"us_large","COP":"us_large","COR":"us_large","CORN":"commod","CORT":"us_small","COST":"us_large","COTY":"us_small","CPAY":"us_large","CPB":"us_small","CPF":"us_small","CPK":"us_small","CPRI":"us_mid","CPRT":"us_large","CPT":"reit","CR":"us_mid","CRBG":"us_mid","CRC":"us_small","CRGY":"us_small","CRH":"us_large","CRI":"us_small","CRK":"us_small","CRL":"us_large","CRM":"us_large","CROX":"us_mid","CRS":"us_mid","CRSR":"us_small","CRUS":"us_mid","CRVL":"us_small","CRWD":"us_large","CSCO":"us_large","CSGP":"reit","CSL":"us_mid","CSR":"us_small","CSW":"us_small","CSX":"us_large","CTA":"other","CTAS":"us_large","CTRE":"us_mid","CTS":"us_small","CTSH":"us_large","CTVA":"us_large","CUBE":"us_mid","CUBI":"us_small","CURB":"us_small","CUZ":"us_mid","CVBF":"us_small","CVCO":"us_small","CVI":"us_small","CVLT":"us_mid","CVNA":"us_large","CVS":"us_large","CVSA":"us_small","CVX":"us_large","CW":"us_mid","CWEN":"us_small","CWEN.A":"us_small","CWK":"us_small","CWST":"us_small","CWT":"us_small","CXM":"us_small","CXT":"us_mid","CXW":"us_small","CYTK":"us_mid","CZR":"us_small","D":"us_large","DAL":"us_large","DAN":"us_small","DAPP":"crypto","DAR":"us_mid","DASH":"us_large","DAVE":"us_small","DBA":"commod","DBB":"commod","DBC":"commod","DBD":"us_small","DBEF":"intl_dev","DBMF":"other","DBO":"commod","DBP":"commod","DBX":"us_mid","DCH":"us_small","DCI":"us_mid","DCOM":"us_small","DD":"us_large","DDOG":"us_large","DE":"us_large","DEA":"us_small","DECK":"us_large","DEI":"us_small","DELL":"us_large","DFAS":"us_small","DFAX":"intl_dev","DFEM":"em","DFH":"us_small","DFIN":"us_small","DFSV":"us_small","DG":"us_large","DGII":"us_small","DGRO":"us_large","DGRW":"us_large","DGS":"em","DGX":"us_large","DHI":"us_large","DHR":"us_large","DHS":"us_large","DIA":"us_large","DINO":"us_mid","DIOD":"us_small","DIS":"us_large","DIV":"other","DIVO":"other","DJP":"commod","DKS":"us_mid","DLB":"us_mid","DLR":"reit","DLTR":"us_large","DLX":"us_small","DMC":"us_small","DNOW":"us_small","DOC":"reit","DOCN":"us_mid","DOCS":"us_mid","DOCU":"us_mid","DODIX":"us_bond","DOGE":"crypto","DORM":"us_small","DOV":"us_large","DOW":"us_large","DPZ":"us_large","DRH":"us_small","DRI":"us_large","DSMC":"us_total","DT":"us_mid","DTE":"us_large","DTM":"us_mid","DUK":"us_large","DUOL":"us_mid","DV":"us_small","DVA":"us_large","DVN":"us_large","DVY":"us_large","DWX":"intl_dev","DXC":"us_small","DXCM":"us_large","DXPE":"us_small","DY":"us_mid","EAT":"us_small","EBAY":"us_large","EBC":"us_small","EBND":"intl_bond","ECG":"us_small","ECH":"em","ECHO":"us_large","ECL":"us_large","ECPG":"us_small","ED":"us_large","EDIV":"em","EEFT":"us_mid","EEM":"em","EEMV":"em","EFA":"intl_dev","EFAV":"intl_dev","EFC":"us_small","EFG":"intl_dev","EFOR":"us_small","EFV":"intl_dev","EFX":"us_large","EG":"us_large","EGBN":"us_small","EGP":"us_mid","EHC":"us_mid","EIDO":"em","EIG":"us_small","EIX":"us_large","EL":"us_large","ELAN":"us_mid","ELF":"us_mid","ELS":"us_mid","ELV":"us_large","EMB":"us_bond","EME":"us_large","EMN":"us_small","EMQQ":"em","EMR":"us_large","EMXC":"em","ENOV":"us_small","ENPH":"us_small","ENR":"us_small","ENS":"us_mid","ENSG":"us_mid","ENTG":"us_mid","ENVA":"us_small","ENZL":"intl_dev","EOG":"us_large","EPAC":"us_small","EPAM":"us_small","EPC":"us_small","EPHE":"em","EPI":"em","EPP":"intl_dev","EPR":"us_mid","EPRT":"us_small","EQAL":"us_large","EQH":"us_mid","EQIX":"reit","EQR":"reit","EQT":"us_large","ERIE":"us_large","ES":"us_large","ESAB":"us_mid","ESE":"us_small","ESI":"us_small","ESNT":"us_mid","ESS":"reit","ETH":"crypto","ETHA":"crypto","ETHE":"crypto","ETHV":"crypto","ETHW":"crypto","ETN":"us_large","ETR":"us_large","ETSY":"us_small","EVR":"us_mid","EVRG":"us_large","EVTC":"us_small","EW":"us_large","EWA":"intl_dev","EWBC":"us_mid","EWC":"intl_dev","EWD":"intl_dev","EWG":"intl_dev","EWH":"intl_dev","EWI":"intl_dev","EWJ":"intl_dev","EWK":"intl_dev","EWL":"intl_dev","EWM":"intl_dev","EWN":"intl_dev","EWO":"intl_dev","EWP":"intl_dev","EWQ":"intl_dev","EWS":"intl_dev","EWT":"intl_dev","EWU":"intl_dev","EWW":"intl_dev","EWY":"intl_dev","EWZ":"intl_dev","EXC":"us_large","EXE":"us_large","EXEL":"us_mid","EXLS":"us_mid","EXP":"us_mid","EXPD":"us_large","EXPE":"us_large","EXPO":"us_mid","EXR":"reit","EXTR":"us_small","EYE":"us_small","EZA":"em","EZBC":"crypto","EZPW":"us_small","F":"us_large","FA":"us_small","FAF":"us_mid","FALN":"us_bond","FANG":"us_large","FAST":"us_large","FBALX":"blend","FBIN":"us_mid","FBK":"us_small","FBNC":"us_small","FBND":"us_bond","FBP":"us_small","FBRT":"us_small","FBTC":"crypto","FCF":"us_small","FCFS":"us_mid","FCN":"us_mid","FCPT":"us_small","FCX":"us_large","FDEEX":"blend","FDEWX":"blend","FDKLX":"blend","FDL":"us_large","FDLXX":"cash","FDN":"us_large","FDRXX":"cash","FDS":"us_large","FDX":"us_large","FDXF":"us_large","FE":"us_large","FELE":"us_small","FERG":"us_large","FEZ":"intl_dev","FFBC":"us_small","FFFHX":"blend","FFIN":"us_mid","FFIV":"us_large","FFNOX":"blend","FG":"us_small","FHB":"us_small","FHI":"us_mid","FHN":"us_mid","FIBK":"us_small","FICO":"us_large","FIG":"other","FIPFX":"blend","FIS":"us_large","FISV":"us_large","FITB":"us_large","FIVE":"us_mid","FIVN":"us_small","FIX":"us_large","FIZZ":"us_small","FLEX":"us_large","FLG":"us_mid","FLO":"us_small","FLOT":"us_bond","FLR":"us_mid","FLS":"us_mid","FMC":"us_small","FN":"us_mid","FNB":"us_mid","FND":"us_mid","FNDE":"em","FNF":"us_mid","FORM":"us_small","FOUR":"us_mid","FOX":"us_large","FOXA":"us_large","FOXF":"us_small","FPADX":"em","FR":"us_mid","FREL":"reit","FRPT":"us_small","FRT":"reit","FSKAX":"us_total","FSLR":"us_large","FSMDX":"us_mid","FSPSX":"intl_dev","FSS":"us_small","FSSNX":"us_small","FTDR":"us_small","FTEC":"us_large","FTI":"us_mid","FTIHX":"intl_dev","FTNT":"us_large","FTRE":"us_small","FTSL":"other","FTV":"us_large","FUL":"us_small","FULT":"us_small","FUN":"us_small","FVD":"us_large","FXAIX":"us_large","FXI":"em","FXNAX":"us_bond","FZDXX":"cash","FZFXX":"cash","FZILX":"intl_dev","FZIPX":"em","FZROX":"us_total","G":"us_mid","GABXX":"cash","GAP":"us_mid","GATX":"us_mid","GBCI":"us_mid","GBTC":"crypto","GBX":"us_small","GD":"us_large","GDDY":"us_large","GE":"us_large","GEF":"us_mid","GEHC":"us_large","GEN":"us_large","GEO":"us_small","GEV":"us_large","GFF":"us_small","GGG":"us_mid","GHC":"us_mid","GIII":"us_small","GILD":"us_large","GIS":"us_large","GKOS":"us_small","GL":"us_large","GLD":"commod","GLDM":"commod","GLPI":"us_mid","GLTR":"commod","GLW":"us_large","GM":"us_large","GME":"us_mid","GMED":"us_mid","GNL":"us_small","GNRC":"us_large","GNTX":"us_mid","GNW":"us_small","GO":"us_small","GOLF":"us_small","GOOG":"us_large","GOOGL":"us_large","GOVT":"us_bond","GPC":"us_large","GPI":"us_small","GPK":"us_mid","GPN":"us_large","GPOR":"us_small","GRBK":"us_small","GRMN":"us_large","GS":"us_large","GSG":"commod","GSHD":"us_small","GSY":"us_bond","GT":"us_small","GTES":"us_small","GTM":"us_small","GTY":"us_small","GVA":"us_small","GVI":"us_bond","GWRE":"us_mid","GWW":"us_large","GXG":"em","GXO":"us_mid","H":"us_mid","HACK":"us_large","HAE":"us_mid","HAFC":"us_small","HAL":"us_large","HALO":"us_mid","HAS":"us_large","HASI":"us_small","HAYW":"us_small","HBAN":"us_large","HCA":"us_large","HCC":"us_small","HCI":"us_small","HCSG":"us_small","HD":"us_large","HDV":"us_large","HE":"us_small","HEFA":"intl_dev","HFWA":"us_small","HGV":"us_mid","HIG":"us_large","HII":"us_large","HIMS":"us_mid","HIW":"us_small","HL":"us_mid","HLI":"us_mid","HLIT":"us_small","HLNE":"us_mid","HLT":"us_large","HLX":"us_small","HMN":"us_small","HNI":"us_small","HODL":"crypto","HOG":"us_mid","HOMB":"us_mid","HON":"us_large","HONA":"us_large","HOOD":"us_large","HOPE":"us_small","HP":"us_small","HPE":"us_large","HPQ":"us_large","HQY":"us_mid","HR":"us_mid","HRB":"us_mid","HRL":"us_large","HRMY":"us_small","HSIC":"us_large","HST":"reit","HSTM":"us_small","HSY":"us_large","HTH":"us_small","HTLD":"us_small","HTO":"us_small","HUBB":"us_large","HUBG":"us_small","HUM":"us_large","HWC":"us_mid","HWKN":"us_small","HWM":"us_large","HXL":"us_mid","HYEM":"intl_bond","HYG":"us_bond","HYLB":"us_bond","HYSA":"cash","HZO":"us_small","IAGG":"us_bond","IART":"us_small","IAU":"commod","IAUM":"commod","IBIT":"crypto","IBKR":"us_large","IBM":"us_large","IBOC":"us_mid","IBP":"us_small","ICE":"us_large","ICF":"reit","ICHR":"us_small","ICSH":"us_bond","ICUI":"us_small","IDA":"us_mid","IDCC":"us_mid","IDEV":"intl_dev","IDV":"intl_dev","IDXX":"us_large","IEF":"us_bond","IEFA":"intl_dev","IEI":"us_bond","IEMG":"em","IESC":"us_mid","IEUR":"intl_dev","IEV":"intl_dev","IEX":"us_large","IFF":"us_large","IGOV":"us_bond","IGV":"us_large","IIPR":"us_small","IJH":"us_mid","IJJ":"us_mid","IJK":"us_mid","IJR":"us_small","IJS":"us_small","IJT":"us_small","ILMN":"us_mid","INCY":"us_large","INDA":"em","INDB":"us_small","INDS":"reit","INDV":"us_small","INDY":"em","INGR":"us_mid","INSP":"us_small","INSW":"us_small","INTC":"us_large","INTU":"us_large","INVA":"us_small","INVH":"reit","INVX":"us_small","IOO":"intl_dev","IOSP":"us_small","IP":"us_large","IPAR":"us_small","IPGP":"us_mid","IQLT":"intl_dev","IQV":"us_large","IR":"us_large","IRDM":"us_small","IRM":"reit","IRT":"us_mid","ISRG":"us_large","IT":"us_large","ITGR":"us_small","ITOT":"us_total","ITRI":"us_small","ITT":"us_mid","ITW":"us_large","IVOG":"us_mid","IVOO":"us_mid","IVOV":"us_mid","IVT":"us_small","IVV":"us_large","IVZ":"us_large","IWB":"us_large","IWD":"us_large","IWF":"us_large","IWL":"us_large","IWM":"us_small","IWP":"us_mid","IWR":"us_mid","IWS":"us_mid","IWV":"us_total","IXUS":"intl_dev","IYR":"reit","IYW":"us_large","J":"us_large","JAZZ":"us_mid","JBGS":"us_small","JBHT":"us_large","JBL":"us_large","JBLU":"us_small","JBSS":"us_small","JBTM":"us_small","JCI":"us_large","JEF":"us_mid","JEPI":"other","JEPQ":"other","JJSF":"us_small","JKD":"us_large","JKHY":"us_large","JLL":"us_mid","JNJ":"us_large","JNK":"us_bond","JOE":"us_small","JPM":"us_large","JPST":"us_bond","JXN":"us_small","KAI":"us_small","KALU":"us_small","KBH":"us_mid","KBR":"us_mid","KBWD":"other","KBWY":"reit","KD":"us_mid","KDP":"us_large","KEX":"us_mid","KEY":"us_large","KEYS":"us_large","KFY":"us_small","KGS":"us_small","KHC":"us_large","KIM":"reit","KKR":"us_large","KLAC":"us_large","KLIC":"us_small","KMB":"us_large","KMI":"us_large","KMLM":"other","KMPR":"us_small","KMT":"us_small","KMX":"us_small","KN":"us_small","KNF":"us_mid","KNSL":"us_mid","KNTK":"us_small","KNX":"us_mid","KO":"us_large","KOP":"us_small","KR":"us_large","KRC":"us_mid","KRG":"us_mid","KRMN":"us_small","KRYS":"us_mid","KSS":"us_small","KTB":"us_small","KTOS":"us_mid","KVUE":"us_large","KWEB":"em","KWR":"us_small","L":"us_large","LAD":"us_mid","LAMR":"us_mid","LAUR":"us_small","LAZ":"us_small","LBRT":"us_small","LCII":"us_small","LDOS":"us_large","LEA":"us_mid","LECO":"us_mid","LEG":"us_small","LEGR":"crypto","LEMB":"intl_bond","LEN":"us_large","LEU":"us_small","LFST":"us_small","LFUS":"us_mid","LGIH":"us_small","LGND":"us_small","LH":"us_large","LHX":"us_large","LIF":"us_small","LIFEX":"blend","LII":"us_large","LIN":"us_large","LITE":"us_large","LIVN":"us_mid","LKFN":"us_small","LKQ":"us_small","LLY":"us_large","LMAT":"us_small","LMT":"us_large","LNC":"us_small","LNN":"us_small","LNT":"us_large","LNTH":"us_mid","LOPE":"us_mid","LOW":"us_large","LPG":"us_small","LPX":"us_mid","LQD":"us_bond","LQDA":"us_small","LQDT":"us_small","LRCX":"us_large","LRN":"us_small","LSCC":"us_mid","LSTR":"us_mid","LTC":"us_small","LTH":"us_small","LULU":"us_large","LUMN":"us_small","LUV":"us_large","LVS":"us_large","LW":"us_small","LXP":"us_small","LYB":"us_large","LYFT":"us_small","LYV":"us_large","LZ":"us_small","LZB":"us_small","M":"us_mid","MA":"us_large","MAA":"reit","MAC":"us_small","MAN":"us_small","MANH":"us_mid","MAR":"us_large","MARA":"us_small","MAS":"us_large","MAT":"us_mid","MATW":"us_small","MATX":"us_small","MBB":"us_bond","MBC":"us_small","MBGL":"us_small","MBIN":"us_small","MC":"us_small","MCD":"us_large","MCHI":"em","MCHP":"us_large","MCK":"us_large","MCO":"us_large","MCRI":"us_small","MCY":"us_small","MD":"us_small","MDLZ":"us_large","MDT":"us_large","MDU":"us_small","MDY":"us_mid","MDYG":"us_mid","MDYV":"us_mid","MEDP":"us_mid","MET":"us_large","META":"us_large","MFP":"us_small","MGC":"us_large","MGEE":"us_small","MGK":"us_large","MGM":"us_large","MGV":"us_large","MGY":"us_small","MHK":"us_small","MHO":"us_small","MIDD":"us_mid","MINT":"us_bond","MIR":"us_small","MKC":"us_large","MKSI":"us_mid","MKTX":"us_small","MLI":"us_mid","MLKN":"us_small","MLM":"us_large","MM":"cash","MMF":"cash","MMI":"us_small","MMM":"us_large","MMS":"us_mid","MMSI":"us_small","MNA":"other","MNST":"us_large","MO":"us_large","MOG.A":"us_mid","MOH":"us_mid","MORN":"us_mid","MORT":"reit","MOS":"us_large","MP":"us_mid","MPC":"us_large","MPT":"us_small","MPWR":"us_large","MRCY":"us_small","MRK":"us_large","MRNA":"us_large","MRP":"us_small","MRSH":"us_large","MRTN":"us_small","MRVL":"us_large","MS":"us_large","MSA":"us_mid","MSCI":"us_large","MSEX":"us_small","MSFT":"us_large","MSGS":"us_small","MSI":"us_large","MSM":"us_mid","MTB":"us_large","MTCH":"us_small","MTD":"us_large","MTDR":"us_mid","MTG":"us_mid","MTH":"us_small","MTN":"us_mid","MTRN":"us_small","MTSI":"us_mid","MTUM":"us_large","MTUS":"us_small","MTX":"us_small","MTZ":"us_mid","MU":"us_large","MUB":"us_bond","MUR":"us_mid","MUSA":"us_mid","MWA":"us_small","MXL":"us_small","MYRG":"us_small","MZTI":"us_mid","NABL":"us_small","NATL":"us_small","NAVI":"us_small","NBHC":"us_small","NBIX":"us_mid","NBTB":"us_small","NCLH":"us_large","NDAQ":"us_large","NDSN":"us_large","NE":"us_small","NEAR":"us_bond","NEE":"us_large","NEM":"us_large","NEO":"us_small","NEOG":"us_small","NETL":"reit","NEU":"us_mid","NFG":"us_mid","NFLX":"us_large","NGVT":"us_small","NHC":"us_small","NHI":"us_small","NI":"us_large","NIC":"us_small","NJR":"us_mid","NKE":"us_large","NLY":"us_mid","NMIH":"us_small","NNN":"us_mid","NOBL":"us_large","NOC":"us_large","NOG":"us_small","NOV":"us_mid","NOVT":"us_mid","NOW":"us_large","NPK":"us_small","NPO":"us_small","NRG":"us_large","NSC":"us_large","NSIT":"us_small","NSP":"us_small","NSSC":"us_small","NTAP":"us_large","NTCT":"us_small","NTNX":"us_mid","NTRS":"us_large","NTST":"us_small","NTSX":"blend","NUE":"us_large","NUSI":"other","NVDA":"us_large","NVR":"us_large","NVST":"us_mid","NVT":"us_mid","NWBI":"us_small","NWE":"us_mid","NWL":"us_small","NWN":"us_small","NWS":"us_large","NWSA":"us_large","NX":"us_small","NXPI":"us_large","NXRT":"us_small","NXST":"us_mid","NXT":"us_mid","NYT":"us_mid","O":"reit","OC":"us_mid","ODFL":"us_large","OEF":"us_large","OFG":"us_small","OGE":"us_mid","OGN":"us_small","OGS":"us_mid","OHI":"us_mid","OI":"us_small","OII":"us_small","OKE":"us_large","OKTA":"us_mid","OLED":"us_mid","OLLI":"us_mid","OLN":"us_mid","OMC":"us_large","OMCL":"us_small","ON":"us_large","ONB":"us_mid","ONEQ":"us_large","ONTO":"us_mid","OPCH":"us_mid","OPLN":"us_small","ORA":"us_mid","ORCL":"us_large","ORI":"us_mid","ORLY":"us_large","OSIS":"us_small","OSK":"us_mid","OSW":"us_small","OTIS":"us_large","OTTR":"us_small","OUNZ":"commod","OUT":"us_small","OVV":"us_mid","OXY":"us_large","OZK":"us_mid","P":"us_mid","PAG":"us_mid","PAHC":"us_small","PALL":"commod","PANW":"us_large","PARR":"us_small","PATH":"us_mid","PATK":"us_small","PAYC":"us_small","PAYO":"us_small","PAYS":"cash","PAYX":"us_large","PB":"us_mid","PBF":"us_mid","PBH":"us_small","PBI":"us_small","PCAR":"us_large","PCG":"us_large","PCRX":"us_small","PCTY":"us_mid","PCY":"us_bond","PDBC":"commod","PDFS":"us_small","PEB":"us_small","PECO":"us_small","PEG":"us_large","PEGA":"us_mid","PEN":"us_mid","PENG":"us_small","PENN":"us_small","PEP":"us_large","PFBC":"us_small","PFE":"us_large","PFF":"other","PFFD":"other","PFG":"us_large","PFGC":"us_mid","PFS":"us_small","PG":"us_large","PGNY":"us_small","PGR":"us_large","PGX":"other","PH":"us_large","PHIN":"us_small","PHM":"us_large","PI":"us_small","PICB":"intl_bond","PII":"us_mid","PINS":"us_mid","PIPR":"us_small","PJT":"us_small","PK":"us_mid","PKG":"us_large","PLAB":"us_small","PLD":"reit","PLMR":"us_small","PLNT":"us_mid","PLTR":"us_large","PLUS":"us_small","PLXS":"us_small","PM":"us_large","PMT":"us_small","PNC":"us_large","PNFP":"us_mid","PNR":"us_large","PNW":"us_large","PODD":"us_large","PONAX":"us_bond","POOL":"us_small","POR":"us_mid","POST":"us_mid","POWI":"us_small","POWL":"us_small","PPC":"us_mid","PPG":"us_large","PPL":"us_large","PPLI":"us_small","PPLT":"commod","PR":"us_mid","PRDO":"us_small","PRG":"us_small","PRGFX":"blend","PRGO":"us_small","PRGS":"us_small","PRI":"us_mid","PRIM":"us_small","PRKS":"us_small","PRLB":"us_small","PRSU":"us_small","PRU":"us_large","PRVA":"us_small","PRWCX":"blend","PSA":"reit","PSKY":"us_large","PSMT":"us_small","PSN":"us_mid","PSP":"other","PSX":"us_large","PTC":"us_large","PTCT":"us_small","PTEN":"us_small","PTGX":"us_small","PTON":"us_small","PTTRX":"us_bond","PUTW":"other","PVH":"us_mid","PWR":"us_large","PYPL":"us_large","PZZA":"us_small","Q":"us_large","QAI":"other","QCOM":"us_large","QDEL":"us_small","QLYS":"us_mid","QNST":"us_small","QQEW":"us_large","QQQ":"us_large","QQQM":"us_large","QRVO":"us_small","QTWO":"us_small","QUAL":"us_large","QYLD":"other","R":"us_mid","RAL":"us_small","RAMP":"us_small","RBA":"us_mid","RBC":"us_mid","RCL":"us_large","RCUS":"us_small","RDN":"us_small","RDNT":"us_small","RDVY":"us_large","REET":"reit","REG":"reit","REGN":"us_large","RELY":"us_small","REM":"reit","RES":"us_small","REX":"us_small","REXR":"us_mid","REYN":"us_small","REZ":"reit","REZI":"us_small","RF":"us_large","RGA":"us_mid","RGEN":"us_mid","RGLD":"us_mid","RH":"us_mid","RHI":"us_small","RHP":"us_small","RITM":"us_small","RJF":"us_large","RL":"us_large","RLI":"us_mid","RMBS":"us_mid","RMD":"us_large","RNG":"us_small","RNR":"us_mid","RNST":"us_small","ROAD":"us_small","ROCK":"us_small","ROG":"us_small","ROIV":"us_mid","ROK":"us_large","ROKU":"us_mid","ROL":"us_large","ROOF":"reit","ROP":"us_large","ROST":"us_large","RPAR":"blend","RPM":"us_mid","RRC":"us_mid","RRR":"us_small","RRX":"us_mid","RS":"us_mid","RSG":"us_large","RSI":"us_small","RSP":"us_large","RTX":"us_large","RUN":"us_small","RUSHA":"us_small","RVTY":"us_large","RWJ":"us_small","RWO":"reit","RWR":"reit","RWX":"reit","RXO":"us_small","RYAN":"us_mid","RYLD":"other","RYN":"us_mid","SABR":"us_small","SAFE":"us_small","SAFT":"us_small","SAH":"us_small","SAIA":"us_mid","SAIC":"us_mid","SAM":"us_mid","SANM":"us_mid","SARO":"us_mid","SAVINGS":"cash","SBAC":"reit","SBCF":"us_small","SBH":"us_small","SBRA":"us_mid","SBSI":"us_small","SBUX":"us_large","SCHA":"us_small","SCHB":"us_total","SCHD":"us_large","SCHE":"em","SCHF":"intl_dev","SCHG":"us_large","SCHH":"reit","SCHL":"us_small","SCHM":"us_mid","SCHP":"us_bond","SCHV":"us_large","SCHW":"us_large","SCHX":"us_large","SCHZ":"us_bond","SCI":"us_mid","SCL":"us_small","SCSC":"us_small","SDGR":"us_small","SDIV":"other","SDY":"us_large","SEDG":"us_small","SEI":"us_small","SEIC":"us_mid","SEZL":"us_small","SF":"us_mid","SFBS":"us_small","SFM":"us_mid","SFNC":"us_small","SGI":"us_mid","SGOL":"commod","SGOV":"us_bond","SHAK":"us_small","SHC":"us_mid","SHEN":"us_small","SHM":"us_bond","SHO":"us_small","SHOO":"us_small","SHV":"us_bond","SHW":"us_large","SHY":"us_bond","SHYG":"us_bond","SIG":"us_small","SIGI":"us_mid","SIRI":"us_mid","SITM":"us_mid","SIVR":"commod","SJM":"us_large","SJNK":"us_bond","SKT":"us_small","SKY":"us_small","SKYW":"us_small","SKYY":"us_large","SLAB":"us_mid","SLB":"us_large","SLG":"us_small","SLGN":"us_mid","SLM":"us_mid","SLV":"commod","SLVM":"us_small","SLYG":"us_small","SLYV":"us_small","SM":"us_small","SMCI":"us_large","SMG":"us_mid","SMH":"us_large","SMP":"us_small","SMPL":"us_small","SMTC":"us_mid","SN":"us_mid","SNA":"us_large","SNDK":"us_large","SNDR":"us_small","SNEX":"us_small","SNPS":"us_large","SNSXX":"cash","SNVXX":"cash","SNX":"us_mid","SO":"us_large","SOL":"crypto","SOLS":"us_mid","SOLV":"us_large","SON":"us_mid","SONO":"us_small","SOXX":"us_large","SOYB":"commod","SPAB":"us_bond","SPAXX":"cash","SPDW":"intl_dev","SPEM":"em","SPFF":"other","SPG":"reit","SPGI":"us_large","SPHD":"us_large","SPHQ":"us_large","SPHR":"us_small","SPLG":"us_large","SPLV":"us_large","SPNT":"us_small","SPRXX":"cash","SPSC":"us_small","SPXC":"us_mid","SPY":"us_large","SPYG":"us_large","SPYV":"us_large","SR":"us_mid","SRE":"us_large","SRLN":"other","SRPT":"us_small","SRVR":"reit","SSB":"us_mid","SSD":"us_mid","ST":"us_mid","STAA":"us_small","STAG":"us_mid","STBA":"us_small","STC":"us_small","STE":"us_large","STEL":"us_small","STEP":"us_small","STIP":"us_bond","STLD":"us_large","STRA":"us_small","STRL":"us_mid","STT":"us_large","STWD":"us_mid","STX":"us_large","STZ":"us_large","SUB":"us_bond","SUPN":"us_small","SVOL":"other","SW":"us_large","SWAN":"blend","SWISX":"intl_dev","SWK":"us_large","SWKS":"us_large","SWPPX":"us_large","SWTSX":"us_total","SWVXX":"cash","SWX":"us_mid","SWYGX":"blend","SWYJX":"blend","SWYMX":"blend","SXI":"us_small","SXT":"us_small","SYF":"us_large","SYK":"us_large","SYNA":"us_mid","SYY":"us_large","T":"us_large","TALO":"us_small","TAP":"us_large","TBBK":"us_small","TBILL":"cash","TCBI":"us_mid","TDC":"us_small","TDG":"us_large","TDS":"us_small","TDW":"us_small","TDY":"us_large","TECH":"us_large","TEL":"us_large","TER":"us_large","TEX":"us_mid","TFC":"us_large","TFIN":"us_small","TFLO":"us_bond","TFX":"us_small","TGT":"us_large","TGTX":"us_small","THC":"us_mid","THD":"em","THG":"us_mid","THO":"us_mid","THRM":"us_small","TILE":"us_small","TIP":"us_bond","TJX":"us_large","TKO":"us_large","TKR":"us_mid","TLH":"us_bond","TLN":"us_mid","TLT":"us_bond","TMDX":"us_small","TMFC":"us_total","TMO":"us_large","TMUS":"us_large","TNC":"us_small","TNDM":"us_small","TNL":"us_mid","TOL":"us_mid","TOST":"us_mid","TPC":"us_small","TPL":"us_large","TPR":"us_large","TR":"us_small","TREX":"us_mid","TRGP":"us_large","TRIP":"us_small","TRMB":"us_large","TRMK":"us_small","TRN":"us_small","TRNO":"us_small","TROW":"us_large","TRST":"us_small","TRU":"us_mid","TRUP":"us_small","TRV":"us_large","TSCO":"us_large","TSLA":"us_large","TSN":"us_large","TT":"us_large","TTC":"us_mid","TTD":"us_large","TTEK":"us_mid","TTMI":"us_mid","TTWO":"us_large","TUR":"em","TWLO":"us_mid","TXN":"us_large","TXNM":"us_mid","TXRH":"us_mid","TXT":"us_large","TYL":"us_large","UA":"us_small","UAA":"us_small","UAL":"us_large","UBER":"us_large","UBSI":"us_mid","UCB":"us_small","UCTT":"us_small","UDR":"reit","UE":"us_small","UFCS":"us_small","UFPI":"us_mid","UFPT":"us_small","UGA":"commod","UGI":"us_mid","UHS":"us_large","ULS":"us_mid","ULTA":"us_large","UMBF":"us_mid","UNF":"us_small","UNFI":"us_small","UNG":"commod","UNH":"us_large","UNIT":"us_small","UNM":"us_mid","UNP":"us_large","UPBD":"us_small","UPS":"us_large","UPWK":"us_small","URBN":"us_small","URI":"us_large","USB":"us_large","USFD":"us_mid","USFR":"us_bond","USHY":"us_bond","USLM":"us_small","USMV":"us_large","USO":"commod","USPH":"us_small","USRT":"reit","UTHR":"us_mid","UTI":"us_small","UTL":"us_small","UVV":"us_small","V":"us_large","VAC":"us_small","VAL":"us_mid","VASGX":"blend","VB":"us_small","VBIAX":"blend","VBIRX":"us_bond","VBK":"us_small","VBR":"us_small","VBTLX":"us_bond","VC":"us_mid","VCEL":"us_small","VCIT":"us_bond","VCSH":"us_bond","VCTR":"us_small","VCYT":"us_small","VEA":"intl_dev","VECO":"us_small","VEEV":"us_large","VEMAX":"em","VEU":"intl_dev","VEURX":"intl_dev","VFC":"us_mid","VFFVX":"blend","VFIAX":"us_large","VFICX":"us_bond","VFORX":"blend","VFSTX":"us_bond","VGIT":"us_bond","VGK":"intl_dev","VGLT":"us_bond","VGNT":"us_small","VGSH":"us_bond","VGSLX":"reit","VGSTX":"blend","VGT":"us_large","VGVT":"us_bond","VIAV":"us_mid","VICI":"reit","VICR":"us_mid","VIG":"us_large","VIMAX":"us_mid","VIOG":"us_small","VIOO":"us_small","VIOV":"us_small","VIR":"us_small","VIRT":"us_small","VLO":"us_large","VLTO":"us_large","VLUE":"us_large","VLXVX":"blend","VLY":"us_mid","VMBS":"us_bond","VMC":"us_large","VMFXX":"cash","VMI":"us_mid","VMOT":"us_mid","VMRXX":"cash","VNLA":"us_bond","VNO":"us_mid","VNOM":"us_mid","VNQ":"reit","VNQI":"reit","VNT":"us_mid","VO":"us_mid","VOE":"us_mid","VONE":"us_large","VONG":"us_large","VONV":"us_large","VOO":"us_large","VOT":"us_mid","VOYA":"us_mid","VPGDX":"blend","VPL":"intl_dev","VPMAX":"blend","VRP":"other","VRRM":"us_small","VRSK":"us_large","VRSN":"us_large","VRT":"us_large","VRTS":"us_small","VRTX":"us_large","VSAT":"us_small","VSEC":"us_small","VSGX":"intl_dev","VSH":"us_small","VSMAX":"us_small","VSMGX":"blend","VSNT":"us_small","VST":"us_large","VSTS":"us_small","VSXY":"us_small","VT":"intl_dev","VTABX":"intl_bond","VTEB":"us_bond","VTHRX":"blend","VTI":"us_total","VTIAX":"intl_dev","VTINX":"blend","VTIP":"us_bond","VTIVX":"blend","VTOL":"us_small","VTR":"reit","VTRS":"us_large","VTSAX":"us_total","VTTSX":"blend","VTTVX":"blend","VTV":"us_large","VTWAX":"us_total","VTWNX":"blend","VTWO":"us_small","VTXVX":"blend","VUG":"us_large","VUSB":"cash","VUSXX":"cash","VV":"us_large","VVV":"us_mid","VVX":"us_small","VWEHX":"us_bond","VWELX":"blend","VWENX":"blend","VWINX":"blend","VWIUX":"us_bond","VWO":"em","VWOB":"us_bond","VXUS":"intl_dev","VYM":"us_large","VYMI":"intl_dev","VYX":"us_small","VZ":"us_large","WAB":"us_large","WABC":"us_small","WAFD":"us_small","WAL":"us_mid","WAT":"us_large","WAY":"us_small","WBD":"us_large","WBS":"us_mid","WCC":"us_mid","WD":"us_small","WDAY":"us_large","WDC":"us_large","WDFC":"us_small","WEAT":"commod","WEC":"us_large","WELL":"reit","WEN":"us_small","WERN":"us_small","WEX":"us_mid","WFC":"us_large","WFRD":"us_mid","WGO":"us_small","WH":"us_mid","WHD":"us_small","WHR":"us_mid","WINA":"us_small","WING":"us_mid","WKC":"us_small","WLK":"us_mid","WLY":"us_small","WM":"us_large","WMB":"us_large","WMG":"us_mid","WMS":"us_mid","WMT":"us_large","WOR":"us_small","WPC":"us_mid","WRB":"us_large","WRBY":"us_small","WRLD":"us_small","WS":"us_small","WSBC":"us_small","WSC":"us_small","WSFS":"us_small","WSM":"us_large","WSO":"us_mid","WST":"us_large","WT":"us_small","WTFC":"us_mid","WTMF":"other","WTRG":"us_mid","WTS":"us_mid","WTW":"us_large","WU":"us_small","WWD":"us_mid","WWW":"us_small","WY":"reit","WYNN":"us_large","XEL":"us_large","XHR":"us_small","XLK":"us_large","XLRE":"reit","XMMO":"us_mid","XNCR":"us_small","XOM":"us_large","XPEL":"us_small","XPO":"us_mid","XRAY":"us_mid","XRP":"crypto","XSMO":"us_small","XSVM":"us_small","XYL":"us_large","XYLD":"other","XYZ":"us_large","YELP":"us_small","YETI":"us_mid","YOU":"us_small","YUM":"us_large","ZBH":"us_large","ZBRA":"us_large","ZD":"us_small","ZION":"us_mid","ZTS":"us_large","ZWS":"us_small"};
+
 /* ---------------------------------------------------------------
    SCHEMA + MIGRATION (spec §10)
    --------------------------------------------------------------- */
@@ -443,6 +449,7 @@ function classifyTicker(ticker, tickerMap) {
   if (!key) return null;
   if (tickerMap && Object.prototype.hasOwnProperty.call(tickerMap, key)) return tickerMap[key];
   if (Object.prototype.hasOwnProperty.call(SEED_MAP, key)) return SEED_MAP[key];
+  if (Object.prototype.hasOwnProperty.call(SEED_MAP_EXT, key)) return SEED_MAP_EXT[key];
   return null; // unknown → caller prompts with 14-class picker
 }
 
@@ -513,10 +520,13 @@ function allocate(holdings, snapshot) {
     if (!v) continue;
     const mv = Number(v.marketValue) || 0;
     if (mv === 0) continue;
-    const cls = h.assetClass || 'other';
-    const grp = rollupOf(cls);
-    detail[cls] = (detail[cls] || 0) + mv;
-    group[grp] = (group[grp] || 0) + mv;
+    // Look-through: if the holding declares a composition, split its value
+    // across the real classes (e.g. a target-date fund into stocks/bonds/intl).
+    const comp = compositionOf(h);
+    for (const [cls, part] of splitValue(mv, comp, h.assetClass)) {
+      detail[cls] = (detail[cls] || 0) + part;
+      group[rollupOf(cls)] = (group[rollupOf(cls)] || 0) + part;
+    }
     total += mv;
     const cb = (v.costBasis != null ? Number(v.costBasis)
              : (h.costBasis != null ? Number(h.costBasis) : null));
@@ -524,9 +534,24 @@ function allocate(holdings, snapshot) {
       holding: h, marketValue: mv, costBasis: cb,
       gain: cb != null ? mv - cb : null,
       gainPct: (cb != null && cb !== 0) ? (mv - cb) / cb : null,
+      composed: !!comp,
     });
   }
   return { detail, group, total, byHolding };
+}
+
+/* A holding's composition map {classId: pct} if it has a valid one, else null. */
+function compositionOf(h) {
+  if (!h.composition) return null;
+  const keys = Object.keys(h.composition).filter(k => Number(h.composition[k]) > 0);
+  return keys.length ? h.composition : null;
+}
+/* Yield [classId, dollarPart] pairs for a holding's value, honoring composition. */
+function splitValue(mv, comp, primaryClass) {
+  if (!comp) return [[primaryClass || 'other', mv]];
+  const entries = Object.entries(comp).filter(([, p]) => Number(p) > 0);
+  const sum = entries.reduce((s, [, p]) => s + Number(p), 0) || 1;
+  return entries.map(([cls, p]) => [cls, mv * (Number(p) / sum)]);
 }
 
 /* Convert a {id:value} map + total into sorted [{id,label,color,value,pct}]. */
@@ -556,6 +581,13 @@ function householdHoldings() {
   return holdingsWhereAccount(a => a.status !== 'archived' && a.category !== '529')
     .filter(h => h.status !== 'archived');
 }
+function categoryHoldingsLabeled(category, label) {
+  if (category === 'Other' && label) {
+    return holdingsWhereAccount(a => a.status !== 'archived' && a.category === 'Other' && (a.categoryLabel || 'Other') === label)
+      .filter(h => h.status !== 'archived');
+  }
+  return categoryHoldings(category);
+}
 function categoryHoldings(category) {
   return holdingsWhereAccount(a => a.status !== 'archived' && a.category === category)
     .filter(h => h.status !== 'archived');
@@ -571,6 +603,26 @@ function activeGoal(asOfDate) {
     .sort((a, b) => a.effectiveDate.localeCompare(b.effectiveDate));
   return eligible.length ? eligible[eligible.length - 1] : null;
 }
+
+/* Goals may be stored at detail (14-class) or legacy rollup (6-group) level. */
+function goalIsDetail(goal) {
+  return !!(goal && goal.targets && Object.keys(goal.targets).some(k => DETAIL_BY_ID[k]));
+}
+/* Group-level targets: sum detail targets into their rollup groups (or pass a
+   legacy rollup goal through unchanged). Always available. */
+function goalGroupTargets(goal) {
+  if (!goal) return null;
+  if (!goalIsDetail(goal)) return goal.targets;
+  const g = {};
+  for (const [cls, pct] of Object.entries(goal.targets)) {
+    const grp = rollupOf(cls);
+    g[grp] = (g[grp] || 0) + Number(pct);
+  }
+  return g;
+}
+/* Detail-level targets: only a detail goal exposes these (a rollup goal can't
+   be split into 14 classes unambiguously). */
+function goalDetailTargets(goal) { return goalIsDetail(goal) ? goal.targets : null; }
 
 /*
   Drift = actual% - target%. Positive = overweight.
@@ -802,14 +854,16 @@ function loadDemoData() {
   });
   p.snapshots.push(snap('2025-08-15', 0.86), snap('2025-11-15', 0.92), snap('2026-02-15', 0.97), snap('2026-05-15', 1.0));
 
+  // 14-class household targets (sum 100). Rollup: stocks 70 / bonds 15 / real 5 / crypto 3 / cash 7.
   p.goals.push({
     effectiveDate: '2025-01-01',
-    targets: { stocks: 70, bonds: 15, real_assets: 5, crypto: 3, cash: 7 },
+    targets: { us_large: 35, us_mid: 8, us_small: 5, us_total: 5, intl_dev: 12, em: 5, us_bond: 13, intl_bond: 2, reit: 4, commod: 1, crypto: 3, cash: 7 },
     rationale: 'Baseline growth-tilted household target for a long horizon.',
   });
+  // Rollup: stocks 65 / bonds 18 / real 5 / crypto 5 / cash 7.
   p.goals.push({
     effectiveDate: '2026-02-01',
-    targets: { stocks: 65, bonds: 18, real_assets: 5, crypto: 5, cash: 7 },
+    targets: { us_large: 32, us_mid: 7, us_small: 5, us_total: 5, intl_dev: 11, em: 5, us_bond: 15, intl_bond: 3, reit: 4, commod: 1, crypto: 5, cash: 7 },
     rationale: 'Trimmed equities 5% into bonds as we near the home-fund milestone; nudged crypto ceiling up slightly.',
   });
 
@@ -865,6 +919,12 @@ function parseNum(v) {
 }
 function fmtMoney(n)  { return '$' + Math.round(Number(n) || 0).toLocaleString('en-US'); }
 function fmtMoneySigned(n) { const v = Math.round(Number(n) || 0); return (v >= 0 ? '+' : '−') + '$' + Math.abs(v).toLocaleString('en-US'); }
+/* Two-decimal, comma-grouped variants (used in the check-in view). */
+const _2dp = { minimumFractionDigits: 2, maximumFractionDigits: 2 };
+function fmtNum2(n) { return (Number(n) || 0).toLocaleString('en-US', _2dp); }
+function fmtMoney2(n) { return '$' + fmtNum2(n); }
+function fmtMoneySigned2(n) { const v = Number(n) || 0; return (v >= 0 ? '+' : '−') + '$' + Math.abs(v).toLocaleString('en-US', _2dp); }
+function fmtEditNum(v) { const n = parseNum(v); return n == null ? '' : fmtNum2(n); }
 function fmtPct(n, dp) { return (Number(n) || 0).toFixed(dp == null ? 1 : dp) + '%'; }
 function fmtPctSigned(n) { const v = Number(n) || 0; return (v > 0 ? '+' : v < 0 ? '−' : '±') + Math.abs(v).toFixed(1) + '%'; }
 function accountsSorted(pred) {
@@ -873,6 +933,30 @@ function accountsSorted(pred) {
     .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
 }
 function grandTotal(snap) { return allocate(portfolio.holdings.filter(h => h.status !== 'archived'), snap).total; }
+
+/* Distinct custom "Other" category labels currently in use. */
+function otherLabels() {
+  const set = [];
+  for (const a of accountsSorted(a => a.category === 'Other')) {
+    const k = a.categoryLabel || 'Other';
+    if (!set.includes(k)) set.push(k);
+  }
+  return set;
+}
+/* Ordered display groups for headers/cards: Retirement, 529, Non-Retirement,
+   then one group per distinct custom Other label. */
+function accountGroups() {
+  const out = [];
+  for (const cat of ['Retirement', '529', 'Non-Retirement']) {
+    const accts = accountsSorted(a => a.category === cat);
+    if (accts.length) out.push({ key: cat, label: cat, category: cat, accounts: accts });
+  }
+  for (const label of otherLabels()) {
+    out.push({ key: 'Other:' + label, label, category: 'Other', categoryLabel: label,
+      accounts: accountsSorted(a => a.category === 'Other' && (a.categoryLabel || 'Other') === label) });
+  }
+  return out;
+}
 
 /* Current snapshot given ui.snapDate (fallback latest). */
 function currentSnapshot() {
@@ -1050,6 +1134,23 @@ function pctStackSVG(series) {
 
 function corners() { return '<i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>'; }
 
+/* Brand mark — a segmented allocation ring (echoes the concentric donut). */
+function logoSVG(size) {
+  size = size || 26;
+  const segs = [
+    ['var(--color-accent-900)', 30, 0],
+    ['var(--color-accent-700)', 18, -30],
+    ['var(--color-accent-500)', 12, -48],
+    ['var(--color-accent-300)', 9.1, -60],
+  ];
+  const ring = segs.map(([c, len, off]) =>
+    `<circle cx="16" cy="16" r="11" stroke="${c}" stroke-dasharray="${len} ${(69.1 - len).toFixed(1)}" stroke-dashoffset="${off}"></circle>`).join('');
+  return `<svg viewBox="0 0 32 32" width="${size}" height="${size}" aria-hidden="true" style="flex:none;display:block;">
+    <g transform="rotate(-90 16 16)" fill="none" stroke-width="5">${ring}</g>
+    <circle cx="16" cy="16" r="3.4" fill="var(--color-accent-700)"></circle>
+  </svg>`;
+}
+
 /* ===============================================================
    RENDER ROUTER + SHELL
    =============================================================== */
@@ -1091,7 +1192,7 @@ function navHTML() {
   const saveCls = dirty ? 'btn btn-sm save-dirty' : 'btn btn-sm btn-secondary';
   const savedNote = dirty ? 'unsaved changes' : (HAS_FSA && fileHandle ? esc(fileName) : esc(fileName));
   return `<div class="nav no-print">
-    <span class="nav-brand">Allocation Tracker</span>
+    <span class="nav-brand" style="display:flex;align-items:center;gap:9px;">${logoSVG(24)}Allocation Tracker</span>
     <div style="display:flex;gap:20px;align-items:center;margin-right:auto;margin-left:24px;">${links}</div>
     <div style="display:flex;align-items:center;gap:10px;">
       <span class="text-muted" style="font-size:12px;">${savedNote}</span>
@@ -1103,8 +1204,9 @@ function navHTML() {
 }
 
 function emptyStateHTML() {
-  return `<div class="nav no-print"><span class="nav-brand">Allocation Tracker</span></div>
+  return `<div class="nav no-print"><span class="nav-brand" style="display:flex;align-items:center;gap:9px;">${logoSVG(24)}Allocation Tracker</span></div>
   <div class="empty">
+    ${logoSVG(64)}
     <span class="tag tag-outline">Local · offline · your data never leaves this file</span>
     <h1 style="margin:0;">See what you actually own.</h1>
     <p class="text-muted" style="max-width:56ch;">Track true asset allocation across every account, compare it to a goal, and watch it over time. No accounts, no cloud — a single file you keep and can hand to a friend.</p>
@@ -1130,7 +1232,8 @@ function renderDashboard() {
 
   if (drill.level === 'household') { holdings = householdHoldings(); scopeLabel = 'Household'; }
   else if (drill.level === 'category') {
-    holdings = categoryHoldings(drill.category); scopeLabel = drill.category;
+    holdings = categoryHoldingsLabeled(drill.category, drill.categoryLabel);
+    scopeLabel = drill.categoryLabel || drill.category;
   } else {
     holdings = accountHoldings(drill.accountId);
     const acct = accountById(drill.accountId); scopeLabel = acct ? acct.name : 'Account';
@@ -1171,13 +1274,10 @@ function renderDashboard() {
 }
 
 function rollupTargets(goal, level) {
-  // Goals are stored at rollup level; if viewing detail, we still compare
-  // actual-detail against the rollup goal by mapping each detail's group %.
+  // A 14-class goal compares directly at detail level and sums to groups at
+  // rollup level. A legacy rollup goal only supports the rollup view.
   if (!goal) return null;
-  if (level === 'group') return goal.targets;
-  // detail view: spread each group target is not meaningful → return null so
-  // detail view shows actual only, no drift bars (avoids fabricated targets).
-  return null;
+  return level === 'group' ? goalGroupTargets(goal) : goalDetailTargets(goal);
 }
 
 function dashToolbarHTML(snap) {
@@ -1189,10 +1289,11 @@ function dashToolbarHTML(snap) {
   if (d.level === 'household') {
     crumb = `<span>Household</span><span class="sep">›</span><span class="text-muted">Category</span><span class="sep">›</span><span class="text-muted">Account</span>`;
   } else if (d.level === 'category') {
-    crumb += `<span class="sep">›</span><span>${esc(d.category)}</span><span class="sep">›</span><span class="text-muted">Account</span>`;
+    crumb += `<span class="sep">›</span><span>${esc(d.categoryLabel || d.category)}</span><span class="sep">›</span><span class="text-muted">Account</span>`;
   } else {
     const acct = accountById(d.accountId);
-    crumb += `<span class="sep">›</span><a data-act="drill" data-level="category" data-category="${esc(acct ? acct.category : '')}">${esc(acct ? acct.category : '')}</a><span class="sep">›</span><span>${esc(acct ? acct.name : '')}</span>`;
+    const catLbl = acct ? (acct.categoryLabel || acct.category) : '';
+    crumb += `<span class="sep">›</span><a data-act="drill" data-level="category" data-category="${esc(acct ? acct.category : '')}" data-categorylabel="${esc(acct ? (acct.categoryLabel || '') : '')}">${esc(catLbl)}</a><span class="sep">›</span><span>${esc(acct ? acct.name : '')}</span>`;
   }
   return `<div class="toolbar no-print">
     <div class="crumb">${crumb}</div>
@@ -1218,7 +1319,8 @@ function dashKpiHTML(snap, alloc, goal, band, breachCount) {
   }
   const withBasis = alloc.byHolding.filter(h => h.gain != null);
   const totalGain = withBasis.reduce((s, h) => s + h.gain, 0);
-  const goalStr = goal ? Object.entries(goal.targets).map(([, v]) => v).join('/') : '—';
+  const gg = goal ? goalGroupTargets(goal) : null;
+  const goalStr = gg ? TAXONOMY.groups.filter(x => gg[x.id]).map(x => Math.round(gg[x.id])).join('/') : '—';
   return `<div class="grid-kpi">
     <div class="kpi">
       <div class="kicker">${esc(drillScopeLabel())} total</div>
@@ -1246,7 +1348,7 @@ function dashKpiHTML(snap, alloc, goal, band, breachCount) {
 function drillScopeLabel() {
   const d = ui.drill;
   if (d.level === 'household') return 'Household';
-  if (d.level === 'category') return d.category;
+  if (d.level === 'category') return d.categoryLabel || d.category;
   const a = accountById(d.accountId); return a ? a.name : 'Account';
 }
 
@@ -1312,31 +1414,35 @@ function dashCategoriesHTML(snap) {
   if (ui.drill.level !== 'household') return '';
   const gt = grandTotal(snap);
   const cards = [];
-  for (const cat of CATEGORY_ORDER) {
+  const plainCatCard = (cat) => {
     const accts = accountsSorted(a => a.category === cat);
-    if (cat === '529') {
-      // one card per child that has a 529 account
-      for (const acct of accts) {
-        const child = childById(acct.childId);
-        const a = allocate(accountHoldings(acct.id), snap);
-        const g = glideTargets(acct.childId, snap.date);
-        const share = gt > 0 ? (a.total / gt) * 100 : 0;
-        const gr = toRows(a.group, a.total, 'group');
-        let meta = 'age ' + (g ? g.age : '?');
-        if (g && g.targets) {
-          const gd = computeDrift(gr, a.total, g.targets, 999).filter(x => x.targetPct > 0);
-          meta = gd.map(x => `${x.label} ${x.actualPct.toFixed(0)}/${x.targetPct}`).slice(0, 2).join(' · ');
-        }
-        cards.push(catCardHTML(`529 · ${child ? child.label : ''} (${g ? g.age : '?'})`, acct.name, a.total, share, meta, { level: 'account', accountId: acct.id }));
-      }
-      continue;
-    }
-    if (!accts.length) continue;
-    const holdings = accts.flatMap(a => accountHoldings(a.id));
-    const a = allocate(holdings, snap);
-    if (a.total === 0 && !accts.length) continue;
+    if (!accts.length) return;
+    const a = allocate(accts.flatMap(x => accountHoldings(x.id)), snap);
     const share = gt > 0 ? (a.total / gt) * 100 : 0;
     cards.push(catCardHTML('Category', cat, a.total, share, `${accts.length} account${accts.length > 1 ? 's' : ''}`, { level: 'category', category: cat }));
+  };
+  plainCatCard('Retirement');
+  // 529 — one card per child
+  for (const acct of accountsSorted(a => a.category === '529')) {
+    const child = childById(acct.childId);
+    const a = allocate(accountHoldings(acct.id), snap);
+    const g = glideTargets(acct.childId, snap.date);
+    const share = gt > 0 ? (a.total / gt) * 100 : 0;
+    const gr = toRows(a.group, a.total, 'group');
+    let meta = 'age ' + (g ? g.age : '?');
+    if (g && g.targets) {
+      const gd = computeDrift(gr, a.total, g.targets, 999).filter(x => x.targetPct > 0);
+      meta = gd.map(x => `${x.label} ${x.actualPct.toFixed(0)}/${x.targetPct}`).slice(0, 2).join(' · ');
+    }
+    cards.push(catCardHTML(`529 · ${child ? child.label : ''} (${g ? g.age : '?'})`, acct.name, a.total, share, meta, { level: 'account', accountId: acct.id }));
+  }
+  plainCatCard('Non-Retirement');
+  // Other — one card per custom category label
+  for (const label of otherLabels()) {
+    const accts = accountsSorted(a => a.category === 'Other' && (a.categoryLabel || 'Other') === label);
+    const a = allocate(accts.flatMap(x => accountHoldings(x.id)), snap);
+    const share = gt > 0 ? (a.total / gt) * 100 : 0;
+    cards.push(catCardHTML('Other', label, a.total, share, `${accts.length} account${accts.length > 1 ? 's' : ''}`, { level: 'category', category: 'Other', categoryLabel: label }));
   }
   if (!cards.length) return '';
   return `<div class="panel">
@@ -1348,7 +1454,7 @@ function dashCategoriesHTML(snap) {
 function catCardHTML(kicker, name, value, share, meta, drillTarget) {
   const dattr = drillTarget.level === 'account'
     ? `data-act="drill" data-level="account" data-account="${esc(drillTarget.accountId)}"`
-    : `data-act="drill" data-level="category" data-category="${esc(drillTarget.category)}"`;
+    : `data-act="drill" data-level="category" data-category="${esc(drillTarget.category)}" data-categorylabel="${esc(drillTarget.categoryLabel || '')}"`;
   return `<div class="card blueprint" style="cursor:pointer;gap:6px;" ${dattr}>${corners()}
     <span class="card-kicker">${esc(kicker)}</span>
     <span class="card-title">${esc(name)}</span>
@@ -1435,60 +1541,56 @@ function checkinSanityHTML(total) {
   const nw = parseNum(ui.checkinNetWorth);
   if (nw == null || nw <= 0) return '<span class="text-muted" style="font-size:12px;">Enter your net-worth number to sanity-check.</span>';
   const d = total - nw, pct = (d / nw) * 100, within = Math.abs(pct) <= 2;
-  return `<span class="tag ${within ? 'tag-ok' : 'tag-warn'}">Off by ${fmtMoney(Math.abs(d))} · ${Math.abs(pct).toFixed(2)}% — ${within ? 'within tolerance' : 'check entries'}</span>`;
+  return `<span class="tag ${within ? 'tag-ok' : 'tag-warn'}">Off by ${fmtMoney2(Math.abs(d))} · ${Math.abs(pct).toFixed(2)}% — ${within ? 'within tolerance' : 'check entries'}</span>`;
 }
 /* Live-update the sanity footer without a full re-render (keeps input focus). */
 function updateCheckinTotals() {
   if (!ui.checkin) return;
   const total = checkinTotal();
-  const tEl = document.getElementById('ci-total'); if (tEl) tEl.textContent = fmtMoney(total);
+  const tEl = document.getElementById('ci-total'); if (tEl) tEl.textContent = fmtMoney2(total);
   const sEl = document.getElementById('ci-sanity'); if (sEl) sEl.innerHTML = checkinSanityHTML(total);
 }
 
-function renderCheckin() {
-  ensureCheckinDraft();
-  const ci = ui.checkin;
-  const baseVals = ci.baseDate ? valueIndex(snapshotByDate(ci.baseDate)) : {};
-  const accts = accountsSorted();
-
-  const acctBlocks = accts.map(acct => {
-    const open = !!ui.checkinOpen[acct.id];
-    const holds = activeHoldings(acct.id);
-    let acctTotal = 0, baseTotal = 0;
-    for (const h of holds) {
-      const mv = parseNum((ci.values[h.id] || {}).marketValue) || 0; acctTotal += mv;
-      const bv = baseVals[h.id] ? Number(baseVals[h.id].marketValue) : 0; baseTotal += bv;
-    }
-    const delta = acctTotal - baseTotal;
-    const head = `<div style="display:flex;align-items:center;gap:12px;padding:12px 20px;${open ? 'background:color-mix(in srgb, var(--color-text) 4%, transparent);' : ''}cursor:pointer;" data-act="ci-toggle" data-account="${esc(acct.id)}">
+/* One account's collapsible block in the check-in. */
+function checkinAccountBlock(acct, ci, baseVals) {
+  const open = !!ui.checkinOpen[acct.id];
+  const holds = activeHoldings(acct.id);
+  let acctTotal = 0, baseTotal = 0;
+  for (const h of holds) {
+    const mv = parseNum((ci.values[h.id] || {}).marketValue) || 0; acctTotal += mv;
+    const bv = baseVals[h.id] ? Number(baseVals[h.id].marketValue) : 0; baseTotal += bv;
+  }
+  const delta = acctTotal - baseTotal;
+  const head = `<div style="display:flex;align-items:center;gap:12px;padding:12px 20px;${open ? 'background:color-mix(in srgb, var(--color-text) 4%, transparent);' : ''}cursor:pointer;" data-act="ci-toggle" data-account="${esc(acct.id)}">
       <span class="text-muted" style="font-size:14px;width:12px;">${open ? '–' : '+'}</span>
       <span style="font-family:var(--font-heading);font-size:18px;">${esc(acct.name)}</span>
-      <span class="tag tag-accent">${esc(acct.categoryLabel || acct.category)}</span>
+      ${acct.institution ? `<span class="text-muted" style="font-size:13px;">${esc(acct.institution)}</span>` : ''}
       ${acct.taxTreatment ? `<span class="tag tag-outline">${esc(acct.taxTreatment)}</span>` : ''}
-      <span class="text-muted tnum" style="font-size:12px;margin-left:auto;">${fmtMoney(acctTotal)} ${baseTotal ? `<span style="color:var(--color-accent-700);">${fmtMoneySigned(delta)}</span>` : ''}</span>
+      <button class="btn btn-ghost btn-sm" title="Edit account" data-act="edit-account" data-account="${esc(acct.id)}">edit</button>
+      <span class="text-muted tnum" style="font-size:12px;margin-left:auto;">${fmtMoney2(acctTotal)} ${baseTotal ? `<span style="color:var(--color-accent-700);">${fmtMoneySigned2(delta)}</span>` : ''}</span>
     </div>`;
-    if (!open) return `<div style="border-bottom:1px solid var(--color-divider);">${head}</div>`;
+  if (!open) return `<div style="border-bottom:1px solid var(--color-divider);">${head}</div>`;
 
-    const rows = holds.map(h => {
-      const v = ci.values[h.id] || {};
-      const prev = baseVals[h.id] ? fmtMoney(baseVals[h.id].marketValue) : '—';
-      const mv = parseNum(v.marketValue), cb = parseNum(v.costBasis);
-      const gain = (mv != null && cb != null) ? mv - cb : null;
-      return `<tr>
+  const rows = holds.map(h => {
+    const v = ci.values[h.id] || {};
+    const prev = baseVals[h.id] ? fmtMoney2(baseVals[h.id].marketValue) : '—';
+    const mv = parseNum(v.marketValue), cb = parseNum(v.costBasis);
+    const gain = (mv != null && cb != null) ? mv - cb : null;
+    return `<tr>
         <td style="padding-left:20px;font-family:var(--font-heading);font-size:15px;">${esc(h.ticker)}</td>
         <td>
-          <span class="tag tag-accent" style="cursor:pointer;gap:6px;" data-act="edit-class" data-hid="${esc(h.id)}">${esc(detailLabel(h.assetClass))}<span class="text-muted" style="font-size:10px;">edit</span></span>
+          <span class="tag ${compositionOf(h) ? 'tag-accent-2' : 'tag-accent'}" style="cursor:pointer;gap:6px;" data-act="edit-class" data-hid="${esc(h.id)}">${compositionOf(h) ? 'Split · ' : ''}${esc(detailLabel(h.assetClass))}<span class="text-muted" style="font-size:10px;">edit</span></span>
           ${h.name ? `<span class="text-muted" style="font-size:11px;margin-left:8px;">${esc(h.name)}</span>` : ''}
         </td>
         <td class="text-muted tnum" style="text-align:right;">${prev}</td>
-        <td><input class="input tnum" style="min-height:32px;text-align:right;" inputmode="decimal" value="${esc(v.marketValue)}" data-act="ci-val" data-hid="${esc(h.id)}" placeholder="0"></td>
-        <td><input class="input tnum" style="min-height:32px;text-align:right;" inputmode="decimal" value="${esc(v.costBasis)}" data-act="ci-basis" data-hid="${esc(h.id)}" placeholder="—"></td>
-        <td class="tnum" style="text-align:right;padding-right:8px;color:${gain != null && gain < 0 ? 'var(--color-crit)' : 'var(--color-accent-700)'};">${gain != null ? fmtMoneySigned(gain) : '—'}</td>
+        <td><input class="input tnum" style="min-height:32px;text-align:right;" inputmode="decimal" value="${esc(fmtEditNum(v.marketValue))}" data-act="ci-val" data-hid="${esc(h.id)}" placeholder="0.00"></td>
+        <td><input class="input tnum" style="min-height:32px;text-align:right;" inputmode="decimal" value="${esc(fmtEditNum(v.costBasis))}" data-act="ci-basis" data-hid="${esc(h.id)}" placeholder="—"></td>
+        <td class="tnum" style="text-align:right;padding-right:8px;color:${gain != null && gain < 0 ? 'var(--color-crit)' : 'var(--color-accent-700)'};">${gain != null ? fmtMoneySigned2(gain) : '—'}</td>
         <td style="width:34px;text-align:right;padding-right:16px;"><button class="btn btn-ghost btn-sm" title="Archive holding" data-act="archive-holding" data-hid="${esc(h.id)}">✕</button></td>
       </tr>`;
-    }).join('');
+  }).join('');
 
-    return `<div style="border-bottom:1px solid var(--color-divider);">
+  return `<div style="border-bottom:1px solid var(--color-divider);">
       ${head}
       <table class="table">
         <thead><tr>
@@ -1504,6 +1606,23 @@ function renderCheckin() {
       </table>
       <div style="padding:10px 20px;"><button class="btn btn-ghost btn-sm" data-act="add-holding" data-account="${esc(acct.id)}">+ Add holding</button></div>
     </div>`;
+}
+
+function renderCheckin() {
+  ensureCheckinDraft();
+  const ci = ui.checkin;
+  const baseVals = ci.baseDate ? valueIndex(snapshotByDate(ci.baseDate)) : {};
+
+  const groups = accountGroups();
+  const acctBlocks = groups.map(g => {
+    let gTotal = 0;
+    for (const acct of g.accounts) for (const h of activeHoldings(acct.id)) gTotal += parseNum((ci.values[h.id] || {}).marketValue) || 0;
+    const header = `<div style="display:flex;align-items:baseline;gap:10px;padding:14px 20px 8px;border-bottom:1px solid var(--color-divider);background:color-mix(in srgb, var(--color-text) 2%, transparent);">
+      <span class="kicker" style="font-size:11px;">${esc(g.label)}</span>
+      <span class="text-muted" style="font-size:11px;">${g.accounts.length} account${g.accounts.length > 1 ? 's' : ''}</span>
+      <span class="text-muted tnum" style="font-size:12px;margin-left:auto;">${fmtMoney2(gTotal)}</span>
+    </div>`;
+    return header + g.accounts.map(acct => checkinAccountBlock(acct, ci, baseVals)).join('');
   }).join('');
 
   const total = checkinTotal();
@@ -1526,7 +1645,7 @@ function renderCheckin() {
     <div style="display:flex;align-items:center;gap:20px;padding:18px 20px;flex-wrap:wrap;">
       <div>
         <div class="kicker">Snapshot total</div>
-        <div id="ci-total" style="font-family:var(--font-heading);font-size:30px;line-height:1.1;" class="tnum">${fmtMoney(total)}</div>
+        <div id="ci-total" style="font-family:var(--font-heading);font-size:30px;line-height:1.1;" class="tnum">${fmtMoney2(total)}</div>
       </div>
       <div class="field" style="width:190px;border-left:1px solid var(--color-divider);padding-left:20px;"><label>Net worth tracker says</label><input class="input tnum" inputmode="decimal" placeholder="optional" value="${esc(ui.checkinNetWorth)}" data-act="ci-nw"></div>
       <div id="ci-sanity" style="align-self:flex-end;padding-bottom:6px;">${sanity}</div>
@@ -1596,19 +1715,29 @@ function renderHistory() {
    =============================================================== */
 function renderGoal() {
   const goal = activeGoal(todayISO());
-  const groups = TAXONOMY.groups;
+  const detail = TAXONOMY.detail;
   const draft = ui.goalDraft || (ui.goalDraft = {
     date: todayISO(),
-    targets: Object.fromEntries(groups.map(g => [g.id, goal && goal.targets[g.id] != null ? goal.targets[g.id] : 0])),
+    targets: (() => { const dt = goalDetailTargets(goal); return Object.fromEntries(detail.map(d => [d.id, dt && dt[d.id] != null ? dt[d.id] : 0])); })(),
     rationale: '',
   });
-  const sum = groups.reduce((s, g) => s + (Number(draft.targets[g.id]) || 0), 0);
-  const inputs = groups.map(g => `
-    <div class="drift-row" style="grid-template-columns:130px 1fr 70px;">
-      <span style="font-size:14px;"><span class="swatch" style="background:${groupColor(g.id)};margin-right:6px;"></span>${esc(g.label)}</span>
-      <input type="range" min="0" max="100" step="1" value="${draft.targets[g.id]}" data-act="goal-slider" data-gid="${g.id}" style="width:100%;">
-      <input class="input tnum" style="text-align:right;min-height:30px;" inputmode="numeric" value="${draft.targets[g.id]}" data-act="goal-num" data-gid="${g.id}">
-    </div>`).join('');
+  const sum = detail.reduce((s, d) => s + (Number(draft.targets[d.id]) || 0), 0);
+  // 14 classes grouped by rollup family, each family showing its subtotal.
+  const inputs = TAXONOMY.groups.map(grp => {
+    const kids = detail.filter(d => d.group === grp.id);
+    const famSum = kids.reduce((s, d) => s + (Number(draft.targets[d.id]) || 0), 0);
+    const rows = kids.map(d => `
+      <div class="drift-row" style="grid-template-columns:150px 1fr 58px;gap:10px;">
+        <span style="font-size:13px;"><span class="swatch" style="background:${detailColor(d.id)};margin-right:6px;"></span>${esc(d.label)}</span>
+        <input type="range" min="0" max="100" step="1" value="${draft.targets[d.id]}" data-act="goal-slider" data-gid="${d.id}" style="width:100%;">
+        <input class="input tnum" style="text-align:right;min-height:28px;padding:3px 6px;" inputmode="numeric" value="${draft.targets[d.id]}" data-act="goal-num" data-gid="${d.id}">
+      </div>`).join('');
+    return `<div style="margin-bottom:4px;">
+      <div style="display:flex;align-items:baseline;gap:8px;margin:8px 0 4px;border-bottom:1px solid var(--color-divider);padding-bottom:2px;">
+        <span class="kicker" style="font-size:10px;">${esc(grp.label)}</span>
+        <span class="text-muted tnum" id="goal-fam-${grp.id}" style="font-size:11px;margin-left:auto;">${Math.round(famSum)}%</span>
+      </div>${rows}</div>`;
+  }).join('');
   const sumOk = Math.abs(sum - 100) < 0.5;
   const canSave = sumOk && draft.rationale.trim().length > 0;
 
@@ -1616,7 +1745,7 @@ function renderGoal() {
     <div style="display:grid;grid-template-columns:100px 1fr;gap:14px;border-left:1px solid var(--color-divider);padding:0 0 14px 14px;position:relative;">
       <span class="text-muted tnum" style="font-size:12px;">${esc(g.effectiveDate)}${i === 0 ? ' <span class="tag tag-accent">current</span>' : ''}</span>
       <div>
-        <div style="font-size:13px;font-family:var(--font-heading);">${groups.filter(x => g.targets[x.id]).map(x => `${x.label.split(' ')[0]} ${g.targets[x.id]}`).join(' · ')}</div>
+        <div style="font-size:13px;font-family:var(--font-heading);">${(() => { const gg = goalGroupTargets(g) || {}; return TAXONOMY.groups.filter(x => gg[x.id]).map(x => `${x.label.split(' ')[0]} ${Math.round(gg[x.id])}`).join(' · '); })()}</div>
         <p class="text-muted" style="margin:2px 0 0;font-size:13px;">${esc(g.rationale || '(no rationale recorded)')}</p>
       </div>
     </div>`).join('') || '<span class="text-muted">No goals recorded yet.</span>';
@@ -1624,7 +1753,7 @@ function renderGoal() {
   return `<div class="toolbar no-print"><div class="crumb"><span>Goal &amp; journal</span></div></div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start;">
     <div class="panel">
-      <div class="panel-hd"><h4>Household target (rollup)</h4><span class="tnum ${sumOk ? 'text-muted' : ''}" style="margin-left:auto;font-size:13px;color:${sumOk ? '' : 'var(--color-crit)'};">sum ${sum}%</span></div>
+      <div class="panel-hd"><h4>Household target — 14 classes</h4><span id="goal-sum" class="tnum text-muted" style="margin-left:auto;font-size:13px;color:${sumOk ? '' : 'var(--color-crit)'};">sum ${Math.round(sum)}%</span></div>
       <div style="padding:20px;display:flex;flex-direction:column;gap:10px;">
         ${inputs}
         <div class="field" style="margin-top:10px;"><label>Why is the goal changing? (required — this is the journal)</label>
@@ -1706,7 +1835,7 @@ function allocTableHTML(rows, goalTargets, band) {
   return `<table class="table"><thead><tr><th>Asset class</th><th style="text-align:right;">Value</th><th style="text-align:right;">Actual</th><th style="text-align:right;">Goal</th><th style="text-align:right;">Drift</th></tr></thead><tbody>${body}</tbody></table>`;
 }
 
-function reportSection(title, subtitle, holdings, snap, goalTargets, band, showAccounts) {
+function reportSection(title, subtitle, holdings, snap, goalTargets, band, showAccounts, detailTargets) {
   const a = allocate(holdings, snap);
   const rollup = toRows(a.group, a.total, 'group');
   const detail = toRows(a.detail, a.total, 'detail');
@@ -1723,7 +1852,7 @@ function reportSection(title, subtitle, holdings, snap, goalTargets, band, showA
     <div class="text-muted" style="font-size:13px;margin-bottom:10px;">${esc(subtitle)} · ${fmtMoney(a.total)}</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
       <div><div class="kicker" style="margin-bottom:6px;">Rollup</div>${allocTableHTML(rollup, goalTargets, band)}</div>
-      <div><div class="kicker" style="margin-bottom:6px;">Detail</div>${allocTableHTML(detail, null, band)}</div>
+      <div><div class="kicker" style="margin-bottom:6px;">Detail</div>${allocTableHTML(detail, detailTargets || null, band)}</div>
     </div>
     ${accountsHTML}
   </section>`;
@@ -1733,16 +1862,17 @@ function reportHTML(snap) {
   if (!snap) return '<p class="text-muted">No snapshot to report on yet.</p>';
   const band = portfolio.meta.driftBandPct || 5;
   const goal = activeGoal(snap.date);
-  const gt = goal ? goal.targets : null;
+  const ggt = goal ? goalGroupTargets(goal) : null;
+  const gdt = goal ? goalDetailTargets(goal) : null;
   let out = `<header style="border-bottom:2px solid var(--color-text);padding-bottom:10px;margin-bottom:20px;">
     <div class="kicker">Asset Allocation Report</div>
     <h1 style="margin:2px 0 0;font-size:34px;">As of ${esc(snap.date)}</h1>
   </header>`;
 
-  out += reportSection('Household', 'Excludes 529s · vs goal', householdHoldings(), snap, gt, band);
+  out += reportSection('Household', 'Excludes 529s · vs goal', householdHoldings(), snap, ggt, band, null, gdt);
 
   const ret = accountsSorted(a => a.category === 'Retirement');
-  if (ret.length) out += reportSection('Retirement', 'vs household goal', ret.flatMap(a => accountHoldings(a.id)), snap, gt, band, ret);
+  if (ret.length) out += reportSection('Retirement', 'vs household goal', ret.flatMap(a => accountHoldings(a.id)), snap, ggt, band, ret, gdt);
 
   for (const acct of accountsSorted(a => a.category === '529')) {
     const child = childById(acct.childId);
@@ -1751,14 +1881,14 @@ function reportHTML(snap) {
   }
 
   const nonret = accountsSorted(a => a.category === 'Non-Retirement');
-  if (nonret.length) out += reportSection('Non-Retirement', 'vs household goal', nonret.flatMap(a => accountHoldings(a.id)), snap, gt, band, nonret);
+  if (nonret.length) out += reportSection('Non-Retirement', 'vs household goal', nonret.flatMap(a => accountHoldings(a.id)), snap, ggt, band, nonret, gdt);
 
   // Other categories grouped by label
   const others = accountsSorted(a => a.category === 'Other');
   const byLabel = {};
   for (const a of others) { const k = a.categoryLabel || 'Other'; (byLabel[k] = byLabel[k] || []).push(a); }
   for (const [label, accts] of Object.entries(byLabel)) {
-    out += reportSection(label, 'Other category · vs household goal', accts.flatMap(a => accountHoldings(a.id)), snap, gt, band, accts);
+    out += reportSection(label, 'Other category · vs household goal', accts.flatMap(a => accountHoldings(a.id)), snap, ggt, band, accts, gdt);
   }
 
   out += `<footer style="border-top:1px solid var(--color-divider);margin-top:20px;padding-top:12px;font-size:12px;" class="text-muted">
@@ -1829,10 +1959,29 @@ function dialogHTML() {
   let inner = '';
   if (d.type === 'class-pick') {
     const h = portfolio.holdings.find(x => x.id === d.hid);
-    inner = `<div class="dialog-title">Asset class for ${esc(h ? h.ticker : '')}</div>
-      <div class="dialog-body">Your choice is saved to this file's ticker map and reused next time.</div>
-      ${classPickerGrid(h ? h.assetClass : null, 'data-act="pick-class" data-hid="' + esc(d.hid) + '"')}
-      <div class="dialog-actions"><button class="btn btn-secondary" data-act="close-dialog">Cancel</button></div>`;
+    const comp = (h && h.composition) || {};
+    const composed = compositionOf(h);
+    const compRows = TAXONOMY.detail.map(dc => `
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span class="swatch" style="background:${detailColor(dc.id)}"></span>
+        <span style="font-size:12px;flex:1;">${esc(dc.label)}</span>
+        <input class="input tnum" id="comp-${dc.id}" data-act="comp-input" style="width:54px;text-align:right;min-height:26px;padding:2px 5px;" inputmode="numeric" value="${comp[dc.id] != null ? comp[dc.id] : ''}" placeholder="0">
+      </div>`).join('');
+    inner = `<div class="dialog-title">Classify ${esc(h ? h.ticker : '')}</div>
+      <div class="dialog-body">Pick one class, or split a fund across classes (look-through) — ideal for target-date and balanced funds so their assets land in the right buckets.</div>
+      <div class="kicker" style="margin:2px 0 6px;">One class</div>
+      ${classPickerGrid(composed ? null : (h ? h.assetClass : null), 'data-act="pick-class" data-hid="' + esc(d.hid) + '"')}
+      <div class="kicker" style="margin:16px 0 6px;">Or split across classes (%)</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;">
+        <button class="btn btn-sm btn-secondary" data-act="comp-preset" data-preset="90/10">90/10</button>
+        <button class="btn btn-sm btn-secondary" data-act="comp-preset" data-preset="80/20">80/20</button>
+        <button class="btn btn-sm btn-secondary" data-act="comp-preset" data-preset="60/40">60/40</button>
+        <button class="btn btn-sm btn-secondary" data-act="comp-preset" data-preset="three-fund">Three-fund</button>
+        <button class="btn btn-sm btn-secondary" data-act="comp-preset" data-preset="clear">Clear</button>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px 16px;">${compRows}</div>
+      <div id="comp-sum" class="text-muted tnum" style="font-size:11px;margin-top:8px;">split sum ${TAXONOMY.detail.reduce((s, dc) => s + (Number(comp[dc.id]) || 0), 0)}%</div>
+      <div class="dialog-actions"><button class="btn btn-secondary" data-act="close-dialog">Cancel</button><button class="btn btn-primary" data-act="save-composition" data-hid="${esc(d.hid)}">Save split</button></div>`;
   } else if (d.type === 'account') {
     const a = d.acctId ? accountById(d.acctId) : null;
     const catOpts = CATEGORY_ORDER.map(c => `<option ${a && a.category === c ? 'selected' : ''}>${c}</option>`).join('');
@@ -1845,7 +1994,10 @@ function dialogHTML() {
         <div class="field" style="flex:1;"><label>Category</label><select class="input" id="f-cat" data-act="acct-cat">${catOpts}</select></div>
         <div class="field" style="flex:1;"><label>Tax treatment</label><select class="input" id="f-tax">${taxOpts}</select></div>
       </div>
-      <div class="field" id="f-other-wrap" style="display:${a && a.category === 'Other' ? 'block' : 'none'};"><label>Category label (required for Other)</label><input class="input" id="f-catlabel" value="${esc(a ? a.categoryLabel || '' : '')}" placeholder="e.g. Family Trust"></div>
+      <div class="field" id="f-other-wrap" style="display:${a && a.category === 'Other' ? 'block' : 'none'};"><label>Custom category name (required for Other)</label>
+        <input class="input" id="f-catlabel" list="other-cats" value="${esc(a ? a.categoryLabel || '' : '')}" placeholder="e.g. Family Trust, HSA, UTMA">
+        <datalist id="other-cats">${otherLabels().map(l => `<option value="${esc(l)}"></option>`).join('')}</datalist>
+        <span class="text-muted" style="font-size:11px;">Type a new name to create a category, or pick an existing one.</span></div>
       <div class="field" id="f-child-wrap" style="display:${a && a.category === '529' ? 'block' : 'none'};"><label>Child (529 links to a glide path)</label><select class="input" id="f-child">${childOpts}</select></div>
       <div class="dialog-actions"><button class="btn btn-secondary" data-act="close-dialog">Cancel</button><button class="btn btn-primary" data-act="save-account" data-acct="${esc(d.acctId || '')}">${a ? 'Save' : 'Add account'}</button></div>`;
   } else if (d.type === 'child') {
@@ -1920,6 +2072,21 @@ function boot() {
   document.addEventListener('click', onClick);
   document.addEventListener('change', onChange);
   document.addEventListener('input', onInput);
+  // Money inputs: strip grouping while editing, reformat to 1,234.00 on blur.
+  document.addEventListener('focusin', e => {
+    const t = e.target.closest && e.target.closest('input[data-act="ci-val"],input[data-act="ci-basis"],input[data-act="ci-nw"]');
+    if (t) { const n = parseNum(t.value); t.value = n == null ? '' : String(n); }
+  });
+  document.addEventListener('focusout', e => {
+    const t = e.target.closest && e.target.closest('input[data-act="ci-val"],input[data-act="ci-basis"],input[data-act="ci-nw"]');
+    if (!t) return;
+    const n = parseNum(t.value);
+    t.value = n == null ? '' : fmtNum2(n);
+    const act = t.dataset.act, hid = t.dataset.hid;
+    if (act === 'ci-nw') ui.checkinNetWorth = t.value;
+    else if (ui.checkin) { ui.checkin.values[hid] = ui.checkin.values[hid] || {}; ui.checkin.values[hid][act === 'ci-val' ? 'marketValue' : 'costBasis'] = t.value; }
+    updateCheckinTotals();
+  });
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && ui.dialog) closeDialog(); });
   render();
 }
@@ -1936,8 +2103,8 @@ function onClick(e) {
     case 'load-demo': loadDemoData(); resetViewState(); render(); toast('Demo data loaded'); break;
     case 'onboard-start': openDialog({ type: 'account' }); break;
     case 'drill':
-      ui.drill = { level: ds.level, category: ds.category || (ds.level === 'category' ? ds.category : null), accountId: ds.account || null };
-      if (ds.level === 'account') { const ac = accountById(ds.account); ui.drill.category = ac ? ac.category : null; }
+      ui.drill = { level: ds.level, category: ds.category || null, categoryLabel: ds.categorylabel || null, accountId: ds.account || null };
+      if (ds.level === 'account') { const ac = accountById(ds.account); ui.drill.category = ac ? ac.category : null; ui.drill.categoryLabel = ac ? (ac.categoryLabel || null) : null; }
       ui.view = 'dashboard'; render(); break;
     case 'ci-toggle': ui.checkinOpen[ds.account] = !ui.checkinOpen[ds.account]; render(); break;
     case 'ci-discard': ui.checkin = null; ui.view = 'dashboard'; render(); break;
@@ -1952,6 +2119,8 @@ function onClick(e) {
     case 'move-acct': moveAccount(ds.account, Number(ds.dir)); break;
     case 'del-child': deleteChild(ds.child); break;
     case 'pick-class': setHoldingClass(ds.hid, ds.cls); break;
+    case 'comp-preset': applyCompPreset(ds.preset); break;
+    case 'save-composition': saveComposition(ds.hid); break;
     case 'save-account': saveAccountFromDialog(ds.acct || null); break;
     case 'save-child': saveChildFromDialog(); break;
     case 'save-holding': saveHoldingFromDialog(ds.account); break;
@@ -1994,6 +2163,7 @@ function onInput(e) {
   else if (a === 'ci-note') { ui.checkin.note = t.value; }
   else if (a === 'ci-date') { ui.checkin.date = t.value; }
   else if (a === 'ci-nw') { ui.checkinNetWorth = t.value; updateCheckinTotals(); }
+  else if (a === 'comp-input') { updateCompSum(); }
   else if (a === 'goal-slider' || a === 'goal-num') {
     const v = Math.max(0, Math.min(100, Math.round(Number(t.value) || 0)));
     ui.goalDraft.targets[ds.gid] = v; renderGoalLive();
@@ -2007,16 +2177,21 @@ function onInput(e) {
 /* Light-touch updates that avoid a full re-render mid-typing */
 function renderGoalLive() {
   markDirty();
-  // update the sibling number/slider + sum without stealing focus
-  const groups = TAXONOMY.groups;
-  const sum = groups.reduce((s, g) => s + (Number(ui.goalDraft.targets[g.id]) || 0), 0);
-  document.querySelectorAll('[data-act="goal-slider"]').forEach(el => { el.value = ui.goalDraft.targets[el.dataset.gid]; });
-  document.querySelectorAll('[data-act="goal-num"]').forEach(el => { if (el !== document.activeElement) el.value = ui.goalDraft.targets[el.dataset.gid]; });
+  // update siblings + subtotals + overall sum without stealing focus
+  const T = ui.goalDraft.targets;
+  const sum = TAXONOMY.detail.reduce((s, d) => s + (Number(T[d.id]) || 0), 0);
+  document.querySelectorAll('[data-act="goal-slider"]').forEach(el => { el.value = T[el.dataset.gid]; });
+  document.querySelectorAll('[data-act="goal-num"]').forEach(el => { if (el !== document.activeElement) el.value = T[el.dataset.gid]; });
+  for (const grp of TAXONOMY.groups) {
+    const fam = document.getElementById('goal-fam-' + grp.id);
+    if (fam) fam.textContent = Math.round(TAXONOMY.detail.filter(d => d.group === grp.id).reduce((s, d) => s + (Number(T[d.id]) || 0), 0)) + '%';
+  }
+  const sumEl = document.getElementById('goal-sum');
+  if (sumEl) { sumEl.textContent = 'sum ' + Math.round(sum) + '%'; sumEl.style.color = Math.abs(sum - 100) < 0.5 ? '' : 'var(--color-crit)'; }
   toggleGoalSave();
 }
 function toggleGoalSave() {
-  const groups = TAXONOMY.groups;
-  const sum = groups.reduce((s, g) => s + (Number(ui.goalDraft.targets[g.id]) || 0), 0);
+  const sum = TAXONOMY.detail.reduce((s, d) => s + (Number(ui.goalDraft.targets[d.id]) || 0), 0);
   const btn = document.querySelector('[data-act="goal-save"]');
   if (btn) btn.disabled = !(Math.abs(sum - 100) < 0.5 && ui.goalDraft.rationale.trim().length > 0);
 }
@@ -2033,8 +2208,50 @@ async function doOpen() {
 
 function setHoldingClass(hid, cls) {
   const h = portfolio.holdings.find(x => x.id === hid);
-  if (h) { h.assetClass = cls; if (h.ticker) portfolio.tickerMap[h.ticker.trim().toUpperCase()] = cls; markDirty(); }
+  if (h) { h.assetClass = cls; delete h.composition; if (h.ticker) portfolio.tickerMap[h.ticker.trim().toUpperCase()] = cls; markDirty(); }
   closeDialog();
+}
+
+/* ---- Look-through composition editor ---- */
+const COMP_PRESETS = {
+  '90/10':     { us_total: 54, intl_dev: 36, us_bond: 10 },
+  '80/20':     { us_total: 48, intl_dev: 32, us_bond: 16, intl_bond: 4 },
+  '60/40':     { us_total: 36, intl_dev: 24, us_bond: 32, intl_bond: 8 },
+  'three-fund':{ us_total: 54, intl_dev: 36, us_bond: 10 },
+};
+function applyCompPreset(name) {
+  const preset = name === 'clear' ? {} : (COMP_PRESETS[name] || {});
+  for (const dc of TAXONOMY.detail) {
+    const el = document.getElementById('comp-' + dc.id);
+    if (el) el.value = preset[dc.id] != null ? preset[dc.id] : '';
+  }
+  updateCompSum();
+}
+function readCompInputs() {
+  const comp = {};
+  let sum = 0;
+  for (const dc of TAXONOMY.detail) {
+    const el = document.getElementById('comp-' + dc.id);
+    const v = el ? parseNum(el.value) : null;
+    if (v && v > 0) { comp[dc.id] = v; sum += v; }
+  }
+  return { comp, sum };
+}
+function updateCompSum() {
+  const { sum } = readCompInputs();
+  const el = document.getElementById('comp-sum');
+  if (el) { el.textContent = 'split sum ' + Math.round(sum) + '%'; el.style.color = (sum === 0 || Math.abs(sum - 100) < 0.5) ? '' : 'var(--color-warn)'; }
+}
+function saveComposition(hid) {
+  const h = portfolio.holdings.find(x => x.id === hid);
+  if (!h) { closeDialog(); return; }
+  const { comp, sum } = readCompInputs();
+  if (Object.keys(comp).length === 0) { toast('Enter at least one class %, or pick a single class above.'); return; }
+  if (Math.abs(sum - 100) > 0.5) { toast('Split must sum to 100% (now ' + Math.round(sum) + ').'); return; }
+  h.composition = comp;
+  // primary class (chip label) = largest weight
+  h.assetClass = Object.entries(comp).sort((a, b) => b[1] - a[1])[0][0];
+  markDirty(); closeDialog();
 }
 function archiveHolding(hid) {
   const h = portfolio.holdings.find(x => x.id === hid);
@@ -2136,7 +2353,7 @@ function deleteBand(childId, idx) {
 function saveGoalDraft() {
   const d = ui.goalDraft;
   const targets = {};
-  for (const g of TAXONOMY.groups) if (d.targets[g.id]) targets[g.id] = d.targets[g.id];
+  for (const dc of TAXONOMY.detail) if (d.targets[dc.id]) targets[dc.id] = d.targets[dc.id];
   portfolio.goals.push({ effectiveDate: d.date, targets, rationale: d.rationale.trim() });
   ui.goalDraft = null; markDirty(); render(); toast('Goal saved to journal');
 }
@@ -2153,10 +2370,12 @@ document.addEventListener('DOMContentLoaded', boot);
 
 /* Expose internals for console testing during development. */
 window.__AAT__ = {
-  TAXONOMY, SEED_MAP, classifyTicker, migrate, emptyPortfolio, uid,
+  TAXONOMY, SEED_MAP, SEED_MAP_EXT, classifyTicker, migrate, emptyPortfolio, uid,
   allocate, toRows, computeDrift, activeGoal, glideTargets, historySeries,
   householdHoldings, categoryHoldings, accountHoldings, latestSnapshot,
   snapshotCSV, loadDemoData, saveFile, openFile,
+  goalGroupTargets, goalDetailTargets, compositionOf, splitValue,
   get portfolio() { return portfolio; },
+  set portfolio(p) { portfolio = p; },
 };
 </script>
