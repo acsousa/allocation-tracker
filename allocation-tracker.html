@@ -578,12 +578,30 @@ function compositionOf(h) {
   if (h.assetClass === 'us_total') return US_TOTAL_SPLIT;
   return null;
 }
-/* Yield [classId, dollarPart] pairs for a holding's value, honoring composition. */
+/* Expand a single class + dollar amount into terminal classes. US Total Market
+   is a blend, so it decomposes into Large/Mid/Small — even when it appears as a
+   SLEEVE inside a fund's composition (e.g. a target-date fund's total-market
+   holding). Any other class is terminal. */
+function expandClass(cls, amt) {
+  if (cls === 'us_total') {
+    const s = US_TOTAL_SPLIT, tot = s.us_large + s.us_mid + s.us_small;
+    return [['us_large', amt * s.us_large / tot], ['us_mid', amt * s.us_mid / tot], ['us_small', amt * s.us_small / tot]];
+  }
+  return [[cls, amt]];
+}
+/* Yield [classId, dollarPart] pairs for a holding's value, honoring composition
+   and expanding any blend classes (us_total) into their components. */
 function splitValue(mv, comp, primaryClass) {
-  if (!comp) return [[primaryClass || 'other', mv]];
-  const entries = Object.entries(comp).filter(([, p]) => Number(p) > 0);
-  const sum = entries.reduce((s, [, p]) => s + Number(p), 0) || 1;
-  return entries.map(([cls, p]) => [cls, mv * (Number(p) / sum)]);
+  const raw = !comp
+    ? [[primaryClass || 'other', mv]]
+    : (() => {
+        const entries = Object.entries(comp).filter(([, p]) => Number(p) > 0);
+        const sum = entries.reduce((s, [, p]) => s + Number(p), 0) || 1;
+        return entries.map(([cls, p]) => [cls, mv * (Number(p) / sum)]);
+      })();
+  const out = [];
+  for (const [cls, part] of raw) for (const pair of expandClass(cls, part)) out.push(pair);
+  return out;
 }
 
 /* Convert a {id:value} map + total into sorted [{id,label,color,value,pct}]. */
