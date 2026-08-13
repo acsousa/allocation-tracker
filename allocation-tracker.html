@@ -284,6 +284,12 @@ const TAXONOMY = {
 
 const DETAIL_BY_ID = Object.fromEntries(TAXONOMY.detail.map(d => [d.id, d]));
 const GROUP_BY_ID  = Object.fromEntries(TAXONOMY.groups.map(g => [g.id, g]));
+
+// US Total Market is a US-equity blend, not a peer of Large/Mid/Small. Holdings
+// tagged us_total auto-decompose into L/M/S by this default market-cap split
+// (editable per fund), and us_total is excluded from the goal matrix.
+const US_TOTAL_SPLIT = { us_large: 82, us_mid: 13, us_small: 5 };
+const GOAL_DETAIL = TAXONOMY.detail.filter(d => d.id !== 'us_total');
 function detailLabel(id) { return (DETAIL_BY_ID[id] || {}).label || id; }
 function cssVarValue(name, fallback) {
   const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
@@ -401,7 +407,7 @@ const SEED_MAP_EXT = {"A":"us_large","AA":"us_mid","AAAU":"commod","AAL":"us_mid
 /* ---------------------------------------------------------------
    SCHEMA + MIGRATION (spec §10)
    --------------------------------------------------------------- */
-const SCHEMA_VERSION = 1;
+const SCHEMA_VERSION = 2;
 
 function emptyPortfolio() {
   return {
@@ -426,11 +432,23 @@ function migrate(data) {
       `Update the tracker to open it.`
     );
   }
-  // migration stubs land here as versions advance, e.g.:
-  // if (v < 2) { ...transform...; data.meta.schemaVersion = 2; }
   const base = emptyPortfolio();
   const merged = Object.assign(base, data);
   merged.meta = Object.assign(base.meta, data.meta || {});
+  // v1 → v2: US Total Market retired as a goal class; redistribute any goal
+  // target on us_total into Large/Mid/Small by the default split.
+  if (v < 2) {
+    for (const g of merged.goals || []) {
+      if (g.targets && g.targets.us_total) {
+        const amt = Number(g.targets.us_total);
+        const mid = Math.round(amt * 0.13), small = Math.round(amt * 0.05), large = amt - mid - small;
+        g.targets.us_large = (g.targets.us_large || 0) + large;
+        g.targets.us_mid = (g.targets.us_mid || 0) + mid;
+        g.targets.us_small = (g.targets.us_small || 0) + small;
+        delete g.targets.us_total;
+      }
+    }
+  }
   merged.meta.schemaVersion = SCHEMA_VERSION;
   return merged;
 }
@@ -549,11 +567,16 @@ function allocate(holdings, snapshot) {
   return { detail, group, total, byHolding };
 }
 
-/* A holding's composition map {classId: pct} if it has a valid one, else null. */
+/* A holding's composition map {classId: pct} if it has a valid one, else null.
+   Total-market funds auto-decompose into Large/Mid/Small unless the user set an
+   explicit composition. */
 function compositionOf(h) {
-  if (!h.composition) return null;
-  const keys = Object.keys(h.composition).filter(k => Number(h.composition[k]) > 0);
-  return keys.length ? h.composition : null;
+  if (h.composition) {
+    const keys = Object.keys(h.composition).filter(k => Number(h.composition[k]) > 0);
+    if (keys.length) return h.composition;
+  }
+  if (h.assetClass === 'us_total') return US_TOTAL_SPLIT;
+  return null;
 }
 /* Yield [classId, dollarPart] pairs for a holding's value, honoring composition. */
 function splitValue(mv, comp, primaryClass) {
@@ -944,14 +967,14 @@ function loadDemoData() {
   p.goals.push({
     effectiveDate: '2025-01-01',
     name: 'Growth tilt (baseline)',
-    targets: { us_large: 35, us_mid: 8, us_small: 5, us_total: 5, intl_dev: 12, em: 5, us_bond: 13, intl_bond: 2, reit: 4, commod: 1, crypto: 3, cash: 7 },
+    targets: { us_large: 40, us_mid: 8, us_small: 5, intl_dev: 12, em: 5, us_bond: 13, intl_bond: 2, reit: 4, commod: 1, crypto: 3, cash: 7 },
     rationale: 'Baseline growth-tilted household target for a long horizon.',
   });
   // Rollup: stocks 65 / bonds 18 / real 5 / crypto 5 / cash 7.
   p.goals.push({
     effectiveDate: '2026-02-01',
     name: 'Home-fund glidedown',
-    targets: { us_large: 32, us_mid: 7, us_small: 5, us_total: 5, intl_dev: 11, em: 5, us_bond: 15, intl_bond: 3, reit: 4, commod: 1, crypto: 5, cash: 7 },
+    targets: { us_large: 37, us_mid: 7, us_small: 5, intl_dev: 11, em: 5, us_bond: 15, intl_bond: 3, reit: 4, commod: 1, crypto: 5, cash: 7 },
     rationale: 'Trimmed equities 5% into bonds as we near the home-fund milestone; nudged crypto ceiling up slightly.',
   });
 
@@ -1868,7 +1891,7 @@ function renderHistory() {
    =============================================================== */
 function renderGoal() {
   const goal = activeGoal(todayISO());
-  const detail = TAXONOMY.detail;
+  const detail = GOAL_DETAIL; // US Total Market is a blend, not a settable target
   const draft = ui.goalDraft || (ui.goalDraft = {
     date: todayISO(),
     name: '',
@@ -1908,7 +1931,7 @@ function renderGoal() {
   return `<div class="toolbar no-print"><div class="crumb"><span>Goal &amp; journal</span></div></div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start;">
     <div class="panel">
-      <div class="panel-hd"><h4>Household target — 14 classes</h4><span id="goal-sum" class="tnum text-muted" style="margin-left:auto;font-size:13px;color:${sumOk ? '' : 'var(--color-crit)'};">sum ${Math.round(sum)}%</span></div>
+      <div class="panel-hd"><h4>Household target — 13 classes</h4><span id="goal-sum" class="tnum text-muted" style="margin-left:auto;font-size:13px;color:${sumOk ? '' : 'var(--color-crit)'};">sum ${Math.round(sum)}%</span></div>
       <div style="padding:20px;display:flex;flex-direction:column;gap:10px;">
         ${inputs}
         <div class="field" style="margin-top:10px;"><label>Goal name (optional)</label>
@@ -2131,7 +2154,7 @@ function dialogHTML() {
   let inner = '';
   if (d.type === 'class-pick') {
     const h = portfolio.holdings.find(x => x.id === d.hid);
-    const comp = (h && h.composition) || {};
+    const comp = (h && compositionOf(h)) || {};
     const composed = compositionOf(h);
     const compRows = TAXONOMY.detail.map(dc => `
       <div style="display:flex;align-items:center;gap:8px;">
@@ -2149,6 +2172,7 @@ function dialogHTML() {
         <button class="btn btn-sm btn-secondary" data-act="comp-preset" data-preset="80/20">80/20</button>
         <button class="btn btn-sm btn-secondary" data-act="comp-preset" data-preset="60/40">60/40</button>
         <button class="btn btn-sm btn-secondary" data-act="comp-preset" data-preset="three-fund">Three-fund</button>
+        <button class="btn btn-sm btn-secondary" data-act="comp-preset" data-preset="us-total">US Total</button>
         <button class="btn btn-sm btn-secondary" data-act="comp-preset" data-preset="clear">Clear</button>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px 16px;">${compRows}</div>
@@ -2413,10 +2437,11 @@ function setHoldingClass(hid, cls) {
 
 /* ---- Look-through composition editor ---- */
 const COMP_PRESETS = {
-  '90/10':     { us_total: 54, intl_dev: 36, us_bond: 10 },
-  '80/20':     { us_total: 48, intl_dev: 32, us_bond: 16, intl_bond: 4 },
-  '60/40':     { us_total: 36, intl_dev: 24, us_bond: 32, intl_bond: 8 },
-  'three-fund':{ us_total: 54, intl_dev: 36, us_bond: 10 },
+  '90/10':     { us_large: 54, intl_dev: 36, us_bond: 10 },
+  '80/20':     { us_large: 48, intl_dev: 32, us_bond: 16, intl_bond: 4 },
+  '60/40':     { us_large: 36, intl_dev: 24, us_bond: 32, intl_bond: 8 },
+  'three-fund':{ us_large: 54, intl_dev: 36, us_bond: 10 },
+  'us-total':  US_TOTAL_SPLIT,
 };
 function applyCompPreset(name) {
   const preset = name === 'clear' ? {} : (COMP_PRESETS[name] || {});
