@@ -943,12 +943,14 @@ function loadDemoData() {
   // 14-class household targets (sum 100). Rollup: stocks 70 / bonds 15 / real 5 / crypto 3 / cash 7.
   p.goals.push({
     effectiveDate: '2025-01-01',
+    name: 'Growth tilt (baseline)',
     targets: { us_large: 35, us_mid: 8, us_small: 5, us_total: 5, intl_dev: 12, em: 5, us_bond: 13, intl_bond: 2, reit: 4, commod: 1, crypto: 3, cash: 7 },
     rationale: 'Baseline growth-tilted household target for a long horizon.',
   });
   // Rollup: stocks 65 / bonds 18 / real 5 / crypto 5 / cash 7.
   p.goals.push({
     effectiveDate: '2026-02-01',
+    name: 'Home-fund glidedown',
     targets: { us_large: 32, us_mid: 7, us_small: 5, us_total: 5, intl_dev: 11, em: 5, us_bond: 15, intl_bond: 3, reit: 4, commod: 1, crypto: 5, cash: 7 },
     rationale: 'Trimmed equities 5% into bonds as we near the home-fund milestone; nudged crypto ceiling up slightly.',
   });
@@ -1253,7 +1255,7 @@ function rerender() { render(); }
 function resetViewState() {
   ui.view = 'dashboard'; ui.snapDate = null; ui.level = 'group';
   ui.drill = { level: 'household', category: null, accountId: null };
-  ui.checkin = null; ui.goalDraft = null; ui.historyTab = 'value';
+  ui.checkin = null; ui.goalDraft = null; ui.historyTab = 'value'; ui.goalSel = '';
 }
 
 function render() {
@@ -1338,8 +1340,9 @@ function renderDashboard() {
   const level = ui.level;
   const actualRows = toRows(level === 'group' ? alloc.group : alloc.detail, alloc.total, level);
 
-  // goal / glide targets for this scope
-  const goal = activeGoal(snap.date);
+  // goal / glide targets for this scope (dashboard "Goal" selector can override
+  // the date-based active goal to compare against any named goal).
+  const goal = (ui.goalSel && portfolio.goals.find(x => x.effectiveDate === ui.goalSel)) || activeGoal(snap.date);
   if (drill.level === 'account') {
     const acct = accountById(drill.accountId);
     if (acct && acct.category === '529' && acct.childId) {
@@ -1364,8 +1367,34 @@ function renderDashboard() {
       ${dashDriftHTML(drift, band, breaches, goalTargets)}
     </div>
     ${dashCategoriesHTML(snap)}
-    ${dashHistoryStripHTML()}
+    ${drill.level === 'account' ? dashHoldingsHTML(drill.accountId, snap) : ''}
+    ${drill.level === 'household' ? dashHistoryStripHTML() : ''}
   `;
+}
+
+/* Account-level review: the account's holdings with values, share, and gain. */
+function dashHoldingsHTML(accountId, snap) {
+  const a = allocate(accountHoldings(accountId), snap);
+  if (!a.byHolding.length) {
+    return `<div class="panel"><div class="panel-hd"><h4>Holdings</h4></div><div style="padding:20px;" class="text-muted">No holdings with values in this snapshot.</div></div>`;
+  }
+  const rows = a.byHolding.slice().sort((x, y) => y.marketValue - x.marketValue).map(h => {
+    const pct = a.total > 0 ? (h.marketValue / a.total) * 100 : 0;
+    const cls = (h.composed ? 'Split · ' : '') + detailLabel(h.holding.assetClass);
+    return `<tr>
+      <td style="padding-left:20px;font-family:var(--font-heading);font-size:15px;">${esc(h.holding.ticker)}</td>
+      <td><span class="tag ${h.composed ? 'tag-accent-2' : 'tag-accent'}">${esc(cls)}</span> ${h.holding.name ? `<span class="text-muted" style="font-size:11px;margin-left:6px;">${esc(h.holding.name)}</span>` : ''}</td>
+      <td class="tnum" style="text-align:right;">${fmtMoney(h.marketValue)}</td>
+      <td class="tnum" style="text-align:right;">${pct.toFixed(1)}%</td>
+      <td class="tnum" style="text-align:right;padding-right:20px;color:${h.gain != null && h.gain < 0 ? 'var(--color-crit)' : 'var(--color-accent-700)'};">${h.gain != null ? fmtMoneySigned(h.gain) : '—'}</td>
+    </tr>`;
+  }).join('');
+  return `<div class="panel"><div class="panel-hd"><h4>Holdings</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">${a.byHolding.length} holding${a.byHolding.length !== 1 ? 's' : ''} · ${fmtMoney(a.total)}</span></div>
+    <table class="table"><thead><tr>
+      <th style="padding-left:20px;">Ticker</th><th>Asset class</th>
+      <th style="text-align:right;">Value</th><th style="text-align:right;">% of account</th>
+      <th style="text-align:right;padding-right:20px;">Unrealized</th>
+    </tr></thead><tbody>${rows}</tbody></table></div>`;
 }
 
 function rollupTargets(goal, level) {
@@ -1390,13 +1419,20 @@ function dashToolbarHTML(snap) {
     const catLbl = acct ? (acct.categoryLabel || catLabel(acct.category)) : '';
     crumb += `<span class="sep">›</span><a data-act="drill" data-level="category" data-category="${esc(acct ? acct.category : '')}" data-categorylabel="${esc(acct ? (acct.categoryLabel || '') : '')}">${esc(catLbl)}</a><span class="sep">›</span><span>${esc(acct ? acct.name : '')}</span>`;
   }
+  const active = activeGoal(snap.date);
+  const goalOpts = ['<option value="">Auto — active by date</option>']
+    .concat(portfolio.goals.slice().sort((a, b) => b.effectiveDate.localeCompare(a.effectiveDate)).map(g =>
+      `<option value="${esc(g.effectiveDate)}" ${ui.goalSel === g.effectiveDate ? 'selected' : ''}>${esc(g.name ? g.name + ' · ' + g.effectiveDate : g.effectiveDate)}${active && g.effectiveDate === active.effectiveDate ? ' (active)' : ''}</option>`)).join('');
   return `<div class="toolbar no-print">
     <div class="crumb">${crumb}</div>
     <div class="seg" style="margin-left:auto;">
       <label class="seg-opt"><input type="radio" name="lvl" ${ui.level === 'group' ? 'checked' : ''} data-act="level" data-level="group">Rollup (6)</label>
       <label class="seg-opt"><input type="radio" name="lvl" ${ui.level === 'detail' ? 'checked' : ''} data-act="level" data-level="detail">Detail (14)</label>
     </div>
-    <div class="field" style="width:170px;">
+    <div class="field" style="width:210px;"><label>Goal</label>
+      <select class="input" data-act="pick-goal">${goalOpts}</select>
+    </div>
+    <div class="field" style="width:150px;"><label>Snapshot</label>
       <select class="input" data-act="pick-snap">${opts}</select>
     </div>
   </div>`;
@@ -1428,9 +1464,9 @@ function dashKpiHTML(snap, alloc, goal, band, breachCount) {
       <div class="text-muted" style="font-size:12px;">${withBasis.length} of ${alloc.byHolding.length} holdings with basis</div>
     </div>
     <div class="kpi">
-      <div class="kicker">Goal in force</div>
-      <div class="kpi-val tnum">${goal ? esc(goal.effectiveDate) : '—'}</div>
-      <div class="text-muted" style="font-size:12px;">${goal ? goalStr + ' rollup' : 'no goal set'}</div>
+      <div class="kicker">Goal in force${ui.goalSel ? ' · selected' : ''}</div>
+      <div class="kpi-val ${goal && goal.name ? '' : 'tnum'}" style="${goal && goal.name ? 'font-size:22px;line-height:1.1;' : ''}">${goal ? esc(goal.name || goal.effectiveDate) : '—'}</div>
+      <div class="text-muted" style="font-size:12px;">${goal ? (goal.name ? esc(goal.effectiveDate) + ' · ' : '') + goalStr + ' rollup' : 'no goal set'}</div>
     </div>
     <div class="kpi">
       <div class="kicker">Drift band</div>
@@ -1502,7 +1538,32 @@ function dashDriftHTML(drift, band, breaches, goalTargets) {
 }
 
 function dashCategoriesHTML(snap) {
-  if (ui.drill.level !== 'household') return '';
+  const drill = ui.drill;
+  if (drill.level === 'account') return ''; // account level shows a holdings table instead
+
+  // Category level → cards for each account in the category (drill into one).
+  if (drill.level === 'category') {
+    const inCat = drill.category === 'Other' && drill.categoryLabel
+      ? accountsSorted(a => a.category === 'Other' && (a.categoryLabel || 'Other') === drill.categoryLabel)
+      : accountsSorted(a => a.category === drill.category);
+    if (!inCat.length) return '';
+    const catName = drill.categoryLabel || catLabel(drill.category);
+    const catTotal = allocate(inCat.flatMap(x => accountHoldings(x.id)), snap).total;
+    const cards = inCat.map(acct => {
+      const av = allocate(accountHoldings(acct.id), snap);
+      const share = catTotal > 0 ? (av.total / catTotal) * 100 : 0;
+      const n = activeHoldings(acct.id).length;
+      return catCardHTML(acct.institution || 'Account', acct.name, av.total, share,
+        `${n} holding${n !== 1 ? 's' : ''}${acct.taxTreatment ? ' · ' + acct.taxTreatment : ''}`,
+        { level: 'account', accountId: acct.id }, catName);
+    }).join('');
+    return `<div class="panel">
+      <div class="panel-hd"><h4>Accounts in ${esc(catName)} — click to drill in</h4></div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;padding:20px;">${cards}</div>
+    </div>`;
+  }
+
+  // Household level → category cards.
   const gt = grandTotal(snap);
   const cards = [];
   const plainCatCard = (cat) => {
@@ -1542,7 +1603,7 @@ function dashCategoriesHTML(snap) {
   </div>`;
 }
 
-function catCardHTML(kicker, name, value, share, meta, drillTarget) {
+function catCardHTML(kicker, name, value, share, meta, drillTarget, shareLabel) {
   const dattr = drillTarget.level === 'account'
     ? `data-act="drill" data-level="account" data-account="${esc(drillTarget.accountId)}"`
     : `data-act="drill" data-level="category" data-category="${esc(drillTarget.category)}" data-categorylabel="${esc(drillTarget.categoryLabel || '')}"`;
@@ -1553,10 +1614,11 @@ function catCardHTML(kicker, name, value, share, meta, drillTarget) {
       ${miniArcSVG(share)}
       <div>
         <div style="font-family:var(--font-heading);font-size:20px;line-height:1.1;" class="tnum">${fmtMoney(value)}</div>
-        <div class="text-muted" style="font-size:11px;">${share.toFixed(1)}% of household</div>
+        <div class="text-muted" style="font-size:11px;">${share.toFixed(1)}% of ${esc(shareLabel || 'household')}</div>
       </div>
     </div>
     <div class="card-meta">${esc(meta)}</div>
+    <div class="card-meta" style="color:var(--color-accent);">Review →</div>
   </div>`;
 }
 
@@ -1809,6 +1871,7 @@ function renderGoal() {
   const detail = TAXONOMY.detail;
   const draft = ui.goalDraft || (ui.goalDraft = {
     date: todayISO(),
+    name: '',
     targets: (() => { const dt = goalDetailTargets(goal); return Object.fromEntries(detail.map(d => [d.id, dt && dt[d.id] != null ? dt[d.id] : 0])); })(),
     rationale: '',
   });
@@ -1836,6 +1899,7 @@ function renderGoal() {
     <div style="display:grid;grid-template-columns:100px 1fr;gap:14px;border-left:1px solid var(--color-divider);padding:0 0 14px 14px;position:relative;">
       <span class="text-muted tnum" style="font-size:12px;">${esc(g.effectiveDate)}${i === 0 ? ' <span class="tag tag-accent">current</span>' : ''}</span>
       <div>
+        <input class="input" style="min-height:28px;padding:3px 8px;font-family:var(--font-heading);max-width:280px;margin-bottom:4px;" value="${esc(g.name || '')}" placeholder="Name this goal (optional)" data-act="rename-goal" data-date="${esc(g.effectiveDate)}">
         <div style="font-size:13px;font-family:var(--font-heading);">${(() => { const gg = goalGroupTargets(g) || {}; return TAXONOMY.groups.filter(x => gg[x.id]).map(x => `${x.label.split(' ')[0]} ${Math.round(gg[x.id])}%`).join(' · '); })()}</div>
         <p class="text-muted" style="margin:2px 0 0;font-size:13px;">${esc(g.rationale || '(no rationale recorded)')}</p>
       </div>
@@ -1847,7 +1911,9 @@ function renderGoal() {
       <div class="panel-hd"><h4>Household target — 14 classes</h4><span id="goal-sum" class="tnum text-muted" style="margin-left:auto;font-size:13px;color:${sumOk ? '' : 'var(--color-crit)'};">sum ${Math.round(sum)}%</span></div>
       <div style="padding:20px;display:flex;flex-direction:column;gap:10px;">
         ${inputs}
-        <div class="field" style="margin-top:10px;"><label>Why is the goal changing? (required — this is the journal)</label>
+        <div class="field" style="margin-top:10px;"><label>Goal name (optional)</label>
+          <input class="input" data-act="goal-name" value="${esc(draft.name || '')}" placeholder="e.g. Growth tilt, Home-fund glidedown"></div>
+        <div class="field"><label>Why is the goal changing? (required — this is the journal)</label>
           <textarea class="input" data-act="goal-rationale" placeholder="e.g. Trimmed equities 5% into bonds as we near the home-fund milestone.">${esc(draft.rationale)}</textarea></div>
         <div style="display:flex;align-items:center;gap:12px;">
           <div class="field" style="width:150px;"><label>Effective date</label><input class="input" type="date" value="${esc(draft.date)}" data-act="goal-date"></div>
@@ -2275,6 +2341,7 @@ function onChange(e) {
   const a = t.dataset.act, ds = t.dataset;
   if (a === 'level') { ui.level = ds.level; render(); }
   else if (a === 'pick-snap') { ui.snapDate = t.value; render(); }
+  else if (a === 'pick-goal') { ui.goalSel = t.value; render(); }
   else if (a === 'htab') { ui.historyTab = ds.tab; render(); }
   else if (a === 'acct-cat') {
     const other = document.getElementById('f-other-wrap'), child = document.getElementById('f-child-wrap');
@@ -2299,7 +2366,9 @@ function onInput(e) {
     ui.goalDraft.targets[ds.gid] = v; renderGoalLive();
   }
   else if (a === 'goal-rationale') { ui.goalDraft.rationale = t.value; toggleGoalSave(); }
+  else if (a === 'goal-name') { ui.goalDraft.name = t.value; }
   else if (a === 'goal-date') { ui.goalDraft.date = t.value; }
+  else if (a === 'rename-goal') { const g = portfolio.goals.find(x => x.effectiveDate === ds.date); if (g) { const v = t.value.trim(); if (v) g.name = v; else delete g.name; markDirty(); } }
   else if (a === 'set-band') { const n = parseNum(t.value); if (n != null) { portfolio.meta.driftBandPct = Math.max(1, Math.min(50, n)); markDirty(); } }
   else if (a === 'glide-rationale') { const gp = ensureGlide(ds.child); gp.rationale = t.value; markDirty(); }
 }
@@ -2484,7 +2553,9 @@ function saveGoalDraft() {
   const d = ui.goalDraft;
   const targets = {};
   for (const dc of TAXONOMY.detail) if (d.targets[dc.id]) targets[dc.id] = d.targets[dc.id];
-  portfolio.goals.push({ effectiveDate: d.date, targets, rationale: d.rationale.trim() });
+  const entry = { effectiveDate: d.date, targets, rationale: d.rationale.trim() };
+  if (d.name && d.name.trim()) entry.name = d.name.trim();
+  portfolio.goals.push(entry);
   ui.goalDraft = null; markDirty(); render(); toast('Goal saved to journal');
 }
 
