@@ -210,8 +210,12 @@
   .legend-item { display: flex; align-items: center; gap: 7px; font-size: 12px; }
   .swatch { width: 10px; height: 10px; flex: none; display: inline-block; }
   .drift-row { display: grid; grid-template-columns: 130px 1fr 150px; align-items: center; gap: 12px; }
-  .donut-wrap { position: relative; display: inline-block; line-height: 0; }
-  .donut-tip { position: absolute; z-index: 6; pointer-events: none; display: none; background: var(--color-text); color: var(--color-bg); font-family: var(--font-heading); font-size: 12px; letter-spacing: 0.01em; padding: 3px 8px; white-space: nowrap; box-shadow: var(--shadow-md); }
+  .donut-wrap { display: inline-flex; align-items: center; gap: 16px; }
+  .donut-readout { width: 132px; min-height: 66px; display: flex; flex-direction: column; justify-content: center; border-left: 1px solid var(--color-divider); padding-left: 14px; }
+  .ro-hint { font-size: 12px; }
+  .ro-ring { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .ro-label { font-family: var(--font-heading); font-size: 17px; line-height: 1.12; margin: 1px 0; }
+  .ro-pct { font-family: var(--font-heading); font-size: 24px; line-height: 1; }
   .slice { transition: stroke-width .12s ease; cursor: pointer; }
   .slice:hover { stroke-width: var(--hw); }
   .empty { max-width: 640px; margin: 8vh auto; text-align: center; display: flex; flex-direction: column; gap: var(--space-4); align-items: center; }
@@ -233,6 +237,7 @@
     .report .rep-section { break-inside: avoid; page-break-inside: avoid; }
     .report .page-break { break-before: page; page-break-before: always; }
     .blueprint > .corner { display: none; }
+    .donut-readout { display: none; }
     a { color: var(--color-text); text-decoration: none; }
   }
 </style>
@@ -1100,7 +1105,7 @@ function concentricDonutSVG(actualRows, goalRows) {
       <text x="${cx}" y="${goalRows ? 106 : 116}" text-anchor="middle" style="font-family:var(--font-heading);font-size:14px;fill:var(--color-text);pointer-events:none;">ACTUAL</text>
       ${goalRows ? `<text x="${cx}" y="124" text-anchor="middle" style="font-family:var(--font-heading);font-size:12px;fill:var(--color-accent-700);pointer-events:none;">vs GOAL</text>` : ''}
     </svg>
-    <div class="donut-tip"></div>
+    <div class="donut-readout"><div class="ro-hint text-muted">Hover a slice</div></div>
   </div>`;
 }
 
@@ -1410,7 +1415,7 @@ function dashKpiHTML(snap, alloc, goal, band, breachCount) {
   const withBasis = alloc.byHolding.filter(h => h.gain != null);
   const totalGain = withBasis.reduce((s, h) => s + h.gain, 0);
   const gg = goal ? goalGroupTargets(goal) : null;
-  const goalStr = gg ? TAXONOMY.groups.filter(x => gg[x.id]).map(x => Math.round(gg[x.id])).join('/') : '—';
+  const goalStr = gg ? TAXONOMY.groups.filter(x => gg[x.id]).map(x => Math.round(gg[x.id]) + '%').join(' / ') : '—';
   return `<div class="grid-kpi">
     <div class="kpi">
       <div class="kicker">${esc(drillScopeLabel())} total</div>
@@ -1445,7 +1450,7 @@ function drillScopeLabel() {
 function legendHTML(actualRows, goalTargets) {
   return actualRows.map(r => {
     const g = goalTargets && goalTargets[r.id];
-    const pair = g != null ? `${r.pct.toFixed(0)} / ${g}` : `${r.pct.toFixed(0)}%`;
+    const pair = g != null ? `${r.pct.toFixed(0)}% / ${g}%` : `${r.pct.toFixed(0)}%`;
     return `<div class="legend-item"><span class="swatch" style="background:${r.color}"></span><span>${esc(r.label)}</span><span class="text-muted">${pair}</span></div>`;
   }).join('');
 }
@@ -1461,17 +1466,13 @@ function dashDonutsHTML(actualRows, goalTargets, alloc, snap, scopeLabel, goalNo
     : `<div class="text-muted" style="font-size:11px;text-align:center;">${esc(goalNote || 'No goal for this scope')}</div>`;
   return `<div style="padding:20px;border-right:1px solid var(--color-divider);">
     <div class="panel-hd" style="padding:0 0 14px;border:0;"><h4>Actual vs Goal</h4>${glideInfo ? `<span class="tag tag-accent-2" style="margin-left:auto;">age ${glideInfo.age}</span>` : ''}</div>
-    <div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap;">
-      <figure class="blueprint" style="padding:16px;display:flex;flex-direction:column;align-items:center;gap:8px;flex:none;">${corners()}
-        ${concentricDonutSVG(actualRows, goalRows)}
-        <figcaption>${esc(snap.date)} · ${fmtMoney(alloc.total)}</figcaption>
-        ${ringKey}
-      </figure>
-      <div style="flex:1;min-width:170px;">
-        ${goalNote ? `<div class="text-muted" style="font-size:12px;margin-bottom:10px;">${esc(goalNote)}</div>` : ''}
-        <div class="legend" style="flex-direction:column;gap:9px;">${legendHTML(actualRows, goalTargets)}</div>
-      </div>
-    </div>
+    <figure class="blueprint" style="padding:16px;display:flex;flex-direction:column;align-items:center;gap:8px;">${corners()}
+      ${concentricDonutSVG(actualRows, goalRows)}
+      <figcaption>${esc(snap.date)} · ${fmtMoney(alloc.total)}</figcaption>
+      ${ringKey}
+    </figure>
+    ${goalNote ? `<div class="text-muted" style="font-size:12px;margin-top:12px;">${esc(goalNote)}</div>` : ''}
+    <div class="legend" style="margin-top:10px;">${legendHTML(actualRows, goalTargets)}</div>
   </div>`;
 }
 
@@ -1522,7 +1523,7 @@ function dashCategoriesHTML(snap) {
     let meta = 'age ' + (g ? g.age : '?');
     if (g && g.targets) {
       const gd = computeDrift(gr, a.total, g.targets, 999).filter(x => x.targetPct > 0);
-      meta = gd.map(x => `${x.label} ${x.actualPct.toFixed(0)}/${x.targetPct}`).slice(0, 2).join(' · ');
+      meta = gd.map(x => `${x.label} ${x.actualPct.toFixed(0)}%/${x.targetPct}%`).slice(0, 2).join(' · ');
     }
     cards.push(catCardHTML(`529 · ${child ? child.label : ''} (${g ? g.age : '?'})`, acct.name, a.total, share, meta, { level: 'account', accountId: acct.id }));
   }
@@ -1835,7 +1836,7 @@ function renderGoal() {
     <div style="display:grid;grid-template-columns:100px 1fr;gap:14px;border-left:1px solid var(--color-divider);padding:0 0 14px 14px;position:relative;">
       <span class="text-muted tnum" style="font-size:12px;">${esc(g.effectiveDate)}${i === 0 ? ' <span class="tag tag-accent">current</span>' : ''}</span>
       <div>
-        <div style="font-size:13px;font-family:var(--font-heading);">${(() => { const gg = goalGroupTargets(g) || {}; return TAXONOMY.groups.filter(x => gg[x.id]).map(x => `${x.label.split(' ')[0]} ${Math.round(gg[x.id])}`).join(' · '); })()}</div>
+        <div style="font-size:13px;font-family:var(--font-heading);">${(() => { const gg = goalGroupTargets(g) || {}; return TAXONOMY.groups.filter(x => gg[x.id]).map(x => `${x.label.split(' ')[0]} ${Math.round(gg[x.id])}%`).join(' · '); })()}</div>
         <p class="text-muted" style="margin:2px 0 0;font-size:13px;">${esc(g.rationale || '(no rationale recorded)')}</p>
       </div>
     </div>`).join('') || '<span class="text-muted">No goals recorded yet.</span>';
@@ -1875,7 +1876,7 @@ function renderGlidePaths() {
     const age = childAge(child.birthYear, todayISO());
     const rows = bands.map((b, i) => {
       const active = age >= b.ageFrom && age <= b.ageTo;
-      const t = TAXONOMY.groups.filter(g => b.targets[g.id]).map(g => `${g.label.split(' ')[0]} ${b.targets[g.id]}`).join(' · ');
+      const t = TAXONOMY.groups.filter(g => b.targets[g.id]).map(g => `${g.label.split(' ')[0]} ${b.targets[g.id]}%`).join(' · ');
       return `<tr ${active ? 'style="background:var(--color-accent-100);"' : ''}>
         <td class="tnum">${b.ageFrom}–${b.ageTo}${active ? ' <span class="tag tag-accent">now</span>' : ''}</td>
         <td style="font-size:13px;">${t || '<span class="text-muted">—</span>'}</td>
@@ -1942,7 +1943,7 @@ function reportSection(title, subtitle, holdings, snap, goalTargets, band, showA
     : null;
   const legend = rollup.map(r => {
     const gt = goalTargets && goalTargets[r.id];
-    return `<div class="legend-item"><span class="swatch" style="background:${r.color}"></span>${esc(r.label)} <span class="text-muted tnum">${r.pct.toFixed(0)}%${gt != null ? ' / ' + Math.round(gt) : ''}</span></div>`;
+    return `<div class="legend-item"><span class="swatch" style="background:${r.color}"></span>${esc(r.label)} <span class="text-muted tnum">${r.pct.toFixed(0)}%${gt != null ? ' / ' + Math.round(gt) + '%' : ''}</span></div>`;
   }).join('');
   return `<section class="rep-section" style="margin-bottom:26px;">
     <h3 style="margin:0 0 2px;">${esc(title)}</h3>
@@ -2203,21 +2204,20 @@ function boot() {
   }).catch(() => {});
 }
 
-/* Donut hover: show the hovered slice's % near the cursor (CSS pops the slice). */
+/* Donut hover: update the fixed readout to the right of the donut (CSS pops the
+   slice). One steady spot so it's easy to read. */
+const RO_HINT = '<div class="ro-hint text-muted">Hover a slice</div>';
 function onDonutHover(e) {
   const s = e.target.closest ? e.target.closest('[data-slice]') : null;
-  document.querySelectorAll('.donut-tip').forEach(t => { t.style.display = 'none'; });
-  if (!s) return;
-  const wrap = s.closest('.donut-wrap'); if (!wrap) return;
-  const tip = wrap.querySelector('.donut-tip'); if (!tip) return;
-  tip.textContent = `${s.dataset.label} · ${s.dataset.ring} ${s.dataset.pct}%`;
-  tip.style.display = 'block';
-  const r = wrap.getBoundingClientRect();
-  let x = e.clientX - r.left + 12, y = e.clientY - r.top + 12;
-  if (x + tip.offsetWidth > r.width) x = e.clientX - r.left - tip.offsetWidth - 12;
-  if (y + tip.offsetHeight > r.height) y = e.clientY - r.top - tip.offsetHeight - 12;
-  tip.style.left = Math.max(0, x) + 'px';
-  tip.style.top = Math.max(0, y) + 'px';
+  const active = s ? s.closest('.donut-wrap') : null;
+  document.querySelectorAll('.donut-readout').forEach(ro => {
+    if (ro.parentElement !== active) ro.innerHTML = RO_HINT;
+  });
+  if (!active) return;
+  const ro = active.querySelector('.donut-readout'); if (!ro) return;
+  ro.innerHTML = `<div class="ro-ring text-muted">${esc(s.dataset.ring)}</div>`
+    + `<div class="ro-label">${esc(s.dataset.label)}</div>`
+    + `<div class="ro-pct">${s.dataset.pct}%</div>`;
 }
 
 function onClick(e) {
