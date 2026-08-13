@@ -210,6 +210,10 @@
   .legend-item { display: flex; align-items: center; gap: 7px; font-size: 12px; }
   .swatch { width: 10px; height: 10px; flex: none; display: inline-block; }
   .drift-row { display: grid; grid-template-columns: 130px 1fr 150px; align-items: center; gap: 12px; }
+  .donut-wrap { position: relative; display: inline-block; line-height: 0; }
+  .donut-tip { position: absolute; z-index: 6; pointer-events: none; display: none; background: var(--color-text); color: var(--color-bg); font-family: var(--font-heading); font-size: 12px; letter-spacing: 0.01em; padding: 3px 8px; white-space: nowrap; box-shadow: var(--shadow-md); }
+  .slice { transition: stroke-width .12s ease; cursor: pointer; }
+  .slice:hover { stroke-width: var(--hw); }
   .empty { max-width: 640px; margin: 8vh auto; text-align: center; display: flex; flex-direction: column; gap: var(--space-4); align-items: center; }
   .step-dots { display: flex; gap: 8px; align-items: center; }
   .step-dot { width: 9px; height: 9px; border: 1px solid var(--color-accent); }
@@ -976,6 +980,9 @@ const ui = {
 };
 
 const CATEGORY_ORDER = ['Retirement', '529', 'Non-Retirement', 'Other'];
+/* Display labels for stored category values (value stays stable in the data). */
+const CATEGORY_LABELS = { 'Non-Retirement': 'Investments (non-retirement)' };
+function catLabel(cat) { return CATEGORY_LABELS[cat] || cat; }
 
 function esc(s) {
   return String(s == null ? '' : s)
@@ -1026,7 +1033,7 @@ function accountGroups() {
   const out = [];
   for (const cat of ['Retirement', '529', 'Non-Retirement']) {
     const accts = accountsSorted(a => a.category === cat);
-    if (accts.length) out.push({ key: cat, label: cat, category: cat, accounts: accts });
+    if (accts.length) out.push({ key: cat, label: catLabel(cat), category: cat, accounts: accts });
   }
   for (const label of otherLabels()) {
     out.push({ key: 'Other:' + label, label, category: 'Other', categoryLabel: label,
@@ -1073,24 +1080,28 @@ function donutSVG(rows, opts) {
    so each class can be compared arc-to-arc between the two rings. */
 function concentricDonutSVG(actualRows, goalRows) {
   const cx = 110, cy = 110;
-  function ring(r, w, rows) {
+  function ring(r, w, rows, ringName) {
     const C = 2 * Math.PI * r;
     const total = rows.reduce((s, x) => s + x.value, 0);
     let off = 0, out = '';
     if (total > 0) for (const row of rows) {
       const len = (row.value / total) * C;
-      out += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke-width="${w}" stroke="${row.color}" stroke-dasharray="${len.toFixed(2)} ${(C - len).toFixed(2)}" stroke-dashoffset="${(-off).toFixed(2)}"></circle>`;
+      const pct = row.pct != null ? row.pct : (row.value / total * 100);
+      out += `<circle class="slice" data-slice data-ring="${ringName}" data-label="${esc(row.label)}" data-pct="${pct.toFixed(1)}" cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke-width="${w}" stroke="${row.color}" stroke-dasharray="${len.toFixed(2)} ${(C - len).toFixed(2)}" stroke-dashoffset="${(-off).toFixed(2)}" style="--hw:${w + 6}"></circle>`;
       off += len;
     } else out = `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke-width="${w}" stroke="var(--color-neutral-300)"></circle>`;
     return out;
   }
-  const outer = ring(82, 20, actualRows);
-  const inner = goalRows ? ring(54, 15, goalRows) : '';
-  return `<svg viewBox="0 0 220 220" width="206" height="206" role="img" aria-label="Actual versus goal allocation, concentric rings">
-    <g transform="rotate(-90 ${cx} ${cy})">${outer}${inner}</g>
-    <text x="${cx}" y="${goalRows ? 106 : 116}" text-anchor="middle" style="font-family:var(--font-heading);font-size:14px;fill:var(--color-text);">ACTUAL</text>
-    ${goalRows ? `<text x="${cx}" y="124" text-anchor="middle" style="font-family:var(--font-heading);font-size:12px;fill:var(--color-accent-700);">vs GOAL</text>` : ''}
-  </svg>`;
+  const outer = ring(82, 20, actualRows, 'actual');
+  const inner = goalRows ? ring(54, 15, goalRows, 'goal') : '';
+  return `<div class="donut-wrap">
+    <svg class="donut" viewBox="0 0 220 220" width="206" height="206" role="img" aria-label="Actual versus goal allocation, concentric rings">
+      <g transform="rotate(-90 ${cx} ${cy})">${outer}${inner}</g>
+      <text x="${cx}" y="${goalRows ? 106 : 116}" text-anchor="middle" style="font-family:var(--font-heading);font-size:14px;fill:var(--color-text);pointer-events:none;">ACTUAL</text>
+      ${goalRows ? `<text x="${cx}" y="124" text-anchor="middle" style="font-family:var(--font-heading);font-size:12px;fill:var(--color-accent-700);pointer-events:none;">vs GOAL</text>` : ''}
+    </svg>
+    <div class="donut-tip"></div>
+  </div>`;
 }
 
 function miniArcSVG(pct) {
@@ -1368,10 +1379,10 @@ function dashToolbarHTML(snap) {
   if (d.level === 'household') {
     crumb = `<span>Household</span><span class="sep">›</span><span class="text-muted">Category</span><span class="sep">›</span><span class="text-muted">Account</span>`;
   } else if (d.level === 'category') {
-    crumb += `<span class="sep">›</span><span>${esc(d.categoryLabel || d.category)}</span><span class="sep">›</span><span class="text-muted">Account</span>`;
+    crumb += `<span class="sep">›</span><span>${esc(d.categoryLabel || catLabel(d.category))}</span><span class="sep">›</span><span class="text-muted">Account</span>`;
   } else {
     const acct = accountById(d.accountId);
-    const catLbl = acct ? (acct.categoryLabel || acct.category) : '';
+    const catLbl = acct ? (acct.categoryLabel || catLabel(acct.category)) : '';
     crumb += `<span class="sep">›</span><a data-act="drill" data-level="category" data-category="${esc(acct ? acct.category : '')}" data-categorylabel="${esc(acct ? (acct.categoryLabel || '') : '')}">${esc(catLbl)}</a><span class="sep">›</span><span>${esc(acct ? acct.name : '')}</span>`;
   }
   return `<div class="toolbar no-print">
@@ -1427,7 +1438,7 @@ function dashKpiHTML(snap, alloc, goal, band, breachCount) {
 function drillScopeLabel() {
   const d = ui.drill;
   if (d.level === 'household') return 'Household';
-  if (d.level === 'category') return d.categoryLabel || d.category;
+  if (d.level === 'category') return d.categoryLabel || catLabel(d.category);
   const a = accountById(d.accountId); return a ? a.name : 'Account';
 }
 
@@ -1498,7 +1509,7 @@ function dashCategoriesHTML(snap) {
     if (!accts.length) return;
     const a = allocate(accts.flatMap(x => accountHoldings(x.id)), snap);
     const share = gt > 0 ? (a.total / gt) * 100 : 0;
-    cards.push(catCardHTML('Category', cat, a.total, share, `${accts.length} account${accts.length > 1 ? 's' : ''}`, { level: 'category', category: cat }));
+    cards.push(catCardHTML('Category', catLabel(cat), a.total, share, `${accts.length} account${accts.length > 1 ? 's' : ''}`, { level: 'category', category: cat }));
   };
   plainCatCard('Retirement');
   // 529 — one card per child
@@ -1926,9 +1937,20 @@ function reportSection(title, subtitle, holdings, snap, goalTargets, band, showA
         return `<div style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0;border-bottom:1px solid color-mix(in srgb,var(--color-text) 8%,transparent);"><span>${esc(acct.name)} <span class="text-muted">${esc(acct.institution || '')}</span></span><span class="tnum">${fmtMoney(av.total)}</span></div>`;
       }).join('') + '</div>';
   }
+  const goalRows = goalTargets
+    ? TAXONOMY.groups.filter(g => goalTargets[g.id] != null).map(g => ({ id: g.id, label: g.label, color: groupColor(g.id), value: goalTargets[g.id], pct: goalTargets[g.id] }))
+    : null;
+  const legend = rollup.map(r => {
+    const gt = goalTargets && goalTargets[r.id];
+    return `<div class="legend-item"><span class="swatch" style="background:${r.color}"></span>${esc(r.label)} <span class="text-muted tnum">${r.pct.toFixed(0)}%${gt != null ? ' / ' + Math.round(gt) : ''}</span></div>`;
+  }).join('');
   return `<section class="rep-section" style="margin-bottom:26px;">
     <h3 style="margin:0 0 2px;">${esc(title)}</h3>
-    <div class="text-muted" style="font-size:13px;margin-bottom:10px;">${esc(subtitle)} · ${fmtMoney(a.total)}</div>
+    <div class="text-muted" style="font-size:13px;margin-bottom:12px;">${esc(subtitle)} · ${fmtMoney(a.total)}</div>
+    <div style="display:flex;gap:24px;align-items:center;margin-bottom:16px;">
+      <figure class="blueprint" style="padding:12px;flex:none;">${corners()}${concentricDonutSVG(rollup, goalRows)}</figure>
+      <div style="flex:1;"><div class="kicker" style="margin-bottom:8px;">${goalRows ? 'Outer ring = actual · inner ring = goal' : 'Allocation'}</div><div class="legend" style="flex-direction:column;gap:7px;">${legend}</div></div>
+    </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
       <div><div class="kicker" style="margin-bottom:6px;">Rollup</div>${allocTableHTML(rollup, goalTargets, band)}</div>
       <div><div class="kicker" style="margin-bottom:6px;">Detail</div>${allocTableHTML(detail, detailTargets || null, band)}</div>
@@ -1948,7 +1970,11 @@ function reportHTML(snap) {
     <h1 style="margin:2px 0 0;font-size:34px;">As of ${esc(snap.date)}</h1>
   </header>`;
 
+  // Order: Household → Investments (non-retirement) → Retirement → 529 → Others
   out += reportSection('Household', 'Excludes 529s · vs goal', householdHoldings(), snap, ggt, band, null, gdt);
+
+  const nonret = accountsSorted(a => a.category === 'Non-Retirement');
+  if (nonret.length) out += reportSection(catLabel('Non-Retirement'), 'vs household goal', nonret.flatMap(a => accountHoldings(a.id)), snap, ggt, band, nonret, gdt);
 
   const ret = accountsSorted(a => a.category === 'Retirement');
   if (ret.length) out += reportSection('Retirement', 'vs household goal', ret.flatMap(a => accountHoldings(a.id)), snap, ggt, band, ret, gdt);
@@ -1958,9 +1984,6 @@ function reportHTML(snap) {
     const g = glideTargets(acct.childId, snap.date);
     out += '<div class="page-break"></div>' + reportSection(`529 — ${child ? child.label : acct.name}`, `Age ${g ? g.age : '?'} · vs glide band`, accountHoldings(acct.id), snap, g && g.targets, band, [acct]);
   }
-
-  const nonret = accountsSorted(a => a.category === 'Non-Retirement');
-  if (nonret.length) out += reportSection('Non-Retirement', 'vs household goal', nonret.flatMap(a => accountHoldings(a.id)), snap, ggt, band, nonret, gdt);
 
   // Other categories grouped by label
   const others = accountsSorted(a => a.category === 'Other');
@@ -1982,24 +2005,27 @@ function reportHTML(snap) {
    =============================================================== */
 function renderAccounts() {
   const band = portfolio.meta.driftBandPct || 5;
-  const catBlocks = CATEGORY_ORDER.map(cat => {
-    const accts = accountsSorted(a => a.category === cat);
-    if (!accts.length) return '';
-    const rows = accts.map((a, i) => `<tr>
+  // One table across all categories → columns align. Category headers are
+  // full-width rows between the account rows.
+  const acctRow = (a, i, n) => `<tr>
       <td style="font-family:var(--font-heading);font-size:15px;">${esc(a.name)}</td>
       <td class="text-muted" style="font-size:13px;">${esc(a.institution || '')}</td>
       <td>${a.taxTreatment ? `<span class="tag tag-outline">${esc(a.taxTreatment)}</span>` : ''} ${a.category === '529' && a.childId ? `<span class="tag tag-accent-2">${esc((childById(a.childId) || {}).label || '')}</span>` : ''}</td>
       <td class="tnum text-muted" style="font-size:13px;">${activeHoldings(a.id).length} holdings</td>
       <td style="text-align:right;white-space:nowrap;">
         <button class="btn btn-ghost btn-sm" data-act="move-acct" data-account="${esc(a.id)}" data-dir="-1" ${i === 0 ? 'disabled' : ''}>↑</button>
-        <button class="btn btn-ghost btn-sm" data-act="move-acct" data-account="${esc(a.id)}" data-dir="1" ${i === accts.length - 1 ? 'disabled' : ''}>↓</button>
+        <button class="btn btn-ghost btn-sm" data-act="move-acct" data-account="${esc(a.id)}" data-dir="1" ${i === n - 1 ? 'disabled' : ''}>↓</button>
         <button class="btn btn-ghost btn-sm" data-act="edit-account" data-account="${esc(a.id)}">edit</button>
         <button class="btn btn-ghost btn-sm btn-danger" data-act="archive-account" data-account="${esc(a.id)}">archive</button>
       </td>
-    </tr>`).join('');
-    return `<div style="margin-bottom:18px;"><div class="kicker" style="margin-bottom:6px;">${esc(cat)}</div>
-      <table class="table"><tbody>${rows}</tbody></table></div>`;
-  }).join('');
+    </tr>`;
+  const bodyRows = accountGroups().map(g =>
+    `<tr><td colspan="5" style="border-bottom:0;padding-bottom:2px;"><div class="kicker" style="padding-top:16px;">${esc(g.label)}</div></td></tr>`
+    + g.accounts.map((a, i) => acctRow(a, i, g.accounts.length)).join('')
+  ).join('');
+  const catBlocks = bodyRows ? `<table class="table" style="table-layout:fixed;">
+    <colgroup><col style="width:28%"><col style="width:20%"><col style="width:18%"><col style="width:12%"><col style="width:22%"></colgroup>
+    <tbody>${bodyRows}</tbody></table>` : '';
 
   const kids = portfolio.children.map(c => `<span class="tag tag-accent-2" style="gap:8px;">${esc(c.label)} · ${esc(c.birthYear)} <span data-act="del-child" data-child="${esc(c.id)}" style="cursor:pointer;">✕</span></span>`).join(' ') || '<span class="text-muted" style="font-size:13px;">No children yet.</span>';
 
@@ -2063,7 +2089,7 @@ function dialogHTML() {
       <div class="dialog-actions"><button class="btn btn-secondary" data-act="close-dialog">Cancel</button><button class="btn btn-primary" data-act="save-composition" data-hid="${esc(d.hid)}">Save split</button></div>`;
   } else if (d.type === 'account') {
     const a = d.acctId ? accountById(d.acctId) : null;
-    const catOpts = CATEGORY_ORDER.map(c => `<option ${a && a.category === c ? 'selected' : ''}>${c}</option>`).join('');
+    const catOpts = CATEGORY_ORDER.map(c => `<option value="${esc(c)}" ${a && a.category === c ? 'selected' : ''}>${esc(catLabel(c))}</option>`).join('');
     const childOpts = ['<option value="">— none —</option>'].concat(portfolio.children.map(c => `<option value="${esc(c.id)}" ${a && a.childId === c.id ? 'selected' : ''}>${esc(c.label)}</option>`)).join('');
     const taxOpts = ['<option value="">— optional —</option>'].concat(TAX_TREATMENTS.map(t => `<option ${a && a.taxTreatment === t ? 'selected' : ''}>${t}</option>`)).join('');
     inner = `<div class="dialog-title">${a ? 'Edit account' : 'Add account'}</div>
@@ -2167,6 +2193,7 @@ function boot() {
     updateCheckinTotals();
   });
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && ui.dialog) closeDialog(); });
+  document.addEventListener('pointermove', onDonutHover);
   render();
   // Auto-restore the last file where the browser permits (Chrome/Edge handle,
   // or a served sibling my-portfolio.json). Falls back to the one-click reopen.
@@ -2174,6 +2201,23 @@ function boot() {
     if (r.loaded) { resetViewState(); render(); toast('Loaded · ' + fileName); }
     else if (r.needsClick) { ui.pendingReopen = r.name; render(); }
   }).catch(() => {});
+}
+
+/* Donut hover: show the hovered slice's % near the cursor (CSS pops the slice). */
+function onDonutHover(e) {
+  const s = e.target.closest ? e.target.closest('[data-slice]') : null;
+  document.querySelectorAll('.donut-tip').forEach(t => { t.style.display = 'none'; });
+  if (!s) return;
+  const wrap = s.closest('.donut-wrap'); if (!wrap) return;
+  const tip = wrap.querySelector('.donut-tip'); if (!tip) return;
+  tip.textContent = `${s.dataset.label} · ${s.dataset.ring} ${s.dataset.pct}%`;
+  tip.style.display = 'block';
+  const r = wrap.getBoundingClientRect();
+  let x = e.clientX - r.left + 12, y = e.clientY - r.top + 12;
+  if (x + tip.offsetWidth > r.width) x = e.clientX - r.left - tip.offsetWidth - 12;
+  if (y + tip.offsetHeight > r.height) y = e.clientY - r.top - tip.offsetHeight - 12;
+  tip.style.left = Math.max(0, x) + 'px';
+  tip.style.top = Math.max(0, y) + 'px';
 }
 
 function onClick(e) {
