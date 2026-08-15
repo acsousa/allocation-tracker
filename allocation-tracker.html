@@ -229,13 +229,27 @@
   .report { display: none; }
   .report.show-screen { display: block; }   /* on-screen preview in the Report view */
   @media print {
-    @page { margin: 14mm; }
-    body { background: #fff; }
-    .no-print, .nav, .toolbar, .toast, .dialog-backdrop { display: none !important; }
+    @page { margin: 15mm; }
+    html, body { background: #fff; }
+    /* print backgrounds/colors (swatches, tags, donut, accent rules) */
+    body, .report, .report * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .no-print, .nav, .toolbar, .toast, .dialog-backdrop, #dialog-mount { display: none !important; }
     .app-body > *:not(.report) { display: none !important; }
     .report { display: block !important; }
-    .report .rep-section { break-inside: avoid; page-break-inside: avoid; }
-    .report .page-break { break-before: page; page-break-before: always; }
+    .report.show-screen { border: 0 !important; padding: 0 !important; box-shadow: none !important; background: #fff !important; }
+    /* each section starts on a fresh page → pagination lines up with headers */
+    .report .rep-section { break-inside: auto; margin-bottom: 0; }
+    .report .rep-section:not(:first-of-type) { break-before: page; }
+    .report h1, .report h3, .report .rep-sub { break-after: avoid; }
+    .report .rep-chart, .report figure.blueprint { break-inside: avoid; }
+    /* tables: repeat headers across pages, never split a row */
+    .report thead { display: table-header-group; }
+    .report tr { break-inside: avoid; }
+    .report .table { font-size: 11.5px; }
+    .report .table th, .report .table td { padding: 4px 7px; }
+    .report .rep-tables { gap: 18px !important; }
+    .report footer { break-inside: avoid; }
+    .report header { break-after: avoid; }
     .blueprint > .corner { display: none; }
     .donut-readout { display: none; }
     a { color: var(--color-text); text-decoration: none; }
@@ -2054,12 +2068,12 @@ function reportSection(title, subtitle, holdings, snap, goalTargets, band, showA
   }).join('');
   return `<section class="rep-section" style="margin-bottom:26px;">
     <h3 style="margin:0 0 2px;">${esc(title)}</h3>
-    <div class="text-muted" style="font-size:13px;margin-bottom:12px;">${esc(subtitle)} · ${fmtMoney(a.total)}</div>
-    <div style="display:flex;gap:24px;align-items:center;margin-bottom:16px;">
+    <div class="rep-sub text-muted" style="font-size:13px;margin-bottom:12px;">${esc(subtitle)} · ${fmtMoney(a.total)}</div>
+    <div class="rep-chart" style="display:flex;gap:24px;align-items:center;margin-bottom:16px;">
       <figure class="blueprint" style="padding:12px;flex:none;">${corners()}${concentricDonutSVG(rollup, goalRows)}</figure>
       <div style="flex:1;"><div class="kicker" style="margin-bottom:8px;">${goalRows ? 'Outer ring = actual · inner ring = goal' : 'Allocation'}</div><div class="legend" style="flex-direction:column;gap:7px;">${legend}</div></div>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+    <div class="rep-tables" style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
       <div><div class="kicker" style="margin-bottom:6px;">Rollup</div>${allocTableHTML(rollup, goalTargets, band)}</div>
       <div><div class="kicker" style="margin-bottom:6px;">Detail</div>${allocTableHTML(detail, detailTargets || null, band)}</div>
     </div>
@@ -2090,7 +2104,7 @@ function reportHTML(snap) {
   for (const acct of accountsSorted(a => a.category === '529')) {
     const child = childById(acct.childId);
     const g = glideTargets(acct.childId, snap.date);
-    out += '<div class="page-break"></div>' + reportSection(`529 — ${child ? child.label : acct.name}`, `Age ${g ? g.age : '?'} · vs glide band`, accountHoldings(acct.id), snap, g && g.targets, band, [acct]);
+    out += reportSection(`529 — ${child ? child.label : acct.name}`, `Age ${g ? g.age : '?'} · vs glide band`, accountHoldings(acct.id), snap, g && g.targets, band, [acct]);
   }
 
   // Other categories grouped by label
