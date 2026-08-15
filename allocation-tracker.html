@@ -185,6 +185,7 @@
   .table th { text-align: left; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: color-mix(in srgb, var(--color-text) 60%, transparent); padding: var(--space-2); border-bottom: 1px solid var(--color-divider); }
   .table td { padding: var(--space-2); border-bottom: 1px solid color-mix(in srgb, var(--color-text) 8%, transparent); }
   .table tbody tr:hover { background: color-mix(in srgb, var(--color-text) 4%, transparent); }
+  .table tbody tr.pos-class-active { background: var(--color-accent-100); }
 
   /* — dialog — */
   .dialog-backdrop { position: fixed; inset: 0; z-index: 40; display: grid; place-items: center; padding: var(--space-6); background: color-mix(in srgb, var(--color-neutral-900) 50%, transparent); }
@@ -651,7 +652,8 @@ function groupColor(groupId) { return cssVarValue('--g-' + groupId, '#b7b7ba'); 
 
 /* ---- Scopes (spec §4/§5): household EXCLUDES 529 (measured vs glide). ---- */
 function householdHoldings() {
-  return holdingsWhereAccount(a => a.status !== 'archived' && a.category !== '529')
+  const inc529 = !!portfolio.meta.include529InHousehold;
+  return holdingsWhereAccount(a => a.status !== 'archived' && (inc529 || a.category !== '529'))
     .filter(h => h.status !== 'archived');
 }
 function categoryHoldingsLabeled(category, label) {
@@ -1353,7 +1355,7 @@ function rerender() { render(); }
 function resetViewState() {
   ui.view = 'dashboard'; ui.snapDate = null; ui.level = 'group';
   ui.drill = { level: 'household', category: null, accountId: null };
-  ui.checkin = null; ui.goalDraft = null; ui.historyTab = 'value'; ui.goalSel = ''; ui.positionsSnap = null;
+  ui.checkin = null; ui.goalDraft = null; ui.historyTab = 'value'; ui.goalSel = ''; ui.positionsSnap = null; ui.posCategory = 'all'; ui.posClass = '';
 }
 
 function render() {
@@ -1770,6 +1772,16 @@ function posCompare(a, b, key) {
   if (key === 'category') { const c = CATEGORY_ORDER.indexOf(a.category) - CATEGORY_ORDER.indexOf(b.category); return c || a.account.localeCompare(b.account); }
   return 0;
 }
+/* Terminal (decomposed) class ids a holding contributes to. */
+function holdingClasses(h) { return splitValue(1, compositionOf(h), h.assetClass).map(([c]) => c); }
+/* Holdings in the current Positions category scope. */
+function positionsScopeHoldings() {
+  const c = ui.posCategory || 'all';
+  if (c === 'all') return activeHoldings();
+  if (c === 'household') return householdHoldings();
+  if (c.indexOf('Other:') === 0) return categoryHoldingsLabeled('Other', c.slice(6));
+  return categoryHoldings(c);
+}
 function renderPositions() {
   const snap = positionsSnapshot();
   if (!snap) return `<div class="toolbar no-print"><div class="crumb"><span>Positions</span></div></div>
@@ -1777,26 +1789,27 @@ function renderPositions() {
     <h2 style="margin:0;">Record a check-in to see your positions.</h2>
     <button class="btn btn-primary" data-act="new-checkin">Start a check-in</button></div>`;
   const idx = valueIndex(snap);
-  const gt = grandTotal(snap);
   const sort = ui.positionsSort || (ui.positionsSort = { key: 'category', dir: 1 });
+  const scoped = positionsScopeHoldings();
+  const alloc = allocate(scoped, snap);           // scope total (decomposed)
+  const gt = alloc.total;
 
-  // per-asset-class summary (decomposed allocation, all holdings incl 529)
-  const alloc = allocate(activeHoldings(), snap);
+  // per-asset-class summary of the scope; click a row to filter holdings by class
   const classRows = toRows(alloc.detail, gt, 'detail').slice().sort((a, b) => b.value - a.value);
-  const classTable = classRows.map(r => `<tr>
+  const classTable = classRows.map(r => `<tr class="${ui.posClass === r.id ? 'pos-class-active' : ''}" style="cursor:pointer;" data-act="pos-class" data-class="${r.id}">
       <td><span class="swatch" style="background:${r.color};margin-right:6px;"></span>${esc(r.label)}</td>
       <td class="tnum" style="text-align:right;">${fmtMoney(r.value)}</td>
       <td class="tnum" style="text-align:right;">${r.pct.toFixed(1)}%</td>
     </tr>`).join('');
 
-  // one row per holding
-  let rows = activeHoldings().map(h => {
+  let rows = scoped.map(h => {
     const v = idx[h.id]; const value = v ? Number(v.marketValue) : 0;
     if (!value) return null;
     const cb = v && v.costBasis != null ? Number(v.costBasis) : (h.costBasis != null ? Number(h.costBasis) : null);
     const acct = accountById(h.accountId) || {};
-    return { ticker: h.ticker, name: h.name || '', account: acct.name || '', category: acct.category || '', categoryLabel: acct.categoryLabel, classId: h.assetClass, className: detailLabel(h.assetClass), value, pct: gt > 0 ? value / gt * 100 : 0, gain: cb != null ? value - cb : null, composed: !!compositionOf(h) };
+    return { ticker: h.ticker, name: h.name || '', account: acct.name || '', category: acct.category || '', categoryLabel: acct.categoryLabel, classId: h.assetClass, className: detailLabel(h.assetClass), classes: holdingClasses(h), value, pct: gt > 0 ? value / gt * 100 : 0, gain: cb != null ? value - cb : null, composed: !!compositionOf(h) };
   }).filter(Boolean);
+  if (ui.posClass) rows = rows.filter(r => r.classes.indexOf(ui.posClass) >= 0);
   rows.sort((a, b) => { const c = posCompare(a, b, sort.key) * sort.dir; return c || (b.value - a.value); });
 
   const arrow = k => sort.key === k ? (sort.dir > 0 ? ' ▲' : ' ▼') : '';
@@ -1811,22 +1824,31 @@ function renderPositions() {
       <td class="tnum" style="text-align:right;color:${r.gain != null && r.gain < 0 ? 'var(--color-crit)' : 'var(--color-accent-700)'};">${r.gain != null ? fmtMoneySigned(r.gain) : '—'}</td>
     </tr>`).join('');
 
+  // category filter options
+  const catArr = [['all', 'Everything (incl. 529)'], ['household', 'Household']];
+  for (const cat of ['Retirement', 'Non-Retirement', '529']) if (accountsSorted(a => a.category === cat).length) catArr.push([cat, catLabel(cat)]);
+  for (const l of otherLabels()) catArr.push(['Other:' + l, l]);
+  const catSel = `<div class="field" style="width:210px;"><label>Category</label><select class="input" data-act="pos-category">${catArr.map(([v, l]) => `<option value="${esc(v)}" ${(ui.posCategory || 'all') === v ? 'selected' : ''}>${esc(l)}</option>`).join('')}</select></div>`;
+
   const snaps = sortedSnapshots().slice().reverse();
   const opts = snaps.map((s, i) => `<option value="${s.date}" ${s.date === snap.date ? 'selected' : ''}>${s.date}${i === 0 ? ' (latest)' : ''}</option>`).join('');
+  const totalLabel = (ui.posCategory && ui.posCategory !== 'all') ? 'scope total' : 'total';
 
-  return `<div class="toolbar no-print"><div class="crumb"><span>Positions</span></div>
-    <span class="text-muted" style="margin-left:auto;font-size:12px;">${rows.length} position${rows.length !== 1 ? 's' : ''} · ${fmtMoney(gt)} total</span>
+  return `<div class="toolbar no-print" style="flex-wrap:wrap;"><div class="crumb"><span>Positions</span></div>
+    ${catSel}
+    ${ui.posClass ? `<span class="tag tag-accent-2" style="cursor:pointer;align-self:flex-end;margin-bottom:6px;" data-act="pos-class-clear">Class: ${esc(detailLabel(ui.posClass))} ✕</span>` : ''}
+    <span class="text-muted" style="margin-left:auto;align-self:flex-end;margin-bottom:6px;font-size:12px;">${rows.length} position${rows.length !== 1 ? 's' : ''} · ${fmtMoney(gt)} ${totalLabel}</span>
     <div class="field" style="width:150px;"><label>Snapshot</label><select class="input" data-act="pos-snap">${opts}</select></div>
   </div>
   <div style="display:grid;grid-template-columns:310px 1fr;gap:20px;align-items:start;">
-    <div class="panel"><div class="panel-hd"><h4>By asset class</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">% of total</span></div>
-      <table class="table"><thead><tr><th>Class</th><th style="text-align:right;">Value</th><th style="text-align:right;">%</th></tr></thead><tbody>${classTable}</tbody></table>
+    <div class="panel"><div class="panel-hd"><h4>By asset class</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">click to filter</span></div>
+      <table class="table"><thead><tr><th>Class</th><th style="text-align:right;">Value</th><th style="text-align:right;">%</th></tr></thead><tbody>${classTable || '<tr><td colspan="3" class="text-muted" style="padding:14px;">Nothing in this scope.</td></tr>'}</tbody></table>
     </div>
     <div class="panel"><div class="panel-hd"><h4>Holdings</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">click a column to sort</span></div>
       <table class="table"><thead><tr>
         ${th('ticker', 'Ticker')}${th('account', 'Account')}${th('category', 'Category')}${th('class', 'Asset class')}
-        ${th('value', 'Value', 'right')}${th('pct', '% of total', 'right')}${th('gain', 'Unrealized', 'right')}
-      </tr></thead><tbody>${body || '<tr><td colspan="7" class="text-muted" style="padding:14px;">No positions in this snapshot.</td></tr>'}</tbody></table>
+        ${th('value', 'Value', 'right')}${th('pct', '% of ' + (totalLabel === 'total' ? 'total' : 'scope'), 'right')}${th('gain', 'Unrealized', 'right')}
+      </tr></thead><tbody>${body || '<tr><td colspan="7" class="text-muted" style="padding:14px;">No positions match this filter.</td></tr>'}</tbody></table>
     </div>
   </div>`;
 }
@@ -2331,6 +2353,7 @@ function renderAccounts() {
   <div class="panel"><div class="panel-hd"><h4>Settings &amp; data</h4></div>
     <div style="padding:20px;display:flex;gap:28px;flex-wrap:wrap;align-items:flex-end;">
       <div class="field" style="width:160px;"><label>Drift band (± absolute %)</label><input class="input tnum" inputmode="numeric" value="${band}" data-act="set-band"></div>
+      <label class="radio" style="align-items:center;"><input type="checkbox" data-act="toggle-529" ${portfolio.meta.include529InHousehold ? 'checked' : ''}><span class="dot"></span>Count 529 accounts in the Household total</label>
       <button class="btn btn-secondary" data-act="save">Save file</button>
       <button class="btn btn-secondary" data-act="open">Open file</button>
       <button class="btn btn-secondary" data-act="export-csv">Export snapshot CSV</button>
@@ -2529,6 +2552,8 @@ function onClick(e) {
     case 'onboard-start': openDialog({ type: 'account' }); break;
     case 'reopen-file': reopenPending(); break;
     case 'pos-sort': { const k = ds.key, s = ui.positionsSort || (ui.positionsSort = { key: 'category', dir: 1 }); if (s.key === k) s.dir = -s.dir; else { s.key = k; s.dir = (k === 'value' || k === 'pct' || k === 'gain') ? -1 : 1; } render(); break; }
+    case 'pos-class': ui.posClass = (ui.posClass === ds.class) ? '' : ds.class; render(); break;
+    case 'pos-class-clear': ui.posClass = ''; render(); break;
     case 'drill':
       ui.drill = { level: ds.level, category: ds.category || null, categoryLabel: ds.categorylabel || null, accountId: ds.account || null };
       if (ds.level === 'account') { const ac = accountById(ds.account); ui.drill.category = ac ? ac.category : null; ui.drill.categoryLabel = ac ? (ac.categoryLabel || null) : null; }
@@ -2574,6 +2599,8 @@ function onChange(e) {
   else if (a === 'pick-snap') { ui.snapDate = t.value; render(); }
   else if (a === 'pick-goal') { ui.goalSel = t.value; render(); }
   else if (a === 'pos-snap') { ui.positionsSnap = t.value; render(); }
+  else if (a === 'pos-category') { ui.posCategory = t.value; ui.posClass = ''; render(); }
+  else if (a === 'toggle-529') { portfolio.meta.include529InHousehold = t.checked; markDirty(); render(); }
   else if (a === 'htab') { ui.historyTab = ds.tab; render(); }
   else if (a === 'acct-cat') {
     const other = document.getElementById('f-other-wrap'), child = document.getElementById('f-child-wrap');
