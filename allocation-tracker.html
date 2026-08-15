@@ -1353,7 +1353,7 @@ function rerender() { render(); }
 function resetViewState() {
   ui.view = 'dashboard'; ui.snapDate = null; ui.level = 'group';
   ui.drill = { level: 'household', category: null, accountId: null };
-  ui.checkin = null; ui.goalDraft = null; ui.historyTab = 'value'; ui.goalSel = '';
+  ui.checkin = null; ui.goalDraft = null; ui.historyTab = 'value'; ui.goalSel = ''; ui.positionsSnap = null;
 }
 
 function render() {
@@ -1363,6 +1363,7 @@ function render() {
 
   let body;
   switch (ui.view) {
+    case 'positions': body = renderPositions(); break;
     case 'checkin':  body = renderCheckin();  break;
     case 'history':  body = renderHistory();  break;
     case 'goal':     body = renderGoal();     break;
@@ -1379,7 +1380,7 @@ function render() {
 function shellHTML(inner) { return `<div class="shell">${inner}</div>`; }
 
 function navHTML() {
-  const tabs = [['dashboard', 'Dashboard'], ['checkin', 'Check-in'], ['history', 'History'], ['goal', 'Goal'], ['report', 'Report'], ['accounts', 'Accounts']];
+  const tabs = [['dashboard', 'Dashboard'], ['positions', 'Positions'], ['checkin', 'Check-in'], ['history', 'History'], ['goal', 'Goal'], ['report', 'Report'], ['accounts', 'Accounts']];
   const links = tabs.map(([v, label]) =>
     `<a data-act="nav" data-view="${v}" ${ui.view === v ? 'aria-current="page"' : ''}>${label}</a>`).join('');
   const saveCls = dirty ? 'btn btn-sm save-dirty' : 'btn btn-sm btn-secondary';
@@ -1753,6 +1754,81 @@ function dashNoSnapshotHTML() {
 }
 function dashToolbarStubHTML() {
   return `<div class="toolbar no-print"><div class="crumb"><span>Household</span></div></div>`;
+}
+
+/* ===============================================================
+   POSITIONS — read-only, sortable view of every holding by category,
+   with % of total per holding and a per-asset-class summary.
+   =============================================================== */
+function positionsSnapshot() { return (ui.positionsSnap ? snapshotByDate(ui.positionsSnap) : null) || latestSnapshot(); }
+function posCompare(a, b, key) {
+  if (key === 'value' || key === 'pct') return a.value - b.value;
+  if (key === 'gain') return (a.gain == null ? -Infinity : a.gain) - (b.gain == null ? -Infinity : b.gain);
+  if (key === 'ticker') return a.ticker.localeCompare(b.ticker);
+  if (key === 'account') return a.account.localeCompare(b.account);
+  if (key === 'class') return TAXONOMY.detail.findIndex(d => d.id === a.classId) - TAXONOMY.detail.findIndex(d => d.id === b.classId);
+  if (key === 'category') { const c = CATEGORY_ORDER.indexOf(a.category) - CATEGORY_ORDER.indexOf(b.category); return c || a.account.localeCompare(b.account); }
+  return 0;
+}
+function renderPositions() {
+  const snap = positionsSnapshot();
+  if (!snap) return `<div class="toolbar no-print"><div class="crumb"><span>Positions</span></div></div>
+    <div class="empty" style="margin:6vh auto;"><span class="tag tag-outline">No snapshots yet</span>
+    <h2 style="margin:0;">Record a check-in to see your positions.</h2>
+    <button class="btn btn-primary" data-act="new-checkin">Start a check-in</button></div>`;
+  const idx = valueIndex(snap);
+  const gt = grandTotal(snap);
+  const sort = ui.positionsSort || (ui.positionsSort = { key: 'category', dir: 1 });
+
+  // per-asset-class summary (decomposed allocation, all holdings incl 529)
+  const alloc = allocate(activeHoldings(), snap);
+  const classRows = toRows(alloc.detail, gt, 'detail').slice().sort((a, b) => b.value - a.value);
+  const classTable = classRows.map(r => `<tr>
+      <td><span class="swatch" style="background:${r.color};margin-right:6px;"></span>${esc(r.label)}</td>
+      <td class="tnum" style="text-align:right;">${fmtMoney(r.value)}</td>
+      <td class="tnum" style="text-align:right;">${r.pct.toFixed(1)}%</td>
+    </tr>`).join('');
+
+  // one row per holding
+  let rows = activeHoldings().map(h => {
+    const v = idx[h.id]; const value = v ? Number(v.marketValue) : 0;
+    if (!value) return null;
+    const cb = v && v.costBasis != null ? Number(v.costBasis) : (h.costBasis != null ? Number(h.costBasis) : null);
+    const acct = accountById(h.accountId) || {};
+    return { ticker: h.ticker, name: h.name || '', account: acct.name || '', category: acct.category || '', categoryLabel: acct.categoryLabel, classId: h.assetClass, className: detailLabel(h.assetClass), value, pct: gt > 0 ? value / gt * 100 : 0, gain: cb != null ? value - cb : null, composed: !!compositionOf(h) };
+  }).filter(Boolean);
+  rows.sort((a, b) => { const c = posCompare(a, b, sort.key) * sort.dir; return c || (b.value - a.value); });
+
+  const arrow = k => sort.key === k ? (sort.dir > 0 ? ' ▲' : ' ▼') : '';
+  const th = (k, label, align) => `<th style="text-align:${align || 'left'};cursor:pointer;white-space:nowrap;" data-act="pos-sort" data-key="${k}">${label}${arrow(k)}</th>`;
+  const body = rows.map(r => `<tr>
+      <td style="font-family:var(--font-heading);font-size:15px;">${esc(r.ticker)}${r.name ? ` <span class="text-muted" style="font-family:var(--font-body);font-size:11px;">${esc(r.name)}</span>` : ''}</td>
+      <td class="text-muted" style="font-size:13px;">${esc(r.account)}</td>
+      <td class="text-muted" style="font-size:13px;">${esc(r.categoryLabel || catLabel(r.category))}</td>
+      <td><span class="tag ${r.composed ? 'tag-accent-2' : 'tag-accent'}">${r.composed ? 'Split · ' : ''}${esc(r.className)}</span></td>
+      <td class="tnum" style="text-align:right;">${fmtMoney(r.value)}</td>
+      <td class="tnum" style="text-align:right;">${r.pct.toFixed(1)}%</td>
+      <td class="tnum" style="text-align:right;color:${r.gain != null && r.gain < 0 ? 'var(--color-crit)' : 'var(--color-accent-700)'};">${r.gain != null ? fmtMoneySigned(r.gain) : '—'}</td>
+    </tr>`).join('');
+
+  const snaps = sortedSnapshots().slice().reverse();
+  const opts = snaps.map((s, i) => `<option value="${s.date}" ${s.date === snap.date ? 'selected' : ''}>${s.date}${i === 0 ? ' (latest)' : ''}</option>`).join('');
+
+  return `<div class="toolbar no-print"><div class="crumb"><span>Positions</span></div>
+    <span class="text-muted" style="margin-left:auto;font-size:12px;">${rows.length} position${rows.length !== 1 ? 's' : ''} · ${fmtMoney(gt)} total</span>
+    <div class="field" style="width:150px;"><label>Snapshot</label><select class="input" data-act="pos-snap">${opts}</select></div>
+  </div>
+  <div style="display:grid;grid-template-columns:310px 1fr;gap:20px;align-items:start;">
+    <div class="panel"><div class="panel-hd"><h4>By asset class</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">% of total</span></div>
+      <table class="table"><thead><tr><th>Class</th><th style="text-align:right;">Value</th><th style="text-align:right;">%</th></tr></thead><tbody>${classTable}</tbody></table>
+    </div>
+    <div class="panel"><div class="panel-hd"><h4>Holdings</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">click a column to sort</span></div>
+      <table class="table"><thead><tr>
+        ${th('ticker', 'Ticker')}${th('account', 'Account')}${th('category', 'Category')}${th('class', 'Asset class')}
+        ${th('value', 'Value', 'right')}${th('pct', '% of total', 'right')}${th('gain', 'Unrealized', 'right')}
+      </tr></thead><tbody>${body || '<tr><td colspan="7" class="text-muted" style="padding:14px;">No positions in this snapshot.</td></tr>'}</tbody></table>
+    </div>
+  </div>`;
 }
 
 /* ===============================================================
@@ -2452,6 +2528,7 @@ function onClick(e) {
     case 'load-demo': loadDemoData(); resetViewState(); render(); toast('Demo data loaded'); break;
     case 'onboard-start': openDialog({ type: 'account' }); break;
     case 'reopen-file': reopenPending(); break;
+    case 'pos-sort': { const k = ds.key, s = ui.positionsSort || (ui.positionsSort = { key: 'category', dir: 1 }); if (s.key === k) s.dir = -s.dir; else { s.key = k; s.dir = (k === 'value' || k === 'pct' || k === 'gain') ? -1 : 1; } render(); break; }
     case 'drill':
       ui.drill = { level: ds.level, category: ds.category || null, categoryLabel: ds.categorylabel || null, accountId: ds.account || null };
       if (ds.level === 'account') { const ac = accountById(ds.account); ui.drill.category = ac ? ac.category : null; ui.drill.categoryLabel = ac ? (ac.categoryLabel || null) : null; }
@@ -2496,6 +2573,7 @@ function onChange(e) {
   if (a === 'level') { ui.level = ds.level; render(); }
   else if (a === 'pick-snap') { ui.snapDate = t.value; render(); }
   else if (a === 'pick-goal') { ui.goalSel = t.value; render(); }
+  else if (a === 'pos-snap') { ui.positionsSnap = t.value; render(); }
   else if (a === 'htab') { ui.historyTab = ds.tab; render(); }
   else if (a === 'acct-cat') {
     const other = document.getElementById('f-other-wrap'), child = document.getElementById('f-child-wrap');
