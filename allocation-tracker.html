@@ -152,6 +152,7 @@
   }
   .input:hover { border-color: color-mix(in srgb, var(--color-text) 45%, transparent); }
   .input:focus-visible { border-color: var(--color-accent); outline-offset: 0; }
+  .input.basis-flag { border-color: var(--color-warn); background: color-mix(in srgb, var(--color-warn) 12%, var(--color-surface)); }
   select.input { min-height: 34px; }
   textarea.input { min-height: 80px; resize: vertical; line-height: 1.5; }
   .seg { display: inline-flex; overflow: hidden; border: 1px solid var(--color-divider); border-radius: 0; }
@@ -1759,10 +1760,50 @@ function updateCheckinTotals() {
   const sEl = document.getElementById('ci-sanity'); if (sEl) sEl.innerHTML = checkinSanityHTML(total);
 }
 
+/* Strict cost-basis rule (later check-ins): if a holding's value changed but its
+   cost basis was left unchanged (and non-blank), the basis is stale — buys/sells
+   move basis. The user must update it or clear it to blank before saving. Holdings
+   with no tracked basis are unaffected. */
+function holdingBasisIssue(h, baseVals) {
+  const ci = ui.checkin;
+  if (!ci || !ci.baseDate) return false;
+  const base = (baseVals || valueIndex(snapshotByDate(ci.baseDate)))[h.id];
+  if (!base) return false;                                 // new holding this check-in
+  const v = ci.values[h.id] || {};
+  const curVal = parseNum(v.marketValue);
+  if (curVal == null || curVal === Number(base.marketValue)) return false; // value unchanged/blank
+  const curBasis = parseNum(v.costBasis);
+  if (curBasis == null) return false;                      // basis blank → allowed
+  const baseBasis = base.costBasis != null ? Number(base.costBasis) : null;
+  if (baseBasis == null) return false;                     // basis newly added → allowed
+  return curBasis === baseBasis;                           // value changed, basis untouched
+}
+function checkinBaseVals() { return ui.checkin && ui.checkin.baseDate ? valueIndex(snapshotByDate(ui.checkin.baseDate)) : {}; }
+function checkinBasisIssues() { const bv = checkinBaseVals(); return activeHoldings().filter(h => holdingBasisIssue(h, bv)); }
+
+/* Live flag update for one holding + its account badge + the header count. */
+function updateBasisFlag(hid) {
+  if (!ui.checkin) return;
+  const h = portfolio.holdings.find(x => x.id === hid);
+  if (!h) return;
+  const bv = checkinBaseVals();
+  const issue = holdingBasisIssue(h, bv);
+  const inp = document.getElementById('ci-basis-' + hid);
+  if (inp) inp.classList.toggle('basis-flag', issue);
+  const hint = document.getElementById('ci-basishint-' + hid);
+  if (hint) hint.textContent = issue ? 'update or clear' : '';
+  const badge = document.getElementById('ci-acctbadge-' + h.accountId);
+  if (badge) { const n = activeHoldings(h.accountId).filter(x => holdingBasisIssue(x, bv)).length; badge.innerHTML = n ? `<span class="tag tag-warn">${n} basis</span>` : ''; }
+  const total = activeHoldings().filter(x => holdingBasisIssue(x, bv)).length;
+  const hdr = document.getElementById('ci-issue-badge');
+  if (hdr) hdr.innerHTML = total ? `<span class="tag tag-warn">${total} need cost basis</span>` : '';
+}
+
 /* One account's collapsible block in the check-in. */
 function checkinAccountBlock(acct, ci, baseVals) {
   const open = !!ui.checkinOpen[acct.id];
   const holds = activeHoldings(acct.id);
+  const acctIssues = holds.filter(h => holdingBasisIssue(h, baseVals)).length;
   let acctTotal = 0, baseTotal = 0;
   for (const h of holds) {
     const mv = parseNum((ci.values[h.id] || {}).marketValue) || 0; acctTotal += mv;
@@ -1775,7 +1816,8 @@ function checkinAccountBlock(acct, ci, baseVals) {
       ${acct.institution ? `<span class="text-muted" style="font-size:13px;">${esc(acct.institution)}</span>` : ''}
       ${acct.taxTreatment ? `<span class="tag tag-outline">${esc(acct.taxTreatment)}</span>` : ''}
       <button class="btn btn-ghost btn-sm" title="Edit account" data-act="edit-account" data-account="${esc(acct.id)}">edit</button>
-      <span class="text-muted tnum" style="font-size:12px;margin-left:auto;">${fmtMoney2(acctTotal)} ${baseTotal ? `<span style="color:var(--color-accent-700);">${fmtMoneySigned2(delta)}</span>` : ''}</span>
+      <span id="ci-acctbadge-${esc(acct.id)}" style="margin-left:auto;">${acctIssues ? `<span class="tag tag-warn">${acctIssues} basis</span>` : ''}</span>
+      <span class="text-muted tnum" style="font-size:12px;${acctIssues ? '' : 'margin-left:auto;'}">${fmtMoney2(acctTotal)} ${baseTotal ? `<span style="color:var(--color-accent-700);">${fmtMoneySigned2(delta)}</span>` : ''}</span>
     </div>`;
   if (!open) return `<div style="border-bottom:1px solid var(--color-divider);">${head}</div>`;
 
@@ -1784,6 +1826,7 @@ function checkinAccountBlock(acct, ci, baseVals) {
     const prev = baseVals[h.id] ? fmtMoney2(baseVals[h.id].marketValue) : '—';
     const mv = parseNum(v.marketValue), cb = parseNum(v.costBasis);
     const gain = (mv != null && cb != null) ? mv - cb : null;
+    const issue = holdingBasisIssue(h, baseVals);
     return `<tr>
         <td style="padding-left:20px;font-family:var(--font-heading);font-size:15px;">${esc(h.ticker)}</td>
         <td>
@@ -1792,7 +1835,7 @@ function checkinAccountBlock(acct, ci, baseVals) {
         </td>
         <td class="text-muted tnum" style="text-align:right;">${prev}</td>
         <td><input class="input tnum" style="min-height:32px;text-align:right;" inputmode="decimal" value="${esc(fmtEditNum(v.marketValue))}" data-act="ci-val" data-hid="${esc(h.id)}" placeholder="0.00"></td>
-        <td><input class="input tnum" style="min-height:32px;text-align:right;" inputmode="decimal" value="${esc(fmtEditNum(v.costBasis))}" data-act="ci-basis" data-hid="${esc(h.id)}" placeholder="—"></td>
+        <td><input id="ci-basis-${esc(h.id)}" class="input tnum ${issue ? 'basis-flag' : ''}" style="min-height:32px;text-align:right;" inputmode="decimal" value="${esc(fmtEditNum(v.costBasis))}" data-act="ci-basis" data-hid="${esc(h.id)}" placeholder="—"><div id="ci-basishint-${esc(h.id)}" style="font-size:10px;text-align:right;color:var(--color-warn);">${issue ? 'update or clear' : ''}</div></td>
         <td class="tnum" style="text-align:right;padding-right:8px;color:${gain != null && gain < 0 ? 'var(--color-crit)' : 'var(--color-accent-700)'};">${gain != null ? fmtMoneySigned2(gain) : '—'}</td>
         <td style="width:34px;text-align:right;padding-right:16px;"><button class="btn btn-ghost btn-sm" title="Archive holding" data-act="archive-holding" data-hid="${esc(h.id)}">✕</button></td>
       </tr>`;
@@ -1835,15 +1878,17 @@ function renderCheckin() {
 
   const total = checkinTotal();
   const sanity = checkinSanityHTML(total);
+  const issueCount = checkinBasisIssues().length;
 
   return `<div class="panel">
     <div style="display:flex;align-items:flex-end;gap:20px;padding:18px 20px;border-bottom:1px solid var(--color-divider);">
       <div>
         <h3 style="margin:0 0 4px;">New check-in</h3>
-        <span class="text-muted" style="font-size:13px;">${ci.baseDate ? `Prefilled from ${esc(ci.baseDate)} · overtype what changed` : 'First snapshot — enter current values'}</span>
+        <span class="text-muted" style="font-size:13px;">${ci.baseDate ? `Prefilled from ${esc(ci.baseDate)} · overtype what changed. If you change a value, update or clear its cost basis.` : 'First snapshot — enter current values'}</span>
       </div>
       <div class="field" style="width:150px;margin-left:8px;"><label>Snapshot date</label><input class="input" type="date" value="${esc(ci.date)}" data-act="ci-date"></div>
       <div style="margin-left:auto;display:flex;align-items:center;gap:10px;">
+        <span id="ci-issue-badge">${issueCount ? `<span class="tag tag-warn">${issueCount} need cost basis</span>` : ''}</span>
         <button class="btn btn-secondary" data-act="ci-discard">Discard</button>
         <button class="btn btn-secondary" data-act="add-account">+ Account</button>
         <button class="btn btn-primary" data-act="ci-save">Save snapshot</button>
@@ -1864,6 +1909,15 @@ function renderCheckin() {
 
 function saveCheckin() {
   const ci = ui.checkin;
+  // Strict cost-basis rule: block save while any changed-value holding still has
+  // an untouched cost basis. Expand the offending accounts so the flags show.
+  const issues = checkinBasisIssues();
+  if (issues.length) {
+    for (const h of issues) ui.checkinOpen[h.accountId] = true;
+    render();
+    toast(`Update or clear cost basis for ${issues.length} holding${issues.length > 1 ? 's' : ''} whose value changed.`);
+    return;
+  }
   const values = [];
   for (const h of activeHoldings()) {
     const v = ci.values[h.id] || {};
@@ -2314,6 +2368,7 @@ function boot() {
     if (act === 'ci-nw') ui.checkinNetWorth = t.value;
     else if (ui.checkin) { ui.checkin.values[hid] = ui.checkin.values[hid] || {}; ui.checkin.values[hid][act === 'ci-val' ? 'marketValue' : 'costBasis'] = t.value; }
     updateCheckinTotals();
+    if (hid) updateBasisFlag(hid);
   });
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && ui.dialog) closeDialog(); });
   document.addEventListener('pointermove', onDonutHover);
@@ -2411,8 +2466,8 @@ function onInput(e) {
   if (!t) return;
   const a = t.dataset.act, ds = t.dataset;
   // check-in fields — mutate draft WITHOUT re-render (preserve focus); recompute totals lazily
-  if (a === 'ci-val')   { ui.checkin.values[ds.hid] = ui.checkin.values[ds.hid] || {}; ui.checkin.values[ds.hid].marketValue = t.value; updateCheckinTotals(); }
-  else if (a === 'ci-basis') { ui.checkin.values[ds.hid] = ui.checkin.values[ds.hid] || {}; ui.checkin.values[ds.hid].costBasis = t.value; }
+  if (a === 'ci-val')   { ui.checkin.values[ds.hid] = ui.checkin.values[ds.hid] || {}; ui.checkin.values[ds.hid].marketValue = t.value; updateCheckinTotals(); updateBasisFlag(ds.hid); }
+  else if (a === 'ci-basis') { ui.checkin.values[ds.hid] = ui.checkin.values[ds.hid] || {}; ui.checkin.values[ds.hid].costBasis = t.value; updateBasisFlag(ds.hid); }
   else if (a === 'ci-note') { ui.checkin.note = t.value; }
   else if (a === 'ci-date') { ui.checkin.date = t.value; }
   else if (a === 'ci-nw') { ui.checkinNetWorth = t.value; updateCheckinTotals(); }
@@ -2633,7 +2688,9 @@ window.__AAT__ = {
   householdHoldings, categoryHoldings, accountHoldings, latestSnapshot,
   snapshotCSV, loadDemoData, saveFile, openFile,
   goalGroupTargets, goalDetailTargets, compositionOf, splitValue,
+  holdingBasisIssue, checkinBasisIssues, snapshotByDate,
   get portfolio() { return portfolio; },
   set portfolio(p) { portfolio = p; },
+  get ui() { return ui; },
 };
 </script>
