@@ -219,6 +219,14 @@
   .ro-pct { font-family: var(--font-heading); font-size: 24px; line-height: 1; }
   .slice { transition: stroke-width .12s ease; cursor: pointer; }
   .slice:hover { stroke-width: var(--hw); }
+  .chart-wrap { position: relative; }
+  .chart-readout { position: absolute; top: 6px; right: 6px; min-width: 156px; background: color-mix(in srgb, var(--color-bg) 90%, transparent); border: 1px solid var(--color-divider); padding: 7px 9px; font-size: 11px; pointer-events: none; }
+  .chart-readout .ro-date { font-family: var(--font-heading); font-size: 13px; margin-bottom: 4px; }
+  .chart-readout .ro-line { display: flex; align-items: center; gap: 6px; margin: 1px 0; }
+  .chart-readout .ro-line .swatch { width: 9px; height: 9px; flex: none; }
+  .chart-readout .ro-line .tnum { margin-left: auto; }
+  .snaphit { fill: transparent; cursor: crosshair; }
+  .snaphit:hover { fill: color-mix(in srgb, var(--color-text) 7%, transparent); }
   .empty { max-width: 640px; margin: 8vh auto; text-align: center; display: flex; flex-direction: column; gap: var(--space-4); align-items: center; }
   .step-dots { display: flex; gap: 8px; align-items: center; }
   .step-dot { width: 9px; height: 9px; border: 1px solid var(--color-accent); }
@@ -1193,94 +1201,128 @@ function driftTrackSVG(driftPct, band) {
 }
 
 /* Stacked area of value by group across snapshots. */
-function stackedAreaSVG(series, opts) {
-  opts = opts || {};
+/* Time-series charts share: a TIME-ACCURATE x-axis (snapshots placed by their
+   real date, so gaps of weeks/months/years show as gaps), per-snapshot hover
+   hit-columns, and a readout panel. */
+let CHART_DATA = {};
+function seriesXs(series, W) {
+  const n = series.length;
+  if (n === 1) return [W / 2];
+  const t = series.map(s => new Date(s.date + 'T00:00:00').getTime());
+  const t0 = t[0], span = t[n - 1] - t0;
+  return t.map((ti, i) => span > 0 ? ((ti - t0) / span) * W : (i / (n - 1)) * W);
+}
+function chartHits(id, xs, H) {
+  return xs.map((x, i) => {
+    const left = i === 0 ? 0 : (xs[i - 1] + x) / 2;
+    const right = i === xs.length - 1 ? 320 : (x + xs[i + 1]) / 2;
+    return `<rect class="snaphit" data-chart="${id}" data-snap="${i}" x="${left.toFixed(1)}" y="0" width="${(right - left).toFixed(1)}" height="${H}"></rect>`;
+  }).join('');
+}
+function chartXAxis(series, xs) {
+  const ticks = xs.map(x => `<line x1="${x.toFixed(1)}" y1="112" x2="${x.toFixed(1)}" y2="116" stroke="var(--color-text)" opacity="0.4"></line>`).join('');
+  const first = `<text x="0" y="127">${esc(series[0].date)}</text>`;
+  const last = series.length > 1 ? `<text x="320" y="127" text-anchor="end">${esc(series[series.length - 1].date)}</text>` : '';
+  return `${ticks}<g style="font-size:9px;fill:var(--color-text);opacity:0.6;font-family:var(--font-body);">${first}${last}</g>`;
+}
+function chartFrame(id, svg) {
+  return `<div class="chart-wrap">${svg}<div class="chart-readout" id="chart-ro-${id}"><span class="ro-hint text-muted">Hover the timeline</span></div></div>`;
+}
+
+function stackedAreaSVG(series, id) {
   const W = 320, H = 110, base = H, n = series.length;
   if (n === 0) return '<div class="text-muted" style="padding:20px;">No snapshots yet.</div>';
+  CHART_DATA[id] = { series, kind: 'value' };
   const maxTotal = Math.max(1, ...series.map(s => s.total));
-  const xOf = i => n === 1 ? W / 2 : (i / (n - 1)) * W;
+  const xs = seriesXs(series, W);
   const yOf = v => base - (v / maxTotal) * (H - 6);
   const keys = TAXONOMY.groups.map(g => g.id);
-  let polys = '';
-  const cum = series.map(() => 0);
+  let polys = ''; const cum = series.map(() => 0);
   for (const k of keys) {
-    const tops = [], bots = [];
-    let any = false;
+    const tops = [], bots = []; let any = false;
     for (let i = 0; i < n; i++) {
-      const bottom = cum[i];
-      const val = (series[i].group[k] || 0);
-      const top = bottom + val;
+      const bottom = cum[i], val = series[i].group[k] || 0, top = bottom + val;
       if (val > 0) any = true;
-      bots.push([xOf(i), yOf(bottom)]);
-      tops.push([xOf(i), yOf(top)]);
-      cum[i] = top;
+      bots.push([xs[i], yOf(bottom)]); tops.push([xs[i], yOf(top)]); cum[i] = top;
     }
     if (!any) continue;
     const pts = tops.map(p => `${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(' ')
       + ' ' + bots.reverse().map(p => `${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(' ');
     polys += `<polygon points="${pts}" fill="${groupColor(k)}"></polygon>`;
   }
-  const labels = n > 1
-    ? `<text x="0" y="124">${esc(series[0].date)}</text><text x="${(W - 44).toFixed(0)}" y="124">${esc(series[n - 1].date)}</text>`
-    : `<text x="0" y="124">${esc(series[0].date)}</text>`;
-  return `<svg viewBox="0 0 320 130" style="width:100%;height:180px;" role="img" aria-label="Stacked area of value by asset class">
+  return chartFrame(id, `<svg viewBox="0 0 320 132" style="width:100%;height:190px;" role="img" aria-label="Stacked area of value by asset class">
     <line x1="0" y1="${base}" x2="320" y2="${base}" stroke="var(--color-divider)"></line>
-    ${polys}
-    <g style="font-size:9px;fill:var(--color-text);opacity:0.55;font-family:var(--font-body);">${labels}</g>
-  </svg>`;
+    ${polys}${chartXAxis(series, xs)}${chartHits(id, xs, H)}
+  </svg>`);
 }
 
-/* Multi-line chart: lines = [{label,color,points:[v...]}] over shared x. */
-function multiLineSVG(dates, lines) {
-  const W = 320, H = 110, base = H, n = dates.length;
+/* Multi-line chart: lines = [{label,color,points:[v...]}] aligned to series. */
+function multiLineSVG(series, lines, id) {
+  const W = 320, H = 110, base = H, n = series.length;
   if (n === 0) return '<div class="text-muted" style="padding:20px;">No snapshots yet.</div>';
-  const allV = lines.flatMap(l => l.points);
-  const maxV = Math.max(1, ...allV);
-  const xOf = i => n === 1 ? W / 2 : (i / (n - 1)) * W;
+  CHART_DATA[id] = { series, kind: 'growth', lines };
+  const maxV = Math.max(1, ...lines.flatMap(l => l.points));
+  const xs = seriesXs(series, W);
   const yOf = v => base - (v / maxV) * (H - 6);
   let paths = '';
   for (const l of lines) {
-    const pts = l.points.map((v, i) => `${xOf(i).toFixed(1)},${yOf(v).toFixed(1)}`).join(' ');
+    const pts = l.points.map((v, i) => `${xs[i].toFixed(1)},${yOf(v).toFixed(1)}`).join(' ');
     paths += `<polyline points="${pts}" fill="none" stroke="${l.color}" stroke-width="2"></polyline>`;
-    const last = l.points.length - 1;
-    paths += `<circle cx="${xOf(last).toFixed(1)}" cy="${yOf(l.points[last]).toFixed(1)}" r="2.5" fill="${l.color}"></circle>`;
+    l.points.forEach((v, i) => { paths += `<circle cx="${xs[i].toFixed(1)}" cy="${yOf(v).toFixed(1)}" r="2" fill="${l.color}"></circle>`; });
   }
-  const labels = n > 1
-    ? `<text x="0" y="124">${esc(dates[0])}</text><text x="${(W - 44).toFixed(0)}" y="124">${esc(dates[n - 1])}</text>`
-    : `<text x="0" y="124">${esc(dates[0])}</text>`;
-  return `<svg viewBox="0 0 320 130" style="width:100%;height:180px;" role="img" aria-label="Growth lines">
+  return chartFrame(id, `<svg viewBox="0 0 320 132" style="width:100%;height:190px;" role="img" aria-label="Growth lines">
     <line x1="0" y1="${base}" x2="320" y2="${base}" stroke="var(--color-divider)"></line>
-    ${paths}
-    <g style="font-size:9px;fill:var(--color-text);opacity:0.55;font-family:var(--font-body);">${labels}</g>
-  </svg>`;
+    ${paths}${chartXAxis(series, xs)}${chartHits(id, xs, H)}
+  </svg>`);
 }
 
-/* Small 100% stacked bar for allocation-% over time (one bar per snapshot). */
-function pctStackSVG(series) {
-  const n = series.length;
+/* 100% stacked bars for allocation-% over time, placed on the time axis. */
+function pctStackSVG(series, id) {
+  const W = 320, H = 110, n = series.length;
   if (n === 0) return '<div class="text-muted" style="padding:20px;">No snapshots yet.</div>';
-  const W = 320, H = 110, gap = 6;
-  const bw = (W - gap * (n - 1)) / n;
+  CHART_DATA[id] = { series, kind: 'pct' };
+  const xs = seriesXs(series, W);
+  let minGap = W; for (let i = 1; i < n; i++) minGap = Math.min(minGap, xs[i] - xs[i - 1]);
+  const bw = n === 1 ? 44 : Math.max(5, Math.min(18, minGap * 0.7));
   const keys = TAXONOMY.groups.map(g => g.id);
   let bars = '';
   series.forEach((s, i) => {
-    const x = i * (bw + gap);
-    let y = 0;
+    const x = xs[i] - bw / 2; let y = 0;
     for (const k of keys) {
-      const v = s.group[k] || 0;
-      if (v <= 0 || s.total <= 0) continue;
+      const v = s.group[k] || 0; if (v <= 0 || s.total <= 0) continue;
       const h = (v / s.total) * H;
       bars += `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${bw.toFixed(1)}" height="${h.toFixed(1)}" fill="${groupColor(k)}"></rect>`;
       y += h;
     }
   });
-  const labels = n > 1
-    ? `<text x="0" y="124">${esc(series[0].date)}</text><text x="${(W - 44).toFixed(0)}" y="124">${esc(series[n - 1].date)}</text>`
-    : `<text x="0" y="124">${esc(series[0].date)}</text>`;
-  return `<svg viewBox="0 0 320 130" style="width:100%;height:180px;" role="img" aria-label="Allocation percent over time">
-    ${bars}
-    <g style="font-size:9px;fill:var(--color-text);opacity:0.55;font-family:var(--font-body);">${labels}</g>
-  </svg>`;
+  return chartFrame(id, `<svg viewBox="0 0 320 132" style="width:100%;height:190px;" role="img" aria-label="Allocation percent over time">
+    ${bars}${chartXAxis(series, xs)}${chartHits(id, xs, H)}
+  </svg>`);
+}
+
+/* Readout for the hovered snapshot column. */
+function chartReadoutHTML(d, i) {
+  const s = d.series[i];
+  let rows;
+  if (d.kind === 'growth') {
+    rows = d.lines.map(l => `<div class="ro-line"><span class="swatch" style="background:${l.color}"></span>${esc(l.label)}<span class="tnum">${fmtMoney(l.points[i])}</span></div>`).join('');
+  } else {
+    const total = s.total || 0;
+    rows = TAXONOMY.groups.filter(g => s.group[g.id]).map(g => {
+      const v = s.group[g.id], pct = total > 0 ? (v / total) * 100 : 0;
+      const val = d.kind === 'pct' ? pct.toFixed(1) + '%' : fmtMoney(v) + ' · ' + pct.toFixed(0) + '%';
+      return `<div class="ro-line"><span class="swatch" style="background:${groupColor(g.id)}"></span>${esc(g.label)}<span class="tnum">${val}</span></div>`;
+    }).join('');
+  }
+  const head = d.kind === 'value' ? `${esc(s.date)} · ${fmtMoney(s.total)}` : esc(s.date);
+  return `<div class="ro-date">${head}</div>${rows}`;
+}
+function onChartHover(e) {
+  const hit = e.target.closest ? e.target.closest('.snaphit') : null;
+  if (!hit) return;
+  const d = CHART_DATA[hit.dataset.chart]; if (!d) return;
+  const ro = document.getElementById('chart-ro-' + hit.dataset.chart); if (!ro) return;
+  ro.innerHTML = chartReadoutHTML(d, +hit.dataset.snap);
 }
 
 function corners() { return '<i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>'; }
@@ -1564,7 +1606,8 @@ function dashDonutsHTML(actualRows, goalTargets, alloc, snap, scopeLabel, goalNo
       ${ringKey}
     </figure>
     ${goalNote ? `<div class="text-muted" style="font-size:12px;margin-top:12px;">${esc(goalNote)}</div>` : ''}
-    <div class="legend" style="margin-top:10px;">${legendHTML(actualRows, goalTargets)}</div>
+    ${goalTargets ? '<div class="kicker" style="margin-top:10px;">Class · actual % / goal %</div>' : ''}
+    <div class="legend" style="margin-top:${goalTargets ? '6' : '10'}px;">${legendHTML(actualRows, goalTargets)}</div>
   </div>`;
 }
 
@@ -1640,7 +1683,7 @@ function dashCategoriesHTML(snap) {
     let meta = 'age ' + (g ? g.age : '?');
     if (g && g.targets) {
       const gd = computeDrift(gr, a.total, g.targets, 999).filter(x => x.targetPct > 0);
-      meta = gd.map(x => `${x.label} ${x.actualPct.toFixed(0)}%/${x.targetPct}%`).slice(0, 2).join(' · ');
+      meta = 'actual→goal: ' + gd.map(x => `${x.label} ${x.actualPct.toFixed(0)}%→${x.targetPct}%`).slice(0, 2).join(' · ');
     }
     cards.push(catCardHTML(`529 · ${child ? child.label : ''} (${g ? g.age : '?'})`, acct.name, a.total, share, meta, { level: 'account', accountId: acct.id }));
   }
@@ -1689,7 +1732,7 @@ function dashHistoryStripHTML() {
   return `<div class="panel" style="display:grid;grid-template-columns:1.4fr 1fr;gap:0;">
     <div style="padding:20px;border-right:1px solid var(--color-divider);">
       <div class="panel-hd" style="padding:0 0 14px;border:0;"><h4>Value by asset class</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">${series.length} snapshot${series.length > 1 ? 's' : ''}</span></div>
-      <figure class="blueprint" style="padding:14px;">${corners()}${stackedAreaSVG(series)}</figure>
+      <figure class="blueprint" style="padding:14px;">${corners()}${stackedAreaSVG(series, 'dash-value')}</figure>
       <div style="margin-top:12px;"><a data-act="nav" data-view="history" style="font-size:13px;cursor:pointer;">Open full history →</a></div>
     </div>
     <div style="padding:20px;">
@@ -1948,20 +1991,19 @@ function renderHistory() {
     `<label class="seg-opt"><input type="radio" name="htab" ${ui.historyTab === t ? 'checked' : ''} data-act="htab" data-tab="${t}">${l}</label>`).join('');
   let chart, legend = '';
   if (ui.historyTab === 'value') {
-    chart = stackedAreaSVG(series);
+    chart = stackedAreaSVG(series, 'hist-value');
     legend = TAXONOMY.groups.map(g => `<div class="legend-item"><span class="swatch" style="background:${groupColor(g.id)}"></span>${esc(g.label)}</div>`).join('');
   } else if (ui.historyTab === 'pct') {
-    chart = pctStackSVG(series);
+    chart = pctStackSVG(series, 'hist-pct');
     legend = TAXONOMY.groups.map(g => `<div class="legend-item"><span class="swatch" style="background:${groupColor(g.id)}"></span>${esc(g.label)}</div>`).join('');
   } else {
-    const dates = series.map(s => s.date);
     const cats = ['Retirement', '529', 'Non-Retirement', 'Other'];
     const palette = ['--color-accent-900', '--color-accent-2-500', '--color-accent-500', '--color-neutral-500'];
     const lines = cats.map((cat, i) => ({
-      label: cat, color: cssVarValue(palette[i], '#888'),
+      label: catLabel(cat), color: cssVarValue(palette[i], '#888'),
       points: series.map(s => allocate(categoryHoldings(cat), snapshotByDate(s.date)).total),
     })).filter(l => l.points.some(v => v > 0));
-    chart = multiLineSVG(dates, lines);
+    chart = multiLineSVG(series, lines, 'hist-growth');
     legend = lines.map(l => `<div class="legend-item"><span class="swatch" style="background:${l.color}"></span>${esc(l.label)}</div>`).join('');
   }
   return `<div class="toolbar no-print"><div class="crumb"><span>History</span></div>
@@ -2125,7 +2167,7 @@ function reportSection(title, subtitle, holdings, snap, goalTargets, band, showA
     <div class="rep-sub text-muted" style="font-size:13px;margin-bottom:12px;">${esc(subtitle)} · ${fmtMoney(a.total)}</div>
     <div class="rep-chart" style="display:flex;gap:24px;align-items:center;margin-bottom:16px;">
       <figure class="blueprint" style="padding:12px;flex:none;">${corners()}${concentricDonutSVG(rollup, goalRows)}</figure>
-      <div style="flex:1;"><div class="kicker" style="margin-bottom:8px;">${goalRows ? 'Outer ring = actual · inner ring = goal' : 'Allocation'}</div><div class="legend" style="flex-direction:column;gap:7px;">${legend}</div></div>
+      <div style="flex:1;"><div class="kicker" style="margin-bottom:8px;">${goalRows ? 'Outer ring = actual · inner ring = goal · figures: actual % / goal %' : 'Allocation'}</div><div class="legend" style="flex-direction:column;gap:7px;">${legend}</div></div>
     </div>
     <div class="rep-tables" style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
       <div><div class="kicker" style="margin-bottom:6px;">Rollup</div>${allocTableHTML(rollup, goalTargets, band)}</div>
@@ -2372,6 +2414,7 @@ function boot() {
   });
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && ui.dialog) closeDialog(); });
   document.addEventListener('pointermove', onDonutHover);
+  document.addEventListener('pointermove', onChartHover);
   render();
   // Auto-restore the last file where the browser permits (Chrome/Edge handle,
   // or a served sibling my-portfolio.json). Falls back to the one-click reopen.
