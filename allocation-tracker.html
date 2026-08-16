@@ -1355,7 +1355,7 @@ function rerender() { render(); }
 function resetViewState() {
   ui.view = 'dashboard'; ui.snapDate = null; ui.level = 'group';
   ui.drill = { level: 'household', category: null, accountId: null };
-  ui.checkin = null; ui.goalDraft = null; ui.historyTab = 'value'; ui.goalSel = ''; ui.positionsSnap = null; ui.posCategory = 'all'; ui.posClass = '';
+  ui.checkin = null; ui.goalDraft = null; ui.historyTab = 'value'; ui.goalSel = ''; ui.positionsSnap = null; ui.posCategory = 'all'; ui.posClass = ''; ui.posExpanded = {};
 }
 
 function render() {
@@ -1763,13 +1763,15 @@ function dashToolbarStubHTML() {
    with % of total per holding and a per-asset-class summary.
    =============================================================== */
 function positionsSnapshot() { return (ui.positionsSnap ? snapshotByDate(ui.positionsSnap) : null) || latestSnapshot(); }
-function posCompare(a, b, key) {
+function posGroupCompare(a, b, key) {
   if (key === 'value' || key === 'pct') return a.value - b.value;
-  if (key === 'gain') return (a.gain == null ? -Infinity : a.gain) - (b.gain == null ? -Infinity : b.gain);
+  if (key === 'gain') return (a.gainTotal == null ? -Infinity : a.gainTotal) - (b.gainTotal == null ? -Infinity : b.gainTotal);
   if (key === 'ticker') return a.ticker.localeCompare(b.ticker);
-  if (key === 'account') return a.account.localeCompare(b.account);
-  if (key === 'class') return TAXONOMY.detail.findIndex(d => d.id === a.classId) - TAXONOMY.detail.findIndex(d => d.id === b.classId);
-  if (key === 'category') { const c = CATEGORY_ORDER.indexOf(a.category) - CATEGORY_ORDER.indexOf(b.category); return c || a.account.localeCompare(b.account); }
+  if (key === 'class') {
+    const ai = a.classId ? TAXONOMY.detail.findIndex(d => d.id === a.classId) : 999;
+    const bi = b.classId ? TAXONOMY.detail.findIndex(d => d.id === b.classId) : 999;
+    return ai - bi;
+  }
   return 0;
 }
 /* Terminal (decomposed) class ids a holding contributes to. */
@@ -1789,7 +1791,7 @@ function renderPositions() {
     <h2 style="margin:0;">Record a check-in to see your positions.</h2>
     <button class="btn btn-primary" data-act="new-checkin">Start a check-in</button></div>`;
   const idx = valueIndex(snap);
-  const sort = ui.positionsSort || (ui.positionsSort = { key: 'category', dir: 1 });
+  const sort = ui.positionsSort || (ui.positionsSort = { key: 'value', dir: -1 });
   const scoped = positionsScopeHoldings();
   const alloc = allocate(scoped, snap);           // scope total (decomposed)
   const gt = alloc.total;
@@ -1802,27 +1804,67 @@ function renderPositions() {
       <td class="tnum" style="text-align:right;">${r.pct.toFixed(1)}%</td>
     </tr>`).join('');
 
-  let rows = scoped.map(h => {
+  // Roll up the same ticker held across multiple accounts into one line.
+  const byTicker = {};
+  for (const h of scoped) {
     const v = idx[h.id]; const value = v ? Number(v.marketValue) : 0;
-    if (!value) return null;
-    const cb = v && v.costBasis != null ? Number(v.costBasis) : (h.costBasis != null ? Number(h.costBasis) : null);
+    if (!value) continue;
+    const key = (h.ticker || '').toUpperCase();
     const acct = accountById(h.accountId) || {};
-    return { ticker: h.ticker, name: h.name || '', account: acct.name || '', category: acct.category || '', categoryLabel: acct.categoryLabel, classId: h.assetClass, className: detailLabel(h.assetClass), classes: holdingClasses(h), value, pct: gt > 0 ? value / gt * 100 : 0, gain: cb != null ? value - cb : null, composed: !!compositionOf(h) };
-  }).filter(Boolean);
-  if (ui.posClass) rows = rows.filter(r => r.classes.indexOf(ui.posClass) >= 0);
-  rows.sort((a, b) => { const c = posCompare(a, b, sort.key) * sort.dir; return c || (b.value - a.value); });
+    const cb = v && v.costBasis != null ? Number(v.costBasis) : (h.costBasis != null ? Number(h.costBasis) : null);
+    const gain = cb != null ? value - cb : null;
+    const g = byTicker[key] || (byTicker[key] = { ticker: h.ticker, name: '', classIds: new Set(), classes: new Set(), composedAny: false, children: [], value: 0, gain: 0, gainAny: false });
+    if (!g.name && h.name) g.name = h.name;
+    g.classIds.add(h.assetClass);
+    holdingClasses(h).forEach(c => g.classes.add(c));
+    if (compositionOf(h)) g.composedAny = true;
+    g.value += value;
+    if (gain != null) { g.gain += gain; g.gainAny = true; }
+    g.children.push({ account: acct.name || '', category: acct.category || '', categoryLabel: acct.categoryLabel, value, gain });
+  }
+  let groups = Object.values(byTicker).map(g => ({
+    ticker: g.ticker, name: g.name, children: g.children, value: g.value,
+    classId: g.classIds.size === 1 ? [...g.classIds][0] : null,
+    className: g.classIds.size === 1 ? detailLabel([...g.classIds][0]) : 'Mixed',
+    classesArr: [...g.classes], composed: g.composedAny,
+    pct: gt > 0 ? g.value / gt * 100 : 0,
+    gainTotal: g.gainAny ? g.gain : null, multi: g.children.length > 1,
+  }));
+  if (ui.posClass) groups = groups.filter(g => g.classesArr.indexOf(ui.posClass) >= 0);
+  groups.sort((a, b) => { const c = posGroupCompare(a, b, sort.key) * sort.dir; return c || (b.value - a.value); });
 
   const arrow = k => sort.key === k ? (sort.dir > 0 ? ' ▲' : ' ▼') : '';
-  const th = (k, label, align) => `<th style="text-align:${align || 'left'};cursor:pointer;white-space:nowrap;" data-act="pos-sort" data-key="${k}">${label}${arrow(k)}</th>`;
-  const body = rows.map(r => `<tr>
-      <td style="font-family:var(--font-heading);font-size:15px;">${esc(r.ticker)}${r.name ? ` <span class="text-muted" style="font-family:var(--font-body);font-size:11px;">${esc(r.name)}</span>` : ''}</td>
-      <td class="text-muted" style="font-size:13px;">${esc(r.account)}</td>
-      <td class="text-muted" style="font-size:13px;">${esc(r.categoryLabel || catLabel(r.category))}</td>
-      <td><span class="tag ${r.composed ? 'tag-accent-2' : 'tag-accent'}">${r.composed ? 'Split · ' : ''}${esc(r.className)}</span></td>
-      <td class="tnum" style="text-align:right;">${fmtMoney(r.value)}</td>
-      <td class="tnum" style="text-align:right;">${r.pct.toFixed(1)}%</td>
-      <td class="tnum" style="text-align:right;color:${r.gain != null && r.gain < 0 ? 'var(--color-crit)' : 'var(--color-accent-700)'};">${r.gain != null ? fmtMoneySigned(r.gain) : '—'}</td>
-    </tr>`).join('');
+  const th = (k, label, align) => k
+    ? `<th style="text-align:${align || 'left'};cursor:pointer;white-space:nowrap;" data-act="pos-sort" data-key="${k}">${label}${arrow(k)}</th>`
+    : `<th style="text-align:${align || 'left'};">${label}</th>`;
+  const gcolor = g => g < 0 ? 'var(--color-crit)' : 'var(--color-accent-700)';
+  const body = groups.map(g => {
+    const exp = !!(ui.posExpanded && ui.posExpanded[g.ticker.toUpperCase()]);
+    const caret = g.multi ? `<span style="display:inline-block;width:12px;color:var(--color-accent);">${exp ? '▾' : '▸'}</span>` : '<span style="display:inline-block;width:12px;"></span>';
+    const acctCell = g.multi
+      ? `<span class="tag tag-neutral">${g.children.length} accounts</span> ${esc(g.children.map(c => c.account).slice(0, 2).join(', '))}${g.children.length > 2 ? ' …' : ''}`
+      : esc(g.children[0].account);
+    const main = `<tr ${g.multi ? `style="cursor:pointer;" data-act="pos-expand" data-ticker="${esc(g.ticker.toUpperCase())}"` : ''}>
+      <td style="font-family:var(--font-heading);font-size:15px;">${caret}${esc(g.ticker)}${g.name ? ` <span class="text-muted" style="font-family:var(--font-body);font-size:11px;">${esc(g.name)}</span>` : ''}</td>
+      <td class="text-muted" style="font-size:13px;">${acctCell}</td>
+      <td><span class="tag ${g.composed ? 'tag-accent-2' : 'tag-accent'}">${g.composed && g.classId ? 'Split · ' : ''}${esc(g.className)}</span></td>
+      <td class="tnum" style="text-align:right;">${fmtMoney(g.value)}</td>
+      <td class="tnum" style="text-align:right;font-family:var(--font-heading);">${g.pct.toFixed(1)}%</td>
+      <td class="tnum" style="text-align:right;color:${g.gainTotal != null ? gcolor(g.gainTotal) : ''};">${g.gainTotal != null ? fmtMoneySigned(g.gainTotal) : '—'}</td>
+    </tr>`;
+    let kids = '';
+    if (g.multi && exp) {
+      kids = g.children.slice().sort((a, b) => b.value - a.value).map(c => `<tr style="background:color-mix(in srgb, var(--color-text) 3%, transparent);">
+        <td style="padding-left:34px;font-size:13px;">↳ ${esc(c.account)}</td>
+        <td class="text-muted" style="font-size:12px;">${esc(c.categoryLabel || catLabel(c.category))}</td>
+        <td></td>
+        <td class="tnum" style="text-align:right;font-size:13px;">${fmtMoney(c.value)}</td>
+        <td class="tnum" style="text-align:right;font-size:13px;">${(gt > 0 ? c.value / gt * 100 : 0).toFixed(1)}%</td>
+        <td class="tnum" style="text-align:right;font-size:13px;color:${c.gain != null ? gcolor(c.gain) : ''};">${c.gain != null ? fmtMoneySigned(c.gain) : '—'}</td>
+      </tr>`).join('');
+    }
+    return main + kids;
+  }).join('');
 
   // category filter options
   const catArr = [['all', 'Everything (incl. 529)'], ['household', 'Household']];
@@ -1837,18 +1879,18 @@ function renderPositions() {
   return `<div class="toolbar no-print" style="flex-wrap:wrap;"><div class="crumb"><span>Positions</span></div>
     ${catSel}
     ${ui.posClass ? `<span class="tag tag-accent-2" style="cursor:pointer;align-self:flex-end;margin-bottom:6px;" data-act="pos-class-clear">Class: ${esc(detailLabel(ui.posClass))} ✕</span>` : ''}
-    <span class="text-muted" style="margin-left:auto;align-self:flex-end;margin-bottom:6px;font-size:12px;">${rows.length} position${rows.length !== 1 ? 's' : ''} · ${fmtMoney(gt)} ${totalLabel}</span>
+    <span class="text-muted" style="margin-left:auto;align-self:flex-end;margin-bottom:6px;font-size:12px;">${groups.length} position${groups.length !== 1 ? 's' : ''} · ${fmtMoney(gt)} ${totalLabel}</span>
     <div class="field" style="width:150px;"><label>Snapshot</label><select class="input" data-act="pos-snap">${opts}</select></div>
   </div>
   <div style="display:grid;grid-template-columns:310px 1fr;gap:20px;align-items:start;">
     <div class="panel"><div class="panel-hd"><h4>By asset class</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">click to filter</span></div>
       <table class="table"><thead><tr><th>Class</th><th style="text-align:right;">Value</th><th style="text-align:right;">%</th></tr></thead><tbody>${classTable || '<tr><td colspan="3" class="text-muted" style="padding:14px;">Nothing in this scope.</td></tr>'}</tbody></table>
     </div>
-    <div class="panel"><div class="panel-hd"><h4>Holdings</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">click a column to sort</span></div>
+    <div class="panel"><div class="panel-hd"><h4>Holdings</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">rolled up by ticker · click ▸ to expand · click a column to sort</span></div>
       <table class="table"><thead><tr>
-        ${th('ticker', 'Ticker')}${th('account', 'Account')}${th('category', 'Category')}${th('class', 'Asset class')}
+        ${th('ticker', 'Ticker')}${th('', 'Accounts')}${th('class', 'Asset class')}
         ${th('value', 'Value', 'right')}${th('pct', '% of ' + (totalLabel === 'total' ? 'total' : 'scope'), 'right')}${th('gain', 'Unrealized', 'right')}
-      </tr></thead><tbody>${body || '<tr><td colspan="7" class="text-muted" style="padding:14px;">No positions match this filter.</td></tr>'}</tbody></table>
+      </tr></thead><tbody>${body || '<tr><td colspan="6" class="text-muted" style="padding:14px;">No positions match this filter.</td></tr>'}</tbody></table>
     </div>
   </div>`;
 }
@@ -2554,6 +2596,7 @@ function onClick(e) {
     case 'pos-sort': { const k = ds.key, s = ui.positionsSort || (ui.positionsSort = { key: 'category', dir: 1 }); if (s.key === k) s.dir = -s.dir; else { s.key = k; s.dir = (k === 'value' || k === 'pct' || k === 'gain') ? -1 : 1; } render(); break; }
     case 'pos-class': ui.posClass = (ui.posClass === ds.class) ? '' : ds.class; render(); break;
     case 'pos-class-clear': ui.posClass = ''; render(); break;
+    case 'pos-expand': { ui.posExpanded = ui.posExpanded || {}; ui.posExpanded[ds.ticker] = !ui.posExpanded[ds.ticker]; render(); break; }
     case 'drill':
       ui.drill = { level: ds.level, category: ds.category || null, categoryLabel: ds.categorylabel || null, accountId: ds.account || null };
       if (ds.level === 'account') { const ac = accountById(ds.account); ui.drill.category = ac ? ac.category : null; ui.drill.categoryLabel = ac ? (ac.categoryLabel || null) : null; }
