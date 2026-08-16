@@ -1413,62 +1413,51 @@ function renderWelcome() {
   const actions = hasData
     ? `<button class="btn btn-primary" data-act="new-checkin">New check-in</button>
        <button class="btn btn-secondary" data-act="nav" data-view="dashboard">Open dashboard</button>
-       <button class="btn btn-secondary" data-act="nav" data-view="positions">Positions</button>
-       <button class="btn btn-secondary" data-act="nav" data-view="report">Report</button>
        <button class="btn ${dirty ? 'save-dirty' : 'btn-secondary'}" data-act="save">Save file</button>`
     : `${ui.pendingReopen ? `<button class="btn btn-primary" data-act="reopen-file">Reopen ${esc(ui.pendingReopen)}</button>` : ''}
        <button class="btn ${ui.pendingReopen ? 'btn-secondary' : 'btn-primary'}" data-act="onboard-start">Add your first account</button>
        <button class="btn btn-secondary" data-act="load-demo">Load demo data</button>
        <button class="btn btn-secondary" data-act="open">Open a saved file</button>`;
 
-  const status = hasData ? `<div class="grid-kpi">
-      <div class="kpi"><div class="kicker">File</div><div style="font-family:var(--font-heading);font-size:18px;line-height:1.15;">${esc(fileName)}</div><div class="text-muted" style="font-size:12px;">${dirty ? 'unsaved changes' : 'saved'}</div></div>
-      <div class="kpi"><div class="kicker">Household total</div><div class="kpi-val tnum">${fmtMoney(hhTotal)}</div></div>
-      <div class="kpi"><div class="kicker">Accounts · holdings</div><div class="kpi-val tnum">${nAcct} · ${nHold}</div></div>
-      <div class="kpi"><div class="kicker">Last check-in</div><div class="kpi-val tnum">${snap ? esc(snap.date) : '—'}</div></div>
-    </div>` : '';
+  const status = hasData
+    ? `<div class="text-muted" style="font-size:13px;">${esc(fileName)} · ${fmtMoney(hhTotal)} · ${nAcct} account${nAcct !== 1 ? 's' : ''} · last check-in ${snap ? esc(snap.date) : '—'} · <span style="color:${dirty ? 'var(--color-warn)' : 'inherit'};">${dirty ? 'unsaved changes' : 'saved'}</span></div>`
+    : `<p class="text-muted" style="margin:0;max-width:64ch;">Track your true asset allocation across every account, compare it to a goal, and watch it over time — all in one local file.</p>`;
 
   const steps = [
-    ['1', 'Set up accounts & holdings', 'Add each account (401(k), IRA, brokerage, 529…) and what’s inside. Tickers auto-classify from a ~2,200-name map.', 'accounts', 'Go to Accounts'],
-    ['2', 'Do a quarterly check-in', '“New check-in” pre-fills last time’s values — overtype what changed. About 10 minutes.', 'checkin', 'Start a check-in'],
-    ['3', 'Set your goal', 'Target percentages across 14 asset classes; each change takes a one-line rationale (your journal).', 'goal', 'Set a goal'],
-    ['4', 'Review the dashboard', 'Actual vs goal, drift bands, and what’s over/under by class. Drill into any category or account.', 'dashboard', 'Open dashboard'],
-    ['5', 'Positions & history', 'A rolled-up view of every holding, plus how your allocation moved over a real timeline.', 'positions', 'View positions'],
-    ['6', 'Save your file', 'Your data lives only in your JSON file — save it and keep it somewhere safe. Nothing is uploaded.', '', 'Save file'],
+    ['1', 'Set up your accounts &amp; holdings', 'Add each account and what’s inside — tickers auto-classify.', 'accounts'],
+    ['2', 'Check in each quarter', '“New check-in” pre-fills last time’s values; overtype what changed.', 'checkin'],
+    ['3', 'Review against your goal', 'The Dashboard, Positions and Report show where you stand vs your target.', 'dashboard'],
+    ['4', 'Save your file', 'Write your changes back to your data file (see right).', 'save'],
   ];
-  const stepCards = steps.map(([n, title, desc, view, cta]) =>
-    `<div class="card blueprint" style="cursor:pointer;gap:6px;" ${view ? `data-act="nav" data-view="${view}"` : 'data-act="save"'}>${corners()}
-      <span class="card-kicker">Step ${n}</span>
-      <span class="card-title">${esc(title)}</span>
-      <p class="text-muted" style="margin:0;font-size:12.5px;flex:1;">${esc(desc)}</p>
-      <div class="card-meta" style="color:var(--color-accent);">${esc(cta)} →</div>
+  const stepList = steps.map(([n, t, d, view]) => `
+    <div style="display:grid;grid-template-columns:24px 1fr;gap:12px;align-items:start;cursor:pointer;" ${view === 'save' ? 'data-act="save"' : `data-act="nav" data-view="${view}"`}>
+      <span style="width:22px;height:22px;background:var(--color-accent);color:var(--color-bg);font-family:var(--font-heading);font-size:12px;display:flex;align-items:center;justify-content:center;flex:none;">${n}</span>
+      <div><span style="font-family:var(--font-heading);font-size:16px;">${t}</span><div class="text-muted" style="font-size:13px;">${d}</div></div>
     </div>`).join('');
 
-  const concepts = [
-    ['Local & offline', 'Zero network requests. Your numbers live only in the file you save — and it’s the file you hand to a friend.'],
-    ['Look-through funds', 'Total-market and target-date funds split into their real asset classes, so you see where money actually sits.'],
-    ['Cost-basis guard', 'On later check-ins, if a value changed you must update or clear its cost basis — buys and sells move basis.'],
-    ['529 glide paths', '529s are measured against an age-based glide, not the household goal; you choose whether they count in the total.'],
-  ].map(([t, d]) => `<div class="card blueprint" style="gap:4px;">${corners()}<span class="card-title" style="font-size:15px;">${esc(t)}</span><p class="text-muted" style="margin:0;font-size:12.5px;">${esc(d)}</p></div>`).join('');
-
-  return `<div class="view">
-    <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
-      ${logoSVG(48)}
-      <div>
-        <h1 style="margin:0;">${hasData ? 'Welcome back.' : 'See what you actually own.'}</h1>
-        <p class="text-muted" style="margin:3px 0 0;max-width:72ch;">${hasData ? 'Your portfolio by true asset allocation — compared to your goal and tracked over time.' : 'Track true asset allocation across every account, compare it to a goal, and watch it over time. No accounts, no cloud — a single local file you keep and can share.'}</p>
+  return `<div class="view" style="max-width:900px;margin:0 auto;width:100%;align-items:center;">
+    <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;">
+      ${logoSVG(56)}
+      <h1 style="margin:4px 0 0;">${hasData ? 'Welcome back.' : 'See what you actually own.'}</h1>
+      <div>${status}</div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;">${actions}</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;align-items:start;width:100%;text-align:left;">
+      <div class="panel"><div class="panel-hd"><h4>How it works</h4></div>
+        <div style="padding:20px;display:flex;flex-direction:column;gap:16px;">${stepList}</div>
       </div>
-      <span class="tag tag-outline" style="margin-left:auto;align-self:flex-start;">Local · offline · your data stays in your file</span>
-    </div>
-    ${status}
-    <div style="display:flex;gap:10px;flex-wrap:wrap;">${actions}</div>
-    <div>
-      <h4 style="margin:0 0 10px;">How to use this${hasData ? '' : ' — three steps, ~3 minutes to your first snapshot'}</h4>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;">${stepCards}</div>
-    </div>
-    <div>
-      <h4 style="margin:0 0 10px;">Good to know</h4>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;">${concepts}</div>
+      <div class="panel" style="border-color:var(--color-accent);">
+        <div class="panel-hd" style="border-color:var(--color-accent);"><h4>Your app + your data file</h4></div>
+        <div style="padding:20px;font-size:13px;line-height:1.6;">
+          <p style="margin:0 0 10px;"><span style="font-family:var(--font-heading);">allocation-tracker.html</span> is the app — this page. It never changes, runs offline, and you can hand the same file to a friend.</p>
+          <p style="margin:0 0 10px;"><span style="font-family:var(--font-heading);">my-portfolio.json</span> is your data — every account, value and goal. It’s the only place your numbers live; nothing is uploaded or stored in the browser.</p>
+          <p style="margin:0 0 12px;">Open the app → your file loads → make changes → <strong>Save</strong> writes it all back to the JSON.</p>
+          <div style="background:var(--color-accent-100);border:1px solid var(--color-accent);padding:11px 13px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+            <span style="font-family:var(--font-heading);color:var(--color-accent-800);">Don’t forget to Save — especially after a check-in, or your changes are lost.</span>
+            <button class="btn btn-sm ${dirty ? 'save-dirty' : 'btn-primary'}" data-act="save" style="margin-left:auto;">Save file</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>`;
 }
