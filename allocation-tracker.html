@@ -1424,15 +1424,18 @@ function renderWelcome() {
     : `<p class="text-muted" style="margin:0;max-width:64ch;">Track your true asset allocation across every account, compare it to a goal, and watch it over time — all in one local file.</p>`;
 
   const steps = [
-    ['1', 'Set up your accounts &amp; holdings', 'Add each account and what’s inside — tickers auto-classify.', 'accounts'],
-    ['2', 'Check in each quarter', '“New check-in” pre-fills last time’s values; overtype what changed.', 'checkin'],
-    ['3', 'Review against your goal', 'The Dashboard, Positions and Report show where you stand vs your target.', 'dashboard'],
-    ['4', 'Save your file', 'Write your changes back to your data file (see right).', 'save'],
+    { n: '1', t: 'Load your data file — or start a new one', d: 'Open your saved <b>my-portfolio.json</b>, or start fresh if you haven’t yet.',
+      actions: `<button class="btn btn-sm btn-secondary" data-act="open">Open a file</button>
+        <button class="btn btn-sm btn-secondary" data-act="onboard-start">Start new</button>
+        ${ui.pendingReopen ? `<button class="btn btn-sm btn-primary" data-act="reopen-file">Reopen ${esc(ui.pendingReopen)}</button>` : ''}` },
+    { n: '2', t: 'Set up your accounts &amp; holdings', d: 'Add each account and what’s inside — tickers auto-classify.', view: 'accounts' },
+    { n: '3', t: 'Check in, then review vs your goal', d: '“New check-in” pre-fills last time’s values; the Dashboard shows drift vs your target.', view: 'checkin' },
+    { n: '4', t: 'Save your file', d: 'Write your changes back to your data file (see right).', view: 'save' },
   ];
-  const stepList = steps.map(([n, t, d, view]) => `
-    <div style="display:grid;grid-template-columns:24px 1fr;gap:12px;align-items:start;cursor:pointer;" ${view === 'save' ? 'data-act="save"' : `data-act="nav" data-view="${view}"`}>
-      <span style="width:22px;height:22px;background:var(--color-accent);color:var(--color-bg);font-family:var(--font-heading);font-size:12px;display:flex;align-items:center;justify-content:center;flex:none;">${n}</span>
-      <div><span style="font-family:var(--font-heading);font-size:16px;">${t}</span><div class="text-muted" style="font-size:13px;">${d}</div></div>
+  const stepList = steps.map(s => `
+    <div style="display:grid;grid-template-columns:24px 1fr;gap:12px;align-items:start;${s.actions ? '' : 'cursor:pointer;'}" ${s.actions ? '' : (s.view === 'save' ? 'data-act="save"' : `data-act="nav" data-view="${s.view}"`)}>
+      <span style="width:22px;height:22px;background:var(--color-accent);color:var(--color-bg);font-family:var(--font-heading);font-size:12px;display:flex;align-items:center;justify-content:center;flex:none;">${s.n}</span>
+      <div><span style="font-family:var(--font-heading);font-size:16px;">${s.t}</span><div class="text-muted" style="font-size:13px;">${s.d}</div>${s.actions ? `<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">${s.actions}</div>` : ''}</div>
     </div>`).join('');
 
   return `<div class="view" style="max-width:900px;margin:0 auto;width:100%;align-items:center;">
