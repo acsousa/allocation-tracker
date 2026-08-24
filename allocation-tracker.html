@@ -181,6 +181,10 @@
   .nav-brand { font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 18px; }
   .nav a { color: inherit; text-decoration: none; font-size: 14px; cursor: pointer; }
   .nav a:hover, .nav a[aria-current='page'] { color: var(--color-accent); }
+  .subnav { display: flex; gap: var(--space-5); padding: 9px var(--space-6); border-bottom: 1px solid var(--color-divider); background: color-mix(in srgb, var(--color-text) 2%, transparent); flex-wrap: wrap; }
+  .subnav a { color: color-mix(in srgb, var(--color-text) 55%, transparent); text-decoration: none; font-size: 13px; cursor: pointer; padding-bottom: 2px; border-bottom: 2px solid transparent; }
+  .subnav a:hover { color: var(--color-text); }
+  .subnav a.subnav-active { color: var(--color-accent); border-bottom-color: var(--color-accent); }
   .table { width: 100%; border-collapse: collapse; font-size: 14px; }
   .table th { text-align: left; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: color-mix(in srgb, var(--color-text) 60%, transparent); padding: var(--space-2); border-bottom: 1px solid var(--color-divider); }
   .table td { padding: var(--space-2); border-bottom: 1px solid color-mix(in srgb, var(--color-text) 8%, transparent); }
@@ -428,10 +432,222 @@ const SEED_MAP = {
    hand seed above wins on overlap; the user tickerMap always wins over both. */
 const SEED_MAP_EXT = {"A":"us_large","AA":"us_mid","AAAU":"commod","AAL":"us_mid","AAMI":"us_small","AAON":"us_mid","AAP":"us_small","AAPL":"us_large","AAT":"us_small","ABBV":"us_large","ABCB":"us_small","ABG":"us_small","ABM":"us_small","ABNB":"us_large","ABR":"us_small","ABT":"us_large","ACA":"us_small","ACAD":"us_small","ACGL":"us_large","ACHC":"us_small","ACI":"us_mid","ACIW":"us_small","ACLS":"us_small","ACM":"us_mid","ACMR":"us_small","ACN":"us_large","ACT":"us_small","ACWI":"intl_dev","ACWX":"intl_dev","ADA":"crypto","ADAM":"us_small","ADBE":"us_large","ADC":"us_mid","ADEA":"us_small","ADI":"us_large","ADIG":"us_small","ADM":"us_large","ADMA":"us_small","ADNT":"us_small","ADP":"us_large","ADSK":"us_large","ADT":"us_small","ADUS":"us_small","AEE":"us_large","AEIS":"us_mid","AEO":"us_small","AEP":"us_large","AES":"us_large","AESI":"us_small","AFG":"us_mid","AFL":"us_large","AGCO":"us_mid","AGG":"us_bond","AGNT":"us_small","AGO":"us_small","AGX":"us_small","AGYS":"us_small","AHCO":"us_small","AHR":"us_mid","AIG":"us_large","AIN":"us_small","AIR":"us_small","AIT":"us_mid","AIZ":"us_large","AJG":"us_large","AKAM":"us_large","AKR":"us_small","ALB":"us_large","ALG":"us_small","ALGM":"us_mid","ALGN":"us_large","ALGT":"us_small","ALHC":"us_small","ALK":"us_mid","ALKS":"us_small","ALL":"us_large","ALLE":"us_large","ALLY":"us_mid","ALRM":"us_small","ALSN":"us_mid","ALTY":"other","ALV":"us_mid","AM":"us_mid","AMAT":"us_large","AMCR":"us_large","AMD":"us_large","AME":"us_large","AMG":"us_mid","AMGN":"us_large","AMH":"us_mid","AMKR":"us_mid","AMN":"us_small","AMP":"us_large","AMPH":"us_small","AMR":"us_small","AMRX":"us_small","AMSF":"us_small","AMT":"reit","AMTM":"us_small","AMZN":"us_large","AN":"us_mid","ANDE":"us_small","ANET":"us_large","ANF":"us_mid","ANGL":"us_bond","ANIP":"us_small","AOA":"blend","AOK":"blend","AOM":"blend","AON":"us_large","AOR":"blend","AORT":"us_small","AOS":"us_large","AOSL":"us_small","APA":"us_large","APAM":"us_small","APD":"us_large","APG":"us_mid","APH":"us_large","APLE":"us_small","APO":"us_large","APOG":"us_small","APP":"us_large","APPF":"us_mid","APTV":"us_large","AR":"us_mid","ARCB":"us_small","ARE":"reit","ARES":"us_large","ARKB":"crypto","ARLO":"us_small","ARMK":"us_mid","AROC":"us_small","ARR":"us_small","ARW":"us_mid","ARWR":"us_mid","ASB":"us_mid","ASH":"us_mid","ASHR":"em","ASO":"us_small","ASTE":"us_small","ASTH":"us_small","ATEN":"us_small","ATI":"us_mid","ATMU":"us_small","ATO":"us_large","ATR":"us_mid","AUB":"us_small","AVA":"us_small","AVAV":"us_mid","AVB":"reit","AVDE":"intl_dev","AVEM":"em","AVES":"us_small","AVGO":"us_large","AVIV":"intl_dev","AVNT":"us_mid","AVT":"us_mid","AVTR":"us_mid","AVUV":"us_small","AVY":"us_large","AWI":"us_small","AWK":"us_large","AWR":"us_small","AX":"us_small","AXON":"us_large","AXP":"us_large","AXTA":"us_mid","AYI":"us_mid","AZO":"us_large","AZTA":"us_small","AZZ":"us_small","BA":"us_large","BAC":"us_large","BAH":"us_mid","BALL":"us_large","BANC":"us_small","BANF":"us_small","BANR":"us_small","BAR":"commod","BAX":"us_large","BBT":"us_small","BBWI":"us_mid","BBY":"us_large","BC":"us_mid","BCC":"us_small","BCHASH":"crypto","BCI":"commod","BCO":"us_mid","BCPC":"us_small","BDC":"us_mid","BDX":"us_large","BEN":"us_large","BF.B":"us_large","BFAM":"us_small","BFH":"us_small","BFS":"us_small","BG":"us_large","BGC":"us_small","BHE":"us_small","BHF":"us_mid","BIIB":"us_large","BIL":"us_bond","BILL":"us_mid","BIO":"us_mid","BITB":"crypto","BITO":"crypto","BITX":"crypto","BIV":"us_bond","BJ":"us_mid","BJRI":"us_small","BKCH":"crypto","BKE":"us_small","BKH":"us_mid","BKLN":"other","BKNG":"us_large","BKR":"us_large","BKU":"us_small","BL":"us_small","BLDR":"us_large","BLFS":"us_small","BLK":"us_large","BLKB":"us_small","BLOK":"crypto","BMI":"us_small","BMRN":"us_mid","BMY":"us_large","BND":"us_bond","BNDX":"us_bond","BNL":"us_small","BNO":"commod","BNY":"us_large","BOH":"us_small","BOND":"us_bond","BOOT":"us_small","BOX":"us_small","BR":"us_large","BRC":"us_small","BRK.B":"us_large","BRKR":"us_mid","BRO":"us_large","BROS":"us_mid","BRRR":"crypto","BRX":"us_mid","BSV":"us_bond","BSX":"us_large","BSY":"us_mid","BTAL":"other","BTC":"crypto","BTCO":"crypto","BTCW":"crypto","BTSG":"us_mid","BTU":"us_small","BURL":"us_mid","BWA":"us_mid","BWX":"us_bond","BWXT":"us_mid","BX":"us_large","BXMT":"us_small","BXP":"reit","BYD":"us_mid","C":"us_large","CACC":"us_small","CACI":"us_mid","CAG":"us_small","CAH":"us_large","CAKE":"us_small","CALM":"us_small","CALX":"us_small","CALY":"us_small","CAR":"us_mid","CARG":"us_small","CARR":"us_large","CART":"us_mid","CASH":"us_small","CASY":"us_large","CAT":"us_large","CATY":"us_small","CAVA":"us_mid","CB":"us_large","CBOE":"us_large","CBRE":"reit","CBRL":"us_small","CBSH":"us_mid","CBT":"us_mid","CBU":"us_small","CC":"us_small","CCI":"reit","CCK":"us_mid","CCL":"us_large","CCOI":"us_small","CCS":"us_small","CD":"cash","CDE":"us_mid","CDNS":"us_large","CDP":"us_mid","CDW":"us_large","CE":"us_small","CEG":"us_large","CELH":"us_mid","CENT":"us_small","CENTA":"us_small","CENX":"us_small","CERT":"us_small","CETH":"crypto","CF":"us_large","CFFN":"us_small","CFG":"us_large","CFR":"us_mid","CG":"us_mid","CGNX":"us_mid","CHCO":"us_small","CHD":"us_large","CHDN":"us_mid","CHE":"us_mid","CHEF":"us_small","CHH":"us_mid","CHRD":"us_mid","CHRW":"us_large","CHTR":"us_large","CHWY":"us_mid","CI":"us_large","CIBR":"us_large","CIEN":"us_large","CINF":"us_large","CL":"us_large","CLF":"us_mid","CLH":"us_mid","CLSK":"us_small","CLX":"us_large","CMC":"us_mid","CMCSA":"us_large","CME":"us_large","CMG":"us_large","CMI":"us_large","CMS":"us_large","CNC":"us_large","CNH":"us_mid","CNK":"us_small","CNM":"us_mid","CNMD":"us_small","CNO":"us_mid","CNP":"us_large","CNR":"us_small","CNS":"us_small","CNX":"us_mid","CNXC":"us_small","CNXN":"us_small","COCO":"us_small","COF":"us_large","COHR":"us_large","COHU":"us_small","COIN":"us_large","COKE":"us_mid","COLB":"us_mid","COLL":"us_small","COLM":"us_mid","COMT":"commod","CON":"us_small","COO":"us_large","COP":"us_large","COR":"us_large","CORN":"commod","CORT":"us_small","COST":"us_large","COTY":"us_small","CPAY":"us_large","CPB":"us_small","CPF":"us_small","CPK":"us_small","CPRI":"us_mid","CPRT":"us_large","CPT":"reit","CR":"us_mid","CRBG":"us_mid","CRC":"us_small","CRGY":"us_small","CRH":"us_large","CRI":"us_small","CRK":"us_small","CRL":"us_large","CRM":"us_large","CROX":"us_mid","CRS":"us_mid","CRSR":"us_small","CRUS":"us_mid","CRVL":"us_small","CRWD":"us_large","CSCO":"us_large","CSGP":"reit","CSL":"us_mid","CSR":"us_small","CSW":"us_small","CSX":"us_large","CTA":"other","CTAS":"us_large","CTRE":"us_mid","CTS":"us_small","CTSH":"us_large","CTVA":"us_large","CUBE":"us_mid","CUBI":"us_small","CURB":"us_small","CUZ":"us_mid","CVBF":"us_small","CVCO":"us_small","CVI":"us_small","CVLT":"us_mid","CVNA":"us_large","CVS":"us_large","CVSA":"us_small","CVX":"us_large","CW":"us_mid","CWEN":"us_small","CWEN.A":"us_small","CWK":"us_small","CWST":"us_small","CWT":"us_small","CXM":"us_small","CXT":"us_mid","CXW":"us_small","CYTK":"us_mid","CZR":"us_small","D":"us_large","DAL":"us_large","DAN":"us_small","DAPP":"crypto","DAR":"us_mid","DASH":"us_large","DAVE":"us_small","DBA":"commod","DBB":"commod","DBC":"commod","DBD":"us_small","DBEF":"intl_dev","DBMF":"other","DBO":"commod","DBP":"commod","DBX":"us_mid","DCH":"us_small","DCI":"us_mid","DCOM":"us_small","DD":"us_large","DDOG":"us_large","DE":"us_large","DEA":"us_small","DECK":"us_large","DEI":"us_small","DELL":"us_large","DFAS":"us_small","DFAX":"intl_dev","DFEM":"em","DFH":"us_small","DFIN":"us_small","DFSV":"us_small","DG":"us_large","DGII":"us_small","DGRO":"us_large","DGRW":"us_large","DGS":"em","DGX":"us_large","DHI":"us_large","DHR":"us_large","DHS":"us_large","DIA":"us_large","DINO":"us_mid","DIOD":"us_small","DIS":"us_large","DIV":"other","DIVO":"other","DJP":"commod","DKS":"us_mid","DLB":"us_mid","DLR":"reit","DLTR":"us_large","DLX":"us_small","DMC":"us_small","DNOW":"us_small","DOC":"reit","DOCN":"us_mid","DOCS":"us_mid","DOCU":"us_mid","DODIX":"us_bond","DOGE":"crypto","DORM":"us_small","DOV":"us_large","DOW":"us_large","DPZ":"us_large","DRH":"us_small","DRI":"us_large","DSMC":"us_total","DT":"us_mid","DTE":"us_large","DTM":"us_mid","DUK":"us_large","DUOL":"us_mid","DV":"us_small","DVA":"us_large","DVN":"us_large","DVY":"us_large","DWX":"intl_dev","DXC":"us_small","DXCM":"us_large","DXPE":"us_small","DY":"us_mid","EAT":"us_small","EBAY":"us_large","EBC":"us_small","EBND":"intl_bond","ECG":"us_small","ECH":"em","ECHO":"us_large","ECL":"us_large","ECPG":"us_small","ED":"us_large","EDIV":"em","EEFT":"us_mid","EEM":"em","EEMV":"em","EFA":"intl_dev","EFAV":"intl_dev","EFC":"us_small","EFG":"intl_dev","EFOR":"us_small","EFV":"intl_dev","EFX":"us_large","EG":"us_large","EGBN":"us_small","EGP":"us_mid","EHC":"us_mid","EIDO":"em","EIG":"us_small","EIX":"us_large","EL":"us_large","ELAN":"us_mid","ELF":"us_mid","ELS":"us_mid","ELV":"us_large","EMB":"us_bond","EME":"us_large","EMN":"us_small","EMQQ":"em","EMR":"us_large","EMXC":"em","ENOV":"us_small","ENPH":"us_small","ENR":"us_small","ENS":"us_mid","ENSG":"us_mid","ENTG":"us_mid","ENVA":"us_small","ENZL":"intl_dev","EOG":"us_large","EPAC":"us_small","EPAM":"us_small","EPC":"us_small","EPHE":"em","EPI":"em","EPP":"intl_dev","EPR":"us_mid","EPRT":"us_small","EQAL":"us_large","EQH":"us_mid","EQIX":"reit","EQR":"reit","EQT":"us_large","ERIE":"us_large","ES":"us_large","ESAB":"us_mid","ESE":"us_small","ESI":"us_small","ESNT":"us_mid","ESS":"reit","ETH":"crypto","ETHA":"crypto","ETHE":"crypto","ETHV":"crypto","ETHW":"crypto","ETN":"us_large","ETR":"us_large","ETSY":"us_small","EVR":"us_mid","EVRG":"us_large","EVTC":"us_small","EW":"us_large","EWA":"intl_dev","EWBC":"us_mid","EWC":"intl_dev","EWD":"intl_dev","EWG":"intl_dev","EWH":"intl_dev","EWI":"intl_dev","EWJ":"intl_dev","EWK":"intl_dev","EWL":"intl_dev","EWM":"intl_dev","EWN":"intl_dev","EWO":"intl_dev","EWP":"intl_dev","EWQ":"intl_dev","EWS":"intl_dev","EWT":"intl_dev","EWU":"intl_dev","EWW":"intl_dev","EWY":"intl_dev","EWZ":"intl_dev","EXC":"us_large","EXE":"us_large","EXEL":"us_mid","EXLS":"us_mid","EXP":"us_mid","EXPD":"us_large","EXPE":"us_large","EXPO":"us_mid","EXR":"reit","EXTR":"us_small","EYE":"us_small","EZA":"em","EZBC":"crypto","EZPW":"us_small","F":"us_large","FA":"us_small","FAF":"us_mid","FALN":"us_bond","FANG":"us_large","FAST":"us_large","FBALX":"blend","FBIN":"us_mid","FBK":"us_small","FBNC":"us_small","FBND":"us_bond","FBP":"us_small","FBRT":"us_small","FBTC":"crypto","FCF":"us_small","FCFS":"us_mid","FCN":"us_mid","FCPT":"us_small","FCX":"us_large","FDEEX":"blend","FDEWX":"blend","FDKLX":"blend","FDL":"us_large","FDLXX":"cash","FDN":"us_large","FDRXX":"cash","FDS":"us_large","FDX":"us_large","FDXF":"us_large","FE":"us_large","FELE":"us_small","FERG":"us_large","FEZ":"intl_dev","FFBC":"us_small","FFFHX":"blend","FFIN":"us_mid","FFIV":"us_large","FFNOX":"blend","FG":"us_small","FHB":"us_small","FHI":"us_mid","FHN":"us_mid","FIBK":"us_small","FICO":"us_large","FIG":"other","FIPFX":"blend","FIS":"us_large","FISV":"us_large","FITB":"us_large","FIVE":"us_mid","FIVN":"us_small","FIX":"us_large","FIZZ":"us_small","FLEX":"us_large","FLG":"us_mid","FLO":"us_small","FLOT":"us_bond","FLR":"us_mid","FLS":"us_mid","FMC":"us_small","FN":"us_mid","FNB":"us_mid","FND":"us_mid","FNDE":"em","FNF":"us_mid","FORM":"us_small","FOUR":"us_mid","FOX":"us_large","FOXA":"us_large","FOXF":"us_small","FPADX":"em","FR":"us_mid","FREL":"reit","FRPT":"us_small","FRT":"reit","FSKAX":"us_total","FSLR":"us_large","FSMDX":"us_mid","FSPSX":"intl_dev","FSS":"us_small","FSSNX":"us_small","FTDR":"us_small","FTEC":"us_large","FTI":"us_mid","FTIHX":"intl_dev","FTNT":"us_large","FTRE":"us_small","FTSL":"other","FTV":"us_large","FUL":"us_small","FULT":"us_small","FUN":"us_small","FVD":"us_large","FXAIX":"us_large","FXI":"em","FXNAX":"us_bond","FZDXX":"cash","FZFXX":"cash","FZILX":"intl_dev","FZIPX":"em","FZROX":"us_total","G":"us_mid","GABXX":"cash","GAP":"us_mid","GATX":"us_mid","GBCI":"us_mid","GBTC":"crypto","GBX":"us_small","GD":"us_large","GDDY":"us_large","GE":"us_large","GEF":"us_mid","GEHC":"us_large","GEN":"us_large","GEO":"us_small","GEV":"us_large","GFF":"us_small","GGG":"us_mid","GHC":"us_mid","GIII":"us_small","GILD":"us_large","GIS":"us_large","GKOS":"us_small","GL":"us_large","GLD":"commod","GLDM":"commod","GLPI":"us_mid","GLTR":"commod","GLW":"us_large","GM":"us_large","GME":"us_mid","GMED":"us_mid","GNL":"us_small","GNRC":"us_large","GNTX":"us_mid","GNW":"us_small","GO":"us_small","GOLF":"us_small","GOOG":"us_large","GOOGL":"us_large","GOVT":"us_bond","GPC":"us_large","GPI":"us_small","GPK":"us_mid","GPN":"us_large","GPOR":"us_small","GRBK":"us_small","GRMN":"us_large","GS":"us_large","GSG":"commod","GSHD":"us_small","GSY":"us_bond","GT":"us_small","GTES":"us_small","GTM":"us_small","GTY":"us_small","GVA":"us_small","GVI":"us_bond","GWRE":"us_mid","GWW":"us_large","GXG":"em","GXO":"us_mid","H":"us_mid","HACK":"us_large","HAE":"us_mid","HAFC":"us_small","HAL":"us_large","HALO":"us_mid","HAS":"us_large","HASI":"us_small","HAYW":"us_small","HBAN":"us_large","HCA":"us_large","HCC":"us_small","HCI":"us_small","HCSG":"us_small","HD":"us_large","HDV":"us_large","HE":"us_small","HEFA":"intl_dev","HFWA":"us_small","HGV":"us_mid","HIG":"us_large","HII":"us_large","HIMS":"us_mid","HIW":"us_small","HL":"us_mid","HLI":"us_mid","HLIT":"us_small","HLNE":"us_mid","HLT":"us_large","HLX":"us_small","HMN":"us_small","HNI":"us_small","HODL":"crypto","HOG":"us_mid","HOMB":"us_mid","HON":"us_large","HONA":"us_large","HOOD":"us_large","HOPE":"us_small","HP":"us_small","HPE":"us_large","HPQ":"us_large","HQY":"us_mid","HR":"us_mid","HRB":"us_mid","HRL":"us_large","HRMY":"us_small","HSIC":"us_large","HST":"reit","HSTM":"us_small","HSY":"us_large","HTH":"us_small","HTLD":"us_small","HTO":"us_small","HUBB":"us_large","HUBG":"us_small","HUM":"us_large","HWC":"us_mid","HWKN":"us_small","HWM":"us_large","HXL":"us_mid","HYEM":"intl_bond","HYG":"us_bond","HYLB":"us_bond","HYSA":"cash","HZO":"us_small","IAGG":"us_bond","IART":"us_small","IAU":"commod","IAUM":"commod","IBIT":"crypto","IBKR":"us_large","IBM":"us_large","IBOC":"us_mid","IBP":"us_small","ICE":"us_large","ICF":"reit","ICHR":"us_small","ICSH":"us_bond","ICUI":"us_small","IDA":"us_mid","IDCC":"us_mid","IDEV":"intl_dev","IDV":"intl_dev","IDXX":"us_large","IEF":"us_bond","IEFA":"intl_dev","IEI":"us_bond","IEMG":"em","IESC":"us_mid","IEUR":"intl_dev","IEV":"intl_dev","IEX":"us_large","IFF":"us_large","IGOV":"us_bond","IGV":"us_large","IIPR":"us_small","IJH":"us_mid","IJJ":"us_mid","IJK":"us_mid","IJR":"us_small","IJS":"us_small","IJT":"us_small","ILMN":"us_mid","INCY":"us_large","INDA":"em","INDB":"us_small","INDS":"reit","INDV":"us_small","INDY":"em","INGR":"us_mid","INSP":"us_small","INSW":"us_small","INTC":"us_large","INTU":"us_large","INVA":"us_small","INVH":"reit","INVX":"us_small","IOO":"intl_dev","IOSP":"us_small","IP":"us_large","IPAR":"us_small","IPGP":"us_mid","IQLT":"intl_dev","IQV":"us_large","IR":"us_large","IRDM":"us_small","IRM":"reit","IRT":"us_mid","ISRG":"us_large","IT":"us_large","ITGR":"us_small","ITOT":"us_total","ITRI":"us_small","ITT":"us_mid","ITW":"us_large","IVOG":"us_mid","IVOO":"us_mid","IVOV":"us_mid","IVT":"us_small","IVV":"us_large","IVZ":"us_large","IWB":"us_large","IWD":"us_large","IWF":"us_large","IWL":"us_large","IWM":"us_small","IWP":"us_mid","IWR":"us_mid","IWS":"us_mid","IWV":"us_total","IXUS":"intl_dev","IYR":"reit","IYW":"us_large","J":"us_large","JAZZ":"us_mid","JBGS":"us_small","JBHT":"us_large","JBL":"us_large","JBLU":"us_small","JBSS":"us_small","JBTM":"us_small","JCI":"us_large","JEF":"us_mid","JEPI":"other","JEPQ":"other","JJSF":"us_small","JKD":"us_large","JKHY":"us_large","JLL":"us_mid","JNJ":"us_large","JNK":"us_bond","JOE":"us_small","JPM":"us_large","JPST":"us_bond","JXN":"us_small","KAI":"us_small","KALU":"us_small","KBH":"us_mid","KBR":"us_mid","KBWD":"other","KBWY":"reit","KD":"us_mid","KDP":"us_large","KEX":"us_mid","KEY":"us_large","KEYS":"us_large","KFY":"us_small","KGS":"us_small","KHC":"us_large","KIM":"reit","KKR":"us_large","KLAC":"us_large","KLIC":"us_small","KMB":"us_large","KMI":"us_large","KMLM":"other","KMPR":"us_small","KMT":"us_small","KMX":"us_small","KN":"us_small","KNF":"us_mid","KNSL":"us_mid","KNTK":"us_small","KNX":"us_mid","KO":"us_large","KOP":"us_small","KR":"us_large","KRC":"us_mid","KRG":"us_mid","KRMN":"us_small","KRYS":"us_mid","KSS":"us_small","KTB":"us_small","KTOS":"us_mid","KVUE":"us_large","KWEB":"em","KWR":"us_small","L":"us_large","LAD":"us_mid","LAMR":"us_mid","LAUR":"us_small","LAZ":"us_small","LBRT":"us_small","LCII":"us_small","LDOS":"us_large","LEA":"us_mid","LECO":"us_mid","LEG":"us_small","LEGR":"crypto","LEMB":"intl_bond","LEN":"us_large","LEU":"us_small","LFST":"us_small","LFUS":"us_mid","LGIH":"us_small","LGND":"us_small","LH":"us_large","LHX":"us_large","LIF":"us_small","LIFEX":"blend","LII":"us_large","LIN":"us_large","LITE":"us_large","LIVN":"us_mid","LKFN":"us_small","LKQ":"us_small","LLY":"us_large","LMAT":"us_small","LMT":"us_large","LNC":"us_small","LNN":"us_small","LNT":"us_large","LNTH":"us_mid","LOPE":"us_mid","LOW":"us_large","LPG":"us_small","LPX":"us_mid","LQD":"us_bond","LQDA":"us_small","LQDT":"us_small","LRCX":"us_large","LRN":"us_small","LSCC":"us_mid","LSTR":"us_mid","LTC":"us_small","LTH":"us_small","LULU":"us_large","LUMN":"us_small","LUV":"us_large","LVS":"us_large","LW":"us_small","LXP":"us_small","LYB":"us_large","LYFT":"us_small","LYV":"us_large","LZ":"us_small","LZB":"us_small","M":"us_mid","MA":"us_large","MAA":"reit","MAC":"us_small","MAN":"us_small","MANH":"us_mid","MAR":"us_large","MARA":"us_small","MAS":"us_large","MAT":"us_mid","MATW":"us_small","MATX":"us_small","MBB":"us_bond","MBC":"us_small","MBGL":"us_small","MBIN":"us_small","MC":"us_small","MCD":"us_large","MCHI":"em","MCHP":"us_large","MCK":"us_large","MCO":"us_large","MCRI":"us_small","MCY":"us_small","MD":"us_small","MDLZ":"us_large","MDT":"us_large","MDU":"us_small","MDY":"us_mid","MDYG":"us_mid","MDYV":"us_mid","MEDP":"us_mid","MET":"us_large","META":"us_large","MFP":"us_small","MGC":"us_large","MGEE":"us_small","MGK":"us_large","MGM":"us_large","MGV":"us_large","MGY":"us_small","MHK":"us_small","MHO":"us_small","MIDD":"us_mid","MINT":"us_bond","MIR":"us_small","MKC":"us_large","MKSI":"us_mid","MKTX":"us_small","MLI":"us_mid","MLKN":"us_small","MLM":"us_large","MM":"cash","MMF":"cash","MMI":"us_small","MMM":"us_large","MMS":"us_mid","MMSI":"us_small","MNA":"other","MNST":"us_large","MO":"us_large","MOG.A":"us_mid","MOH":"us_mid","MORN":"us_mid","MORT":"reit","MOS":"us_large","MP":"us_mid","MPC":"us_large","MPT":"us_small","MPWR":"us_large","MRCY":"us_small","MRK":"us_large","MRNA":"us_large","MRP":"us_small","MRSH":"us_large","MRTN":"us_small","MRVL":"us_large","MS":"us_large","MSA":"us_mid","MSCI":"us_large","MSEX":"us_small","MSFT":"us_large","MSGS":"us_small","MSI":"us_large","MSM":"us_mid","MTB":"us_large","MTCH":"us_small","MTD":"us_large","MTDR":"us_mid","MTG":"us_mid","MTH":"us_small","MTN":"us_mid","MTRN":"us_small","MTSI":"us_mid","MTUM":"us_large","MTUS":"us_small","MTX":"us_small","MTZ":"us_mid","MU":"us_large","MUB":"us_bond","MUR":"us_mid","MUSA":"us_mid","MWA":"us_small","MXL":"us_small","MYRG":"us_small","MZTI":"us_mid","NABL":"us_small","NATL":"us_small","NAVI":"us_small","NBHC":"us_small","NBIX":"us_mid","NBTB":"us_small","NCLH":"us_large","NDAQ":"us_large","NDSN":"us_large","NE":"us_small","NEAR":"us_bond","NEE":"us_large","NEM":"us_large","NEO":"us_small","NEOG":"us_small","NETL":"reit","NEU":"us_mid","NFG":"us_mid","NFLX":"us_large","NGVT":"us_small","NHC":"us_small","NHI":"us_small","NI":"us_large","NIC":"us_small","NJR":"us_mid","NKE":"us_large","NLY":"us_mid","NMIH":"us_small","NNN":"us_mid","NOBL":"us_large","NOC":"us_large","NOG":"us_small","NOV":"us_mid","NOVT":"us_mid","NOW":"us_large","NPK":"us_small","NPO":"us_small","NRG":"us_large","NSC":"us_large","NSIT":"us_small","NSP":"us_small","NSSC":"us_small","NTAP":"us_large","NTCT":"us_small","NTNX":"us_mid","NTRS":"us_large","NTST":"us_small","NTSX":"blend","NUE":"us_large","NUSI":"other","NVDA":"us_large","NVR":"us_large","NVST":"us_mid","NVT":"us_mid","NWBI":"us_small","NWE":"us_mid","NWL":"us_small","NWN":"us_small","NWS":"us_large","NWSA":"us_large","NX":"us_small","NXPI":"us_large","NXRT":"us_small","NXST":"us_mid","NXT":"us_mid","NYT":"us_mid","O":"reit","OC":"us_mid","ODFL":"us_large","OEF":"us_large","OFG":"us_small","OGE":"us_mid","OGN":"us_small","OGS":"us_mid","OHI":"us_mid","OI":"us_small","OII":"us_small","OKE":"us_large","OKTA":"us_mid","OLED":"us_mid","OLLI":"us_mid","OLN":"us_mid","OMC":"us_large","OMCL":"us_small","ON":"us_large","ONB":"us_mid","ONEQ":"us_large","ONTO":"us_mid","OPCH":"us_mid","OPLN":"us_small","ORA":"us_mid","ORCL":"us_large","ORI":"us_mid","ORLY":"us_large","OSIS":"us_small","OSK":"us_mid","OSW":"us_small","OTIS":"us_large","OTTR":"us_small","OUNZ":"commod","OUT":"us_small","OVV":"us_mid","OXY":"us_large","OZK":"us_mid","P":"us_mid","PAG":"us_mid","PAHC":"us_small","PALL":"commod","PANW":"us_large","PARR":"us_small","PATH":"us_mid","PATK":"us_small","PAYC":"us_small","PAYO":"us_small","PAYS":"cash","PAYX":"us_large","PB":"us_mid","PBF":"us_mid","PBH":"us_small","PBI":"us_small","PCAR":"us_large","PCG":"us_large","PCRX":"us_small","PCTY":"us_mid","PCY":"us_bond","PDBC":"commod","PDFS":"us_small","PEB":"us_small","PECO":"us_small","PEG":"us_large","PEGA":"us_mid","PEN":"us_mid","PENG":"us_small","PENN":"us_small","PEP":"us_large","PFBC":"us_small","PFE":"us_large","PFF":"other","PFFD":"other","PFG":"us_large","PFGC":"us_mid","PFS":"us_small","PG":"us_large","PGNY":"us_small","PGR":"us_large","PGX":"other","PH":"us_large","PHIN":"us_small","PHM":"us_large","PI":"us_small","PICB":"intl_bond","PII":"us_mid","PINS":"us_mid","PIPR":"us_small","PJT":"us_small","PK":"us_mid","PKG":"us_large","PLAB":"us_small","PLD":"reit","PLMR":"us_small","PLNT":"us_mid","PLTR":"us_large","PLUS":"us_small","PLXS":"us_small","PM":"us_large","PMT":"us_small","PNC":"us_large","PNFP":"us_mid","PNR":"us_large","PNW":"us_large","PODD":"us_large","PONAX":"us_bond","POOL":"us_small","POR":"us_mid","POST":"us_mid","POWI":"us_small","POWL":"us_small","PPC":"us_mid","PPG":"us_large","PPL":"us_large","PPLI":"us_small","PPLT":"commod","PR":"us_mid","PRDO":"us_small","PRG":"us_small","PRGFX":"blend","PRGO":"us_small","PRGS":"us_small","PRI":"us_mid","PRIM":"us_small","PRKS":"us_small","PRLB":"us_small","PRSU":"us_small","PRU":"us_large","PRVA":"us_small","PRWCX":"blend","PSA":"reit","PSKY":"us_large","PSMT":"us_small","PSN":"us_mid","PSP":"other","PSX":"us_large","PTC":"us_large","PTCT":"us_small","PTEN":"us_small","PTGX":"us_small","PTON":"us_small","PTTRX":"us_bond","PUTW":"other","PVH":"us_mid","PWR":"us_large","PYPL":"us_large","PZZA":"us_small","Q":"us_large","QAI":"other","QCOM":"us_large","QDEL":"us_small","QLYS":"us_mid","QNST":"us_small","QQEW":"us_large","QQQ":"us_large","QQQM":"us_large","QRVO":"us_small","QTWO":"us_small","QUAL":"us_large","QYLD":"other","R":"us_mid","RAL":"us_small","RAMP":"us_small","RBA":"us_mid","RBC":"us_mid","RCL":"us_large","RCUS":"us_small","RDN":"us_small","RDNT":"us_small","RDVY":"us_large","REET":"reit","REG":"reit","REGN":"us_large","RELY":"us_small","REM":"reit","RES":"us_small","REX":"us_small","REXR":"us_mid","REYN":"us_small","REZ":"reit","REZI":"us_small","RF":"us_large","RGA":"us_mid","RGEN":"us_mid","RGLD":"us_mid","RH":"us_mid","RHI":"us_small","RHP":"us_small","RITM":"us_small","RJF":"us_large","RL":"us_large","RLI":"us_mid","RMBS":"us_mid","RMD":"us_large","RNG":"us_small","RNR":"us_mid","RNST":"us_small","ROAD":"us_small","ROCK":"us_small","ROG":"us_small","ROIV":"us_mid","ROK":"us_large","ROKU":"us_mid","ROL":"us_large","ROOF":"reit","ROP":"us_large","ROST":"us_large","RPAR":"blend","RPM":"us_mid","RRC":"us_mid","RRR":"us_small","RRX":"us_mid","RS":"us_mid","RSG":"us_large","RSI":"us_small","RSP":"us_large","RTX":"us_large","RUN":"us_small","RUSHA":"us_small","RVTY":"us_large","RWJ":"us_small","RWO":"reit","RWR":"reit","RWX":"reit","RXO":"us_small","RYAN":"us_mid","RYLD":"other","RYN":"us_mid","SABR":"us_small","SAFE":"us_small","SAFT":"us_small","SAH":"us_small","SAIA":"us_mid","SAIC":"us_mid","SAM":"us_mid","SANM":"us_mid","SARO":"us_mid","SAVINGS":"cash","SBAC":"reit","SBCF":"us_small","SBH":"us_small","SBRA":"us_mid","SBSI":"us_small","SBUX":"us_large","SCHA":"us_small","SCHB":"us_total","SCHD":"us_large","SCHE":"em","SCHF":"intl_dev","SCHG":"us_large","SCHH":"reit","SCHL":"us_small","SCHM":"us_mid","SCHP":"us_bond","SCHV":"us_large","SCHW":"us_large","SCHX":"us_large","SCHZ":"us_bond","SCI":"us_mid","SCL":"us_small","SCSC":"us_small","SDGR":"us_small","SDIV":"other","SDY":"us_large","SEDG":"us_small","SEI":"us_small","SEIC":"us_mid","SEZL":"us_small","SF":"us_mid","SFBS":"us_small","SFM":"us_mid","SFNC":"us_small","SGI":"us_mid","SGOL":"commod","SGOV":"us_bond","SHAK":"us_small","SHC":"us_mid","SHEN":"us_small","SHM":"us_bond","SHO":"us_small","SHOO":"us_small","SHV":"us_bond","SHW":"us_large","SHY":"us_bond","SHYG":"us_bond","SIG":"us_small","SIGI":"us_mid","SIRI":"us_mid","SITM":"us_mid","SIVR":"commod","SJM":"us_large","SJNK":"us_bond","SKT":"us_small","SKY":"us_small","SKYW":"us_small","SKYY":"us_large","SLAB":"us_mid","SLB":"us_large","SLG":"us_small","SLGN":"us_mid","SLM":"us_mid","SLV":"commod","SLVM":"us_small","SLYG":"us_small","SLYV":"us_small","SM":"us_small","SMCI":"us_large","SMG":"us_mid","SMH":"us_large","SMP":"us_small","SMPL":"us_small","SMTC":"us_mid","SN":"us_mid","SNA":"us_large","SNDK":"us_large","SNDR":"us_small","SNEX":"us_small","SNPS":"us_large","SNSXX":"cash","SNVXX":"cash","SNX":"us_mid","SO":"us_large","SOL":"crypto","SOLS":"us_mid","SOLV":"us_large","SON":"us_mid","SONO":"us_small","SOXX":"us_large","SOYB":"commod","SPAB":"us_bond","SPAXX":"cash","SPDW":"intl_dev","SPEM":"em","SPFF":"other","SPG":"reit","SPGI":"us_large","SPHD":"us_large","SPHQ":"us_large","SPHR":"us_small","SPLG":"us_large","SPLV":"us_large","SPNT":"us_small","SPRXX":"cash","SPSC":"us_small","SPXC":"us_mid","SPY":"us_large","SPYG":"us_large","SPYV":"us_large","SR":"us_mid","SRE":"us_large","SRLN":"other","SRPT":"us_small","SRVR":"reit","SSB":"us_mid","SSD":"us_mid","ST":"us_mid","STAA":"us_small","STAG":"us_mid","STBA":"us_small","STC":"us_small","STE":"us_large","STEL":"us_small","STEP":"us_small","STIP":"us_bond","STLD":"us_large","STRA":"us_small","STRL":"us_mid","STT":"us_large","STWD":"us_mid","STX":"us_large","STZ":"us_large","SUB":"us_bond","SUPN":"us_small","SVOL":"other","SW":"us_large","SWAN":"blend","SWISX":"intl_dev","SWK":"us_large","SWKS":"us_large","SWPPX":"us_large","SWTSX":"us_total","SWVXX":"cash","SWX":"us_mid","SWYGX":"blend","SWYJX":"blend","SWYMX":"blend","SXI":"us_small","SXT":"us_small","SYF":"us_large","SYK":"us_large","SYNA":"us_mid","SYY":"us_large","T":"us_large","TALO":"us_small","TAP":"us_large","TBBK":"us_small","TBILL":"cash","TCBI":"us_mid","TDC":"us_small","TDG":"us_large","TDS":"us_small","TDW":"us_small","TDY":"us_large","TECH":"us_large","TEL":"us_large","TER":"us_large","TEX":"us_mid","TFC":"us_large","TFIN":"us_small","TFLO":"us_bond","TFX":"us_small","TGT":"us_large","TGTX":"us_small","THC":"us_mid","THD":"em","THG":"us_mid","THO":"us_mid","THRM":"us_small","TILE":"us_small","TIP":"us_bond","TJX":"us_large","TKO":"us_large","TKR":"us_mid","TLH":"us_bond","TLN":"us_mid","TLT":"us_bond","TMDX":"us_small","TMFC":"us_total","TMO":"us_large","TMUS":"us_large","TNC":"us_small","TNDM":"us_small","TNL":"us_mid","TOL":"us_mid","TOST":"us_mid","TPC":"us_small","TPL":"us_large","TPR":"us_large","TR":"us_small","TREX":"us_mid","TRGP":"us_large","TRIP":"us_small","TRMB":"us_large","TRMK":"us_small","TRN":"us_small","TRNO":"us_small","TROW":"us_large","TRST":"us_small","TRU":"us_mid","TRUP":"us_small","TRV":"us_large","TSCO":"us_large","TSLA":"us_large","TSN":"us_large","TT":"us_large","TTC":"us_mid","TTD":"us_large","TTEK":"us_mid","TTMI":"us_mid","TTWO":"us_large","TUR":"em","TWLO":"us_mid","TXN":"us_large","TXNM":"us_mid","TXRH":"us_mid","TXT":"us_large","TYL":"us_large","UA":"us_small","UAA":"us_small","UAL":"us_large","UBER":"us_large","UBSI":"us_mid","UCB":"us_small","UCTT":"us_small","UDR":"reit","UE":"us_small","UFCS":"us_small","UFPI":"us_mid","UFPT":"us_small","UGA":"commod","UGI":"us_mid","UHS":"us_large","ULS":"us_mid","ULTA":"us_large","UMBF":"us_mid","UNF":"us_small","UNFI":"us_small","UNG":"commod","UNH":"us_large","UNIT":"us_small","UNM":"us_mid","UNP":"us_large","UPBD":"us_small","UPS":"us_large","UPWK":"us_small","URBN":"us_small","URI":"us_large","USB":"us_large","USFD":"us_mid","USFR":"us_bond","USHY":"us_bond","USLM":"us_small","USMV":"us_large","USO":"commod","USPH":"us_small","USRT":"reit","UTHR":"us_mid","UTI":"us_small","UTL":"us_small","UVV":"us_small","V":"us_large","VAC":"us_small","VAL":"us_mid","VASGX":"blend","VB":"us_small","VBIAX":"blend","VBIRX":"us_bond","VBK":"us_small","VBR":"us_small","VBTLX":"us_bond","VC":"us_mid","VCEL":"us_small","VCIT":"us_bond","VCSH":"us_bond","VCTR":"us_small","VCYT":"us_small","VEA":"intl_dev","VECO":"us_small","VEEV":"us_large","VEMAX":"em","VEU":"intl_dev","VEURX":"intl_dev","VFC":"us_mid","VFFVX":"blend","VFIAX":"us_large","VFICX":"us_bond","VFORX":"blend","VFSTX":"us_bond","VGIT":"us_bond","VGK":"intl_dev","VGLT":"us_bond","VGNT":"us_small","VGSH":"us_bond","VGSLX":"reit","VGSTX":"blend","VGT":"us_large","VGVT":"us_bond","VIAV":"us_mid","VICI":"reit","VICR":"us_mid","VIG":"us_large","VIMAX":"us_mid","VIOG":"us_small","VIOO":"us_small","VIOV":"us_small","VIR":"us_small","VIRT":"us_small","VLO":"us_large","VLTO":"us_large","VLUE":"us_large","VLXVX":"blend","VLY":"us_mid","VMBS":"us_bond","VMC":"us_large","VMFXX":"cash","VMI":"us_mid","VMOT":"us_mid","VMRXX":"cash","VNLA":"us_bond","VNO":"us_mid","VNOM":"us_mid","VNQ":"reit","VNQI":"reit","VNT":"us_mid","VO":"us_mid","VOE":"us_mid","VONE":"us_large","VONG":"us_large","VONV":"us_large","VOO":"us_large","VOT":"us_mid","VOYA":"us_mid","VPGDX":"blend","VPL":"intl_dev","VPMAX":"blend","VRP":"other","VRRM":"us_small","VRSK":"us_large","VRSN":"us_large","VRT":"us_large","VRTS":"us_small","VRTX":"us_large","VSAT":"us_small","VSEC":"us_small","VSGX":"intl_dev","VSH":"us_small","VSMAX":"us_small","VSMGX":"blend","VSNT":"us_small","VST":"us_large","VSTS":"us_small","VSXY":"us_small","VT":"intl_dev","VTABX":"intl_bond","VTEB":"us_bond","VTHRX":"blend","VTI":"us_total","VTIAX":"intl_dev","VTINX":"blend","VTIP":"us_bond","VTIVX":"blend","VTOL":"us_small","VTR":"reit","VTRS":"us_large","VTSAX":"us_total","VTTSX":"blend","VTTVX":"blend","VTV":"us_large","VTWAX":"us_total","VTWNX":"blend","VTWO":"us_small","VTXVX":"blend","VUG":"us_large","VUSB":"cash","VUSXX":"cash","VV":"us_large","VVV":"us_mid","VVX":"us_small","VWEHX":"us_bond","VWELX":"blend","VWENX":"blend","VWINX":"blend","VWIUX":"us_bond","VWO":"em","VWOB":"us_bond","VXUS":"intl_dev","VYM":"us_large","VYMI":"intl_dev","VYX":"us_small","VZ":"us_large","WAB":"us_large","WABC":"us_small","WAFD":"us_small","WAL":"us_mid","WAT":"us_large","WAY":"us_small","WBD":"us_large","WBS":"us_mid","WCC":"us_mid","WD":"us_small","WDAY":"us_large","WDC":"us_large","WDFC":"us_small","WEAT":"commod","WEC":"us_large","WELL":"reit","WEN":"us_small","WERN":"us_small","WEX":"us_mid","WFC":"us_large","WFRD":"us_mid","WGO":"us_small","WH":"us_mid","WHD":"us_small","WHR":"us_mid","WINA":"us_small","WING":"us_mid","WKC":"us_small","WLK":"us_mid","WLY":"us_small","WM":"us_large","WMB":"us_large","WMG":"us_mid","WMS":"us_mid","WMT":"us_large","WOR":"us_small","WPC":"us_mid","WRB":"us_large","WRBY":"us_small","WRLD":"us_small","WS":"us_small","WSBC":"us_small","WSC":"us_small","WSFS":"us_small","WSM":"us_large","WSO":"us_mid","WST":"us_large","WT":"us_small","WTFC":"us_mid","WTMF":"other","WTRG":"us_mid","WTS":"us_mid","WTW":"us_large","WU":"us_small","WWD":"us_mid","WWW":"us_small","WY":"reit","WYNN":"us_large","XEL":"us_large","XHR":"us_small","XLK":"us_large","XLRE":"reit","XMMO":"us_mid","XNCR":"us_small","XOM":"us_large","XPEL":"us_small","XPO":"us_mid","XRAY":"us_mid","XRP":"crypto","XSMO":"us_small","XSVM":"us_small","XYL":"us_large","XYLD":"other","XYZ":"us_large","YELP":"us_small","YETI":"us_mid","YOU":"us_small","YUM":"us_large","ZBH":"us_large","ZBRA":"us_large","ZD":"us_small","ZION":"us_mid","ZTS":"us_large","ZWS":"us_small"};
 
+/* ===============================================================
+   referenceData — per-tax-year constants (spec §4, §13). NORMATIVE.
+   TAX YEAR 2025 (returns filed 2026). Source: IRS Rev. Proc. 2024-40
+   (federal brackets, LTCG thresholds, contribution limits); NIIT
+   thresholds are fixed by statute (26 USC 1411). State rates are TOP
+   MARGINAL, approximate — editable in Settings > Tax Profile. Rates
+   stored as DECIMALS (0.24 = 24%); dollar thresholds are the top of
+   each band ("upTo"), final band Infinity. This block is embedded
+   data, NOT part of the user's saved JSON.
+   =============================================================== */
+const REFERENCE_DATA = {
+  taxYear: 2025,
+  source: 'IRS Rev. Proc. 2024-40 (TY2025)',
+  verifyNote: 'Estimates for Tax Year 2025 — verify against IRS.gov. Every value is editable in Settings › Tax Profile.',
+  federalBrackets: {
+    single: [ { upTo: 11925, rate: 0.10 }, { upTo: 48475, rate: 0.12 }, { upTo: 103350, rate: 0.22 }, { upTo: 197300, rate: 0.24 }, { upTo: 250525, rate: 0.32 }, { upTo: 626350, rate: 0.35 }, { upTo: Infinity, rate: 0.37 } ],
+    mfj:    [ { upTo: 23850, rate: 0.10 }, { upTo: 96950, rate: 0.12 }, { upTo: 206700, rate: 0.22 }, { upTo: 394600, rate: 0.24 }, { upTo: 501050, rate: 0.32 }, { upTo: 751600, rate: 0.35 }, { upTo: Infinity, rate: 0.37 } ],
+    hoh:    [ { upTo: 17000, rate: 0.10 }, { upTo: 64850, rate: 0.12 }, { upTo: 103350, rate: 0.22 }, { upTo: 197300, rate: 0.24 }, { upTo: 250500, rate: 0.32 }, { upTo: 626350, rate: 0.35 }, { upTo: Infinity, rate: 0.37 } ],
+    mfs:    [ { upTo: 11925, rate: 0.10 }, { upTo: 48475, rate: 0.12 }, { upTo: 103350, rate: 0.22 }, { upTo: 197300, rate: 0.24 }, { upTo: 250525, rate: 0.32 }, { upTo: 375800, rate: 0.35 }, { upTo: Infinity, rate: 0.37 } ],
+  },
+  ltcgBrackets: {
+    single: [ { upTo: 48350, rate: 0.00 }, { upTo: 533400, rate: 0.15 }, { upTo: Infinity, rate: 0.20 } ],
+    mfj:    [ { upTo: 96700, rate: 0.00 }, { upTo: 600050, rate: 0.15 }, { upTo: Infinity, rate: 0.20 } ],
+    hoh:    [ { upTo: 64750, rate: 0.00 }, { upTo: 566700, rate: 0.15 }, { upTo: Infinity, rate: 0.20 } ],
+    mfs:    [ { upTo: 48350, rate: 0.00 }, { upTo: 300000, rate: 0.15 }, { upTo: Infinity, rate: 0.20 } ],
+  },
+  niitRate: 0.038,
+  niitThreshold: { single: 200000, mfj: 250000, hoh: 200000, mfs: 125000 },
+  maSurtax: { rate: 0.04, threshold: 1083150 },
+  // Top marginal STATE income-tax rate, TY2025, as PERCENT. 0 = no wage tax.
+  stateRates: {
+    AL: 5.00, AK: 0.00, AZ: 2.50, AR: 3.90, CA: 13.30, CO: 4.40, CT: 6.99,
+    DE: 6.60, DC: 10.75, FL: 0.00, GA: 5.39, HI: 11.00, ID: 5.695, IL: 4.95,
+    IN: 3.00, IA: 3.80, KS: 5.58, KY: 4.00, LA: 3.00, ME: 7.15, MD: 5.75,
+    MA: 5.00, MI: 4.25, MN: 9.85, MS: 4.40, MO: 4.70, MT: 5.90, NE: 5.20,
+    NV: 0.00, NH: 0.00, NJ: 10.75, NM: 5.90, NY: 10.90, NC: 4.25, ND: 2.50,
+    OH: 3.50, OK: 4.75, OR: 9.90, PA: 3.07, RI: 5.99, SC: 6.20, SD: 0.00,
+    TN: 0.00, TX: 0.00, UT: 4.55, VT: 8.75, VA: 5.75, WA: 0.00, WV: 4.82,
+    WI: 7.65, WY: 0.00,
+  },
+  stateNotes: {
+    WA: 'No wage tax; 7% tax on LT gains above ~$270k only.',
+    NH: 'Interest & dividends tax repealed effective 2025.',
+    TN: 'No income tax (Hall tax repealed 2021).',
+  },
+  contribLimits: {
+    k401_elective: 23500, k401_catchup_50: 7500, k401_catchup_60_63: 11250,
+    ira: 7000, ira_catchup_50: 1000,
+    hsa_self: 4300, hsa_family: 8550, hsa_catchup_55: 1000,
+  },
+  incomeBands: [
+    { key: 'lt50',    label: 'Under $50k',   income: 40000 },
+    { key: '50_100',  label: '$50k – $100k', income: 75000 },
+    { key: '100_200', label: '$100k – $200k', income: 150000 },
+    { key: '200_400', label: '$200k – $400k', income: 300000 },
+    { key: '400_600', label: '$400k – $600k', income: 500000 },
+    { key: '600_1m',  label: '$600k – $1M',  income: 800000 },
+    { key: 'gt1m',    label: 'Over $1M',     income: 1200000 },
+  ],
+};
+
+const FILING_STATUS_LABELS = { single: 'Single', mfj: 'Married filing jointly', hoh: 'Head of household', mfs: 'Married filing separately' };
+
+/* Asset-class DEFAULT tax profiles (§13.2). Used when a ticker has no
+   entry in taxData/seed. Values are PERCENT; rows using these are
+   flagged "estimated". */
+const DEFAULT_TAX_PROFILE = {
+  us_large:  { divYield: 1.3, qualifiedPct: 95, capGainDistPct: 0.0 },
+  us_mid:    { divYield: 1.4, qualifiedPct: 90, capGainDistPct: 0.2 },
+  us_small:  { divYield: 1.3, qualifiedPct: 85, capGainDistPct: 0.3 },
+  us_total:  { divYield: 1.3, qualifiedPct: 94, capGainDistPct: 0.1 },
+  intl_dev:  { divYield: 3.0, qualifiedPct: 70, capGainDistPct: 0.1 },
+  em:        { divYield: 2.8, qualifiedPct: 60, capGainDistPct: 0.2 },
+  us_bond:   { divYield: 4.0, qualifiedPct: 0,  capGainDistPct: 0.2 },
+  intl_bond: { divYield: 3.5, qualifiedPct: 0,  capGainDistPct: 0.2 },
+  reit:      { divYield: 3.8, qualifiedPct: 0,  capGainDistPct: 0.5 },
+  commod:    { divYield: 0.0, qualifiedPct: 0,  capGainDistPct: 5.0 },
+  crypto:    { divYield: 0.0, qualifiedPct: 0,  capGainDistPct: 0.0 },
+  cash:      { divYield: 4.5, qualifiedPct: 0,  capGainDistPct: 0.0 },
+  blend:     { divYield: 2.0, qualifiedPct: 60, capGainDistPct: 1.0 },
+  other:     { divYield: 0.0, qualifiedPct: 0,  capGainDistPct: 0.0 },
+};
+
+/* Curated per-ticker tax profiles (bundled taxData snapshot). Reviewed
+   best-effort; everything else falls back to DEFAULT_TAX_PROFILE by
+   asset class. `muni: true` marks a federal-exempt muni fund (§13.6). */
+const SEED_TAX_DATA = {
+  VOO:  { divYield: 1.3, qualifiedPct: 100, capGainDistPct: 0.0 },
+  IVV:  { divYield: 1.3, qualifiedPct: 100, capGainDistPct: 0.0 },
+  SPY:  { divYield: 1.3, qualifiedPct: 100, capGainDistPct: 0.0 },
+  SPLG: { divYield: 1.3, qualifiedPct: 100, capGainDistPct: 0.0 },
+  VTI:  { divYield: 1.3, qualifiedPct: 95,  capGainDistPct: 0.0 },
+  ITOT: { divYield: 1.3, qualifiedPct: 95,  capGainDistPct: 0.0 },
+  SPTM: { divYield: 1.3, qualifiedPct: 95,  capGainDistPct: 0.0 },
+  FSKAX:{ divYield: 1.3, qualifiedPct: 95,  capGainDistPct: 0.0 },
+  FXAIX:{ divYield: 1.3, qualifiedPct: 100, capGainDistPct: 0.0 },
+  VXUS: { divYield: 3.1, qualifiedPct: 72,  capGainDistPct: 0.0 },
+  IXUS: { divYield: 3.1, qualifiedPct: 72,  capGainDistPct: 0.0 },
+  VEA:  { divYield: 3.2, qualifiedPct: 75,  capGainDistPct: 0.0 },
+  IEFA: { divYield: 3.1, qualifiedPct: 75,  capGainDistPct: 0.0 },
+  VWO:  { divYield: 2.9, qualifiedPct: 60,  capGainDistPct: 0.0 },
+  IEMG: { divYield: 2.8, qualifiedPct: 60,  capGainDistPct: 0.0 },
+  BND:  { divYield: 4.1, qualifiedPct: 0,   capGainDistPct: 0.0 },
+  AGG:  { divYield: 4.0, qualifiedPct: 0,   capGainDistPct: 0.0 },
+  BNDX: { divYield: 3.4, qualifiedPct: 0,   capGainDistPct: 0.0 },
+  VNQ:  { divYield: 3.9, qualifiedPct: 0,   capGainDistPct: 0.6 },
+  VTEB: { divYield: 3.3, qualifiedPct: 0,   capGainDistPct: 0.0, muni: true },
+  MUB:  { divYield: 3.3, qualifiedPct: 0,   capGainDistPct: 0.0, muni: true },
+  VMFXX:{ divYield: 4.5, qualifiedPct: 0,   capGainDistPct: 0.0 },
+};
+
+/* Substantially-identical clones for wash-sale flagging (§13.7). */
+const WASH_CLONES = [
+  ['VOO', 'IVV', 'SPLG', 'FXAIX', 'SPY'],
+  ['VTI', 'ITOT', 'SPTM', 'FSKAX'],
+  ['VXUS', 'IXUS'],
+  ['VEA', 'IEFA'],
+  ['VWO', 'IEMG'],
+  ['BND', 'AGG'],
+];
+
+/* §13.3 shelter-first ranking (lower = shelter first). null = neutral. */
+const SHELTER_RANK = {
+  us_bond: 1, intl_bond: 1, reit: 2, commod: 2.5, blend: 4, em: 5,
+  us_small: 6, us_mid: 6, us_large: 7, us_total: 7, intl_dev: 8,
+  cash: null, crypto: null, other: null,
+};
+/* Classes counted by the Location Efficiency Score (ranks 1–4, §13.9). */
+const INEFFICIENT_CLASSES = ['us_bond', 'intl_bond', 'reit', 'commod', 'blend'];
+
+/* ===============================================================
+   TAX ENGINE — §13.1–13.2. Pure functions; rates returned as DECIMALS.
+   Portfolio-aware tax calc (drag table, scorecard, recommendations)
+   lives further down in the CALC LAYER.
+   =============================================================== */
+function marginalRate(brackets, income) {
+  for (const b of brackets) if (income <= b.upTo) return b.rate;
+  return brackets[brackets.length - 1].rate;
+}
+function ltcgRateFor(brackets, income) {
+  for (const b of brackets) if (income <= b.upTo) return b.rate;
+  return brackets[brackets.length - 1].rate;
+}
+function bandIncome(ref, bandKey) {
+  const b = ref.incomeBands.find(x => x.key === bandKey);
+  return b ? b.income : 150000;
+}
+// §13.1 — derive the full effective rate stack from taxSettings.
+function deriveRates(ref, taxSettings) {
+  const ts = taxSettings || {};
+  const fs = ts.filingStatus || 'single';
+  const income = bandIncome(ref, ts.incomeBand);
+  const ov = ts.override || {};
+  const r_ord   = (ov.ordinaryRate != null) ? ov.ordinaryRate : marginalRate(ref.federalBrackets[fs] || ref.federalBrackets.single, income);
+  const r_qdi   = (ov.ltcgRate     != null) ? ov.ltcgRate     : ltcgRateFor(ref.ltcgBrackets[fs] || ref.ltcgBrackets.single, income);
+  const niit    = (ov.niitApplies  != null) ? (ov.niitApplies ? ref.niitRate : 0)
+                                            : (income > (ref.niitThreshold[fs] || 200000) ? ref.niitRate : 0);
+  const r_state = (ov.stateRate    != null) ? ov.stateRate    : ((ref.stateRates[ts.state] || 0) / 100);
+  const surtax  = (ov.surtaxApplies != null) ? (ov.surtaxApplies ? ref.maSurtax.rate : 0)
+                                             : ((ts.state === 'MA' && income >= 1000000) ? ref.maSurtax.rate : 0);
+  const r_ord_eff  = r_ord + niit + r_state + surtax;
+  const r_qdi_eff  = r_qdi + niit + r_state + surtax;
+  const r_ltcg_eff = r_qdi_eff;
+  return { fs, income, r_ord, r_qdi, niit, r_state, surtax, r_ord_eff, r_qdi_eff, r_ltcg_eff };
+}
+// Resolve a ticker's tax profile: user taxData → bundled seed → class default.
+function tickerProfile(ticker, assetClass, taxData) {
+  const t = (ticker || '').toUpperCase();
+  const user = taxData && taxData.tickers && taxData.tickers[t];
+  if (user) return { profile: user, estimated: false, source: 'user' };
+  if (SEED_TAX_DATA[t]) return { profile: SEED_TAX_DATA[t], estimated: false, source: 'bundled' };
+  return { profile: DEFAULT_TAX_PROFILE[assetClass] || DEFAULT_TAX_PROFILE.other, estimated: true, source: 'default' };
+}
+// §13.2 — annual $ tax drag for one taxable holding.
+function holdingDrag(mv, profile, rates) {
+  const dy = (profile.divYield || 0) / 100;
+  const q  = (profile.qualifiedPct || 0) / 100;
+  const cg = (profile.capGainDistPct || 0) / 100;
+  return mv * (dy * q * rates.r_qdi_eff + dy * (1 - q) * rates.r_ord_eff + cg * rates.r_ltcg_eff);
+}
+// Account tax-shelter classification from category + treatment.
+// Returns { sheltered:bool, reason:string }.
+function accountShelter(acct) {
+  if (!acct) return { sheltered: false, reason: 'taxable' };
+  const cat = acct.category;
+  const tt = acct.taxTreatment;
+  if (cat === 'Retirement') return { sheltered: true, reason: tt === 'Roth' ? 'tax-free (Roth)' : 'tax-deferred' };
+  if (cat === '529') return { sheltered: true, reason: 'tax-free (529)' };
+  if (tt === 'Roth' || tt === 'Tax-free') return { sheltered: true, reason: 'tax-free' };
+  if (tt === 'Pre-tax') return { sheltered: true, reason: 'tax-deferred' };
+  return { sheltered: false, reason: 'taxable' };
+}
+// Wash-sale clone set for a ticker (includes the ticker itself, §13.7).
+function washCloneSet(ticker) {
+  const t = (ticker || '').toUpperCase();
+  const row = WASH_CLONES.find(g => g.includes(t));
+  return row ? row : [t];
+}
+
 /* ---------------------------------------------------------------
    SCHEMA + MIGRATION (spec §10)
    --------------------------------------------------------------- */
-const SCHEMA_VERSION = 2;
+const SCHEMA_VERSION = 3;
+
+function defaultTaxSettings() {
+  return {
+    filingStatus: 'single',
+    incomeBand: '100_200',
+    state: '',
+    gainBudgetAnnual: 0,
+    householdMonthlySavings: 0,
+    ytdContributions: {},   // { accountId: dollarsContributedThisYear }
+    networkEnabled: false,  // dormant placeholder — no network feature ships in this build
+    override: null,         // { ordinaryRate, ltcgRate, niitApplies, stateRate, surtaxApplies }
+  };
+}
 
 function emptyPortfolio() {
   return {
@@ -443,6 +659,9 @@ function emptyPortfolio() {
     goals: [],
     glidePaths: [],
     tickerMap: {},
+    plans: [],
+    taxSettings: defaultTaxSettings(),
+    taxData: { lastRefreshed: null, source: 'bundled', tickers: {} },
   };
 }
 
@@ -459,6 +678,15 @@ function migrate(data) {
   const base = emptyPortfolio();
   const merged = Object.assign(base, data);
   merged.meta = Object.assign(base.meta, data.meta || {});
+  // v2 → v3: tax module. Add plans[], taxSettings, taxData if absent.
+  // Additive + idempotent — never drops existing user data.
+  if (!Array.isArray(merged.plans)) merged.plans = [];
+  merged.taxSettings = Object.assign(defaultTaxSettings(), data.taxSettings || {});
+  if (!merged.taxData || typeof merged.taxData !== 'object') {
+    merged.taxData = { lastRefreshed: null, source: 'bundled', tickers: {} };
+  } else if (!merged.taxData.tickers || typeof merged.taxData.tickers !== 'object') {
+    merged.taxData.tickers = {};
+  }
   // v1 → v2: US Total Market retired as a goal class; redistribute any goal
   // target on us_total into Large/Mid/Small by the default split.
   if (v < 2) {
@@ -760,6 +988,245 @@ function historySeries(scope /* 'household'|category|null=all */) {
 }
 
 /* ===============================================================
+   TAX CALC LAYER (F9/F8) — portfolio-aware, built on the pure
+   tax engine above. All offline; §13.2–13.9.
+   =============================================================== */
+function taxRates() { return deriveRates(REFERENCE_DATA, portfolio.taxSettings); }
+
+// Per-holding drag rows for a snapshot, worst-first (§13.2).
+function holdingDragRows(snapshot, rates) {
+  rates = rates || taxRates();
+  const idx = valueIndex(snapshot);
+  const rows = [];
+  for (const h of activeHoldings()) {
+    const v = idx[h.id];
+    if (!v || !(Number(v.marketValue) > 0)) continue;
+    const acct = accountById(h.accountId) || {};
+    const shelter = accountShelter(acct);
+    const mv = Number(v.marketValue);
+    const { profile, estimated, source } = tickerProfile(h.ticker, h.assetClass, portfolio.taxData);
+    const drag = shelter.sheltered ? 0 : holdingDrag(mv, profile, rates);
+    const cb = v.costBasis != null ? v.costBasis : (h.costBasis != null ? h.costBasis : null);
+    rows.push({
+      holdingId: h.id, ticker: h.ticker || '', name: h.name || '',
+      accountId: h.accountId, accountName: acct.name || '(account)',
+      assetClass: h.assetClass, mv, costBasis: cb == null ? null : Number(cb),
+      sheltered: shelter.sheltered, reason: shelter.reason,
+      profile, estimated, source, drag,
+      dragPerDollar: shelter.sheltered ? 0 : holdingDrag(1, profile, rates),
+    });
+  }
+  rows.sort((a, b) => b.drag - a.drag);
+  return rows;
+}
+
+// §13.9 scorecard for a snapshot.
+function taxScorecard(snapshot) {
+  const rates = taxRates();
+  const rows = holdingDragRows(snapshot, rates);
+  let totalDrag = 0, taxableAssets = 0, locNum = 0, locDen = 0;
+  for (const r of rows) {
+    totalDrag += r.drag;
+    if (!r.sheltered) taxableAssets += r.mv;
+    if (INEFFICIENT_CLASSES.includes(r.assetClass)) {
+      locDen += r.mv;
+      if (r.sheltered) locNum += r.mv;
+    }
+  }
+  const dragPct = taxableAssets > 0 ? (totalDrag / taxableAssets) * 100 : 0;
+  const locScore = locDen > 0 ? (locNum / locDen) * 100 : null;
+  return { rates, rows, totalDrag, taxableAssets, dragPct, locScore, locNum, locDen };
+}
+
+const EFFICIENT_FOR_TAXABLE = ['us_large', 'us_total', 'intl_dev', 'us_mid', 'us_small'];
+
+// §13.5 location-swap recommendations (allocation-neutral pairs).
+function locationSwapRecs(snapshot) {
+  const rates = taxRates();
+  const rows = holdingDragRows(snapshot, rates);
+  const inefTaxable = rows
+    .filter(r => !r.sheltered && INEFFICIENT_CLASSES.includes(r.assetClass) && r.mv > 0)
+    .sort((a, b) => b.drag - a.drag);
+  const effSheltered = rows
+    .filter(r => r.sheltered && EFFICIENT_FOR_TAXABLE.includes(r.assetClass) && r.mv > 0)
+    .sort((a, b) => a.dragPerDollarTaxable - b.dragPerDollarTaxable);
+  // Precompute each sheltered efficient holding's would-be taxable per-$ drag.
+  for (const b of effSheltered) {
+    b.dragPerDollarTaxable = holdingDrag(1, b.profile, rates);
+  }
+  effSheltered.sort((a, b) => a.dragPerDollarTaxable - b.dragPerDollarTaxable);
+  const usedB = {};   // holdingId → dollars already committed
+  const recs = [];
+  for (const a of inefTaxable) {
+    const dA = a.dragPerDollar;  // per-$ drag of A in taxable
+    let best = null;
+    for (const b of effSheltered) {
+      const avail = b.mv - (usedB[b.holdingId] || 0);
+      if (avail <= 1) continue;
+      if (b.dragPerDollarTaxable >= dA) continue; // B must be more efficient than A
+      if (!best || b.dragPerDollarTaxable < best.dragPerDollarTaxable) best = b;
+    }
+    if (!best) continue;
+    const bAvail = best.mv - (usedB[best.holdingId] || 0);
+    const X = Math.min(a.mv, bAvail);
+    if (X <= 1) continue;
+    const savings = X * (dA - best.dragPerDollarTaxable);
+    if (savings <= 0) continue;
+    // One-time realization cost on the A portion sold in taxable (§13.5).
+    let oneTime = 0, basisKnown = a.costBasis != null;
+    if (basisKnown) {
+      const gainFull = a.mv - a.costBasis;
+      const gainPortion = (X / a.mv) * gainFull;
+      oneTime = Math.max(0, gainPortion) * rates.r_ltcg_eff;
+    }
+    // Recommend only when one-time cost is $0 or < 2 years of savings (§13.5).
+    const worthIt = oneTime === 0 || oneTime < 2 * savings;
+    if (!worthIt) continue;
+    usedB[best.holdingId] = (usedB[best.holdingId] || 0) + X;
+    recs.push({
+      kind: 'location-swap', amount: X, savingsPerYr: savings,
+      oneTimeCost: oneTime, basisKnown,
+      aTicker: a.ticker, aClass: a.assetClass, aAccountId: a.accountId, aAccountName: a.accountName,
+      bTicker: best.ticker, bClass: best.assetClass, bAccountId: best.accountId, bAccountName: best.accountName,
+    });
+    if (recs.length >= 6) break;
+  }
+  return recs;
+}
+
+const DEFAULT_MUNI_YIELD = 3.3; // VTEB national muni fund (federal-exempt).
+
+// §13.6 muni comparison (only when r_ord ≥ 32% and bonds sit in taxable).
+function muniRecs(snapshot) {
+  const rates = taxRates();
+  if (rates.r_ord < 0.32) return [];
+  const rows = holdingDragRows(snapshot, rates);
+  const recs = [];
+  for (const r of rows) {
+    if (r.sheltered || r.assetClass !== 'us_bond') continue;
+    if (r.profile && r.profile.muni) continue; // already a muni fund
+    const y_t = (r.profile.divYield || 0);
+    const y_m = DEFAULT_MUNI_YIELD;
+    const taxableAT = y_t * (1 - rates.r_ord_eff);
+    const muniAT = y_m * (1 - rates.r_state);
+    if (muniAT <= taxableAT) continue;
+    const savings = r.mv * (muniAT - taxableAT) / 100;
+    let oneTime = 0, basisKnown = r.costBasis != null;
+    if (basisKnown) oneTime = Math.max(0, r.mv - r.costBasis) * rates.r_ltcg_eff;
+    recs.push({
+      kind: 'muni', amount: r.mv, savingsPerYr: savings, oneTimeCost: oneTime, basisKnown,
+      aTicker: r.ticker, aAccountId: r.accountId, aAccountName: r.accountName,
+      muniTicker: 'VTEB', taxableAT, muniAT,
+    });
+  }
+  return recs;
+}
+
+// §13.7 wash-sale scan for a plan's moves + directive.
+function washWarnings(plan) {
+  if (!plan) return [];
+  const buys = new Set();
+  for (const m of plan.moves || []) if (m.buyTicker) for (const t of washCloneSet(m.buyTicker)) buys.add(t);
+  if (plan.directive && plan.directive.splits) {
+    for (const s of plan.directive.splits) if (s.ticker) for (const t of washCloneSet(s.ticker)) buys.add(t);
+  }
+  const warns = [];
+  for (const m of plan.moves || []) {
+    if (!m.sellTicker) continue;
+    const set = washCloneSet(m.sellTicker);
+    if (set.some(t => buys.has(t))) {
+      warns.push({ ticker: m.sellTicker, clones: set.filter(t => t !== m.sellTicker.toUpperCase()) });
+    }
+  }
+  return warns;
+}
+
+/* §13.8 savings directive — steer householdMonthlySavings by headroom
+   then toward the most-underweight classes. Returns { monthly, lines[],
+   text, splits[] } or null when no savings figure is set. */
+function savingsDirective(snapshot) {
+  const ts = portfolio.taxSettings || {};
+  const monthly = Number(ts.householdMonthlySavings) || 0;
+  if (monthly <= 0) return null;
+  const lim = REFERENCE_DATA.contribLimits;
+  const ytd = ts.ytdContributions || {};
+  // Headroom per tax-advantaged account (annual limit − YTD), simple model.
+  const headrooms = [];
+  for (const a of portfolio.accounts) {
+    if (a.status === 'archived') continue;
+    let cap = 0;
+    if (a.category === 'Retirement') cap = a.taxTreatment === 'Pre-tax' || a.taxTreatment === 'Roth' ? lim.k401_elective : lim.ira;
+    else if (a.category === '529') cap = 0; // 529s have high limits; steered by glide need, not capped here
+    else continue;
+    const used = Number(ytd[a.id]) || 0;
+    const room = Math.max(0, cap - used);
+    if (room > 0) headrooms.push({ accountId: a.id, name: a.name, room, category: a.category });
+  }
+  // Most-underweight classes from household drift (targets − actual).
+  const under = underweightClasses(snapshot);
+  const topClass = under.length ? under[0] : null;
+  const splits = [];
+  const lines = [];
+  let remainingAnnual = monthly * 12;
+  for (const h of headrooms) {
+    if (remainingAnnual <= 0) break;
+    const fill = Math.min(h.room, remainingAnnual);
+    remainingAnnual -= fill;
+    const perMo = fill / 12;
+    const tkr = topClass ? topClass.suggestTicker : 'VTI';
+    splits.push({ accountId: h.accountId, ticker: tkr, pctOrAmt: perMo });
+    lines.push(`Fill ${h.name}: ~$${fmtMoney(perMo)}/mo → ${tkr}`);
+  }
+  if (remainingAnnual > 0) {
+    const perMo = remainingAnnual / 12;
+    const tkr = topClass ? topClass.suggestTicker : 'VTI';
+    splits.push({ accountId: 'taxable', ticker: tkr, pctOrAmt: perMo });
+    lines.push(`Remainder to taxable: ~$${fmtMoney(perMo)}/mo → ${tkr}`);
+  }
+  const text = lines.join('; ');
+  return { monthly, lines, text, splits };
+}
+
+// Underweight classes (target − actual > 0), most-underweight first.
+const CLASS_SUGGEST_TICKER = {
+  us_large: 'VOO', us_mid: 'VO', us_small: 'VB', us_total: 'VTI',
+  intl_dev: 'VEA', em: 'VWO', us_bond: 'BND', intl_bond: 'BNDX',
+  reit: 'VNQ', commod: 'PDBC', crypto: 'BTC', cash: 'VMFXX',
+  blend: 'VTI', other: '',
+};
+function underweightClasses(snapshot) {
+  const goal = activeGoal(snapshot ? snapshot.date : null);
+  if (!goal) return [];
+  const holds = householdHoldings();
+  const a = allocate(holds, snapshot);
+  const detail = goalIsDetail(goal);
+  const targets = detail ? goalDetailTargets(goal) : goalGroupTargets(goal);
+  const rows = detail ? toRows(a.detail, a.total, 'detail') : toRows(a.group, a.total, 'group');
+  const drift = computeDrift(rows, a.total, targets, portfolio.meta.driftBandPct || 5);
+  const out = [];
+  for (const d of drift) {
+    if (d.driftPct < 0) { // underweight
+      out.push({
+        classId: d.id, level: detail ? 'detail' : 'group',
+        driftPct: d.driftPct, gapDollars: (Math.abs(d.driftPct) / 100) * a.total,
+        suggestTicker: detail ? (CLASS_SUGGEST_TICKER[d.id] || 'VTI') : 'VTI',
+      });
+    }
+  }
+  out.sort((x, y) => x.driftPct - y.driftPct); // most negative first
+  return out;
+}
+
+// Most-recent plan (attached to whatever snapshot it was made on).
+function latestPlan() {
+  const ps = (portfolio.plans || []).slice().sort((a, b) => (a.snapshotDate || '').localeCompare(b.snapshotDate || ''));
+  return ps.length ? ps[ps.length - 1] : null;
+}
+function planForSnapshot(date) {
+  return (portfolio.plans || []).find(p => p.snapshotDate === date) || null;
+}
+
+/* ===============================================================
    CSV EXPORT (F6/F7) — plain, Excel-friendly.
    =============================================================== */
 function csvEscape(v) {
@@ -1040,8 +1507,11 @@ function loadDemoData() {
 /* ===============================================================
    UI STATE + small helpers
    =============================================================== */
+// Internal view ids map to the §14 IA nav:
+//   Check-In → checkin · Review → {dashboard,positions,goal,tax,history}
+//   Plan → plan · Report → report · Settings → {accounts,household,taxprofile,data}
 const ui = {
-  view: 'welcome',         // welcome | dashboard | positions | checkin | history | goal | report | accounts
+  view: 'checkin',         // active internal view id (see map above)
   snapDate: null,          // selected snapshot (null → latest)
   level: 'group',          // group (rollup 6) | detail (14)
   drill: { level: 'household', category: null, accountId: null },
@@ -1049,8 +1519,20 @@ const ui = {
   checkinExpanded: null,   // accountId expanded in the check-in
   checkinNetWorth: '',     // optional sanity number the user types
   historyTab: 'value',     // value | pct | growth
+  planSim: null,           // live simulator overlay for the Plan tab
   dialog: null,            // active modal descriptor
 };
+
+// §14 IA: which internal views sit under each top-level nav tab.
+const REVIEW_VIEWS = ['dashboard', 'positions', 'goal', 'tax', 'history'];
+const SETTINGS_VIEWS = ['accounts', 'household', 'taxprofile', 'data'];
+function topTabOf(view) {
+  if (view === 'checkin') return 'checkin';
+  if (view === 'plan') return 'plan';
+  if (view === 'report') return 'report';
+  if (SETTINGS_VIEWS.includes(view)) return 'settings';
+  return 'review';
+}
 
 const CATEGORY_ORDER = ['Retirement', '529', 'Non-Retirement', 'Other'];
 /* Display labels for stored category values (value stays stable in the data). */
@@ -1353,43 +1835,68 @@ function rerender() { render(); }
 
 /* Reset all view/draft state — used after loading a new dataset (demo/open/fresh). */
 function resetViewState() {
-  ui.view = 'welcome'; ui.snapDate = null; ui.level = 'group';
+  ui.view = 'checkin'; ui.snapDate = null; ui.level = 'group';
   ui.drill = { level: 'household', category: null, accountId: null };
   ui.checkin = null; ui.goalDraft = null; ui.historyTab = 'value'; ui.goalSel = ''; ui.positionsSnap = null; ui.posCategory = 'all'; ui.posClass = ''; ui.posExpanded = {};
+  ui.planSim = null;
 }
 
 function render() {
   const app = document.getElementById('app');
   const hasData = portfolio.accounts.some(a => a.status !== 'archived');
-  if (!hasData && !['welcome', 'accounts'].includes(ui.view)) ui.view = 'welcome';
+  // No data → land in Check-In (its onboarding empty state) or a Settings pane.
+  if (!hasData && !['checkin', ...SETTINGS_VIEWS].includes(ui.view)) ui.view = 'checkin';
 
   let body;
   switch (ui.view) {
-    case 'welcome':  body = renderWelcome(); break;
-    case 'positions': body = renderPositions(); break;
-    case 'checkin':  body = renderCheckin();  break;
-    case 'history':  body = renderHistory();  break;
-    case 'goal':     body = renderGoal();     break;
-    case 'report':   body = renderReport();   break;
-    case 'accounts': body = renderAccounts(); break;
-    default:         body = renderDashboard();
+    case 'positions':  body = renderPositions(); break;
+    case 'checkin':    body = renderCheckin();  break;
+    case 'history':    body = renderHistory();  break;
+    case 'goal':       body = renderGoal();     break;
+    case 'tax':        body = renderTax();      break;
+    case 'plan':       body = renderPlan();     break;
+    case 'report':     body = renderReport();   break;
+    case 'accounts':   body = renderAccounts(); break;
+    case 'household':  body = renderHousehold(); break;
+    case 'taxprofile': body = renderTaxProfile(); break;
+    case 'data':       body = renderDataPrivacy(); break;
+    default:           body = renderDashboard();
   }
   // The report markup is always in the DOM (hidden) so print + preview share it.
-  const reportHidden = (ui.view === 'report' || ui.view === 'welcome') ? '' : reportHTML(currentSnapshot());
+  const reportHidden = (ui.view === 'report') ? '' : reportHTML(currentSnapshot());
   app.innerHTML = shellHTML(navHTML() + `<div class="app-body">${body}${reportHidden ? `<div class="report">${reportHidden}</div>` : ''}</div>`);
   afterRender();
 }
 
 function shellHTML(inner) { return `<div class="shell">${inner}</div>`; }
 
+/* §14 top-level nav + contextual sub-tab bar. */
+const NAV_TABS = [
+  ['checkin',  'Check-In',  'checkin'],
+  ['review',   'Review',    'dashboard'],   // default sub-view = Overview
+  ['plan',     'Plan',      'plan'],
+  ['report',   'Report',    'report'],
+  ['settings', 'Settings',  'accounts'],    // default sub-view = Accounts
+];
+const REVIEW_SUBTABS = [
+  ['dashboard', 'Overview'], ['positions', 'Positions'], ['goal', 'Goals'],
+  ['tax', 'Tax'], ['history', 'History'],
+];
+const SETTINGS_SUBTABS = [
+  ['accounts', 'Accounts'], ['household', 'Household'],
+  ['taxprofile', 'Tax Profile'], ['data', 'Data & Privacy'],
+];
 function navHTML() {
-  const tabs = [['welcome', 'Welcome'], ['dashboard', 'Dashboard'], ['positions', 'Positions'], ['checkin', 'Check-in'], ['history', 'History'], ['goal', 'Goal'], ['report', 'Report'], ['accounts', 'Accounts']];
-  const links = tabs.map(([v, label]) =>
-    `<a data-act="nav" data-view="${v}" ${ui.view === v ? 'aria-current="page"' : ''}>${label}</a>`).join('');
+  const active = topTabOf(ui.view);
+  const links = NAV_TABS.map(([tab, label, defView]) =>
+    `<a data-act="nav" data-view="${defView}" ${active === tab ? 'aria-current="page"' : ''}>${label}</a>`).join('');
   const saveCls = dirty ? 'btn btn-sm save-dirty' : 'btn btn-sm btn-secondary';
-  const savedNote = dirty ? 'unsaved changes' : (HAS_FSA && fileHandle ? esc(fileName) : esc(fileName));
+  const savedNote = dirty ? 'unsaved changes' : esc(fileName);
+  const subtabs = active === 'review' ? REVIEW_SUBTABS : active === 'settings' ? SETTINGS_SUBTABS : null;
+  const subBar = subtabs ? `<div class="subnav no-print">${subtabs.map(([v, label]) =>
+      `<a data-act="nav" data-view="${v}" class="${ui.view === v ? 'subnav-active' : ''}">${label}</a>`).join('')}</div>` : '';
   return `<div class="nav no-print">
-    <span class="nav-brand" data-act="nav" data-view="welcome" title="Home" style="display:flex;align-items:center;gap:9px;cursor:pointer;">${logoSVG(24)}Allocation Tracker</span>
+    <span class="nav-brand" data-act="about" title="About this app" style="display:flex;align-items:center;gap:9px;cursor:pointer;">${logoSVG(24)}Allocation Tracker</span>
     <div style="display:flex;gap:18px;align-items:center;margin-right:auto;margin-left:24px;flex-wrap:wrap;">${links}</div>
     <div style="display:flex;align-items:center;gap:10px;">
       <span class="text-muted" style="font-size:12px;">${savedNote}</span>
@@ -1397,39 +1904,22 @@ function navHTML() {
       <button class="btn btn-sm btn-secondary" data-act="open">Open</button>
       <button class="btn btn-sm btn-primary" data-act="new-checkin">New check-in</button>
     </div>
-  </div>`;
+  </div>${subBar}`;
 }
 
 /* ===============================================================
-   WELCOME / HOME — a welcome + welcome-back landing that doubles as a
-   quick how-to. Reachable anytime via the brand/logo.
+   ONBOARDING — the empty state of Check-In (§14: Welcome tab removed;
+   first-run content becomes the Check-In empty state). The "app + data
+   file" explanation lives in the About/Help modal (logo click).
    =============================================================== */
-function renderWelcome() {
-  const hasData = portfolio.accounts.some(a => a.status !== 'archived');
-  const snap = latestSnapshot();
-  const nAcct = accountsSorted().length, nHold = activeHoldings().length;
-  const hhTotal = snap ? allocate(householdHoldings(), snap).total : 0;
-
-  const actions = hasData
-    ? `<button class="btn btn-primary" data-act="new-checkin">New check-in</button>
-       <button class="btn btn-secondary" data-act="nav" data-view="dashboard">Open dashboard</button>
-       <button class="btn ${dirty ? 'save-dirty' : 'btn-secondary'}" data-act="save">Save file</button>`
-    : `${ui.pendingReopen ? `<button class="btn btn-primary" data-act="reopen-file">Reopen ${esc(ui.pendingReopen)}</button>` : ''}
-       <button class="btn ${ui.pendingReopen ? 'btn-secondary' : 'btn-primary'}" data-act="onboard-start">Add your first account</button>
-       <button class="btn btn-secondary" data-act="load-demo">Load demo data</button>
-       <button class="btn btn-secondary" data-act="open">Open a saved file</button>`;
-
-  const status = hasData
-    ? `<div class="text-muted" style="font-size:13px;">${esc(fileName)} · ${fmtMoney(hhTotal)} · ${nAcct} account${nAcct !== 1 ? 's' : ''} · last check-in ${snap ? esc(snap.date) : '—'} · <span style="color:${dirty ? 'var(--color-warn)' : 'inherit'};">${dirty ? 'unsaved changes' : 'saved'}</span></div>`
-    : `<p class="text-muted" style="margin:0;max-width:64ch;">Track your true asset allocation across every account, compare it to a goal, and watch it over time — all in one local file.</p>`;
-
+function renderCheckinEmpty() {
   const steps = [
     { n: '1', t: 'Load your data file — or start a new one', d: 'Open your saved <b>my-portfolio.json</b>, or start fresh if you haven’t yet.',
       actions: `<button class="btn btn-sm btn-secondary" data-act="open">Open a file</button>
         <button class="btn btn-sm btn-secondary" data-act="onboard-start">Start new</button>
         ${ui.pendingReopen ? `<button class="btn btn-sm btn-primary" data-act="reopen-file">Reopen ${esc(ui.pendingReopen)}</button>` : ''}` },
     { n: '2', t: 'Set up your accounts &amp; holdings', d: 'Add each account and what’s inside — tickers auto-classify.', view: 'accounts' },
-    { n: '3', t: 'Check in, then review vs your goal', d: '“New check-in” pre-fills last time’s values; the Dashboard shows drift vs your target.', view: 'checkin' },
+    { n: '3', t: 'Check in, then review vs your goal', d: '“New check-in” pre-fills last time’s values; Review › Overview shows drift vs your target.', view: 'accounts' },
     { n: '4', t: 'Save your file', d: 'Write your changes back to your data file (see right).', view: 'save' },
   ];
   const stepList = steps.map(s => `
@@ -1441,10 +1931,15 @@ function renderWelcome() {
   return `<div class="view" style="max-width:900px;margin:0 auto;width:100%;align-items:center;">
     <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;">
       ${logoSVG(56)}
-      <h1 style="margin:4px 0 0;">${hasData ? 'Welcome back.' : 'See what you actually own.'}</h1>
-      <div>${status}</div>
+      <h1 style="margin:4px 0 0;">See what you actually own.</h1>
+      <p class="text-muted" style="margin:0;max-width:64ch;">Track your true asset allocation across every account, compare it to a goal, and watch it over time — all in one local file.</p>
     </div>
-    <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;">${actions}</div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;">
+      ${ui.pendingReopen ? `<button class="btn btn-primary" data-act="reopen-file">Reopen ${esc(ui.pendingReopen)}</button>` : ''}
+      <button class="btn ${ui.pendingReopen ? 'btn-secondary' : 'btn-primary'}" data-act="onboard-start">Add your first account</button>
+      <button class="btn btn-secondary" data-act="load-demo">Load demo data</button>
+      <button class="btn btn-secondary" data-act="open">Open a saved file</button>
+    </div>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;align-items:start;width:100%;text-align:left;">
       <div class="panel"><div class="panel-hd"><h4>How it works</h4></div>
         <div style="padding:20px;display:flex;flex-direction:column;gap:16px;">${stepList}</div>
@@ -1455,14 +1950,23 @@ function renderWelcome() {
           <p style="margin:0 0 10px;"><span style="font-family:var(--font-heading);">allocation-tracker.html</span> is the app — this page. It never changes, runs offline, and you can hand the same file to a friend.</p>
           <p style="margin:0 0 10px;"><span style="font-family:var(--font-heading);">my-portfolio.json</span> is your data — every account, value and goal. It’s the only place your numbers live; nothing is uploaded or stored in the browser.</p>
           <p style="margin:0 0 12px;">Open the app → your file loads → make changes → <strong>Save</strong> writes it all back to the JSON.</p>
-          <div style="background:var(--color-accent-100);border:1px solid var(--color-accent);padding:11px 13px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
-            <span style="font-family:var(--font-heading);color:var(--color-accent-800);">Don’t forget to Save — especially after a check-in, or your changes are lost.</span>
-            <button class="btn btn-sm ${dirty ? 'save-dirty' : 'btn-primary'}" data-act="save" style="margin-left:auto;">Save file</button>
-          </div>
         </div>
       </div>
     </div>
   </div>`;
+}
+
+/* About/Help modal inner content (opened from the logo, §14). */
+function aboutDialogHTML() {
+  return `<div class="dialog-title" style="display:flex;align-items:center;gap:10px;">${logoSVG(22)}Allocation Tracker</div>
+    <div style="font-size:13px;line-height:1.6;">
+      <p style="margin:0 0 10px;">Track your true asset allocation across every account, compare it to a goal, plan tax-aware moves, and watch it over time — all in one local file that works fully offline.</p>
+      <p style="margin:0 0 10px;"><span style="font-family:var(--font-heading);">allocation-tracker.html</span> is the app — this page. It never changes and you can hand the same file to a friend.</p>
+      <p style="margin:0 0 10px;"><span style="font-family:var(--font-heading);">my-portfolio.json</span> is your data — the only place your numbers live. Nothing is uploaded or stored in the browser; <strong>Save</strong> writes changes back to the file.</p>
+      <p style="margin:0 0 10px;"><strong>Check-In → Review → Plan → Report</strong>: enter it, understand it, decide, record.</p>
+      <p class="text-muted" style="margin:0;font-size:12px;">Tax figures are estimates for Tax Year ${REFERENCE_DATA.taxYear} from simplified rules — not tax advice. Confirm material decisions with a CPA.</p>
+    </div>
+    <div class="dialog-actions"><button class="btn btn-primary" data-act="close-dialog">Close</button></div>`;
 }
 
 /* ===============================================================
@@ -2091,6 +2595,8 @@ function checkinAccountBlock(acct, ci, baseVals) {
 }
 
 function renderCheckin() {
+  // §14: Check-In empty state doubles as first-run onboarding.
+  if (!portfolio.accounts.some(a => a.status !== 'archived')) return renderCheckinEmpty();
   ensureCheckinDraft();
   const ci = ui.checkin;
   const baseVals = ci.baseDate ? valueIndex(snapshotByDate(ci.baseDate)) : {};
@@ -2301,6 +2807,280 @@ function renderGlidePaths() {
 }
 
 /* ===============================================================
+   REVIEW › TAX (F9, §13) — scorecard, per-holding drag, recommendations
+   =============================================================== */
+function snapPickerHTML() {
+  const snap = currentSnapshot();
+  const snaps = sortedSnapshots().slice().reverse();
+  if (!snaps.length) return '';
+  const opts = snaps.map((s, i) => `<option value="${s.date}" ${snap && s.date === snap.date ? 'selected' : ''}>${s.date}${i === 0 ? ' (latest)' : ''}</option>`).join('');
+  return `<div class="field" style="width:170px;margin-left:auto;"><select class="input" data-act="pick-snap">${opts}</select></div>`;
+}
+function classForTicker(t) { return classifyTicker(t, portfolio.tickerMap) || 'other'; }
+
+function renderTax() {
+  const snap = currentSnapshot();
+  if (!snap) return `<div class="toolbar no-print"><div class="crumb"><span>Tax Analysis</span></div></div>
+    <div class="panel"><div style="padding:44px 20px;text-align:center;" class="text-muted">The tax scorecard needs a snapshot. <a data-act="new-checkin" style="cursor:pointer;color:var(--color-accent);">Start a check-in →</a></div></div>`;
+  const sc = taxScorecard(snap);
+  const rates = sc.rates;
+  const swaps = locationSwapRecs(snap);
+  const munis = muniRecs(snap);
+  ui._taxRecs = [...swaps, ...munis];
+
+  const scoreCls = sc.locScore == null ? 'text-muted' : sc.locScore >= 90 ? 'ok' : sc.locScore >= 70 ? 'warn' : 'crit';
+  const scoreColor = sc.locScore == null ? 'inherit' : `var(--color-${scoreCls})`;
+  const tile = (label, big, sub, color) => `<div class="blueprint" style="flex:1;min-width:190px;padding:16px 18px;">
+      <div class="kicker" style="font-size:10px;">${label}</div>
+      <div class="tnum" style="font-family:var(--font-heading);font-size:30px;line-height:1.1;${color ? `color:${color};` : ''}">${big}</div>
+      <div class="text-muted" style="font-size:12px;">${sub}</div></div>`;
+
+  const scorecard = `<div style="display:flex;gap:14px;flex-wrap:wrap;">
+    ${tile('Location Efficiency', sc.locScore == null ? 'N/A' : fmtPct(sc.locScore, 0), sc.locScore == null ? 'no tax-inefficient assets' : `${fmtMoney(sc.locNum)} of ${fmtMoney(sc.locDen)} inefficient assets sheltered`, scoreColor)}
+    ${tile('Annual tax drag', fmtMoney(sc.totalDrag), `${fmtPct(sc.dragPct, 2)} of ${fmtMoney(sc.taxableAssets)} taxable`, sc.totalDrag > 0 ? 'var(--color-warn)' : 'var(--color-ok)')}
+    ${tile('Effective rates', fmtPct(rates.r_qdi_eff * 100, 1), `QDI/LTCG · ordinary ${fmtPct(rates.r_ord_eff * 100, 1)}`, '')}
+  </div>`;
+
+  const rateLine = `<div class="panel"><div style="padding:12px 18px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;font-size:12px;">
+      <span class="tag tag-accent">TY ${REFERENCE_DATA.taxYear}</span>
+      <span class="text-muted">${esc(FILING_STATUS_LABELS[rates.fs] || rates.fs)} · ${esc(REFERENCE_DATA.incomeBands.find(b => b.income === rates.income)?.label || '')}${portfolio.taxSettings.state ? ' · ' + esc(portfolio.taxSettings.state) : ''}</span>
+      <span class="text-muted">Ordinary ${fmtPct(rates.r_ord * 100, 0)} · QDI/LTCG ${fmtPct(rates.r_qdi * 100, 0)} · NIIT ${fmtPct(rates.niit * 100, 1)} · State ${fmtPct(rates.r_state * 100, 2)}${rates.surtax ? ' · MA surtax ' + fmtPct(rates.surtax * 100, 0) : ''}</span>
+      <a data-act="nav" data-view="taxprofile" style="margin-left:auto;cursor:pointer;color:var(--color-accent);">Edit tax profile →</a>
+    </div></div>`;
+
+  const dragRows = sc.rows.map(r => {
+    const p = r.profile;
+    const dragCell = r.sheltered
+      ? `<span class="text-muted">$0 · ${esc(r.reason)}</span>`
+      : `<span class="tnum">${fmtMoney2(r.drag)}</span>`;
+    return `<tr>
+      <td style="font-family:var(--font-heading);">${esc(r.ticker || '—')}${r.estimated ? ' <span class="tag tag-neutral" style="font-size:9px;padding:1px 5px;">est.</span>' : ''}</td>
+      <td class="text-muted" style="font-size:12px;">${esc(r.accountName)}</td>
+      <td class="text-muted" style="font-size:12px;">${esc(detailLabel(r.assetClass))}</td>
+      <td class="tnum" style="text-align:right;">${fmtMoney(r.mv)}</td>
+      <td class="tnum text-muted" style="text-align:right;font-size:12px;">${(p.divYield || 0).toFixed(1)}% / ${(p.qualifiedPct || 0)}%q / ${(p.capGainDistPct || 0).toFixed(1)}%cg</td>
+      <td style="text-align:right;">${dragCell}</td>
+    </tr>`;
+  }).join('') || '<tr><td colspan="6" class="text-muted" style="padding:14px 20px;">No holdings in this snapshot.</td></tr>';
+
+  const recCard = (r, i) => {
+    const savings = `${fmtMoney2(r.savingsPerYr)}/yr`;
+    const cost = r.basisKnown ? (r.oneTimeCost > 0 ? `one-time tax ${fmtMoney2(r.oneTimeCost)}` : 'no gain to realize') : 'basis unknown — verify realization cost';
+    const title = r.kind === 'location-swap'
+      ? `Shelter ${fmtMoney(r.amount)} ${esc(r.aTicker)} <span class="text-muted">(${esc(detailLabel(r.aClass))})</span> → move into ${esc(r.bAccountName)}, send ${esc(r.bTicker)} to taxable`
+      : `Swap ${fmtMoney(r.amount)} ${esc(r.aTicker)} → ${esc(r.muniTicker)} <span class="text-muted">(muni, federal-exempt)</span>`;
+    return `<div class="blueprint" style="padding:14px 16px;display:flex;gap:14px;align-items:center;flex-wrap:wrap;">
+      <div style="flex:1;min-width:260px;">
+        <div style="font-size:14px;">${title}</div>
+        <div class="text-muted" style="font-size:12px;margin-top:3px;">Est. savings <span style="color:var(--color-ok);">${savings}</span> · ${cost}${r.kind === 'muni' ? ` · after-tax yield ${r.muniAT.toFixed(2)}% vs ${r.taxableAT.toFixed(2)}%` : ''}</div>
+      </div>
+      <button class="btn btn-sm btn-primary" data-act="send-to-plan" data-rec="${i}">Send to Plan →</button>
+    </div>`;
+  };
+  const recsHTML = ui._taxRecs.length
+    ? ui._taxRecs.map((r, i) => recCard(r, i)).join('')
+    : `<div class="text-muted" style="font-size:13px;padding:6px 2px;">No location-swap or muni recommendations — your tax-inefficient assets are already well placed${rates.r_ord < 0.32 ? ' (muni comparison activates at the 32% bracket)' : ''}.</div>`;
+
+  return `<div class="toolbar no-print"><div class="crumb"><span>Tax Analysis</span></div>${snapPickerHTML()}</div>
+    ${scorecard}
+    ${rateLine}
+    <div class="panel"><div class="panel-hd"><h4>Per-holding tax drag</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">taxable accounts only · worst first</span></div>
+      <table class="table"><thead><tr><th>Ticker</th><th>Account</th><th>Class</th><th style="text-align:right;">Value</th><th style="text-align:right;">yield / qual / capgain</th><th style="text-align:right;">Drag $/yr</th></tr></thead>
+        <tbody>${dragRows}</tbody></table></div>
+    <div class="panel"><div class="panel-hd"><h4>Recommendations</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">allocation-neutral · not advice</span></div>
+      <div style="padding:16px 20px;display:flex;flex-direction:column;gap:12px;">${recsHTML}</div></div>
+    <div style="padding:0 2px;"><span class="text-muted" style="font-size:12px;">Estimates only, from your data and simplified rules — not tax advice. Confirm material decisions with a CPA.</span></div>`;
+}
+
+/* ===============================================================
+   PLAN (F8, §13.4/§13.7/§13.8) — moves, no-action, savings directive,
+   before/after simulator, commit & track.
+   =============================================================== */
+function ensurePlan(date) {
+  let p = planForSnapshot(date);
+  if (!p) { p = { snapshotDate: date, moves: [], noAction: false, directive: null, notes: '' }; portfolio.plans.push(p); }
+  return p;
+}
+function planAddMove(date, move) {
+  const p = ensurePlan(date); p.noAction = false;
+  p.moves.push(Object.assign({ accountId: '', sellTicker: '', buyTicker: '', amount: 0, taxNote: '', done: false }, move));
+  markDirty();
+}
+// §13.4 — build drift-driven proposals, preferring sheltered trades (zero tax).
+function driftMoves(snap) {
+  const goal = activeGoal(snap.date);
+  if (!goal) return [];
+  const holds = householdHoldings();
+  const a = allocate(holds, snap);
+  const detail = goalIsDetail(goal);
+  const targets = detail ? goalDetailTargets(goal) : goalGroupTargets(goal);
+  const rows = detail ? toRows(a.detail, a.total, 'detail') : toRows(a.group, a.total, 'group');
+  const band = portfolio.meta.driftBandPct || 5;
+  const drift = computeDrift(rows, a.total, targets, band);
+  const over = drift.filter(d => d.driftPct > band).sort((x, y) => y.driftPct - x.driftPct);
+  const under = drift.filter(d => d.driftPct < -band).sort((x, y) => x.driftPct - y.driftPct);
+  const idx = valueIndex(snap);
+  const moves = [];
+  let ui2 = 0;
+  for (const o of over) {
+    if (ui2 >= under.length) break;
+    const u = under[ui2];
+    const amt = Math.min((o.driftPct / 100) * a.total, (Math.abs(u.driftPct) / 100) * a.total);
+    if (amt < a.total * 0.005) continue;
+    // Prefer a sheltered account holding a ticker of the overweight class.
+    const cands = activeHoldings().filter(h => {
+      const cls = detail ? h.assetClass : rollupOf(h.assetClass);
+      return cls === o.id && (idx[h.id] && Number(idx[h.id].marketValue) > 0);
+    });
+    cands.sort((h1, h2) => {
+      const s1 = accountShelter(accountById(h1.accountId)).sheltered ? 0 : 1;
+      const s2 = accountShelter(accountById(h2.accountId)).sheltered ? 0 : 1;
+      return s1 - s2;
+    });
+    const src = cands[0];
+    const acctId = src ? src.accountId : '';
+    const sellTicker = src ? src.ticker : '';
+    const buyTicker = detail ? (CLASS_SUGGEST_TICKER[u.id] || 'VTI') : 'VTI';
+    moves.push({ accountId: acctId, sellTicker, buyTicker, amount: Math.round(amt), done: false });
+    ui2++;
+    if (moves.length >= 4) break;
+  }
+  return moves;
+}
+function generatePlanProposals(snap) {
+  const p = ensurePlan(snap.date);
+  p.noAction = false;
+  for (const m of driftMoves(snap)) p.moves.push(Object.assign({ taxNote: '', done: false }, m));
+  const dir = savingsDirective(snap);
+  p.directive = dir ? { text: dir.text, splits: dir.splits } : null;
+  markDirty();
+}
+// Live tax note for a move (recomputes as the user edits).
+function moveTaxNoteLive(m) {
+  const acct = accountById(m.accountId);
+  const sh = accountShelter(acct);
+  if (!m.accountId) return { text: 'Pick an account', cls: 'tag-neutral' };
+  if (sh.sheltered) return { text: `Tax-free · ${sh.reason}`, cls: 'tag-ok' };
+  const rates = taxRates();
+  return { text: `Taxable · gains taxed ~${fmtPct(rates.r_ltcg_eff * 100, 1)}`, cls: 'tag-warn' };
+}
+function simulateAfter(snap, moves) {
+  const base = allocate(householdHoldings(), snap);
+  const detail = Object.assign({}, base.detail);
+  const apply = (cls, amt) => { for (const [k, v] of expandClass(cls, amt)) detail[k] = (detail[k] || 0) + v; };
+  for (const m of moves || []) {
+    const X = Number(m.amount) || 0; if (!(X > 0)) continue;
+    if (m.sellTicker) apply(classForTicker(m.sellTicker), -X);
+    if (m.buyTicker) apply(classForTicker(m.buyTicker), X);
+  }
+  for (const k in detail) if (detail[k] < 0) detail[k] = 0;
+  const group = {}; for (const k in detail) { const g = rollupOf(k); group[g] = (group[g] || 0) + detail[k]; }
+  const total = Object.values(detail).reduce((s, v) => s + v, 0);
+  return { detail, group, total };
+}
+
+function renderPlan() {
+  const snap = currentSnapshot();
+  if (!snap) return `<div class="toolbar no-print"><div class="crumb"><span>Quarterly Plan</span></div></div>
+    <div class="panel"><div style="padding:44px 20px;text-align:center;" class="text-muted">A plan attaches to a snapshot. <a data-act="new-checkin" style="cursor:pointer;color:var(--color-accent);">Start a check-in →</a></div></div>`;
+  const plan = planForSnapshot(snap.date);
+  const dir = savingsDirective(snap);
+
+  if (!plan) {
+    const dirPreview = dir ? `<div class="blueprint" style="padding:14px 16px;margin-top:14px;"><div class="kicker" style="font-size:10px;">Savings directive preview (§13.8)</div><div style="font-size:13px;margin-top:4px;">${esc(dir.text)}</div></div>` : '';
+    return `<div class="toolbar no-print"><div class="crumb"><span>Quarterly Plan · ${esc(snap.date)}</span></div>${snapPickerHTML()}</div>
+      <div class="panel"><div class="panel-hd"><h4>Start this quarter’s plan</h4></div>
+        <div style="padding:20px;">
+          <p class="text-muted" style="margin:0 0 14px;max-width:70ch;font-size:13px;">Generate rebalancing proposals from your drift vs goal (§13.4), then edit them and simulate the result before you commit. Or record an explicit no-action decision — discipline made visible.</p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <button class="btn btn-primary" data-act="plan-generate">Generate proposals</button>
+            <button class="btn btn-secondary" data-act="plan-noaction">Record “no action — within bands”</button>
+          </div>
+          ${dirPreview}
+        </div></div>
+      <div style="padding:0 2px;"><span class="text-muted" style="font-size:12px;">Suggestions, not advice — nothing is executed. Confirm material decisions with a CPA.</span></div>`;
+  }
+
+  // No-action record.
+  if (plan.noAction) {
+    return `<div class="toolbar no-print"><div class="crumb"><span>Quarterly Plan · ${esc(snap.date)}</span></div>${snapPickerHTML()}</div>
+      <div class="panel"><div class="panel-hd"><h4>Decision recorded</h4></div>
+        <div style="padding:24px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+          <span class="tag tag-ok" style="font-size:13px;">No action — within bands</span>
+          <span class="text-muted" style="font-size:13px;">Recorded for ${esc(snap.date)}. This is a decision, not an absence.</span>
+          <button class="btn btn-sm btn-secondary" style="margin-left:auto;" data-act="plan-generate">Switch to proposals</button>
+        </div></div>`;
+  }
+
+  const acctOpts = (sel) => portfolio.accounts.filter(a => a.status !== 'archived')
+    .map(a => `<option value="${esc(a.id)}" ${a.id === sel ? 'selected' : ''}>${esc(a.name)}</option>`).join('');
+  const moveRows = plan.moves.map((m, i) => {
+    const note = moveTaxNoteLive(m);
+    return `<tr>
+      <td><input type="checkbox" data-act="plan-done" data-idx="${i}" ${m.done ? 'checked' : ''}></td>
+      <td><select class="input" style="min-height:30px;" data-act="plan-account" data-idx="${i}"><option value="">— account —</option>${acctOpts(m.accountId)}</select></td>
+      <td><input class="input" style="min-height:30px;width:80px;text-transform:uppercase;" data-act="plan-sell" data-idx="${i}" value="${esc(m.sellTicker || '')}" placeholder="sell"></td>
+      <td><input class="input" style="min-height:30px;width:80px;text-transform:uppercase;" data-act="plan-buy" data-idx="${i}" value="${esc(m.buyTicker || '')}" placeholder="buy"></td>
+      <td><input class="input tnum" style="min-height:30px;width:100px;text-align:right;" inputmode="decimal" data-act="plan-amount" data-idx="${i}" value="${m.amount || ''}" placeholder="0"></td>
+      <td><span class="tag ${note.cls}" style="font-size:10px;">${esc(note.text)}</span></td>
+      <td style="text-align:right;"><button class="btn btn-ghost btn-sm btn-danger" data-act="plan-del" data-idx="${i}">✕</button></td>
+    </tr>`;
+  }).join('') || '<tr><td colspan="7" class="text-muted" style="padding:14px 20px;">No moves. Add one, or record no-action.</td></tr>';
+
+  // Wash-sale warnings (§13.7).
+  const washes = washWarnings(plan);
+  const washHTML = washes.length ? `<div class="panel" style="border-color:var(--color-crit);"><div style="padding:14px 18px;">
+      ${washes.map(w => `<div style="font-size:13px;color:var(--color-crit);">⚠ Wash-sale risk on <b>${esc(w.ticker)}</b>: a loss is disallowed if you buy it${w.clones.length ? ` or a substantially-identical fund (${w.clones.map(esc).join(', ')})` : ''} within 30 days — including in retirement accounts.</div>`).join('')}
+    </div></div>` : '';
+
+  // Savings directive.
+  const dirHTML = plan.directive ? `<div class="panel"><div class="panel-hd"><h4>Savings directive</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">§13.8 · until next check-in</span></div>
+      <div style="padding:16px 20px;font-size:13px;">${esc(plan.directive.text || '')}</div></div>`
+    : (dir ? `<div class="panel"><div class="panel-hd"><h4>Savings directive</h4></div><div style="padding:16px 20px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><span style="font-size:13px;">${esc(dir.text)}</span><button class="btn btn-sm btn-secondary" style="margin-left:auto;" data-act="plan-adddir">Attach to plan</button></div></div>` : '');
+
+  // Before / after simulator.
+  const base = allocate(householdHoldings(), snap);
+  const after = simulateAfter(snap, plan.moves);
+  const beforeRows = toRows(base.group, base.total, 'group');
+  const afterRows = toRows(after.group, after.total, 'group');
+  const goal = activeGoal(snap.date);
+  const gTargets = goal ? (goalIsDetail(goal) ? goalGroupTargets(goal) : goalGroupTargets(goal)) : {};
+  const band = portfolio.meta.driftBandPct || 5;
+  const dBefore = computeDrift(beforeRows, base.total, gTargets, band);
+  const dAfter = computeDrift(afterRows, after.total, gTargets, band);
+  const afterById = Object.fromEntries(dAfter.map(d => [d.id, d]));
+  const simRows = dBefore.map(d => {
+    const af = afterById[d.id] || { actualPct: 0, driftPct: 0 };
+    const chip = (v, breach) => `<span class="tnum" style="${breach ? 'color:var(--color-warn);' : ''}">${fmtPct(v, 1)}</span>`;
+    return `<tr><td style="font-size:13px;"><span class="swatch" style="background:${d.color};"></span> ${esc(d.label)}</td>
+      <td style="text-align:right;">${chip(d.actualPct, d.breach)}</td>
+      <td style="text-align:right;">${chip(af.actualPct, af.breach)}</td>
+      <td class="tnum text-muted" style="text-align:right;">${fmtPct(d.targetPct || 0, 0)}</td></tr>`;
+  }).join('');
+  const simHTML = `<div class="panel"><div class="panel-hd"><h4>Before → after</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">live simulation of the moves above</span></div>
+    <div style="padding:20px;display:flex;gap:28px;flex-wrap:wrap;align-items:center;">
+      <div style="text-align:center;"><div class="kicker" style="font-size:10px;margin-bottom:6px;">Before</div>${donutSVG(beforeRows, { size: 150 })}</div>
+      <div style="text-align:center;"><div class="kicker" style="font-size:10px;margin-bottom:6px;">After</div>${donutSVG(afterRows, { size: 150 })}</div>
+      <table class="table" style="flex:1;min-width:280px;"><thead><tr><th>Class</th><th style="text-align:right;">Before</th><th style="text-align:right;">After</th><th style="text-align:right;">Target</th></tr></thead><tbody>${simRows}</tbody></table>
+    </div></div>`;
+
+  const doneCount = plan.moves.filter(m => m.done).length;
+  return `<div class="toolbar no-print"><div class="crumb"><span>Quarterly Plan · ${esc(snap.date)}</span></div>${snapPickerHTML()}
+      <button class="btn btn-secondary" data-act="plan-noaction">Mark no-action</button></div>
+    <div class="panel"><div class="panel-hd"><h4>Moves</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">${doneCount}/${plan.moves.length} done</span></div>
+      <table class="table"><thead><tr><th style="width:34px;">✓</th><th>Account</th><th>Sell</th><th>Buy</th><th style="text-align:right;">Amount</th><th>Tax</th><th></th></tr></thead>
+        <tbody>${moveRows}</tbody></table>
+      <div style="padding:12px 20px;display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn btn-sm btn-secondary" data-act="plan-addmove">+ Add move</button>
+        <button class="btn btn-sm btn-secondary" data-act="plan-generate">Regenerate from drift</button>
+      </div></div>
+    ${washHTML}
+    ${dirHTML}
+    ${simHTML}
+    <div style="padding:0 2px;"><span class="text-muted" style="font-size:12px;">Suggestions, not advice — nothing is executed here. Remember to <b>Save</b> to keep this plan. Confirm material decisions with a CPA.</span></div>`;
+}
+
+/* ===============================================================
    REPORT (F7) — screen preview + print
    =============================================================== */
 function renderReport() {
@@ -2365,6 +3145,40 @@ function reportSection(title, subtitle, holdings, snap, goalTargets, band, showA
   </section>`;
 }
 
+/* F7 report — tax scorecard summary section. */
+function reportTaxSection(snap) {
+  const sc = taxScorecard(snap);
+  if (!sc.rows.length) return '';
+  const scoreTxt = sc.locScore == null ? 'N/A' : fmtPct(sc.locScore, 0);
+  const top = sc.rows.filter(r => !r.sheltered && r.drag > 0).slice(0, 6).map(r =>
+    `<tr><td>${esc(r.ticker || '—')}</td><td class="text-muted" style="font-size:12px;">${esc(r.accountName)}</td><td class="tnum" style="text-align:right;">${fmtMoney(r.mv)}</td><td class="tnum" style="text-align:right;">${fmtMoney2(r.drag)}</td></tr>`).join('');
+  return `<section class="rep-section" style="margin-bottom:26px;">
+    <h3 style="margin:0 0 2px;">Tax posture</h3>
+    <div class="rep-sub text-muted" style="font-size:13px;margin-bottom:12px;">Location efficiency ${scoreTxt} · annual drag ${fmtMoney(sc.totalDrag)} (${fmtPct(sc.dragPct, 2)} of ${fmtMoney(sc.taxableAssets)} taxable)</div>
+    ${top ? `<table class="table"><thead><tr><th>Ticker</th><th>Account</th><th style="text-align:right;">Value</th><th style="text-align:right;">Drag $/yr</th></tr></thead><tbody>${top}</tbody></table>` : ''}
+  </section>`;
+}
+
+/* F7 report — committed Quarterly Plan section (§13). */
+function reportPlanSection(snap) {
+  const plan = planForSnapshot(snap.date);
+  if (!plan) return '';
+  if (plan.noAction) return `<section class="rep-section" style="margin-bottom:26px;"><h3 style="margin:0 0 2px;">Quarterly plan</h3><div class="rep-sub text-muted" style="font-size:13px;">Decision: no action — within bands.</div></section>`;
+  const rows = (plan.moves || []).map(m => `<tr>
+      <td>${m.done ? '✓' : '☐'}</td><td>${esc(accountById(m.accountId) ? accountById(m.accountId).name : '—')}</td>
+      <td>${esc(m.sellTicker || '')} → ${esc(m.buyTicker || '')}</td>
+      <td class="tnum" style="text-align:right;">${fmtMoney(m.amount || 0)}</td>
+      <td class="text-muted" style="font-size:12px;">${esc(m.taxNote || '')}</td></tr>`).join('');
+  const dir = plan.directive && plan.directive.text ? `<div class="text-muted" style="font-size:13px;margin-top:8px;">Savings directive: ${esc(plan.directive.text)}</div>` : '';
+  if (!rows && !dir) return '';
+  return `<section class="rep-section" style="margin-bottom:26px;">
+    <h3 style="margin:0 0 2px;">Quarterly plan</h3>
+    <div class="rep-sub text-muted" style="font-size:13px;margin-bottom:12px;">Committed for ${esc(snap.date)}</div>
+    ${rows ? `<table class="table"><thead><tr><th>Done</th><th>Account</th><th>Move</th><th style="text-align:right;">Amount</th><th>Tax note</th></tr></thead><tbody>${rows}</tbody></table>` : ''}
+    ${dir}
+  </section>`;
+}
+
 function reportHTML(snap) {
   if (!snap) return '<p class="text-muted">No snapshot to report on yet.</p>';
   const band = portfolio.meta.driftBandPct || 5;
@@ -2399,8 +3213,11 @@ function reportHTML(snap) {
     out += reportSection(label, 'Other category · vs household goal', accts.flatMap(a => accountHoldings(a.id)), snap, ggt, band, accts, gdt);
   }
 
+  out += reportTaxSection(snap);
+  out += reportPlanSection(snap);
+
   out += `<footer style="border-top:1px solid var(--color-divider);margin-top:20px;padding-top:12px;font-size:12px;" class="text-muted">
-    Snapshot ${esc(snap.date)} · Goal effective ${goal ? esc(goal.effectiveDate) : '—'} · Drift band ±${band}% absolute.
+    Snapshot ${esc(snap.date)} · Goal effective ${goal ? esc(goal.effectiveDate) : '—'} · Drift band ±${band}% absolute · Tax figures TY ${REFERENCE_DATA.taxYear} (estimates, not advice).
     ${goal && goal.rationale ? '<br>Latest rationale: ' + esc(goal.rationale) : ''}
   </footer>`;
   return out;
@@ -2433,23 +3250,135 @@ function renderAccounts() {
     <colgroup><col style="width:28%"><col style="width:20%"><col style="width:18%"><col style="width:12%"><col style="width:22%"></colgroup>
     <tbody>${bodyRows}</tbody></table>` : '';
 
-  const kids = portfolio.children.map(c => `<span class="tag tag-accent-2" style="gap:8px;">${esc(c.label)} · ${esc(c.birthYear)} <span data-act="del-child" data-child="${esc(c.id)}" style="cursor:pointer;">✕</span></span>`).join(' ') || '<span class="text-muted" style="font-size:13px;">No children yet.</span>';
-
-  return `<div class="toolbar no-print"><div class="crumb"><span>Accounts &amp; settings</span></div>
-    <button class="btn btn-secondary" style="margin-left:auto;" data-act="add-child">+ Child</button>
-    <button class="btn btn-primary" data-act="add-account">+ Account</button></div>
+  return `<div class="toolbar no-print"><div class="crumb"><span>Accounts</span></div>
+    <button class="btn btn-primary" style="margin-left:auto;" data-act="add-account">+ Account</button></div>
   <div class="panel"><div class="panel-hd"><h4>Accounts</h4></div><div style="padding:20px;">${catBlocks || '<span class="text-muted">No accounts yet. Add one to begin.</span>'}</div></div>
-  <div class="panel"><div class="panel-hd"><h4>Children (for 529 glide paths)</h4></div><div style="padding:20px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;">${kids}</div></div>
-  <div class="panel"><div class="panel-hd"><h4>Settings &amp; data</h4></div>
+  <div class="panel"><div class="panel-hd"><h4>Allocation settings</h4></div>
     <div style="padding:20px;display:flex;gap:28px;flex-wrap:wrap;align-items:flex-end;">
-      <div class="field" style="width:160px;"><label>Drift band (± absolute %)</label><input class="input tnum" inputmode="numeric" value="${band}" data-act="set-band"></div>
+      <div class="field" style="width:180px;"><label>Drift band (± absolute %)</label><input class="input tnum" inputmode="numeric" value="${band}" data-act="set-band"></div>
       <label class="radio" style="align-items:center;"><input type="checkbox" data-act="toggle-529" ${portfolio.meta.include529InHousehold ? 'checked' : ''}><span class="dot"></span>Count 529 accounts in the Household total</label>
-      <button class="btn btn-secondary" data-act="save">Save file</button>
-      <button class="btn btn-secondary" data-act="open">Open file</button>
-      <button class="btn btn-secondary" data-act="export-csv">Export snapshot CSV</button>
-      <button class="btn btn-danger" data-act="start-fresh">Start fresh</button>
     </div>
-    <div style="padding:0 20px 20px;"><span class="text-muted" style="font-size:12px;">This file makes zero network requests. Your data lives only in the JSON file you save — nothing is uploaded.</span></div>
+    <div style="padding:0 20px 20px;"><span class="text-muted" style="font-size:12px;">Tax treatment on an account (Pre-tax / Roth / Taxable) drives the Tax tab’s asset-location scoring. Edit an account to set it.</span></div>
+  </div>`;
+}
+
+/* ===============================================================
+   SETTINGS › HOUSEHOLD (§14) — children, birth years, 529 assignments.
+   =============================================================== */
+function renderHousehold() {
+  const kids = portfolio.children.length ? portfolio.children.map(c => {
+    const accts = portfolio.accounts.filter(a => a.category === '529' && a.childId === c.id && a.status !== 'archived');
+    const assigned = accts.length ? accts.map(a => esc(a.name)).join(', ') : '<span class="text-muted">no 529 account linked</span>';
+    return `<tr>
+      <td style="font-family:var(--font-heading);font-size:15px;">${esc(c.label)}</td>
+      <td class="tnum">${esc(c.birthYear)}</td>
+      <td class="text-muted" style="font-size:13px;">age ${childAge(c.birthYear)}</td>
+      <td style="font-size:13px;">${assigned}</td>
+      <td style="text-align:right;"><button class="btn btn-ghost btn-sm btn-danger" data-act="del-child" data-child="${esc(c.id)}">remove</button></td>
+    </tr>`;
+  }).join('') : '<tr><td colspan="5" class="text-muted" style="padding:14px 20px;">No children yet. Add one to set up a 529 glide path.</td></tr>';
+  return `<div class="toolbar no-print"><div class="crumb"><span>Household</span></div>
+    <button class="btn btn-primary" style="margin-left:auto;" data-act="add-child">+ Child</button></div>
+  <div class="panel"><div class="panel-hd"><h4>Children</h4></div>
+    <table class="table"><thead><tr><th>Name</th><th style="text-align:right;">Birth year</th><th>Age</th><th>529 account(s)</th><th></th></tr></thead>
+      <tbody>${kids}</tbody></table>
+    <div style="padding:14px 20px;"><span class="text-muted" style="font-size:12px;">Link a 529 account to a child in <a data-act="nav" data-view="accounts" style="cursor:pointer;color:var(--color-accent);">Settings › Accounts</a> (edit the account). Set each child’s age-based glide path in <a data-act="nav" data-view="goal" style="cursor:pointer;color:var(--color-accent);">Review › Goals</a>.</span></div>
+  </div>`;
+}
+
+/* ===============================================================
+   SETTINGS › TAX PROFILE (§14, §13.1) — bracket picker + expert
+   override, gain budget, household monthly savings, YTD contributions.
+   =============================================================== */
+function renderTaxProfile() {
+  const ts = portfolio.taxSettings;
+  const ref = REFERENCE_DATA;
+  const rates = taxRates();
+  const ov = ts.override || {};
+  const advanced = !!ui.taxAdvanced || !!ts.override;
+  const opt = (val, label, sel) => `<option value="${esc(val)}" ${sel ? 'selected' : ''}>${esc(label)}</option>`;
+  const filingOpts = Object.keys(FILING_STATUS_LABELS).map(k => opt(k, FILING_STATUS_LABELS[k], ts.filingStatus === k)).join('');
+  const bandOpts = ref.incomeBands.map(b => opt(b.key, b.label, ts.incomeBand === b.key)).join('');
+  const stateOpts = opt('', '— no state income tax —', !ts.state)
+    + Object.keys(ref.stateRates).sort().map(s => opt(s, `${s} · ${ref.stateRates[s].toFixed(2)}%`, ts.state === s)).join('');
+  const stateNote = ts.state && ref.stateNotes[ts.state] ? `<div class="text-muted" style="font-size:12px;margin-top:4px;">${esc(ref.stateNotes[ts.state])}</div>` : '';
+
+  const rateChip = (label, v) => `<div style="display:flex;flex-direction:column;gap:2px;"><span class="kicker" style="font-size:10px;">${label}</span><span class="tnum" style="font-size:18px;font-family:var(--font-heading);">${fmtPct(v * 100, 1)}</span></div>`;
+
+  const advPanel = advanced ? `
+    <div class="panel" style="border-color:var(--color-accent-2);">
+      <div class="panel-hd" style="border-color:var(--color-accent-2);"><h4>Expert override</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">blank = use derived value</span></div>
+      <div style="padding:20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;">
+        <div class="field"><label>Ordinary rate (%)</label><input class="input tnum" inputmode="decimal" data-act="ov-ord" value="${ov.ordinaryRate != null ? (ov.ordinaryRate * 100) : ''}" placeholder="${(rates.r_ord * 100).toFixed(1)}"></div>
+        <div class="field"><label>QDI / LTCG rate (%)</label><input class="input tnum" inputmode="decimal" data-act="ov-ltcg" value="${ov.ltcgRate != null ? (ov.ltcgRate * 100) : ''}" placeholder="${(rates.r_qdi * 100).toFixed(1)}"></div>
+        <div class="field"><label>State rate (%)</label><input class="input tnum" inputmode="decimal" data-act="ov-state" value="${ov.stateRate != null ? (ov.stateRate * 100) : ''}" placeholder="${(rates.r_state * 100).toFixed(2)}"></div>
+        <label class="radio" style="align-items:center;"><input type="checkbox" data-act="ov-niit" ${ov.niitApplies ? 'checked' : ''}><span class="dot"></span>Force NIIT (3.8%)</label>
+        <label class="radio" style="align-items:center;"><input type="checkbox" data-act="ov-surtax" ${ov.surtaxApplies ? 'checked' : ''}><span class="dot"></span>Force MA 4% surtax</label>
+      </div>
+      <div style="padding:0 20px 18px;"><button class="btn btn-sm btn-secondary" data-act="ov-clear">Clear all overrides</button></div>
+    </div>` : `<div style="padding:2px 2px 6px;"><button class="btn btn-sm btn-secondary" data-act="ov-toggle">Advanced: override derived rates…</button></div>`;
+
+  const advAccts = portfolio.accounts.filter(a => a.status !== 'archived' && (a.category === 'Retirement' || a.category === '529'));
+  const ytd = ts.ytdContributions || {};
+  const ytdRows = advAccts.length ? advAccts.map(a => `<div class="drift-row" style="grid-template-columns:1fr 120px;gap:10px;align-items:center;">
+      <span style="font-size:13px;">${esc(a.name)} <span class="text-muted">· ${esc(a.category)}</span></span>
+      <input class="input tnum" inputmode="decimal" style="text-align:right;min-height:30px;" data-act="ts-ytd" data-account="${esc(a.id)}" value="${ytd[a.id] != null ? ytd[a.id] : ''}" placeholder="0">
+    </div>`).join('') : '<span class="text-muted" style="font-size:13px;">No tax-advantaged accounts yet.</span>';
+
+  return `<div class="toolbar no-print"><div class="crumb"><span>Tax Profile</span></div>
+    <span class="tag tag-accent" style="margin-left:auto;">Tax Year ${ref.taxYear}</span></div>
+  <div class="panel"><div class="panel-hd"><h4>Bracket picker</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">${esc(ref.source)}</span></div>
+    <div style="padding:20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;">
+      <div class="field"><label>Filing status</label><select class="input" data-act="ts-filing">${filingOpts}</select></div>
+      <div class="field"><label>Income band</label><select class="input" data-act="ts-band">${bandOpts}</select></div>
+      <div class="field"><label>State</label><select class="input" data-act="ts-state">${stateOpts}</select>${stateNote}</div>
+    </div>
+    <div style="padding:0 20px 20px;display:flex;gap:26px;flex-wrap:wrap;align-items:flex-end;background:color-mix(in srgb, var(--color-text) 3%, transparent);margin:0 0 0;padding-top:16px;">
+      ${rateChip('Ordinary', rates.r_ord)}${rateChip('QDI / LTCG', rates.r_qdi)}${rateChip('NIIT', rates.niit)}${rateChip('State', rates.r_state)}${rates.surtax ? rateChip('MA surtax', rates.surtax) : ''}
+      <div style="width:1px;align-self:stretch;background:var(--color-divider);"></div>
+      ${rateChip('Ordinary eff.', rates.r_ord_eff)}${rateChip('QDI/LTCG eff.', rates.r_qdi_eff)}
+    </div>
+    <div style="padding:12px 20px 18px;"><span class="text-muted" style="font-size:12px;">${esc(ref.verifyNote)}</span></div>
+  </div>
+  ${advPanel}
+  <div class="panel"><div class="panel-hd"><h4>Planning inputs</h4></div>
+    <div style="padding:20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;">
+      <div class="field"><label>Annual realized-gain budget ($)</label><input class="input tnum" inputmode="decimal" data-act="ts-gainbudget" value="${ts.gainBudgetAnnual || ''}" placeholder="0"><span class="text-muted" style="font-size:11px;">Caps taxable long-term-gain sales the Plan proposes.</span></div>
+      <div class="field"><label>Household savings ($/month)</label><input class="input tnum" inputmode="decimal" data-act="ts-savings" value="${ts.householdMonthlySavings || ''}" placeholder="0"><span class="text-muted" style="font-size:11px;">Drives the Plan’s savings directive (§13.8).</span></div>
+    </div>
+    <div class="panel-hd" style="border-top:1px solid var(--color-divider);"><h4 style="font-size:13px;">YTD contributions (for headroom)</h4></div>
+    <div style="padding:16px 20px 20px;display:flex;flex-direction:column;gap:8px;max-width:520px;">${ytdRows}</div>
+  </div>
+  <div style="padding:0 2px;"><span class="text-muted" style="font-size:12px;">Estimates only — confirm material decisions with a CPA.</span></div>`;
+}
+
+/* ===============================================================
+   SETTINGS › DATA & PRIVACY (§14) — save/load, CSV, start fresh.
+   Network features are omitted entirely in this build (offline-only).
+   =============================================================== */
+function renderDataPrivacy() {
+  const snap = latestSnapshot();
+  return `<div class="toolbar no-print"><div class="crumb"><span>Data &amp; Privacy</span></div></div>
+  <div class="panel"><div class="panel-hd"><h4>Your data file</h4></div>
+    <div style="padding:20px;display:flex;gap:12px;flex-wrap:wrap;align-items:center;">
+      <button class="btn ${dirty ? 'save-dirty' : 'btn-primary'}" data-act="save">Save file</button>
+      <button class="btn btn-secondary" data-act="open">Open file</button>
+      <button class="btn btn-secondary" data-act="export-csv" ${snap ? '' : 'disabled'}>Export snapshot CSV</button>
+      <span class="text-muted" style="font-size:12px;margin-left:auto;">${esc(fileName)} · ${dirty ? 'unsaved changes' : 'saved'}</span>
+    </div>
+    <div style="padding:0 20px 20px;"><span class="text-muted" style="font-size:12px;">Your numbers live only in the JSON file you save. Store it in an iCloud/Dropbox folder for automatic version history.</span></div>
+  </div>
+  <div class="panel" style="border-color:var(--color-accent);"><div class="panel-hd" style="border-color:var(--color-accent);"><h4>Privacy — fully offline</h4></div>
+    <div style="padding:20px;font-size:13px;line-height:1.6;">
+      <p style="margin:0 0 10px;">This app makes <strong>zero network requests</strong>. No fund-data refresh, no telemetry, no cloud sync — everything (including all tax figures) is computed locally from your file and the bundled Tax Year ${REFERENCE_DATA.taxYear} reference data.</p>
+      <p style="margin:0;">Nothing is stored in the browser either — close the tab and the only copy of your data is the file you saved.</p>
+    </div>
+  </div>
+  <div class="panel"><div class="panel-hd"><h4>Start fresh</h4></div>
+    <div style="padding:20px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+      <button class="btn btn-danger" data-act="start-fresh">Start fresh (shared copy)</button>
+      <span class="text-muted" style="font-size:12px;">Clears everything in memory for a clean copy to hand to a friend. Your saved file on disk is untouched.</span>
+    </div>
   </div>`;
 }
 
@@ -2546,6 +3475,8 @@ function dialogHTML() {
   } else if (d.type === 'confirm') {
     inner = `<div class="dialog-title">${esc(d.title)}</div><div class="dialog-body">${esc(d.body)}</div>
       <div class="dialog-actions"><button class="btn btn-secondary" data-act="close-dialog">Cancel</button><button class="btn ${d.danger ? 'btn-danger' : 'btn-primary'}" data-act="confirm-yes">${esc(d.ok || 'Confirm')}</button></div>`;
+  } else if (d.type === 'about') {
+    inner = aboutDialogHTML();
   }
   return `<div class="dialog-backdrop no-print" data-act="backdrop"><div class="dialog" data-stop="1">${inner}</div></div>`;
 }
@@ -2634,7 +3565,8 @@ function onClick(e) {
   if (!t) return;
   const a = t.dataset.act, ds = t.dataset;
   switch (a) {
-    case 'nav': ui.view = ds.view; if (ds.view !== 'checkin') ui.checkin = ui.checkin; render(); break;
+    case 'nav': ui.view = ds.view; render(); break;
+    case 'about': openDialog({ type: 'about' }); break;
     case 'save': saveFile().then(r => { if (r && r.ok) toast('Saved · ' + fileName); render(); }); break;
     case 'open': doOpen(); break;
     case 'new-checkin': startCheckin(); break;
@@ -2676,6 +3608,25 @@ function onClick(e) {
     case 'export-csv': { const s = currentSnapshot(); if (s) triggerDownload(snapshotCSV(s), `snapshot-${s.date}.csv`, 'text/csv'); else toast('No snapshot to export.'); break; }
     case 'report-csv': { const s = currentSnapshot(); if (s) triggerDownload(snapshotCSV(s), `report-${s.date}.csv`, 'text/csv'); break; }
     case 'print': window.print(); break;
+    case 'send-to-plan': {
+      const snap = currentSnapshot(); if (!snap) { toast('No snapshot to plan against.'); break; }
+      const rec = (ui._taxRecs || [])[Number(ds.rec)]; if (!rec) break;
+      if (rec.kind === 'location-swap') {
+        planAddMove(snap.date, { accountId: rec.aAccountId, sellTicker: rec.aTicker, buyTicker: rec.bTicker, amount: Math.round(rec.amount), taxNote: `Location swap · realizes gain on ${rec.aTicker}` });
+        planAddMove(snap.date, { accountId: rec.bAccountId, sellTicker: rec.bTicker, buyTicker: rec.aTicker, amount: Math.round(rec.amount), taxNote: 'Location swap · tax-free side' });
+      } else {
+        planAddMove(snap.date, { accountId: rec.aAccountId, sellTicker: rec.aTicker, buyTicker: rec.muniTicker, amount: Math.round(rec.amount), taxNote: 'Muni swap' });
+      }
+      ui.view = 'plan'; render(); toast('Added to Plan');
+      break;
+    }
+    case 'plan-generate': { const s = currentSnapshot(); if (s) { generatePlanProposals(s); render(); } break; }
+    case 'plan-noaction': { const s = currentSnapshot(); if (s) { const p = ensurePlan(s.date); p.noAction = true; p.moves = []; markDirty(); render(); } break; }
+    case 'plan-addmove': { const s = currentSnapshot(); if (s) { planAddMove(s.date, {}); render(); } break; }
+    case 'plan-del': { const s = currentSnapshot(); const p = s && planForSnapshot(s.date); if (p) { p.moves.splice(Number(ds.idx), 1); markDirty(); render(); } break; }
+    case 'plan-adddir': { const s = currentSnapshot(); if (s) { const dir = savingsDirective(s); const p = ensurePlan(s.date); p.directive = dir ? { text: dir.text, splits: dir.splits } : null; markDirty(); render(); } break; }
+    case 'ov-toggle': ui.taxAdvanced = true; render(); break;
+    case 'ov-clear': portfolio.taxSettings.override = null; ui.taxAdvanced = false; markDirty(); render(); break;
     case 'confirm-yes': handleConfirm(); break;
     case 'close-dialog': closeDialog(); break;
     case 'backdrop': if (!e.target.closest('[data-stop]')) closeDialog(); break;
@@ -2693,6 +3644,16 @@ function onChange(e) {
   else if (a === 'pos-category') { ui.posCategory = t.value; ui.posClass = ''; render(); }
   else if (a === 'toggle-529') { portfolio.meta.include529InHousehold = t.checked; markDirty(); render(); }
   else if (a === 'htab') { ui.historyTab = ds.tab; render(); }
+  // Tax Profile (§13.1)
+  else if (a === 'ts-filing') { portfolio.taxSettings.filingStatus = t.value; markDirty(); render(); }
+  else if (a === 'ts-band') { portfolio.taxSettings.incomeBand = t.value; markDirty(); render(); }
+  else if (a === 'ts-state') { portfolio.taxSettings.state = t.value; markDirty(); render(); }
+  else if (a === 'ts-gainbudget') { portfolio.taxSettings.gainBudgetAnnual = parseNum(t.value) || 0; markDirty(); render(); }
+  else if (a === 'ts-savings') { portfolio.taxSettings.householdMonthlySavings = parseNum(t.value) || 0; markDirty(); render(); }
+  else if (a === 'ts-ytd') { const y = portfolio.taxSettings.ytdContributions = portfolio.taxSettings.ytdContributions || {}; const n = parseNum(t.value); if (n == null) delete y[ds.account]; else y[ds.account] = n; markDirty(); }
+  else if (a === 'ov-ord' || a === 'ov-ltcg' || a === 'ov-state' || a === 'ov-niit' || a === 'ov-surtax') { applyOverride(a, t); render(); }
+  // Plan (F8) — field edits fire on blur/change so mid-typing keeps focus.
+  else if (a === 'plan-account' || a === 'plan-done' || a === 'plan-sell' || a === 'plan-buy' || a === 'plan-amount') { applyPlanEdit(a, ds, t); }
   else if (a === 'acct-cat') {
     const other = document.getElementById('f-other-wrap'), child = document.getElementById('f-child-wrap');
     if (other) other.style.display = t.value === 'Other' ? 'block' : 'none';
@@ -2721,6 +3682,33 @@ function onInput(e) {
   else if (a === 'rename-goal') { const g = portfolio.goals.find(x => x.effectiveDate === ds.date); if (g) { const v = t.value.trim(); if (v) g.name = v; else delete g.name; markDirty(); } }
   else if (a === 'set-band') { const n = parseNum(t.value); if (n != null) { portfolio.meta.driftBandPct = Math.max(1, Math.min(50, n)); markDirty(); } }
   else if (a === 'glide-rationale') { const gp = ensureGlide(ds.child); gp.rationale = t.value; markDirty(); }
+}
+
+/* Tax Profile expert override (§13.1) — blank clears a field. */
+function applyOverride(act, el) {
+  const ov = portfolio.taxSettings.override = portfolio.taxSettings.override || {};
+  if (act === 'ov-niit') { if (el.checked) ov.niitApplies = true; else delete ov.niitApplies; }
+  else if (act === 'ov-surtax') { if (el.checked) ov.surtaxApplies = true; else delete ov.surtaxApplies; }
+  else {
+    const key = act === 'ov-ord' ? 'ordinaryRate' : act === 'ov-ltcg' ? 'ltcgRate' : 'stateRate';
+    const n = parseNum(el.value);
+    if (n == null) delete ov[key]; else ov[key] = n / 100;
+  }
+  ui.taxAdvanced = true;
+  markDirty();
+}
+
+/* Plan (F8) move-field edits. */
+function applyPlanEdit(act, ds, el) {
+  const snap = currentSnapshot(); if (!snap) return;
+  const p = planForSnapshot(snap.date); if (!p) return;
+  const m = p.moves[Number(ds.idx)]; if (!m) return;
+  if (act === 'plan-account') m.accountId = el.value;
+  else if (act === 'plan-done') m.done = el.checked;
+  else if (act === 'plan-sell') m.sellTicker = el.value.trim().toUpperCase();
+  else if (act === 'plan-buy') m.buyTicker = el.value.trim().toUpperCase();
+  else if (act === 'plan-amount') m.amount = parseNum(el.value) || 0;
+  markDirty(); render();
 }
 
 /* Light-touch updates that avoid a full re-render mid-typing */
