@@ -187,8 +187,18 @@
   .subnav a { color: color-mix(in srgb, var(--color-text) 60%, transparent); text-decoration: none; font-size: 13px; cursor: pointer; padding: 10px 14px; border-bottom: 2px solid transparent; margin-bottom: -1px; line-height: 1; white-space: nowrap; }
   .subnav a:hover { color: var(--color-text); background: color-mix(in srgb, var(--color-text) 5%, transparent); }
   .subnav a.subnav-active { color: var(--color-accent); border-bottom-color: var(--color-accent); font-weight: 600; }
-  /* Acronym helper text on hover (§ tooltips) */
-  abbr[title] { text-decoration: underline dotted; text-underline-offset: 2px; cursor: help; text-decoration-thickness: 1px; }
+  /* Acronym helper: dotted underline + readable hover bubble (full name) */
+  abbr.tip { position: relative; text-decoration: underline dotted; text-underline-offset: 2px; text-decoration-thickness: 1px; cursor: help; }
+  abbr.tip::after {
+    content: attr(data-tip);
+    position: absolute; top: calc(100% + 5px); left: 0;
+    background: var(--color-text); color: var(--color-bg);
+    font-family: var(--font-body); font-size: 11px; font-weight: 400; letter-spacing: 0; line-height: 1.35;
+    padding: 5px 8px; width: max-content; max-width: 230px; white-space: normal; text-align: left;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.28); z-index: 60; pointer-events: none;
+    opacity: 0; visibility: hidden; transition: opacity 0.1s ease;
+  }
+  abbr.tip:hover::after { opacity: 1; visibility: visible; }
   .table { width: 100%; border-collapse: collapse; font-size: 14px; }
   .table th { text-align: left; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: color-mix(in srgb, var(--color-text) 60%, transparent); padding: var(--space-2); border-bottom: 1px solid var(--color-divider); }
   .table td { padding: var(--space-2); border-bottom: 1px solid color-mix(in srgb, var(--color-text) 8%, transparent); }
@@ -1577,8 +1587,8 @@ function fmtEditNum(v) { const n = parseNum(v); return n == null ? '' : fmtNum2(
 function fmtPct(n, dp) { return (Number(n) || 0).toFixed(dp == null ? 1 : dp) + '%'; }
 function fmtPctSigned(n) { const v = Number(n) || 0; return (v > 0 ? '+' : v < 0 ? '−' : '±') + Math.abs(v).toFixed(1) + '%'; }
 
-/* Acronym with hover helper text (full name). */
-function abbr(short, full) { return `<abbr title="${esc(full)}">${esc(short)}</abbr>`; }
+/* Acronym with a readable hover bubble (full name). */
+function abbr(short, full) { return `<abbr class="tip" data-tip="${esc(full)}" title="${esc(full)}">${esc(short)}</abbr>`; }
 
 /* CY quarter label from an ISO date, e.g. 2026-08-15 → "CY Q3 Plan (2026-08-15)". */
 function planTitle(date) {
@@ -2909,8 +2919,15 @@ function renderTax() {
       <button class="btn btn-sm btn-primary" data-act="send-to-plan" data-rec="${i}">Send to Plan →</button>
     </div>`;
   };
+  const planMoveCount = (planForSnapshot(snap.date) || { moves: [] }).moves.length;
+  const MATERIAL_MIN = 50; // $/yr — below this a recommendation is flagged immaterial
+  const withIdx = ui._taxRecs.map((r, i) => ({ r, i }));
+  const material = withIdx.filter(x => x.r.savingsPerYr >= MATERIAL_MIN);
+  const immaterial = withIdx.filter(x => x.r.savingsPerYr < MATERIAL_MIN);
+  const divider = (label) => `<div style="display:flex;align-items:center;gap:10px;margin:8px 0 2px;"><div style="flex:1;height:1px;background:var(--color-divider);"></div><span class="kicker" style="font-size:10px;">${label}</span><div style="flex:1;height:1px;background:var(--color-divider);"></div></div>`;
   const recsHTML = ui._taxRecs.length
-    ? ui._taxRecs.map((r, i) => recCard(r, i)).join('')
+    ? `${material.length ? material.map(x => recCard(x.r, x.i)).join('') : `<div class="text-muted" style="font-size:13px;padding:2px 2px 4px;">Nothing worth acting on — every recommendation below saves under ${fmtMoney(MATERIAL_MIN)}/yr.</div>`}
+       ${immaterial.length ? divider(`recommended · immaterial savings (under ${fmtMoney(MATERIAL_MIN)}/yr)`) + immaterial.map(x => recCard(x.r, x.i)).join('') : ''}`
     : `<div class="text-muted" style="font-size:13px;padding:6px 2px;">No location-swap or muni recommendations — your tax-inefficient assets are already well placed${rates.r_ord < 0.32 ? ' (muni comparison activates at the 32% bracket)' : ''}.</div>`;
 
   return `<div class="toolbar no-print"><div class="crumb"><span>Tax Analysis</span></div>${snapPickerHTML()}</div>
@@ -2929,7 +2946,8 @@ function renderTax() {
         </tr></thead>
         <tbody>${dragRows}</tbody></table></div></div>
     ${guide}
-    <div class="panel"><div class="panel-hd"><h4>Recommendations</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">allocation-neutral · not advice</span></div>
+    <div class="panel"><div class="panel-hd"><h4>Recommendations</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">allocation-neutral · not advice</span>
+      <button class="btn btn-sm btn-secondary" data-act="nav" data-view="plan" style="margin-left:12px;">${planMoveCount ? `View Plan (${planMoveCount}) →` : 'Open Plan →'}</button></div>
       <div style="padding:16px 20px;display:flex;flex-direction:column;gap:12px;">${recsHTML}</div></div>
     <div style="padding:0 2px;"><span class="text-muted" style="font-size:12px;">Estimates only, from your data and simplified rules — not tax advice. Confirm material decisions with a CPA.</span></div>`;
 }
@@ -3695,7 +3713,10 @@ function onClick(e) {
       } else {
         planAddMove(snap.date, { accountId: rec.aAccountId, sellTicker: rec.aTicker, buyTicker: rec.muniTicker, amount: Math.round(rec.amount), taxNote: 'Muni swap' });
       }
-      ui.view = 'plan'; render(); toast('Added to Plan');
+      // Stay on the Tax tab so you can send more; the header has a "View Plan" link.
+      render();
+      const n = (planForSnapshot(snap.date) || { moves: [] }).moves.length;
+      toast(`Added to Plan · ${n} move${n === 1 ? '' : 's'}`);
       break;
     }
     case 'plan-generate': { const s = currentSnapshot(); if (s) { generatePlanProposals(s); render(); } break; }
