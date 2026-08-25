@@ -575,6 +575,13 @@ const SHELTER_RANK = {
 };
 /* Classes counted by the Location Efficiency Score (ranks 1–4, §13.9). */
 const INEFFICIENT_CLASSES = ['us_bond', 'intl_bond', 'reit', 'commod', 'blend'];
+const NEUTRAL_CLASSES = ['cash', 'crypto', 'other'];
+/* Tax-efficiency classification of an asset class, for the drag table. */
+function classEfficiency(assetClass) {
+  if (INEFFICIENT_CLASSES.includes(assetClass)) return { key: 'inefficient', label: 'Inefficient', rank: 0, cls: 'tag-warn' };
+  if (NEUTRAL_CLASSES.includes(assetClass)) return { key: 'neutral', label: 'Neutral', rank: 2, cls: 'tag-neutral' };
+  return { key: 'efficient', label: 'Efficient', rank: 1, cls: 'tag-ok' };
+}
 
 /* ===============================================================
    TAX ENGINE — §13.1–13.2. Pure functions; rates returned as DECIMALS.
@@ -2882,14 +2889,32 @@ function renderTax() {
       <a data-act="nav" data-view="taxprofile" style="margin-left:auto;cursor:pointer;color:var(--color-accent);">Edit tax profile →</a>
     </div></div>`;
 
+  const ineffList = INEFFICIENT_CLASSES.map(c => detailLabel(c)).join(', ');
   const guide = `<div class="panel"><div class="panel-hd"><h4>How to read this</h4></div>
     <div style="padding:14px 20px;font-size:12.5px;line-height:1.65;" class="text-muted">
       <p style="margin:0 0 8px;"><b>${abbr('Yield', 'Dividend yield')}</b> = the fund’s annual dividends as a % of its value. <b>${abbr('Qual', 'Qualified dividends')}</b> = the share of those dividends taxed at the lower long-term rate instead of your ordinary rate (bond interest is 0% qualified; broad stock funds ≈ 95–100%). <b>${abbr('Cap Gain', 'Capital-gains distributions')}</b> = gains the fund pays out each year as a % of value (index funds ≈ 0; active funds higher).</p>
-      <p style="margin:0;"><b>Annual drag</b> = Value × [ Yield×Qual×${abbr('QDI', 'Qualified-dividend / long-term rate')} + Yield×(1−Qual)×ordinary + Cap&nbsp;Gain×long-term ], at your effective rates. Sheltered accounts (${abbr('IRA', 'Individual Retirement Account')} / 401k / ${abbr('HSA', 'Health Savings Account')} / 529) pay $0 now — the “Tax shielded” tile is that saving. Fund figures come from bundled ${REFERENCE_DATA.taxYear} data or asset-class defaults (rows marked “est.”).</p>
+      <p style="margin:0 0 8px;"><b>Annual drag</b> = Value × [ Yield×Qual×${abbr('QDI', 'Qualified-dividend / long-term rate')} + Yield×(1−Qual)×ordinary + Cap&nbsp;Gain×long-term ], at your effective rates. Sheltered accounts (${abbr('IRA', 'Individual Retirement Account')} / 401k / ${abbr('HSA', 'Health Savings Account')} / 529) pay $0 now — the “Tax shielded” tile is that saving (what those holdings <em>would</em> cost if held in taxable). Fund figures come from bundled ${REFERENCE_DATA.taxYear} data or asset-class defaults (rows marked “est.”).</p>
+      <p style="margin:0;"><b>Location Efficiency</b> = ($ of tax-<b>inefficient</b> assets held in sheltered accounts) ÷ (total $ of tax-inefficient assets) — i.e. how much of the stuff that belongs in a shelter actually is. <b>Inefficient</b> classes (flagged in the Efficiency column): ${esc(ineffList)}. Stock index funds are <b>efficient</b> (fine in taxable); cash &amp; crypto are <b>neutral</b>. Colored ≥90% green · 70–90% yellow · &lt;70% red.</p>
     </div></div>`;
 
-  const dragRows = sc.rows.map(r => {
+  // Sortable per-holding drag table.
+  const tsort = ui.taxSort || (ui.taxSort = { key: 'drag', dir: -1 });
+  const sortKeys = {
+    ticker: r => (r.ticker || '').toUpperCase(), account: r => (r.accountName || '').toUpperCase(),
+    class: r => detailLabel(r.assetClass), eff: r => classEfficiency(r.assetClass).rank,
+    value: r => r.mv, yield: r => r.profile.divYield || 0, qual: r => r.profile.qualifiedPct || 0,
+    capgain: r => r.profile.capGainDistPct || 0, drag: r => r.drag,
+  };
+  const kf = sortKeys[tsort.key] || sortKeys.drag;
+  const sortedRows = sc.rows.slice().sort((a, b) => {
+    const va = kf(a), vb = kf(b);
+    const c = typeof va === 'string' ? va.localeCompare(vb) : (va - vb);
+    return c * tsort.dir;
+  });
+  const sortTh = (key, label, align) => `<th data-act="tax-sort" data-key="${key}" style="cursor:pointer;user-select:none;${align ? 'text-align:' + align + ';' : ''}" title="Sort by ${key}">${label}${tsort.key === key ? `<span style="font-size:9px;opacity:0.7;"> ${tsort.dir < 0 ? '▼' : '▲'}</span>` : ''}</th>`;
+  const dragRows = sortedRows.map(r => {
     const p = r.profile;
+    const eff = classEfficiency(r.assetClass);
     const dragCell = r.sheltered
       ? `<span class="text-muted" title="${esc(r.reason)} — would cost ${fmtMoney2(r.wouldBeDrag)}/yr if held in a taxable account">$0</span>`
       : `<span class="tnum">${fmtMoney2(r.drag)}</span>`;
@@ -2897,13 +2922,14 @@ function renderTax() {
       <td style="font-family:var(--font-heading);">${esc(r.ticker || '—')}${r.estimated ? ' <span class="tag tag-neutral" style="font-size:9px;padding:1px 5px;" title="Estimated from asset-class defaults — no bundled data for this ticker">est.</span>' : ''}</td>
       <td class="text-muted" style="font-size:12px;">${esc(r.accountName)}</td>
       <td class="text-muted" style="font-size:12px;">${esc(detailLabel(r.assetClass))}</td>
+      <td>${eff.key === 'efficient' ? `<span class="text-muted" style="font-size:11px;">Efficient</span>` : `<span class="tag ${eff.cls}" style="font-size:9px;" title="${eff.key === 'inefficient' ? 'Tax-inefficient — belongs in a sheltered account (counts toward Location Efficiency)' : 'Neutral — placement doesn’t matter much'}">${eff.label}</span>`}</td>
       <td class="tnum" style="text-align:right;">${fmtMoney(r.mv)}</td>
       <td class="tnum text-muted" style="text-align:right;">${(p.divYield || 0).toFixed(1)}%</td>
       <td class="tnum text-muted" style="text-align:right;">${(p.qualifiedPct || 0)}%</td>
       <td class="tnum text-muted" style="text-align:right;">${(p.capGainDistPct || 0).toFixed(1)}%</td>
       <td style="text-align:right;">${dragCell}</td>
     </tr>`;
-  }).join('') || '<tr><td colspan="8" class="text-muted" style="padding:14px 20px;">No holdings in this snapshot.</td></tr>';
+  }).join('') || '<tr><td colspan="9" class="text-muted" style="padding:14px 20px;">No holdings in this snapshot.</td></tr>';
 
   // Materiality = return improvement: annual $ saved ÷ total portfolio value =
   // the percentage points the move adds to your return (e.g. $100 saved on a
@@ -2939,16 +2965,17 @@ function renderTax() {
   return `<div class="toolbar no-print"><div class="crumb"><span>Tax Analysis</span></div>${snapPickerHTML()}</div>
     ${scorecard}
     ${rateLine}
-    <div class="panel"><div class="panel-hd"><h4>Per-holding tax drag</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">worst first · sheltered rows show $0</span></div>
-      <div style="overflow-x:auto;"><table class="table" style="table-layout:fixed;min-width:640px;">
-        <colgroup><col style="width:13%"><col style="width:21%"><col style="width:21%"><col style="width:13%"><col style="width:8%"><col style="width:7%"><col style="width:9%"><col style="width:13%"></colgroup>
+    <div class="panel"><div class="panel-hd"><h4>Per-holding tax drag</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">click a header to sort · sheltered rows show $0</span></div>
+      <div style="overflow-x:auto;"><table class="table" style="table-layout:fixed;min-width:760px;">
+        <colgroup><col style="width:11%"><col style="width:17%"><col style="width:16%"><col style="width:11%"><col style="width:11%"><col style="width:7%"><col style="width:7%"><col style="width:8%"><col style="width:12%"></colgroup>
         <thead><tr>
-          <th>Ticker</th><th>Account</th><th>Class</th>
-          <th style="text-align:right;">Value</th>
-          <th style="text-align:right;">${abbr('Yield', 'Dividend yield — annual dividends ÷ value')}</th>
-          <th style="text-align:right;">${abbr('Qual', 'Qualified % — share of dividends taxed at the lower long-term rate')}</th>
-          <th style="text-align:right;">${abbr('Cap Gain', 'Capital-gains distributions — % of value the fund distributes yearly')}</th>
-          <th style="text-align:right;">Drag $/yr</th>
+          ${sortTh('ticker', 'Ticker')}${sortTh('account', 'Account')}${sortTh('class', 'Class')}
+          ${sortTh('eff', abbr('Efficiency', 'Tax efficiency of the asset class — inefficient classes belong in sheltered accounts'))}
+          ${sortTh('value', 'Value', 'right')}
+          ${sortTh('yield', abbr('Yield', 'Dividend yield — annual dividends ÷ value'), 'right')}
+          ${sortTh('qual', abbr('Qual', 'Qualified % — share of dividends taxed at the lower long-term rate'), 'right')}
+          ${sortTh('capgain', abbr('Cap Gain', 'Capital-gains distributions — % of value the fund distributes yearly'), 'right')}
+          ${sortTh('drag', 'Drag $/yr', 'right')}
         </tr></thead>
         <tbody>${dragRows}</tbody></table></div></div>
     ${guide}
@@ -3730,6 +3757,12 @@ function onClick(e) {
     case 'plan-addmove': { const s = currentSnapshot(); if (s) { planAddMove(s.date, {}); render(); } break; }
     case 'plan-del': { const s = currentSnapshot(); const p = s && planForSnapshot(s.date); if (p) { p.moves.splice(Number(ds.idx), 1); markDirty(); render(); } break; }
     case 'plan-adddir': { const s = currentSnapshot(); if (s) { const dir = savingsDirective(s); const p = ensurePlan(s.date); p.directive = dir ? { text: dir.text, splits: dir.splits } : null; markDirty(); render(); } break; }
+    case 'tax-sort': {
+      const k = ds.key, s = ui.taxSort || (ui.taxSort = { key: 'drag', dir: -1 });
+      if (s.key === k) s.dir = -s.dir;
+      else { s.key = k; s.dir = ['ticker', 'account', 'class', 'eff'].includes(k) ? 1 : -1; }
+      render(); break;
+    }
     case 'ov-toggle': ui.taxAdvanced = true; render(); break;
     case 'ov-clear': portfolio.taxSettings.override = null; ui.taxAdvanced = false; markDirty(); render(); break;
     case 'confirm-yes': handleConfirm(); break;
