@@ -1135,11 +1135,11 @@ function locationSwapRecs(snapshot) {
     const savings = X * (dA - best.dragPerDollarTaxable);
     if (savings <= 0) continue;
     // One-time realization cost on the A portion sold in taxable (§13.5).
-    let oneTime = 0, basisKnown = a.costBasis != null;
+    let oneTime = 0, realizedGain = 0, basisKnown = a.costBasis != null;
     if (basisKnown) {
       const gainFull = a.mv - a.costBasis;
-      const gainPortion = (X / a.mv) * gainFull;
-      oneTime = Math.max(0, gainPortion) * rates.r_ltcg_eff;
+      realizedGain = Math.max(0, (X / a.mv) * gainFull);
+      oneTime = realizedGain * rates.r_ltcg_eff;
     }
     // Recommend only when one-time cost is $0 or < 2 years of savings (§13.5).
     const worthIt = oneTime === 0 || oneTime < 2 * savings;
@@ -1147,7 +1147,7 @@ function locationSwapRecs(snapshot) {
     usedB[best.holdingId] = (usedB[best.holdingId] || 0) + X;
     recs.push({
       kind: 'location-swap', amount: X, savingsPerYr: savings,
-      oneTimeCost: oneTime, basisKnown,
+      oneTimeCost: oneTime, realizedGain, basisKnown,
       aTicker: a.ticker, aClass: a.assetClass, aAccountId: a.accountId, aAccountName: a.accountName,
       bTicker: best.ticker, bClass: best.assetClass, bAccountId: best.accountId, bAccountName: best.accountName,
     });
@@ -1175,10 +1175,10 @@ function muniRecs(snapshot) {
     const muniAT = y_m * (1 - rates.r_state);
     if (muniAT <= taxableAT) continue;
     const savings = r.mv * (muniAT - taxableAT) / 100;
-    let oneTime = 0, basisKnown = r.costBasis != null;
-    if (basisKnown) oneTime = Math.max(0, r.mv - r.costBasis) * rates.r_ltcg_eff;
+    let oneTime = 0, realizedGain = 0, basisKnown = r.costBasis != null;
+    if (basisKnown) { realizedGain = Math.max(0, r.mv - r.costBasis); oneTime = realizedGain * rates.r_ltcg_eff; }
     recs.push({
-      kind: 'muni', amount: r.mv, savingsPerYr: savings, oneTimeCost: oneTime, basisKnown,
+      kind: 'muni', amount: r.mv, savingsPerYr: savings, oneTimeCost: oneTime, realizedGain, basisKnown,
       aTicker: r.ticker, aAccountId: r.accountId, aAccountName: r.accountName,
       muniTicker: 'VTEB', taxableAT, muniAT,
     });
@@ -3081,25 +3081,56 @@ function driftMoves(snap) {
   }
   return moves;
 }
-// Tax-driven moves (location swaps + muni) as plan moves (§13.5/13.6).
-function taxMovesFromRecs(snap) {
-  const moves = [];
-  for (const r of locationSwapRecs(snap)) {
-    moves.push({ accountId: r.aAccountId, sellTicker: r.aTicker, buyTicker: r.bTicker, amount: Math.round(r.amount), source: 'tax-swap', taxNote: `Shelter ${r.aTicker} · ~${fmtMoney2(r.savingsPerYr)}/yr saved` });
-    moves.push({ accountId: r.bAccountId, sellTicker: r.bTicker, buyTicker: r.aTicker, amount: Math.round(r.amount), source: 'tax-swap', taxNote: 'Swap pair · tax-free side' });
-  }
-  for (const r of muniRecs(snap)) {
-    moves.push({ accountId: r.aAccountId, sellTicker: r.aTicker, buyTicker: r.muniTicker, amount: Math.round(r.amount), source: 'tax-muni', taxNote: `Muni swap · ~${fmtMoney2(r.savingsPerYr)}/yr saved` });
-  }
-  return moves;
+// Taxable long-term gain a move would realize (§13.4/13.5). Sheltered-account
+// sales realize $0; unknown basis counts as $0 (can't gate on it).
+function moveRealizedGain(m, snap) {
+  const acct = accountById(m.accountId);
+  if (!acct || accountShelter(acct).sheltered) return 0;
+  const X = Number(m.amount) || 0;
+  if (!(X > 0) || !m.sellTicker) return 0;
+  const idx = valueIndex(snap);
+  const h = activeHoldings(m.accountId).find(x => (x.ticker || '').toUpperCase() === m.sellTicker.toUpperCase());
+  if (!h) return 0;
+  const v = idx[h.id]; if (!v) return 0;
+  const mv = Number(v.marketValue) || 0;
+  const cb = v.costBasis != null ? Number(v.costBasis) : (h.costBasis != null ? Number(h.costBasis) : null);
+  if (cb == null || mv <= 0) return 0;
+  return Math.max(0, (mv - cb) * (Math.min(X, mv) / mv));
+}
+// Total realized gain across a plan's moves (for the gain-budget tracker).
+function planRealizedGain(plan, snap) {
+  return (plan && plan.moves || []).reduce((s, m) => s + moveRealizedGain(m, snap), 0);
 }
 // Full auto-generation from tax + drift + savings (§13.4–13.8); user then edits.
+// Gain-realizing proposals stop once the annual gain budget is spent (§13.4.4).
 function generatePlanProposals(snap) {
   const p = ensurePlan(snap.date);
   p.noAction = false;
   p.moves = [];
-  for (const m of taxMovesFromRecs(snap)) p.moves.push(Object.assign({ done: false }, m));
-  for (const m of driftMoves(snap)) p.moves.push(Object.assign({ source: 'drift', taxNote: '', done: false }, m));
+  const budget = Number(portfolio.taxSettings.gainBudgetAnnual) || 0;
+  let gainUsed = 0;
+  const affords = (gain) => budget <= 0 || (gainUsed + gain) <= budget;
+  // 1. Tax-driven swaps — each realizes gain on the taxable A-side (kept as a pair).
+  for (const r of locationSwapRecs(snap)) {
+    const gain = r.realizedGain || 0;
+    if (!affords(gain)) continue;
+    gainUsed += gain;
+    p.moves.push({ accountId: r.aAccountId, sellTicker: r.aTicker, buyTicker: r.bTicker, amount: Math.round(r.amount), source: 'tax-swap', taxNote: `Shelter ${r.aTicker} · ~${fmtMoney2(r.savingsPerYr)}/yr saved`, done: false });
+    p.moves.push({ accountId: r.bAccountId, sellTicker: r.bTicker, buyTicker: r.aTicker, amount: Math.round(r.amount), source: 'tax-swap', taxNote: 'Swap pair · tax-free side', done: false });
+  }
+  for (const r of muniRecs(snap)) {
+    const gain = r.realizedGain || 0;
+    if (!affords(gain)) continue;
+    gainUsed += gain;
+    p.moves.push({ accountId: r.aAccountId, sellTicker: r.aTicker, buyTicker: r.muniTicker, amount: Math.round(r.amount), source: 'tax-muni', taxNote: `Muni swap · ~${fmtMoney2(r.savingsPerYr)}/yr saved`, done: false });
+  }
+  // 2. Drift moves (sheltered-first; only taxable sells realize gain).
+  for (const m of driftMoves(snap)) {
+    const gain = moveRealizedGain(m, snap);
+    if (!affords(gain)) continue;
+    gainUsed += gain;
+    p.moves.push(Object.assign({ source: 'drift', taxNote: '', done: false }, m));
+  }
   const dir = savingsDirective(snap);
   p.directive = dir ? { text: dir.text, splits: dir.splits } : null;
   p.generated = true;
@@ -3227,9 +3258,22 @@ function renderPlan() {
     </div></div>`;
 
   const doneCount = plan.moves.filter(m => m.done).length;
+  // Gain-budget tracker (§13.4.4): realized long-term gain across the plan's moves.
+  const gainUsed = planRealizedGain(plan, snap);
+  const gainBudget = Number(portfolio.taxSettings.gainBudgetAnnual) || 0;
+  const overBudget = gainBudget > 0 && gainUsed > gainBudget + 0.5;
+  const gainTracker = (gainUsed > 0 || gainBudget > 0)
+    ? `<div class="panel"><div style="padding:12px 20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:13px;">
+        <span class="kicker" style="font-size:10px;">Realized gain</span>
+        <span class="tnum" style="${overBudget ? 'color:var(--color-crit);' : ''}">${fmtMoney(gainUsed)}${gainBudget > 0 ? ` of ${fmtMoney(gainBudget)} budget` : ''}</span>
+        ${gainBudget > 0 ? `<span class="tag ${overBudget ? 'tag-crit' : 'tag-ok'}" style="font-size:10px;">${overBudget ? 'over budget' : fmtPct((gainUsed / gainBudget) * 100, 0) + ' used'}</span>` : `<span class="text-muted" style="font-size:12px;">set an annual gain budget in <a data-act="nav" data-view="taxprofile" style="cursor:pointer;color:var(--color-accent);">Tax Profile</a> to cap taxable-gain sales</span>`}
+        <span class="text-muted" style="font-size:12px;margin-left:auto;">est. tax ${fmtMoney(gainUsed * taxRates().r_ltcg_eff)}</span>
+      </div></div>`
+    : '';
   return `<div class="toolbar no-print"><div class="crumb"><span>${title}</span></div>${snapPickerHTML()}
       <button class="btn btn-secondary" data-act="plan-noaction">Mark no-action</button></div>
     ${explain}
+    ${gainTracker}
     <div class="panel"><div class="panel-hd"><h4>Moves</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">${doneCount}/${plan.moves.length} done</span></div>
       <div style="overflow-x:auto;"><table class="table" style="table-layout:fixed;min-width:660px;">
         <colgroup><col style="width:5%"><col style="width:9%"><col style="width:20%"><col style="width:11%"><col style="width:11%"><col style="width:14%"><col style="width:24%"><col style="width:6%"></colgroup>
