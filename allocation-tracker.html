@@ -2905,7 +2905,15 @@ function renderTax() {
     </tr>`;
   }).join('') || '<tr><td colspan="8" class="text-muted" style="padding:14px 20px;">No holdings in this snapshot.</td></tr>';
 
+  // Materiality = the saving's impact on your annual RETURN: savings ÷ the
+  // portfolio's expected yearly return (assumed ~7%/yr). A rec that lifts
+  // return by less than 1% is flagged immaterial.
+  const ASSUMED_RETURN = 0.07; // assumed annual return for the "% of return" basis
+  const MATERIAL_MIN_RET_PCT = 1.0; // % of expected return below which a rec is immaterial
+  const expReturn = (grandTotal(snap) || 0) * ASSUMED_RETURN;
+  const recRetPct = (r) => expReturn > 0 ? (r.savingsPerYr / expReturn) * 100 : 0;
   const recCard = (r, i) => {
+    const pct = recRetPct(r);
     const savings = `${fmtMoney2(r.savingsPerYr)}/yr`;
     const cost = r.basisKnown ? (r.oneTimeCost > 0 ? `one-time tax ${fmtMoney2(r.oneTimeCost)}` : 'no gain to realize') : 'basis unknown — verify realization cost';
     const title = r.kind === 'location-swap'
@@ -2914,20 +2922,19 @@ function renderTax() {
     return `<div class="blueprint" style="padding:14px 16px;display:flex;gap:14px;align-items:center;flex-wrap:wrap;">
       <div style="flex:1;min-width:260px;">
         <div style="font-size:14px;">${title}</div>
-        <div class="text-muted" style="font-size:12px;margin-top:3px;">Est. savings <span style="color:var(--color-ok);">${savings}</span> · ${cost}${r.kind === 'muni' ? ` · after-tax yield ${r.muniAT.toFixed(2)}% vs ${r.taxableAT.toFixed(2)}%` : ''}</div>
+        <div class="text-muted" style="font-size:12px;margin-top:3px;">Est. savings <span style="color:var(--color-ok);">${savings}</span> <span title="Saving as a share of your expected annual return (assumes ~${Math.round(ASSUMED_RETURN * 100)}%/yr)">(+${fmtPct(pct, 2)} of return)</span> · ${cost}${r.kind === 'muni' ? ` · after-tax yield ${r.muniAT.toFixed(2)}% vs ${r.taxableAT.toFixed(2)}%` : ''}</div>
       </div>
       <button class="btn btn-sm btn-primary" data-act="send-to-plan" data-rec="${i}">Send to Plan →</button>
     </div>`;
   };
   const planMoveCount = (planForSnapshot(snap.date) || { moves: [] }).moves.length;
-  const MATERIAL_MIN = 50; // $/yr — below this a recommendation is flagged immaterial
   const withIdx = ui._taxRecs.map((r, i) => ({ r, i }));
-  const material = withIdx.filter(x => x.r.savingsPerYr >= MATERIAL_MIN);
-  const immaterial = withIdx.filter(x => x.r.savingsPerYr < MATERIAL_MIN);
+  const material = withIdx.filter(x => recRetPct(x.r) >= MATERIAL_MIN_RET_PCT);
+  const immaterial = withIdx.filter(x => recRetPct(x.r) < MATERIAL_MIN_RET_PCT);
   const divider = (label) => `<div style="display:flex;align-items:center;gap:10px;margin:8px 0 2px;"><div style="flex:1;height:1px;background:var(--color-divider);"></div><span class="kicker" style="font-size:10px;">${label}</span><div style="flex:1;height:1px;background:var(--color-divider);"></div></div>`;
   const recsHTML = ui._taxRecs.length
-    ? `${material.length ? material.map(x => recCard(x.r, x.i)).join('') : `<div class="text-muted" style="font-size:13px;padding:2px 2px 4px;">Nothing worth acting on — every recommendation below saves under ${fmtMoney(MATERIAL_MIN)}/yr.</div>`}
-       ${immaterial.length ? divider(`recommended · immaterial savings (under ${fmtMoney(MATERIAL_MIN)}/yr)`) + immaterial.map(x => recCard(x.r, x.i)).join('') : ''}`
+    ? `${material.length ? material.map(x => recCard(x.r, x.i)).join('') : `<div class="text-muted" style="font-size:13px;padding:2px 2px 4px;">Nothing worth acting on — every recommendation below lifts your return by less than ${MATERIAL_MIN_RET_PCT}%.</div>`}
+       ${immaterial.length ? divider(`recommended · immaterial (lifts return < ${MATERIAL_MIN_RET_PCT}%)`) + immaterial.map(x => recCard(x.r, x.i)).join('') : ''}`
     : `<div class="text-muted" style="font-size:13px;padding:6px 2px;">No location-swap or muni recommendations — your tax-inefficient assets are already well placed${rates.r_ord < 0.32 ? ' (muni comparison activates at the 32% bracket)' : ''}.</div>`;
 
   return `<div class="toolbar no-print"><div class="crumb"><span>Tax Analysis</span></div>${snapPickerHTML()}</div>
