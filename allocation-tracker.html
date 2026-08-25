@@ -475,6 +475,8 @@ const REFERENCE_DATA = {
   niitRate: 0.038,
   niitThreshold: { single: 200000, mfj: 250000, hoh: 200000, mfs: 125000 },
   maSurtax: { rate: 0.04, threshold: 1083150 },
+  collectiblesMaxRate: 0.28, // long-term gains on collectibles (physical-metal ETFs) capped here, not the 15/20% LTCG rate
+
   // Top marginal STATE income-tax rate, TY2025, as PERCENT. 0 = no wage tax.
   stateRates: {
     AL: 5.00, AK: 0.00, AZ: 2.50, AR: 3.90, CA: 13.30, CO: 4.40, CT: 6.99,
@@ -522,7 +524,7 @@ const DEFAULT_TAX_PROFILE = {
   us_bond:   { divYield: 4.0, qualifiedPct: 0,  capGainDistPct: 0.2 },
   intl_bond: { divYield: 3.5, qualifiedPct: 0,  capGainDistPct: 0.2 },
   reit:      { divYield: 3.8, qualifiedPct: 0,  capGainDistPct: 0.5 },
-  commod:    { divYield: 0.0, qualifiedPct: 0,  capGainDistPct: 5.0 },
+  commod:    { divYield: 0.0, qualifiedPct: 0,  capGainDistPct: 2.0, collectible: true }, // physical-metal ETFs: gains taxed as collectibles (≤28%), little annual yield
   crypto:    { divYield: 0.0, qualifiedPct: 0,  capGainDistPct: 0.0 },
   cash:      { divYield: 4.5, qualifiedPct: 0,  capGainDistPct: 0.0 },
   blend:     { divYield: 2.0, qualifiedPct: 60, capGainDistPct: 1.0 },
@@ -616,7 +618,10 @@ function deriveRates(ref, taxSettings) {
   const r_ord_eff  = r_ord + niit + r_state + surtax;
   const r_qdi_eff  = r_qdi + niit + r_state + surtax;
   const r_ltcg_eff = r_qdi_eff;
-  return { fs, income, r_ord, r_qdi, niit, r_state, surtax, r_ord_eff, r_qdi_eff, r_ltcg_eff };
+  // Collectibles (physical-metal ETFs): LT gains taxed at ordinary rate capped at 28%, plus NIIT/state.
+  const collMax = ref.collectiblesMaxRate != null ? ref.collectiblesMaxRate : 0.28;
+  const r_collectible_eff = Math.min(r_ord, collMax) + niit + r_state + surtax;
+  return { fs, income, r_ord, r_qdi, niit, r_state, surtax, r_ord_eff, r_qdi_eff, r_ltcg_eff, r_collectible_eff };
 }
 // Resolve a ticker's tax profile: user taxData → bundled seed → class default.
 function tickerProfile(ticker, assetClass, taxData) {
@@ -627,11 +632,14 @@ function tickerProfile(ticker, assetClass, taxData) {
   return { profile: DEFAULT_TAX_PROFILE[assetClass] || DEFAULT_TAX_PROFILE.other, estimated: true, source: 'default' };
 }
 // §13.2 — annual $ tax drag for one taxable holding.
+// Collectible profiles (physical-metal ETFs) tax the gains component at the
+// collectibles rate (≤28% + NIIT/state) instead of the 15/20% LTCG rate.
 function holdingDrag(mv, profile, rates) {
   const dy = (profile.divYield || 0) / 100;
   const q  = (profile.qualifiedPct || 0) / 100;
   const cg = (profile.capGainDistPct || 0) / 100;
-  return mv * (dy * q * rates.r_qdi_eff + dy * (1 - q) * rates.r_ord_eff + cg * rates.r_ltcg_eff);
+  const cgRate = (profile.collectible && rates.r_collectible_eff != null) ? rates.r_collectible_eff : rates.r_ltcg_eff;
+  return mv * (dy * q * rates.r_qdi_eff + dy * (1 - q) * rates.r_ord_eff + cg * cgRate);
 }
 // Account tax-shelter classification from category + treatment.
 // Returns { sheltered:bool, reason:string }.
@@ -2894,7 +2902,8 @@ function renderTax() {
     <div style="padding:14px 20px;font-size:12.5px;line-height:1.65;" class="text-muted">
       <p style="margin:0 0 8px;"><b>${abbr('Yield', 'Dividend yield')}</b> = the fund’s annual dividends as a % of its value. <b>${abbr('Qual', 'Qualified dividends')}</b> = the share of those dividends taxed at the lower long-term rate instead of your ordinary rate (bond interest is 0% qualified; broad stock funds ≈ 95–100%). <b>${abbr('Cap Gain', 'Capital-gains distributions')}</b> = gains the fund pays out each year as a % of value (index funds ≈ 0; active funds higher).</p>
       <p style="margin:0 0 8px;"><b>Annual drag</b> = Value × [ Yield×Qual×${abbr('QDI', 'Qualified-dividend / long-term rate')} + Yield×(1−Qual)×ordinary + Cap&nbsp;Gain×long-term ], at your effective rates. Sheltered accounts (${abbr('IRA', 'Individual Retirement Account')} / 401k / ${abbr('HSA', 'Health Savings Account')} / 529) pay $0 now — the “Tax shielded” tile is that saving (what those holdings <em>would</em> cost if held in taxable). Fund figures come from bundled ${REFERENCE_DATA.taxYear} data or asset-class defaults (rows marked “est.”).</p>
-      <p style="margin:0;"><b>Location Efficiency</b> = ($ of tax-<b>inefficient</b> assets held in sheltered accounts) ÷ (total $ of tax-inefficient assets) — i.e. how much of the stuff that belongs in a shelter actually is. <b>Inefficient</b> classes (flagged in the Efficiency column): ${esc(ineffList)}. Stock index funds are <b>efficient</b> (fine in taxable); cash &amp; crypto are <b>neutral</b>. Colored ≥90% green · 70–90% yellow · &lt;70% red.</p>
+      <p style="margin:0 0 8px;"><b>Location Efficiency</b> = ($ of tax-<b>inefficient</b> assets held in sheltered accounts) ÷ (total $ of tax-inefficient assets) — i.e. how much of the stuff that belongs in a shelter actually is. <b>Inefficient</b> classes (flagged in the Efficiency column): ${esc(ineffList)}. Stock index funds are <b>efficient</b> (fine in taxable); cash &amp; crypto are <b>neutral</b>. Colored ≥90% green · 70–90% yellow · &lt;70% red.</p>
+      <p style="margin:0;"><b>Commodities</b> are inefficient for a different reason than yield: physical-metal ETFs (GLD, IAU, SLV) are taxed as <b>collectibles</b> — long-term gains at your ordinary rate capped at ${Math.round((REFERENCE_DATA.collectiblesMaxRate || 0.28) * 100)}% (plus ${abbr('NIIT', 'Net Investment Income Tax')}), not the 15/20% long-term rate — and futures funds issue ${abbr('K-1', 'Schedule K-1 partnership tax form')}s. The drag shown uses that collectibles rate; the bigger cost lands when you sell, so shelter them.</p>
     </div></div>`;
 
   // Sortable per-holding drag table.
