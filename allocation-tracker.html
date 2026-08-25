@@ -521,10 +521,10 @@ const DEFAULT_TAX_PROFILE = {
   us_total:  { divYield: 1.3, qualifiedPct: 94, capGainDistPct: 0.1 },
   intl_dev:  { divYield: 3.0, qualifiedPct: 70, capGainDistPct: 0.1 },
   em:        { divYield: 2.8, qualifiedPct: 60, capGainDistPct: 0.2 },
-  us_bond:   { divYield: 4.0, qualifiedPct: 0,  capGainDistPct: 0.2 },
+  us_bond:   { divYield: 4.0, qualifiedPct: 0,  capGainDistPct: 0.2 }, // usGovtPct unknown for a generic bond → assume 0 (corporate/aggregate); Treasury funds set it in seed
   intl_bond: { divYield: 3.5, qualifiedPct: 0,  capGainDistPct: 0.2 },
-  reit:      { divYield: 3.8, qualifiedPct: 0,  capGainDistPct: 0.5 },
-  commod:    { divYield: 0.0, qualifiedPct: 0,  capGainDistPct: 2.0, collectible: true }, // physical-metal ETFs: gains taxed as collectibles (≤28%), little annual yield
+  reit:      { divYield: 3.8, qualifiedPct: 0,  capGainDistPct: 0.5, qbiEligible: true }, // REIT ordinary dividends get the §199A 20% deduction
+  commod:    { divYield: 0.0, qualifiedPct: 0,  capGainDistPct: 0.4, collectible: true }, // default = physical-metal ETF: ~no yield, gains taxed as collectibles (≤28%) on sale
   crypto:    { divYield: 0.0, qualifiedPct: 0,  capGainDistPct: 0.0 },
   cash:      { divYield: 4.5, qualifiedPct: 0,  capGainDistPct: 0.0 },
   blend:     { divYield: 2.0, qualifiedPct: 60, capGainDistPct: 1.0 },
@@ -550,13 +550,29 @@ const SEED_TAX_DATA = {
   IEFA: { divYield: 3.1, qualifiedPct: 75,  capGainDistPct: 0.0 },
   VWO:  { divYield: 2.9, qualifiedPct: 60,  capGainDistPct: 0.0 },
   IEMG: { divYield: 2.8, qualifiedPct: 60,  capGainDistPct: 0.0 },
-  BND:  { divYield: 4.1, qualifiedPct: 0,   capGainDistPct: 0.0 },
-  AGG:  { divYield: 4.0, qualifiedPct: 0,   capGainDistPct: 0.0 },
+  BND:  { divYield: 4.1, qualifiedPct: 0,   capGainDistPct: 0.0, usGovtPct: 37 }, // ~37% US Treasuries (state-exempt)
+  AGG:  { divYield: 4.0, qualifiedPct: 0,   capGainDistPct: 0.0, usGovtPct: 28 },
   BNDX: { divYield: 3.4, qualifiedPct: 0,   capGainDistPct: 0.0 },
-  VNQ:  { divYield: 3.9, qualifiedPct: 0,   capGainDistPct: 0.6 },
+  GOVT: { divYield: 4.0, qualifiedPct: 0,   capGainDistPct: 0.0, usGovtPct: 100 }, // all-Treasury → state-exempt
+  VGIT: { divYield: 4.0, qualifiedPct: 0,   capGainDistPct: 0.0, usGovtPct: 100 },
+  VGSH: { divYield: 4.3, qualifiedPct: 0,   capGainDistPct: 0.0, usGovtPct: 100 },
+  SHY:  { divYield: 4.3, qualifiedPct: 0,   capGainDistPct: 0.0, usGovtPct: 100 },
+  VNQ:  { divYield: 3.9, qualifiedPct: 0,   capGainDistPct: 0.6, qbiEligible: true },
   VTEB: { divYield: 3.3, qualifiedPct: 0,   capGainDistPct: 0.0, muni: true },
   MUB:  { divYield: 3.3, qualifiedPct: 0,   capGainDistPct: 0.0, muni: true },
-  VMFXX:{ divYield: 4.5, qualifiedPct: 0,   capGainDistPct: 0.0 },
+  VMFXX:{ divYield: 4.5, qualifiedPct: 0,   capGainDistPct: 0.0, usGovtPct: 45 }, // govt money-market: ~45% state-exempt
+  // Commodities — physical metal = collectibles (≤28% on sale, ~no annual yield):
+  GLD:  { divYield: 0.0, qualifiedPct: 0,   capGainDistPct: 0.4, collectible: true },
+  IAU:  { divYield: 0.0, qualifiedPct: 0,   capGainDistPct: 0.4, collectible: true },
+  SLV:  { divYield: 0.0, qualifiedPct: 0,   capGainDistPct: 0.4, collectible: true },
+  SGOL: { divYield: 0.0, qualifiedPct: 0,   capGainDistPct: 0.4, collectible: true },
+  GLDM: { divYield: 0.0, qualifiedPct: 0,   capGainDistPct: 0.4, collectible: true },
+  // Commodities — futures funds (NOT collectibles): PDBC = ordinary-income distributions, no K-1:
+  PDBC: { divYield: 2.5, qualifiedPct: 0,   capGainDistPct: 0.0 },
+  // §1256 60/40 futures funds (K-1), marked to market annually:
+  DBC:  { divYield: 0.0, qualifiedPct: 0,   capGainDistPct: 4.0, sixtyForty: true },
+  GSG:  { divYield: 0.0, qualifiedPct: 0,   capGainDistPct: 4.0, sixtyForty: true },
+  DJP:  { divYield: 0.0, qualifiedPct: 0,   capGainDistPct: 4.0, sixtyForty: true },
 };
 
 /* Substantially-identical clones for wash-sale flagging (§13.7). */
@@ -614,7 +630,7 @@ function deriveRates(ref, taxSettings) {
                                             : (income > (ref.niitThreshold[fs] || 200000) ? ref.niitRate : 0);
   const r_state = (ov.stateRate    != null) ? ov.stateRate    : ((ref.stateRates[ts.state] || 0) / 100);
   const surtax  = (ov.surtaxApplies != null) ? (ov.surtaxApplies ? ref.maSurtax.rate : 0)
-                                             : ((ts.state === 'MA' && income >= 1000000) ? ref.maSurtax.rate : 0);
+                                             : ((ts.state === 'MA' && income >= ref.maSurtax.threshold) ? ref.maSurtax.rate : 0);
   const r_ord_eff  = r_ord + niit + r_state + surtax;
   const r_qdi_eff  = r_qdi + niit + r_state + surtax;
   const r_ltcg_eff = r_qdi_eff;
@@ -631,15 +647,29 @@ function tickerProfile(ticker, assetClass, taxData) {
   if (SEED_TAX_DATA[t]) return { profile: SEED_TAX_DATA[t], estimated: false, source: 'bundled' };
   return { profile: DEFAULT_TAX_PROFILE[assetClass] || DEFAULT_TAX_PROFILE.other, estimated: true, source: 'default' };
 }
+// Effective rate on the ordinary-income slice (interest / non-qualified divs):
+//  · REIT ordinary dividends get the §199A 20% QBI deduction on the FEDERAL
+//    portion only (qbiEligible) — NIIT and state are not reduced.
+//  · US Treasury interest is state-tax-exempt (usGovtPct) — state applies to
+//    only the non-government fraction.
+function ordinaryInterestRate(profile, rates) {
+  const govt = (profile.usGovtPct || 0) / 100;
+  const fedOrd = profile.qbiEligible ? 0.8 * rates.r_ord : rates.r_ord;
+  return fedOrd + rates.niit + rates.r_state * (1 - govt) + rates.surtax;
+}
 // §13.2 — annual $ tax drag for one taxable holding.
-// Collectible profiles (physical-metal ETFs) tax the gains component at the
-// collectibles rate (≤28% + NIIT/state) instead of the 15/20% LTCG rate.
+//  · Collectible profiles (physical-metal ETFs): gains at the collectibles rate (≤28%).
+//  · §1256 futures funds (sixtyForty): 60% long-term / 40% ordinary on gains.
 function holdingDrag(mv, profile, rates) {
   const dy = (profile.divYield || 0) / 100;
   const q  = (profile.qualifiedPct || 0) / 100;
   const cg = (profile.capGainDistPct || 0) / 100;
-  const cgRate = (profile.collectible && rates.r_collectible_eff != null) ? rates.r_collectible_eff : rates.r_ltcg_eff;
-  return mv * (dy * q * rates.r_qdi_eff + dy * (1 - q) * rates.r_ord_eff + cg * cgRate);
+  const rOrd = ordinaryInterestRate(profile, rates);
+  let rCg;
+  if (profile.collectible && rates.r_collectible_eff != null) rCg = rates.r_collectible_eff;
+  else if (profile.sixtyForty) rCg = 0.6 * rates.r_ltcg_eff + 0.4 * rates.r_ord_eff;
+  else rCg = rates.r_ltcg_eff;
+  return mv * (dy * q * rates.r_qdi_eff + dy * (1 - q) * rOrd + cg * rCg);
 }
 // Account tax-shelter classification from category + treatment.
 // Returns { sheltered:bool, reason:string }.
@@ -1139,7 +1169,9 @@ function muniRecs(snapshot) {
     if (r.profile && r.profile.muni) continue; // already a muni fund
     const y_t = (r.profile.divYield || 0);
     const y_m = DEFAULT_MUNI_YIELD;
-    const taxableAT = y_t * (1 - rates.r_ord_eff);
+    // Taxable-side rate honors any US-Treasury state-exemption in the bond (M1),
+    // so a Treasury-heavy fund isn't overtaxed vs the muni.
+    const taxableAT = y_t * (1 - ordinaryInterestRate(r.profile, rates));
     const muniAT = y_m * (1 - rates.r_state);
     if (muniAT <= taxableAT) continue;
     const savings = r.mv * (muniAT - taxableAT) / 100;
