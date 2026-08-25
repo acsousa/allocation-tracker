@@ -8,6 +8,10 @@ numbers live in a JSON file you save yourself. No server, no accounts, no
 network, no tracking. You can email the same file to a friend and they can use
 it too.
 
+![Allocation Tracker — Review › Overview](docs/screenshot.png)
+
+*Review › Overview: household allocation vs. goal, drift bars, category drill-down, and history — shown with demo data.*
+
 ---
 
 ## Highlights
@@ -52,6 +56,23 @@ Your data is saved to `my-portfolio.json`. Keep it in an iCloud/Dropbox folder
 for automatic version history. **The app never uploads or stores your data in
 the browser — the file is the only copy, so remember to Save.**
 
+### The five tabs
+
+- **Check-In** — record current values (pre-filled from last time). First run
+  shows the onboarding here.
+- **Review** — *Overview* (allocation vs. goal + drift), *Positions* (holdings
+  drill-down), *Goals* (targets, 529 glide paths, rationale journal), *Tax*
+  (drag scorecard + recommendations), *History*.
+- **Plan** — a quarterly plan auto-generated from your drift and tax posture;
+  edit the moves, simulate before/after, or record an explicit no-action.
+- **Report** — a print-to-PDF summary as of a snapshot, including the committed
+  plan and tax scorecard. Also exports CSV.
+- **Settings** — *Accounts*, *Household* (children + 529 glide assignments),
+  *Tax Profile* (bracket picker, gain budget, monthly savings), *Data & Privacy*
+  (save/load/export/start-fresh).
+
+Click the logo any time for the About/Help panel.
+
 ---
 
 ## Privacy & offline
@@ -77,9 +98,11 @@ Settings › Tax Profile.
 
 ## Development
 
-See [`CLAUDE.md`](CLAUDE.md) for architecture, conventions, and the golden
-rules (single file, zero network, never touch real user data, additive schema
-migrations, `$`+comma currency formatting).
+Golden rules: **one file** (all CSS/JS inline), **zero network requests**,
+**never touch a real user's data file** (test only on throwaway copies),
+**additive schema migrations only** (never drop data), and **`$`+comma currency
+formatting** everywhere. A local `CLAUDE.md` (untracked) holds the full agent
+guide with architecture and conventions.
 
 Quick checks:
 
