@@ -342,6 +342,21 @@ function rollupOf(detailId) { return (DETAIL_BY_ID[detailId] || {}).group || 'bl
 
 const ACCOUNT_CATEGORIES = ['Retirement', '529', 'Non-Retirement', 'Other'];
 const TAX_TREATMENTS = ['Pre-tax', 'Roth', 'Taxable', 'Tax-free'];
+// Account "vehicle" drives contribution limits + shelter status (a 401k and an
+// IRA are both "Retirement" but have very different limits).
+const ACCOUNT_VEHICLES = ['taxable', '401k', 'ira', 'hsa', '529', 'other'];
+const VEHICLE_LABELS = { taxable: 'Taxable / brokerage', '401k': '401(k) / 403(b) / TSP', ira: 'IRA (Roth or Traditional)', hsa: 'HSA', '529': '529 plan', other: 'Other' };
+function inferVehicle(a) {
+  const n = (a.name || '').toLowerCase();
+  if (/\bhsa\b/.test(n)) return 'hsa';
+  if (/\bira\b|roth ira|traditional ira|\bsep\b|\bsimple\b/.test(n)) return 'ira';
+  if (/401|403|457|\btsp\b/.test(n)) return '401k';
+  if (a.category === '529') return '529';
+  if (a.category === 'Retirement') return '401k';
+  if (a.category === 'Non-Retirement') return 'taxable';
+  return 'other';
+}
+function accountVehicle(a) { return (a && a.vehicle) || (a ? inferVehicle(a) : 'taxable'); }
 
 /* ---------------------------------------------------------------
    SEED TICKER MAP (spec §9 / §11) — best-effort, user-overridable.
@@ -671,14 +686,17 @@ function holdingDrag(mv, profile, rates) {
   else rCg = rates.r_ltcg_eff;
   return mv * (dy * q * rates.r_qdi_eff + dy * (1 - q) * rOrd + cg * rCg);
 }
-// Account tax-shelter classification from category + treatment.
+// Account tax-shelter classification from its vehicle + treatment.
 // Returns { sheltered:bool, reason:string }.
 function accountShelter(acct) {
   if (!acct) return { sheltered: false, reason: 'taxable' };
-  const cat = acct.category;
+  const v = accountVehicle(acct);
   const tt = acct.taxTreatment;
-  if (cat === 'Retirement') return { sheltered: true, reason: tt === 'Roth' ? 'tax-free (Roth)' : 'tax-deferred' };
-  if (cat === '529') return { sheltered: true, reason: 'tax-free (529)' };
+  if (v === 'hsa') return { sheltered: true, reason: 'tax-free (HSA)' };
+  if (v === '529') return { sheltered: true, reason: 'tax-free (529)' };
+  if (v === '401k' || v === 'ira') return { sheltered: true, reason: (tt === 'Roth' || tt === 'Tax-free') ? 'tax-free (Roth)' : 'tax-deferred' };
+  if (v === 'taxable') return { sheltered: false, reason: 'taxable' };
+  // 'other' → fall back to the tax treatment
   if (tt === 'Roth' || tt === 'Tax-free') return { sheltered: true, reason: 'tax-free' };
   if (tt === 'Pre-tax') return { sheltered: true, reason: 'tax-deferred' };
   return { sheltered: false, reason: 'taxable' };
@@ -693,7 +711,7 @@ function washCloneSet(ticker) {
 /* ---------------------------------------------------------------
    SCHEMA + MIGRATION (spec §10)
    --------------------------------------------------------------- */
-const SCHEMA_VERSION = 3;
+const SCHEMA_VERSION = 4;
 
 function defaultTaxSettings() {
   return {
@@ -746,6 +764,9 @@ function migrate(data) {
   } else if (!merged.taxData.tickers || typeof merged.taxData.tickers !== 'object') {
     merged.taxData.tickers = {};
   }
+  // v3 → v4: account "vehicle" (401k/IRA/HSA/529/taxable) for correct
+  // contribution limits + shelter status. Infer from name/category if absent.
+  for (const a of merged.accounts || []) { if (!a.vehicle) a.vehicle = inferVehicle(a); }
   // v1 → v2: US Total Market retired as a goal class; redistribute any goal
   // target on us_total into Large/Mid/Small by the default split.
   if (v < 2) {
@@ -1208,7 +1229,18 @@ function washWarnings(plan) {
   return warns;
 }
 
-/* §13.8 savings directive — steer householdMonthlySavings by headroom
+/* Contribution limit for an account's vehicle (annual, employee side). */
+function vehicleContribLimit(vehicle, lim) {
+  if (vehicle === '401k') return lim.k401_elective; // 401(k)/403(b)/TSP elective deferral
+  if (vehicle === 'ira') return lim.ira;             // IRA (Roth or Traditional)
+  if (vehicle === 'hsa') return lim.hsa_self;        // HSA (self-only default; family is higher)
+  return 0; // taxable / 529 / other: no elective cap enforced here
+}
+// Fill priority (§13.8): HSA first (triple tax advantage), then 401k, IRA, 529.
+const VEHICLE_FILL_PRIORITY = { hsa: 1, '401k': 2, ira: 3, '529': 4 };
+
+/* Savings directive — steer householdMonthlySavings by contribution headroom
+   (capped on each account's VEHICLE, not its tax treatment) in priority order,
    then toward the most-underweight classes. Returns { monthly, lines[],
    text, splits[] } or null when no savings figure is set. */
 function savingsDirective(snapshot) {
@@ -1217,18 +1249,18 @@ function savingsDirective(snapshot) {
   if (monthly <= 0) return null;
   const lim = REFERENCE_DATA.contribLimits;
   const ytd = ts.ytdContributions || {};
-  // Headroom per tax-advantaged account (annual limit − YTD), simple model.
+  // Headroom per tax-advantaged account (vehicle limit − YTD).
   const headrooms = [];
   for (const a of portfolio.accounts) {
     if (a.status === 'archived') continue;
-    let cap = 0;
-    if (a.category === 'Retirement') cap = a.taxTreatment === 'Pre-tax' || a.taxTreatment === 'Roth' ? lim.k401_elective : lim.ira;
-    else if (a.category === '529') cap = 0; // 529s have high limits; steered by glide need, not capped here
-    else continue;
+    const vehicle = accountVehicle(a);
+    const cap = vehicleContribLimit(vehicle, lim);
+    if (cap <= 0) continue; // taxable / 529 / other → not part of the capped fill
     const used = Number(ytd[a.id]) || 0;
     const room = Math.max(0, cap - used);
-    if (room > 0) headrooms.push({ accountId: a.id, name: a.name, room, category: a.category });
+    if (room > 0) headrooms.push({ accountId: a.id, name: a.name, room, vehicle, priority: VEHICLE_FILL_PRIORITY[vehicle] || 9 });
   }
+  headrooms.sort((a, b) => a.priority - b.priority); // HSA → 401k → IRA → 529
   // Most-underweight classes from household drift (targets − actual).
   const under = underweightClasses(snapshot);
   const topClass = under.length ? under[0] : null;
@@ -1250,7 +1282,9 @@ function savingsDirective(snapshot) {
     splits.push({ accountId: 'taxable', ticker: tkr, pctOrAmt: perMo });
     lines.push(`Remainder to taxable: ~${fmtMoney(perMo)}/mo → ${tkr}`);
   }
-  const text = lines.join('; ');
+  // The tool can't see your employer match — flag it as the true first priority.
+  if (headrooms.some(h => h.vehicle === '401k')) lines.unshift('First capture any employer 401(k) match');
+  const text = lines.join(' · ');
   return { monthly, lines, text, splits };
 }
 
@@ -2845,7 +2879,7 @@ function renderGoal() {
           <button class="btn btn-primary" style="margin-left:auto;align-self:flex-end;" data-act="goal-save" ${canSave ? '' : 'disabled'}>Save goal change</button>
         </div>
         ${!sumOk ? '<span class="text-muted" style="font-size:12px;color:var(--color-warn);">Targets must sum to 100% to save.</span>' : ''}
-        ${sumOk && !draft.rationale.trim() ? '<span class="text-muted" style="font-size:12px;">A rationale note is required — an empty goal change is not allowed (§7.6).</span>' : ''}
+        ${sumOk && !draft.rationale.trim() ? '<span class="text-muted" style="font-size:12px;">A rationale note is required — an empty goal change is not allowed.</span>' : ''}
       </div>
     </div>
     <div class="panel">
@@ -2882,7 +2916,7 @@ function renderGlidePaths() {
       <div style="padding:10px 16px;"><input class="input" style="max-width:520px;" placeholder="Glide rationale (optional)" value="${esc(gp ? gp.rationale || '' : '')}" data-act="glide-rationale" data-child="${esc(child.id)}"></div>
     </div>`;
   }).join('');
-  return `<div class="panel"><div class="panel-hd"><h4>529 glide paths</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">per child · measured instead of the household goal (§12.3)</span></div>
+  return `<div class="panel"><div class="panel-hd"><h4>529 glide paths</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">per child · measured instead of the household goal</span></div>
     <div style="padding:20px;display:flex;flex-direction:column;gap:20px;">${blocks}</div></div>`;
 }
 
@@ -3172,7 +3206,7 @@ function renderPlan() {
     return `<div class="toolbar no-print"><div class="crumb"><span>${title}</span></div>${snapPickerHTML()}</div>
       <div class="panel"><div class="panel-hd"><h4>Auto-generate this quarter’s plan</h4></div>
         <div style="padding:20px;">
-          <p class="text-muted" style="margin:0 0 14px;max-width:74ch;font-size:13px;">Builds a plan automatically from your <b>tax posture</b> (location swaps &amp; muni, §13.5–13.6) and your <b>drift vs goal</b> (§13.4), plus a <b>savings directive</b> (§13.8). You can then edit every move. Or record an explicit no-action decision.</p>
+          <p class="text-muted" style="margin:0 0 14px;max-width:74ch;font-size:13px;">Builds a plan automatically from your <b>tax posture</b> (location swaps &amp; muni) and your <b>drift vs goal</b>, plus a <b>savings directive</b> for new contributions. You can then edit every move. Or record an explicit no-action decision.</p>
           <div style="display:flex;gap:10px;flex-wrap:wrap;">
             <button class="btn btn-primary" data-act="plan-generate">Generate plan</button>
             <button class="btn btn-secondary" data-act="plan-noaction">Record “no action — within bands”</button>
@@ -3195,7 +3229,7 @@ function renderPlan() {
   const nDrift = plan.moves.filter(m => m.source === 'drift').length;
   const explain = `<div class="panel"><div class="panel-hd"><h4>How this plan was built</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">auto-generated · fully editable</span></div>
     <div style="padding:14px 20px;font-size:12.5px;line-height:1.6;" class="text-muted">
-      Combines <b>tax moves</b> — location swaps &amp; muni comparisons (§13.5–13.6) — with <b>rebalancing moves</b> from your drift vs goal, placed in sheltered accounts first to avoid tax (§13.4), plus a <b>savings directive</b> steering new contributions (§13.8). Every row is a suggestion — edit, add, or delete it. Nothing is ever executed.
+      Combines <b>tax moves</b> — location swaps &amp; muni comparisons — with <b>rebalancing moves</b> from your drift vs goal, placed in sheltered accounts first to avoid tax, plus a <b>savings directive</b> steering new contributions. Every row is a suggestion — edit, add, or delete it. Nothing is ever executed.
       <div style="margin-top:8px;color:var(--color-text);"><b>${nTax}</b> tax · <b>${nDrift}</b> rebalancing move${nDrift === 1 ? '' : 's'}${plan.directive ? ' · 1 savings directive' : ''}.</div>
     </div></div>`;
 
@@ -3227,7 +3261,7 @@ function renderPlan() {
     </div></div>` : '';
 
   // Savings directive.
-  const dirHTML = plan.directive ? `<div class="panel"><div class="panel-hd"><h4>Savings directive</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">§13.8 · until next check-in</span></div>
+  const dirHTML = plan.directive ? `<div class="panel"><div class="panel-hd"><h4>Savings directive</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">until next check-in</span></div>
       <div style="padding:16px 20px;font-size:13px;">${esc(plan.directive.text || '')}</div></div>`
     : (dir ? `<div class="panel"><div class="panel-hd"><h4>Savings directive</h4></div><div style="padding:16px 20px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><span style="font-size:13px;">${esc(dir.text)}</span><button class="btn btn-sm btn-secondary" style="margin-left:auto;" data-act="plan-adddir">Attach to plan</button></div></div>` : '');
 
@@ -3442,7 +3476,7 @@ function renderAccounts() {
   const acctRow = (a, i, n) => `<tr>
       <td style="font-family:var(--font-heading);font-size:15px;">${esc(a.name)}</td>
       <td class="text-muted" style="font-size:13px;">${esc(a.institution || '')}</td>
-      <td>${a.taxTreatment ? `<span class="tag tag-outline">${esc(a.taxTreatment)}</span>` : ''} ${a.category === '529' && a.childId ? `<span class="tag tag-accent-2">${esc((childById(a.childId) || {}).label || '')}</span>` : ''}</td>
+      <td><span class="tag tag-neutral" title="${esc(VEHICLE_LABELS[accountVehicle(a)] || '')}">${esc(accountVehicle(a))}</span> ${a.taxTreatment ? `<span class="tag tag-outline">${esc(a.taxTreatment)}</span>` : ''} ${a.category === '529' && a.childId ? `<span class="tag tag-accent-2">${esc((childById(a.childId) || {}).label || '')}</span>` : ''}</td>
       <td class="tnum text-muted" style="font-size:13px;">${activeHoldings(a.id).length} holdings</td>
       <td style="text-align:right;white-space:nowrap;">
         <button class="btn btn-ghost btn-sm" data-act="move-acct" data-account="${esc(a.id)}" data-dir="-1" ${i === 0 ? 'disabled' : ''}>↑</button>
@@ -3527,10 +3561,10 @@ function renderTaxProfile() {
       <div style="padding:0 20px 18px;"><button class="btn btn-sm btn-secondary" data-act="ov-clear">Clear all overrides</button></div>
     </div>` : `<div style="padding:2px 2px 6px;"><button class="btn btn-sm btn-secondary" data-act="ov-toggle">Advanced: override derived rates…</button></div>`;
 
-  const advAccts = portfolio.accounts.filter(a => a.status !== 'archived' && (a.category === 'Retirement' || a.category === '529'));
+  const advAccts = portfolio.accounts.filter(a => a.status !== 'archived' && vehicleContribLimit(accountVehicle(a), REFERENCE_DATA.contribLimits) > 0);
   const ytd = ts.ytdContributions || {};
   const ytdRows = advAccts.length ? advAccts.map(a => `<div class="drift-row" style="grid-template-columns:1fr 120px;gap:10px;align-items:center;">
-      <span style="font-size:13px;">${esc(a.name)} <span class="text-muted">· ${esc(a.category)}</span></span>
+      <span style="font-size:13px;">${esc(a.name)} <span class="text-muted">· ${esc(accountVehicle(a))} limit ${fmtMoney(vehicleContribLimit(accountVehicle(a), REFERENCE_DATA.contribLimits))}</span></span>
       <input class="input tnum" inputmode="decimal" style="text-align:right;min-height:30px;" data-act="ts-ytd" data-account="${esc(a.id)}" value="${ytd[a.id] ? fmtEditNum(ytd[a.id]) : ''}" placeholder="0">
     </div>`).join('') : '<span class="text-muted" style="font-size:13px;">No tax-advantaged accounts yet.</span>';
 
@@ -3553,7 +3587,7 @@ function renderTaxProfile() {
   <div class="panel"><div class="panel-hd"><h4>Planning inputs</h4></div>
     <div style="padding:20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;">
       <div class="field"><label>Annual realized-gain budget ($)</label><input class="input tnum" inputmode="decimal" data-act="ts-gainbudget" value="${ts.gainBudgetAnnual ? fmtEditNum(ts.gainBudgetAnnual) : ''}" placeholder="0"><span class="text-muted" style="font-size:11px;">Caps taxable long-term-gain sales the Plan proposes.</span></div>
-      <div class="field"><label>Household savings ($/month)</label><input class="input tnum" inputmode="decimal" data-act="ts-savings" value="${ts.householdMonthlySavings ? fmtEditNum(ts.householdMonthlySavings) : ''}" placeholder="0"><span class="text-muted" style="font-size:11px;">Drives the Plan’s savings directive (§13.8).</span></div>
+      <div class="field"><label>Household savings ($/month)</label><input class="input tnum" inputmode="decimal" data-act="ts-savings" value="${ts.householdMonthlySavings ? fmtEditNum(ts.householdMonthlySavings) : ''}" placeholder="0"><span class="text-muted" style="font-size:11px;">Drives the Plan’s savings directive.</span></div>
     </div>
     <div class="panel-hd" style="border-top:1px solid var(--color-divider);"><h4 style="font-size:13px;">YTD contributions (for headroom)</h4></div>
     <div style="padding:16px 20px 20px;display:flex;flex-direction:column;gap:8px;max-width:520px;">${ytdRows}</div>
@@ -3638,6 +3672,9 @@ function dialogHTML() {
     const catOpts = CATEGORY_ORDER.map(c => `<option value="${esc(c)}" ${a && a.category === c ? 'selected' : ''}>${esc(catLabel(c))}</option>`).join('');
     const childOpts = ['<option value="">— none —</option>'].concat(portfolio.children.map(c => `<option value="${esc(c.id)}" ${a && a.childId === c.id ? 'selected' : ''}>${esc(c.label)}</option>`)).join('');
     const taxOpts = ['<option value="">— optional —</option>'].concat(TAX_TREATMENTS.map(t => `<option ${a && a.taxTreatment === t ? 'selected' : ''}>${t}</option>`)).join('');
+    const vehOpts = ['<option value="">— auto from name —</option>'].concat(ACCOUNT_VEHICLES.map(veh => `<option value="${veh}" ${a && accountVehicle(a) === veh ? 'selected' : ''}>${esc(VEHICLE_LABELS[veh])}</option>`)).join('');
+    const lim401 = REFERENCE_DATA.contribLimits.k401_elective.toLocaleString('en-US');
+    const limIra = REFERENCE_DATA.contribLimits.ira.toLocaleString('en-US');
     inner = `<div class="dialog-title">${a ? 'Edit account' : 'Add account'}</div>
       <div class="field"><label>Account name</label><input class="input" id="f-name" value="${esc(a ? a.name : '')}" placeholder="e.g. Fidelity 401(k)"></div>
       <div class="field"><label>Institution (optional)</label><input class="input" id="f-inst" value="${esc(a ? a.institution || '' : '')}" placeholder="e.g. Fidelity"></div>
@@ -3645,6 +3682,8 @@ function dialogHTML() {
         <div class="field" style="flex:1;"><label>Category</label><select class="input" id="f-cat" data-act="acct-cat">${catOpts}</select></div>
         <div class="field" style="flex:1;"><label>Tax treatment</label><select class="input" id="f-tax">${taxOpts}</select></div>
       </div>
+      <div class="field"><label>Account vehicle</label><select class="input" id="f-vehicle">${vehOpts}</select>
+        <span class="text-muted" style="font-size:11px;">Sets contribution limits &amp; shelter status — distinguishes a 401(k) ($${lim401} limit) from an IRA ($${limIra}); pick HSA for a health savings account.</span></div>
       <div class="field" id="f-other-wrap" style="display:${a && a.category === 'Other' ? 'block' : 'none'};"><label>Custom category name (required for Other)</label>
         <input class="input" id="f-catlabel" list="other-cats" value="${esc(a ? a.categoryLabel || '' : '')}" placeholder="e.g. Family Trust, HSA, UTMA">
         <datalist id="other-cats">${otherLabels().map(l => `<option value="${esc(l)}"></option>`).join('')}</datalist>
@@ -4048,14 +4087,16 @@ function saveAccountFromDialog(acctId) {
   const taxTreatment = document.getElementById('f-tax').value || undefined;
   const categoryLabel = category === 'Other' ? document.getElementById('f-catlabel').value.trim() : undefined;
   const childId = category === '529' ? (document.getElementById('f-child').value || undefined) : undefined;
+  let vehicle = document.getElementById('f-vehicle').value;
   if (category === 'Other' && !categoryLabel) { toast('Other needs a category label.'); return; }
   if (category === '529' && !childId) { toast('Pick a child for the 529 (add one in Accounts first).'); return; }
+  if (!vehicle) vehicle = inferVehicle({ name, category }); // "— auto —" → infer from name/category
   if (acctId) {
     const a = accountById(acctId);
-    Object.assign(a, { name, category, institution, taxTreatment, categoryLabel, childId });
+    Object.assign(a, { name, category, institution, taxTreatment, categoryLabel, childId, vehicle });
   } else {
     const maxOrder = Math.max(-1, ...portfolio.accounts.filter(a => a.category === category).map(a => a.sortOrder ?? 0));
-    portfolio.accounts.push({ id: uid('acct'), name, institution, category, categoryLabel, taxTreatment, childId, sortOrder: maxOrder + 1, status: 'active' });
+    portfolio.accounts.push({ id: uid('acct'), name, institution, category, categoryLabel, taxTreatment, childId, vehicle, sortOrder: maxOrder + 1, status: 'active' });
   }
   markDirty(); closeDialog();
 }
