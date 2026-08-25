@@ -179,12 +179,16 @@
   /* — nav / tables — */
   .nav { display: flex; align-items: center; gap: var(--space-4); padding: var(--space-3) var(--space-6); border-bottom: 1px solid var(--color-divider); }
   .nav-brand { font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 18px; }
-  .nav a { color: inherit; text-decoration: none; font-size: 14px; cursor: pointer; }
-  .nav a:hover, .nav a[aria-current='page'] { color: var(--color-accent); }
-  .subnav { display: flex; gap: var(--space-5); padding: 9px var(--space-6); border-bottom: 1px solid var(--color-divider); background: color-mix(in srgb, var(--color-text) 2%, transparent); flex-wrap: wrap; }
-  .subnav a { color: color-mix(in srgb, var(--color-text) 55%, transparent); text-decoration: none; font-size: 13px; cursor: pointer; padding-bottom: 2px; border-bottom: 2px solid transparent; }
-  .subnav a:hover { color: var(--color-text); }
-  .subnav a.subnav-active { color: var(--color-accent); border-bottom-color: var(--color-accent); }
+  .nav a { color: inherit; text-decoration: none; font-size: 14px; cursor: pointer; letter-spacing: 0.01em; }
+  .nav a:hover { color: var(--color-accent); }
+  .nav a[aria-current='page'] { color: var(--color-accent); font-weight: 700; }
+  /* Sub-tab strip under a master tab — flush with the content padding, underline indicator. */
+  .subnav { display: flex; gap: 2px; padding: 0 var(--space-6); border-bottom: 1px solid var(--color-divider); background: color-mix(in srgb, var(--color-text) 3%, transparent); flex-wrap: wrap; }
+  .subnav a { color: color-mix(in srgb, var(--color-text) 60%, transparent); text-decoration: none; font-size: 13px; cursor: pointer; padding: 10px 14px; border-bottom: 2px solid transparent; margin-bottom: -1px; line-height: 1; white-space: nowrap; }
+  .subnav a:hover { color: var(--color-text); background: color-mix(in srgb, var(--color-text) 5%, transparent); }
+  .subnav a.subnav-active { color: var(--color-accent); border-bottom-color: var(--color-accent); font-weight: 600; }
+  /* Acronym helper text on hover (§ tooltips) */
+  abbr[title] { text-decoration: underline dotted; text-underline-offset: 2px; cursor: help; text-decoration-thickness: 1px; }
   .table { width: 100%; border-collapse: collapse; font-size: 14px; }
   .table th { text-align: left; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: color-mix(in srgb, var(--color-text) 60%, transparent); padding: var(--space-2); border-bottom: 1px solid var(--color-divider); }
   .table td { padding: var(--space-2); border-bottom: 1px solid color-mix(in srgb, var(--color-text) 8%, transparent); }
@@ -1005,14 +1009,16 @@ function holdingDragRows(snapshot, rates) {
     const shelter = accountShelter(acct);
     const mv = Number(v.marketValue);
     const { profile, estimated, source } = tickerProfile(h.ticker, h.assetClass, portfolio.taxData);
-    const drag = shelter.sheltered ? 0 : holdingDrag(mv, profile, rates);
+    const wouldBeDrag = holdingDrag(mv, profile, rates); // drag if this holding sat in a taxable account
+    const drag = shelter.sheltered ? 0 : wouldBeDrag;
     const cb = v.costBasis != null ? v.costBasis : (h.costBasis != null ? h.costBasis : null);
     rows.push({
       holdingId: h.id, ticker: h.ticker || '', name: h.name || '',
       accountId: h.accountId, accountName: acct.name || '(account)',
       assetClass: h.assetClass, mv, costBasis: cb == null ? null : Number(cb),
       sheltered: shelter.sheltered, reason: shelter.reason,
-      profile, estimated, source, drag,
+      profile, estimated, source, drag, wouldBeDrag,
+      avoided: shelter.sheltered ? wouldBeDrag : 0, // tax shielded by good placement
       dragPerDollar: shelter.sheltered ? 0 : holdingDrag(1, profile, rates),
     });
   }
@@ -1024,10 +1030,11 @@ function holdingDragRows(snapshot, rates) {
 function taxScorecard(snapshot) {
   const rates = taxRates();
   const rows = holdingDragRows(snapshot, rates);
-  let totalDrag = 0, taxableAssets = 0, locNum = 0, locDen = 0;
+  let totalDrag = 0, taxableAssets = 0, shieldedAssets = 0, taxShielded = 0, locNum = 0, locDen = 0;
   for (const r of rows) {
     totalDrag += r.drag;
-    if (!r.sheltered) taxableAssets += r.mv;
+    if (r.sheltered) { shieldedAssets += r.mv; taxShielded += r.avoided; }
+    else taxableAssets += r.mv;
     if (INEFFICIENT_CLASSES.includes(r.assetClass)) {
       locDen += r.mv;
       if (r.sheltered) locNum += r.mv;
@@ -1035,7 +1042,7 @@ function taxScorecard(snapshot) {
   }
   const dragPct = taxableAssets > 0 ? (totalDrag / taxableAssets) * 100 : 0;
   const locScore = locDen > 0 ? (locNum / locDen) * 100 : null;
-  return { rates, rows, totalDrag, taxableAssets, dragPct, locScore, locNum, locDen };
+  return { rates, rows, totalDrag, taxableAssets, shieldedAssets, taxShielded, dragPct, locScore, locNum, locDen };
 }
 
 const EFFICIENT_FOR_TAXABLE = ['us_large', 'us_total', 'intl_dev', 'us_mid', 'us_small'];
@@ -1130,12 +1137,15 @@ function washWarnings(plan) {
   if (plan.directive && plan.directive.splits) {
     for (const s of plan.directive.splits) if (s.ticker) for (const t of washCloneSet(s.ticker)) buys.add(t);
   }
-  const warns = [];
+  const warns = [], seen = new Set();
   for (const m of plan.moves || []) {
     if (!m.sellTicker) continue;
+    const t0 = m.sellTicker.toUpperCase();
+    if (seen.has(t0)) continue; // one warning per sold ticker
     const set = washCloneSet(m.sellTicker);
     if (set.some(t => buys.has(t))) {
-      warns.push({ ticker: m.sellTicker, clones: set.filter(t => t !== m.sellTicker.toUpperCase()) });
+      seen.add(t0);
+      warns.push({ ticker: m.sellTicker, clones: set.filter(t => t !== t0) });
     }
   }
   return warns;
@@ -1175,13 +1185,13 @@ function savingsDirective(snapshot) {
     const perMo = fill / 12;
     const tkr = topClass ? topClass.suggestTicker : 'VTI';
     splits.push({ accountId: h.accountId, ticker: tkr, pctOrAmt: perMo });
-    lines.push(`Fill ${h.name}: ~$${fmtMoney(perMo)}/mo → ${tkr}`);
+    lines.push(`Fill ${h.name}: ~${fmtMoney(perMo)}/mo → ${tkr}`);
   }
   if (remainingAnnual > 0) {
     const perMo = remainingAnnual / 12;
     const tkr = topClass ? topClass.suggestTicker : 'VTI';
     splits.push({ accountId: 'taxable', ticker: tkr, pctOrAmt: perMo });
-    lines.push(`Remainder to taxable: ~$${fmtMoney(perMo)}/mo → ${tkr}`);
+    lines.push(`Remainder to taxable: ~${fmtMoney(perMo)}/mo → ${tkr}`);
   }
   const text = lines.join('; ');
   return { monthly, lines, text, splits };
@@ -1566,6 +1576,16 @@ function fmtMoneySigned2(n) { const v = Number(n) || 0; return (v >= 0 ? '+' : '
 function fmtEditNum(v) { const n = parseNum(v); return n == null ? '' : fmtNum2(n); }
 function fmtPct(n, dp) { return (Number(n) || 0).toFixed(dp == null ? 1 : dp) + '%'; }
 function fmtPctSigned(n) { const v = Number(n) || 0; return (v > 0 ? '+' : v < 0 ? '−' : '±') + Math.abs(v).toFixed(1) + '%'; }
+
+/* Acronym with hover helper text (full name). */
+function abbr(short, full) { return `<abbr title="${esc(full)}">${esc(short)}</abbr>`; }
+
+/* CY quarter label from an ISO date, e.g. 2026-08-15 → "CY Q3 Plan (2026-08-15)". */
+function planTitle(date) {
+  const mo = Number((date || '').slice(5, 7)) || 1;
+  const q = Math.floor((mo - 1) / 3) + 1;
+  return `CY Q${q} Plan (${esc(date)})`;
+}
 function accountsSorted(pred) {
   return portfolio.accounts
     .filter(a => a.status !== 'archived' && (!pred || pred(a)))
@@ -2000,6 +2020,8 @@ function renderDashboard() {
     const acct = accountById(drill.accountId);
     if (acct && acct.category === '529' && acct.childId) {
       glideInfo = glideTargets(acct.childId, snap.date);
+      // Age comes from the child's birth year (Settings › Household) even with no glide path defined yet.
+      if (!glideInfo) { const ch = childById(acct.childId); if (ch && ch.birthYear != null) glideInfo = { age: childAge(ch.birthYear, snap.date), targets: null }; }
       goalTargets = glideInfo && glideInfo.targets; goalNote = '529 glide band';
     } else { goalTargets = goal && rollupTargets(goal, level); goalNote = goal ? 'Household goal ' + goal.effectiveDate : null; }
   } else if (is529) {
@@ -2233,14 +2255,15 @@ function dashCategoriesHTML(snap) {
     const child = childById(acct.childId);
     const a = allocate(accountHoldings(acct.id), snap);
     const g = glideTargets(acct.childId, snap.date);
+    const age = child && child.birthYear != null ? childAge(child.birthYear, snap.date) : null;
     const share = gt > 0 ? (a.total / gt) * 100 : 0;
     const gr = toRows(a.group, a.total, 'group');
-    let meta = 'age ' + (g ? g.age : '?');
+    let meta = age != null ? 'age ' + age : 'set birth year in Settings › Household';
     if (g && g.targets) {
       const gd = computeDrift(gr, a.total, g.targets, 999).filter(x => x.targetPct > 0);
       meta = 'actual→goal: ' + gd.map(x => `${x.label} ${x.actualPct.toFixed(0)}%→${x.targetPct}%`).slice(0, 2).join(' · ');
     }
-    cards.push(catCardHTML(`529 · ${child ? child.label : ''} (${g ? g.age : '?'})`, acct.name, a.total, share, meta, { level: 'account', accountId: acct.id }));
+    cards.push(catCardHTML(`529 · ${child ? child.label : ''}${age != null ? ` (${age})` : ''}`, acct.name, a.total, share, meta, { level: 'account', accountId: acct.id }));
   }
   plainCatCard('Non-Retirement');
   // Other — one card per custom category label
@@ -2830,38 +2853,47 @@ function renderTax() {
 
   const scoreCls = sc.locScore == null ? 'text-muted' : sc.locScore >= 90 ? 'ok' : sc.locScore >= 70 ? 'warn' : 'crit';
   const scoreColor = sc.locScore == null ? 'inherit' : `var(--color-${scoreCls})`;
-  const tile = (label, big, sub, color) => `<div class="blueprint" style="flex:1;min-width:190px;padding:16px 18px;">
+  const tile = (label, big, sub, color) => `<div class="blueprint" style="flex:1;min-width:175px;padding:16px 18px;">
       <div class="kicker" style="font-size:10px;">${label}</div>
-      <div class="tnum" style="font-family:var(--font-heading);font-size:30px;line-height:1.1;${color ? `color:${color};` : ''}">${big}</div>
+      <div class="tnum" style="font-family:var(--font-heading);font-size:28px;line-height:1.1;${color ? `color:${color};` : ''}">${big}</div>
       <div class="text-muted" style="font-size:12px;">${sub}</div></div>`;
 
   const scorecard = `<div style="display:flex;gap:14px;flex-wrap:wrap;">
     ${tile('Location Efficiency', sc.locScore == null ? 'N/A' : fmtPct(sc.locScore, 0), sc.locScore == null ? 'no tax-inefficient assets' : `${fmtMoney(sc.locNum)} of ${fmtMoney(sc.locDen)} inefficient assets sheltered`, scoreColor)}
     ${tile('Annual tax drag', fmtMoney(sc.totalDrag), `${fmtPct(sc.dragPct, 2)} of ${fmtMoney(sc.taxableAssets)} taxable`, sc.totalDrag > 0 ? 'var(--color-warn)' : 'var(--color-ok)')}
-    ${tile('Effective rates', fmtPct(rates.r_qdi_eff * 100, 1), `QDI/LTCG · ordinary ${fmtPct(rates.r_ord_eff * 100, 1)}`, '')}
+    ${tile('Tax shielded ✓', fmtMoney(sc.taxShielded), `avoided/yr by sheltering ${fmtMoney(sc.shieldedAssets)}`, 'var(--color-ok)')}
+    ${tile('Effective rates', fmtPct(rates.r_qdi_eff * 100, 1), `${abbr('QDI', 'Qualified dividends')}/${abbr('LTCG', 'Long-term capital gains')} · ordinary ${fmtPct(rates.r_ord_eff * 100, 1)}`, '')}
   </div>`;
 
   const rateLine = `<div class="panel"><div style="padding:12px 18px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;font-size:12px;">
       <span class="tag tag-accent">TY ${REFERENCE_DATA.taxYear}</span>
       <span class="text-muted">${esc(FILING_STATUS_LABELS[rates.fs] || rates.fs)} · ${esc(REFERENCE_DATA.incomeBands.find(b => b.income === rates.income)?.label || '')}${portfolio.taxSettings.state ? ' · ' + esc(portfolio.taxSettings.state) : ''}</span>
-      <span class="text-muted">Ordinary ${fmtPct(rates.r_ord * 100, 0)} · QDI/LTCG ${fmtPct(rates.r_qdi * 100, 0)} · NIIT ${fmtPct(rates.niit * 100, 1)} · State ${fmtPct(rates.r_state * 100, 2)}${rates.surtax ? ' · MA surtax ' + fmtPct(rates.surtax * 100, 0) : ''}</span>
+      <span class="text-muted">Ordinary ${fmtPct(rates.r_ord * 100, 0)} · ${abbr('QDI', 'Qualified dividends')}/${abbr('LTCG', 'Long-term capital gains')} ${fmtPct(rates.r_qdi * 100, 0)} · ${abbr('NIIT', 'Net Investment Income Tax (3.8%)')} ${fmtPct(rates.niit * 100, 1)} · State ${fmtPct(rates.r_state * 100, 2)}${rates.surtax ? ' · ' + abbr('MA', 'Massachusetts') + ' surtax ' + fmtPct(rates.surtax * 100, 0) : ''}</span>
       <a data-act="nav" data-view="taxprofile" style="margin-left:auto;cursor:pointer;color:var(--color-accent);">Edit tax profile →</a>
+    </div></div>`;
+
+  const guide = `<div class="panel"><div class="panel-hd"><h4>How to read this</h4></div>
+    <div style="padding:14px 20px;font-size:12.5px;line-height:1.65;" class="text-muted">
+      <p style="margin:0 0 8px;"><b>${abbr('Yield', 'Dividend yield')}</b> = the fund’s annual dividends as a % of its value. <b>${abbr('Qual', 'Qualified dividends')}</b> = the share of those dividends taxed at the lower long-term rate instead of your ordinary rate (bond interest is 0% qualified; broad stock funds ≈ 95–100%). <b>${abbr('Cap Gain', 'Capital-gains distributions')}</b> = gains the fund pays out each year as a % of value (index funds ≈ 0; active funds higher).</p>
+      <p style="margin:0;"><b>Annual drag</b> = Value × [ Yield×Qual×${abbr('QDI', 'Qualified-dividend / long-term rate')} + Yield×(1−Qual)×ordinary + Cap&nbsp;Gain×long-term ], at your effective rates. Sheltered accounts (${abbr('IRA', 'Individual Retirement Account')} / 401k / ${abbr('HSA', 'Health Savings Account')} / 529) pay $0 now — the “Tax shielded” tile is that saving. Fund figures come from bundled ${REFERENCE_DATA.taxYear} data or asset-class defaults (rows marked “est.”).</p>
     </div></div>`;
 
   const dragRows = sc.rows.map(r => {
     const p = r.profile;
     const dragCell = r.sheltered
-      ? `<span class="text-muted">$0 · ${esc(r.reason)}</span>`
+      ? `<span class="text-muted" title="${esc(r.reason)} — would cost ${fmtMoney2(r.wouldBeDrag)}/yr if held in a taxable account">$0</span>`
       : `<span class="tnum">${fmtMoney2(r.drag)}</span>`;
     return `<tr>
-      <td style="font-family:var(--font-heading);">${esc(r.ticker || '—')}${r.estimated ? ' <span class="tag tag-neutral" style="font-size:9px;padding:1px 5px;">est.</span>' : ''}</td>
+      <td style="font-family:var(--font-heading);">${esc(r.ticker || '—')}${r.estimated ? ' <span class="tag tag-neutral" style="font-size:9px;padding:1px 5px;" title="Estimated from asset-class defaults — no bundled data for this ticker">est.</span>' : ''}</td>
       <td class="text-muted" style="font-size:12px;">${esc(r.accountName)}</td>
       <td class="text-muted" style="font-size:12px;">${esc(detailLabel(r.assetClass))}</td>
       <td class="tnum" style="text-align:right;">${fmtMoney(r.mv)}</td>
-      <td class="tnum text-muted" style="text-align:right;font-size:12px;">${(p.divYield || 0).toFixed(1)}% / ${(p.qualifiedPct || 0)}%q / ${(p.capGainDistPct || 0).toFixed(1)}%cg</td>
+      <td class="tnum text-muted" style="text-align:right;">${(p.divYield || 0).toFixed(1)}%</td>
+      <td class="tnum text-muted" style="text-align:right;">${(p.qualifiedPct || 0)}%</td>
+      <td class="tnum text-muted" style="text-align:right;">${(p.capGainDistPct || 0).toFixed(1)}%</td>
       <td style="text-align:right;">${dragCell}</td>
     </tr>`;
-  }).join('') || '<tr><td colspan="6" class="text-muted" style="padding:14px 20px;">No holdings in this snapshot.</td></tr>';
+  }).join('') || '<tr><td colspan="8" class="text-muted" style="padding:14px 20px;">No holdings in this snapshot.</td></tr>';
 
   const recCard = (r, i) => {
     const savings = `${fmtMoney2(r.savingsPerYr)}/yr`;
@@ -2884,9 +2916,19 @@ function renderTax() {
   return `<div class="toolbar no-print"><div class="crumb"><span>Tax Analysis</span></div>${snapPickerHTML()}</div>
     ${scorecard}
     ${rateLine}
-    <div class="panel"><div class="panel-hd"><h4>Per-holding tax drag</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">taxable accounts only · worst first</span></div>
-      <table class="table"><thead><tr><th>Ticker</th><th>Account</th><th>Class</th><th style="text-align:right;">Value</th><th style="text-align:right;">yield / qual / capgain</th><th style="text-align:right;">Drag $/yr</th></tr></thead>
-        <tbody>${dragRows}</tbody></table></div>
+    <div class="panel"><div class="panel-hd"><h4>Per-holding tax drag</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">worst first · sheltered rows show $0</span></div>
+      <div style="overflow-x:auto;"><table class="table" style="table-layout:fixed;min-width:640px;">
+        <colgroup><col style="width:13%"><col style="width:21%"><col style="width:21%"><col style="width:13%"><col style="width:8%"><col style="width:7%"><col style="width:9%"><col style="width:13%"></colgroup>
+        <thead><tr>
+          <th>Ticker</th><th>Account</th><th>Class</th>
+          <th style="text-align:right;">Value</th>
+          <th style="text-align:right;">${abbr('Yield', 'Dividend yield — annual dividends ÷ value')}</th>
+          <th style="text-align:right;">${abbr('Qual', 'Qualified % — share of dividends taxed at the lower long-term rate')}</th>
+          <th style="text-align:right;">${abbr('Cap Gain', 'Capital-gains distributions — % of value the fund distributes yearly')}</th>
+          <th style="text-align:right;">Drag $/yr</th>
+        </tr></thead>
+        <tbody>${dragRows}</tbody></table></div></div>
+    ${guide}
     <div class="panel"><div class="panel-hd"><h4>Recommendations</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">allocation-neutral · not advice</span></div>
       <div style="padding:16px 20px;display:flex;flex-direction:column;gap:12px;">${recsHTML}</div></div>
     <div style="padding:0 2px;"><span class="text-muted" style="font-size:12px;">Estimates only, from your data and simplified rules — not tax advice. Confirm material decisions with a CPA.</span></div>`;
@@ -2947,12 +2989,28 @@ function driftMoves(snap) {
   }
   return moves;
 }
+// Tax-driven moves (location swaps + muni) as plan moves (§13.5/13.6).
+function taxMovesFromRecs(snap) {
+  const moves = [];
+  for (const r of locationSwapRecs(snap)) {
+    moves.push({ accountId: r.aAccountId, sellTicker: r.aTicker, buyTicker: r.bTicker, amount: Math.round(r.amount), source: 'tax-swap', taxNote: `Shelter ${r.aTicker} · ~${fmtMoney2(r.savingsPerYr)}/yr saved` });
+    moves.push({ accountId: r.bAccountId, sellTicker: r.bTicker, buyTicker: r.aTicker, amount: Math.round(r.amount), source: 'tax-swap', taxNote: 'Swap pair · tax-free side' });
+  }
+  for (const r of muniRecs(snap)) {
+    moves.push({ accountId: r.aAccountId, sellTicker: r.aTicker, buyTicker: r.muniTicker, amount: Math.round(r.amount), source: 'tax-muni', taxNote: `Muni swap · ~${fmtMoney2(r.savingsPerYr)}/yr saved` });
+  }
+  return moves;
+}
+// Full auto-generation from tax + drift + savings (§13.4–13.8); user then edits.
 function generatePlanProposals(snap) {
   const p = ensurePlan(snap.date);
   p.noAction = false;
-  for (const m of driftMoves(snap)) p.moves.push(Object.assign({ taxNote: '', done: false }, m));
+  p.moves = [];
+  for (const m of taxMovesFromRecs(snap)) p.moves.push(Object.assign({ done: false }, m));
+  for (const m of driftMoves(snap)) p.moves.push(Object.assign({ source: 'drift', taxNote: '', done: false }, m));
   const dir = savingsDirective(snap);
   p.directive = dir ? { text: dir.text, splits: dir.splits } : null;
+  p.generated = true;
   markDirty();
 }
 // Live tax note for a move (recomputes as the user edits).
@@ -2985,47 +3043,59 @@ function renderPlan() {
     <div class="panel"><div style="padding:44px 20px;text-align:center;" class="text-muted">A plan attaches to a snapshot. <a data-act="new-checkin" style="cursor:pointer;color:var(--color-accent);">Start a check-in →</a></div></div>`;
   const plan = planForSnapshot(snap.date);
   const dir = savingsDirective(snap);
+  const title = planTitle(snap.date);
 
   if (!plan) {
-    const dirPreview = dir ? `<div class="blueprint" style="padding:14px 16px;margin-top:14px;"><div class="kicker" style="font-size:10px;">Savings directive preview (§13.8)</div><div style="font-size:13px;margin-top:4px;">${esc(dir.text)}</div></div>` : '';
-    return `<div class="toolbar no-print"><div class="crumb"><span>Quarterly Plan · ${esc(snap.date)}</span></div>${snapPickerHTML()}</div>
-      <div class="panel"><div class="panel-hd"><h4>Start this quarter’s plan</h4></div>
+    return `<div class="toolbar no-print"><div class="crumb"><span>${title}</span></div>${snapPickerHTML()}</div>
+      <div class="panel"><div class="panel-hd"><h4>Auto-generate this quarter’s plan</h4></div>
         <div style="padding:20px;">
-          <p class="text-muted" style="margin:0 0 14px;max-width:70ch;font-size:13px;">Generate rebalancing proposals from your drift vs goal (§13.4), then edit them and simulate the result before you commit. Or record an explicit no-action decision — discipline made visible.</p>
+          <p class="text-muted" style="margin:0 0 14px;max-width:74ch;font-size:13px;">Builds a plan automatically from your <b>tax posture</b> (location swaps &amp; muni, §13.5–13.6) and your <b>drift vs goal</b> (§13.4), plus a <b>savings directive</b> (§13.8). You can then edit every move. Or record an explicit no-action decision.</p>
           <div style="display:flex;gap:10px;flex-wrap:wrap;">
-            <button class="btn btn-primary" data-act="plan-generate">Generate proposals</button>
+            <button class="btn btn-primary" data-act="plan-generate">Generate plan</button>
             <button class="btn btn-secondary" data-act="plan-noaction">Record “no action — within bands”</button>
           </div>
-          ${dirPreview}
-        </div></div>
-      <div style="padding:0 2px;"><span class="text-muted" style="font-size:12px;">Suggestions, not advice — nothing is executed. Confirm material decisions with a CPA.</span></div>`;
+        </div></div>`;
   }
 
   // No-action record.
   if (plan.noAction) {
-    return `<div class="toolbar no-print"><div class="crumb"><span>Quarterly Plan · ${esc(snap.date)}</span></div>${snapPickerHTML()}</div>
+    return `<div class="toolbar no-print"><div class="crumb"><span>${title}</span></div>${snapPickerHTML()}</div>
       <div class="panel"><div class="panel-hd"><h4>Decision recorded</h4></div>
         <div style="padding:24px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
           <span class="tag tag-ok" style="font-size:13px;">No action — within bands</span>
           <span class="text-muted" style="font-size:13px;">Recorded for ${esc(snap.date)}. This is a decision, not an absence.</span>
-          <button class="btn btn-sm btn-secondary" style="margin-left:auto;" data-act="plan-generate">Switch to proposals</button>
+          <button class="btn btn-sm btn-primary" style="margin-left:auto;" data-act="plan-generate">Auto-generate instead</button>
         </div></div>`;
   }
 
+  const nTax = plan.moves.filter(m => /^tax/.test(m.source || '')).length;
+  const nDrift = plan.moves.filter(m => m.source === 'drift').length;
+  const explain = `<div class="panel"><div class="panel-hd"><h4>How this plan was built</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">auto-generated · fully editable</span></div>
+    <div style="padding:14px 20px;font-size:12.5px;line-height:1.6;" class="text-muted">
+      Combines <b>tax moves</b> — location swaps &amp; muni comparisons (§13.5–13.6) — with <b>rebalancing moves</b> from your drift vs goal, placed in sheltered accounts first to avoid tax (§13.4), plus a <b>savings directive</b> steering new contributions (§13.8). Every row is a suggestion — edit, add, or delete it. Nothing is ever executed.
+      <div style="margin-top:8px;color:var(--color-text);"><b>${nTax}</b> tax · <b>${nDrift}</b> rebalancing move${nDrift === 1 ? '' : 's'}${plan.directive ? ' · 1 savings directive' : ''}.</div>
+    </div></div>`;
+
+  const srcTag = (m) => {
+    if (/^tax/.test(m.source || '')) return `<span class="tag tag-accent-2" style="font-size:9px;" title="Proposed by the Tax tab — location swap or muni">tax</span>`;
+    if (m.source === 'drift') return `<span class="tag tag-neutral" style="font-size:9px;" title="Rebalancing toward your goal (drift)">drift</span>`;
+    return `<span class="text-muted" style="font-size:11px;">—</span>`;
+  };
   const acctOpts = (sel) => portfolio.accounts.filter(a => a.status !== 'archived')
     .map(a => `<option value="${esc(a.id)}" ${a.id === sel ? 'selected' : ''}>${esc(a.name)}</option>`).join('');
   const moveRows = plan.moves.map((m, i) => {
     const note = moveTaxNoteLive(m);
     return `<tr>
-      <td><input type="checkbox" data-act="plan-done" data-idx="${i}" ${m.done ? 'checked' : ''}></td>
-      <td><select class="input" style="min-height:30px;" data-act="plan-account" data-idx="${i}"><option value="">— account —</option>${acctOpts(m.accountId)}</select></td>
-      <td><input class="input" style="min-height:30px;width:80px;text-transform:uppercase;" data-act="plan-sell" data-idx="${i}" value="${esc(m.sellTicker || '')}" placeholder="sell"></td>
-      <td><input class="input" style="min-height:30px;width:80px;text-transform:uppercase;" data-act="plan-buy" data-idx="${i}" value="${esc(m.buyTicker || '')}" placeholder="buy"></td>
-      <td><input class="input tnum" style="min-height:30px;width:100px;text-align:right;" inputmode="decimal" data-act="plan-amount" data-idx="${i}" value="${m.amount || ''}" placeholder="0"></td>
-      <td><span class="tag ${note.cls}" style="font-size:10px;">${esc(note.text)}</span></td>
-      <td style="text-align:right;"><button class="btn btn-ghost btn-sm btn-danger" data-act="plan-del" data-idx="${i}">✕</button></td>
+      <td style="text-align:center;"><input type="checkbox" data-act="plan-done" data-idx="${i}" ${m.done ? 'checked' : ''}></td>
+      <td>${srcTag(m)}</td>
+      <td><select class="input" style="min-height:30px;width:100%;" data-act="plan-account" data-idx="${i}"><option value="">— account —</option>${acctOpts(m.accountId)}</select></td>
+      <td><input class="input" style="min-height:30px;width:100%;text-transform:uppercase;" data-act="plan-sell" data-idx="${i}" value="${esc(m.sellTicker || '')}" placeholder="sell"></td>
+      <td><input class="input" style="min-height:30px;width:100%;text-transform:uppercase;" data-act="plan-buy" data-idx="${i}" value="${esc(m.buyTicker || '')}" placeholder="buy"></td>
+      <td><input class="input tnum" style="min-height:30px;width:100%;text-align:right;" inputmode="decimal" data-act="plan-amount" data-idx="${i}" value="${m.amount ? fmtEditNum(m.amount) : ''}" placeholder="0"></td>
+      <td><span class="tag ${note.cls}" style="font-size:10px;">${esc(note.text)}</span>${m.taxNote ? `<div class="text-muted" style="font-size:10px;margin-top:3px;line-height:1.35;">${esc(m.taxNote)}</div>` : ''}</td>
+      <td style="text-align:right;"><button class="btn btn-ghost btn-sm btn-danger" data-act="plan-del" data-idx="${i}" title="Remove move">✕</button></td>
     </tr>`;
-  }).join('') || '<tr><td colspan="7" class="text-muted" style="padding:14px 20px;">No moves. Add one, or record no-action.</td></tr>';
+  }).join('') || '<tr><td colspan="8" class="text-muted" style="padding:14px 20px;">No moves proposed — you’re within bands. Consider recording no-action.</td></tr>';
 
   // Wash-sale warnings (§13.7).
   const washes = washWarnings(plan);
@@ -3065,14 +3135,17 @@ function renderPlan() {
     </div></div>`;
 
   const doneCount = plan.moves.filter(m => m.done).length;
-  return `<div class="toolbar no-print"><div class="crumb"><span>Quarterly Plan · ${esc(snap.date)}</span></div>${snapPickerHTML()}
+  return `<div class="toolbar no-print"><div class="crumb"><span>${title}</span></div>${snapPickerHTML()}
       <button class="btn btn-secondary" data-act="plan-noaction">Mark no-action</button></div>
+    ${explain}
     <div class="panel"><div class="panel-hd"><h4>Moves</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">${doneCount}/${plan.moves.length} done</span></div>
-      <table class="table"><thead><tr><th style="width:34px;">✓</th><th>Account</th><th>Sell</th><th>Buy</th><th style="text-align:right;">Amount</th><th>Tax</th><th></th></tr></thead>
-        <tbody>${moveRows}</tbody></table>
+      <div style="overflow-x:auto;"><table class="table" style="table-layout:fixed;min-width:660px;">
+        <colgroup><col style="width:5%"><col style="width:9%"><col style="width:20%"><col style="width:11%"><col style="width:11%"><col style="width:14%"><col style="width:24%"><col style="width:6%"></colgroup>
+        <thead><tr><th style="text-align:center;">✓</th><th>Source</th><th>Account</th><th>Sell</th><th>Buy</th><th style="text-align:right;">Amount</th><th>Tax</th><th></th></tr></thead>
+        <tbody>${moveRows}</tbody></table></div>
       <div style="padding:12px 20px;display:flex;gap:10px;flex-wrap:wrap;">
         <button class="btn btn-sm btn-secondary" data-act="plan-addmove">+ Add move</button>
-        <button class="btn btn-sm btn-secondary" data-act="plan-generate">Regenerate from drift</button>
+        <button class="btn btn-sm btn-secondary" data-act="plan-generate" title="Rebuild from tax + drift — discards edits">Regenerate</button>
       </div></div>
     ${washHTML}
     ${dirHTML}
@@ -3163,7 +3236,7 @@ function reportTaxSection(snap) {
 function reportPlanSection(snap) {
   const plan = planForSnapshot(snap.date);
   if (!plan) return '';
-  if (plan.noAction) return `<section class="rep-section" style="margin-bottom:26px;"><h3 style="margin:0 0 2px;">Quarterly plan</h3><div class="rep-sub text-muted" style="font-size:13px;">Decision: no action — within bands.</div></section>`;
+  if (plan.noAction) return `<section class="rep-section" style="margin-bottom:26px;"><h3 style="margin:0 0 2px;">${esc(planTitle(snap.date))}</h3><div class="rep-sub text-muted" style="font-size:13px;">Decision: no action — within bands.</div></section>`;
   const rows = (plan.moves || []).map(m => `<tr>
       <td>${m.done ? '✓' : '☐'}</td><td>${esc(accountById(m.accountId) ? accountById(m.accountId).name : '—')}</td>
       <td>${esc(m.sellTicker || '')} → ${esc(m.buyTicker || '')}</td>
@@ -3172,8 +3245,8 @@ function reportPlanSection(snap) {
   const dir = plan.directive && plan.directive.text ? `<div class="text-muted" style="font-size:13px;margin-top:8px;">Savings directive: ${esc(plan.directive.text)}</div>` : '';
   if (!rows && !dir) return '';
   return `<section class="rep-section" style="margin-bottom:26px;">
-    <h3 style="margin:0 0 2px;">Quarterly plan</h3>
-    <div class="rep-sub text-muted" style="font-size:13px;margin-bottom:12px;">Committed for ${esc(snap.date)}</div>
+    <h3 style="margin:0 0 2px;">${esc(planTitle(snap.date))}</h3>
+    <div class="rep-sub text-muted" style="font-size:13px;margin-bottom:12px;">Committed plan</div>
     ${rows ? `<table class="table"><thead><tr><th>Done</th><th>Account</th><th>Move</th><th style="text-align:right;">Amount</th><th>Tax note</th></tr></thead><tbody>${rows}</tbody></table>` : ''}
     ${dir}
   </section>`;
@@ -3310,10 +3383,10 @@ function renderTaxProfile() {
       <div class="panel-hd" style="border-color:var(--color-accent-2);"><h4>Expert override</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">blank = use derived value</span></div>
       <div style="padding:20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;">
         <div class="field"><label>Ordinary rate (%)</label><input class="input tnum" inputmode="decimal" data-act="ov-ord" value="${ov.ordinaryRate != null ? (ov.ordinaryRate * 100) : ''}" placeholder="${(rates.r_ord * 100).toFixed(1)}"></div>
-        <div class="field"><label>QDI / LTCG rate (%)</label><input class="input tnum" inputmode="decimal" data-act="ov-ltcg" value="${ov.ltcgRate != null ? (ov.ltcgRate * 100) : ''}" placeholder="${(rates.r_qdi * 100).toFixed(1)}"></div>
+        <div class="field"><label>${abbr('QDI', 'Qualified dividends')} / ${abbr('LTCG', 'Long-term capital gains')} rate (%)</label><input class="input tnum" inputmode="decimal" data-act="ov-ltcg" value="${ov.ltcgRate != null ? (ov.ltcgRate * 100) : ''}" placeholder="${(rates.r_qdi * 100).toFixed(1)}"></div>
         <div class="field"><label>State rate (%)</label><input class="input tnum" inputmode="decimal" data-act="ov-state" value="${ov.stateRate != null ? (ov.stateRate * 100) : ''}" placeholder="${(rates.r_state * 100).toFixed(2)}"></div>
-        <label class="radio" style="align-items:center;"><input type="checkbox" data-act="ov-niit" ${ov.niitApplies ? 'checked' : ''}><span class="dot"></span>Force NIIT (3.8%)</label>
-        <label class="radio" style="align-items:center;"><input type="checkbox" data-act="ov-surtax" ${ov.surtaxApplies ? 'checked' : ''}><span class="dot"></span>Force MA 4% surtax</label>
+        <label class="radio" style="align-items:center;"><input type="checkbox" data-act="ov-niit" ${ov.niitApplies ? 'checked' : ''}><span class="dot"></span>Force ${abbr('NIIT', 'Net Investment Income Tax')} (3.8%)</label>
+        <label class="radio" style="align-items:center;"><input type="checkbox" data-act="ov-surtax" ${ov.surtaxApplies ? 'checked' : ''}><span class="dot"></span>Force ${abbr('MA', 'Massachusetts')} 4% surtax</label>
       </div>
       <div style="padding:0 20px 18px;"><button class="btn btn-sm btn-secondary" data-act="ov-clear">Clear all overrides</button></div>
     </div>` : `<div style="padding:2px 2px 6px;"><button class="btn btn-sm btn-secondary" data-act="ov-toggle">Advanced: override derived rates…</button></div>`;
@@ -3322,7 +3395,7 @@ function renderTaxProfile() {
   const ytd = ts.ytdContributions || {};
   const ytdRows = advAccts.length ? advAccts.map(a => `<div class="drift-row" style="grid-template-columns:1fr 120px;gap:10px;align-items:center;">
       <span style="font-size:13px;">${esc(a.name)} <span class="text-muted">· ${esc(a.category)}</span></span>
-      <input class="input tnum" inputmode="decimal" style="text-align:right;min-height:30px;" data-act="ts-ytd" data-account="${esc(a.id)}" value="${ytd[a.id] != null ? ytd[a.id] : ''}" placeholder="0">
+      <input class="input tnum" inputmode="decimal" style="text-align:right;min-height:30px;" data-act="ts-ytd" data-account="${esc(a.id)}" value="${ytd[a.id] ? fmtEditNum(ytd[a.id]) : ''}" placeholder="0">
     </div>`).join('') : '<span class="text-muted" style="font-size:13px;">No tax-advantaged accounts yet.</span>';
 
   return `<div class="toolbar no-print"><div class="crumb"><span>Tax Profile</span></div>
@@ -3334,17 +3407,17 @@ function renderTaxProfile() {
       <div class="field"><label>State</label><select class="input" data-act="ts-state">${stateOpts}</select>${stateNote}</div>
     </div>
     <div style="padding:0 20px 20px;display:flex;gap:26px;flex-wrap:wrap;align-items:flex-end;background:color-mix(in srgb, var(--color-text) 3%, transparent);margin:0 0 0;padding-top:16px;">
-      ${rateChip('Ordinary', rates.r_ord)}${rateChip('QDI / LTCG', rates.r_qdi)}${rateChip('NIIT', rates.niit)}${rateChip('State', rates.r_state)}${rates.surtax ? rateChip('MA surtax', rates.surtax) : ''}
+      ${rateChip('Ordinary', rates.r_ord)}${rateChip(abbr('QDI', 'Qualified dividends') + ' / ' + abbr('LTCG', 'Long-term capital gains'), rates.r_qdi)}${rateChip(abbr('NIIT', 'Net Investment Income Tax'), rates.niit)}${rateChip('State', rates.r_state)}${rates.surtax ? rateChip(abbr('MA', 'Massachusetts') + ' surtax', rates.surtax) : ''}
       <div style="width:1px;align-self:stretch;background:var(--color-divider);"></div>
-      ${rateChip('Ordinary eff.', rates.r_ord_eff)}${rateChip('QDI/LTCG eff.', rates.r_qdi_eff)}
+      ${rateChip('Ordinary eff.', rates.r_ord_eff)}${rateChip(abbr('QDI', 'Qualified dividends') + '/' + abbr('LTCG', 'Long-term capital gains') + ' eff.', rates.r_qdi_eff)}
     </div>
     <div style="padding:12px 20px 18px;"><span class="text-muted" style="font-size:12px;">${esc(ref.verifyNote)}</span></div>
   </div>
   ${advPanel}
   <div class="panel"><div class="panel-hd"><h4>Planning inputs</h4></div>
     <div style="padding:20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;">
-      <div class="field"><label>Annual realized-gain budget ($)</label><input class="input tnum" inputmode="decimal" data-act="ts-gainbudget" value="${ts.gainBudgetAnnual || ''}" placeholder="0"><span class="text-muted" style="font-size:11px;">Caps taxable long-term-gain sales the Plan proposes.</span></div>
-      <div class="field"><label>Household savings ($/month)</label><input class="input tnum" inputmode="decimal" data-act="ts-savings" value="${ts.householdMonthlySavings || ''}" placeholder="0"><span class="text-muted" style="font-size:11px;">Drives the Plan’s savings directive (§13.8).</span></div>
+      <div class="field"><label>Annual realized-gain budget ($)</label><input class="input tnum" inputmode="decimal" data-act="ts-gainbudget" value="${ts.gainBudgetAnnual ? fmtEditNum(ts.gainBudgetAnnual) : ''}" placeholder="0"><span class="text-muted" style="font-size:11px;">Caps taxable long-term-gain sales the Plan proposes.</span></div>
+      <div class="field"><label>Household savings ($/month)</label><input class="input tnum" inputmode="decimal" data-act="ts-savings" value="${ts.householdMonthlySavings ? fmtEditNum(ts.householdMonthlySavings) : ''}" placeholder="0"><span class="text-muted" style="font-size:11px;">Drives the Plan’s savings directive (§13.8).</span></div>
     </div>
     <div class="panel-hd" style="border-top:1px solid var(--color-divider);"><h4 style="font-size:13px;">YTD contributions (for headroom)</h4></div>
     <div style="padding:16px 20px 20px;display:flex;flex-direction:column;gap:8px;max-width:520px;">${ytdRows}</div>
@@ -3565,7 +3638,12 @@ function onClick(e) {
   if (!t) return;
   const a = t.dataset.act, ds = t.dataset;
   switch (a) {
-    case 'nav': ui.view = ds.view; render(); break;
+    case 'nav': {
+      ui.view = ds.view;
+      // Plan auto-generates on first open (from tax + drift + savings, §13.4–13.8).
+      if (ds.view === 'plan') { const s = currentSnapshot(); if (s && !planForSnapshot(s.date)) generatePlanProposals(s); }
+      render(); break;
+    }
     case 'about': openDialog({ type: 'about' }); break;
     case 'save': saveFile().then(r => { if (r && r.ok) toast('Saved · ' + fileName); render(); }); break;
     case 'open': doOpen(); break;
