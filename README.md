@@ -87,7 +87,7 @@ Click the logo any time for the About/Help panel.
 ## Tech
 
 Vanilla JavaScript, inline CSS, hand-rolled SVG charts. No framework, no build
-step, no dependencies — the HTML file *is* the source. Styled in Enigma's
+step, no dependencies — the HTML file *is* the source. Styled in
 "Industry" blueprint design system.
 
 Tax reference data (brackets, thresholds, state rates, contribution limits) is
