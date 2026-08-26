@@ -1,7 +1,7 @@
 # Allocation Tracker
 
 A single-file, fully-offline web app for tracking your true asset allocation
-across every account — then planning tax-aware moves to stay on target.
+across every account.
 
 It's one `allocation-tracker.html` file. Open it in a browser and it runs; your
 numbers live in a JSON file you save yourself. No server, no accounts, no
