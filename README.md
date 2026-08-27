@@ -107,6 +107,9 @@ guide with architecture and conventions.
 Quick checks:
 
 ```bash
+# tax-engine + migration test suite (loads the real <script> in a sandbox)
+node test/tax-engine.test.js
+
 # syntax
 python3 - <<'PY'
 import re; h=open('allocation-tracker.html').read()

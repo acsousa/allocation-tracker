@@ -534,8 +534,8 @@ const DEFAULT_TAX_PROFILE = {
   us_mid:    { divYield: 1.4, qualifiedPct: 90, capGainDistPct: 0.2 },
   us_small:  { divYield: 1.3, qualifiedPct: 85, capGainDistPct: 0.3 },
   us_total:  { divYield: 1.3, qualifiedPct: 94, capGainDistPct: 0.1 },
-  intl_dev:  { divYield: 3.0, qualifiedPct: 70, capGainDistPct: 0.1 },
-  em:        { divYield: 2.8, qualifiedPct: 60, capGainDistPct: 0.2 },
+  intl_dev:  { divYield: 3.0, qualifiedPct: 70, capGainDistPct: 0.1, ftcEligible: true }, // foreign tax credit recoverable in taxable, lost in sheltered
+  em:        { divYield: 2.8, qualifiedPct: 60, capGainDistPct: 0.2, ftcEligible: true },
   us_bond:   { divYield: 4.0, qualifiedPct: 0,  capGainDistPct: 0.2 }, // usGovtPct unknown for a generic bond → assume 0 (corporate/aggregate); Treasury funds set it in seed
   intl_bond: { divYield: 3.5, qualifiedPct: 0,  capGainDistPct: 0.2 },
   reit:      { divYield: 3.8, qualifiedPct: 0,  capGainDistPct: 0.5, qbiEligible: true }, // REIT ordinary dividends get the §199A 20% deduction
@@ -559,12 +559,12 @@ const SEED_TAX_DATA = {
   SPTM: { divYield: 1.3, qualifiedPct: 95,  capGainDistPct: 0.0 },
   FSKAX:{ divYield: 1.3, qualifiedPct: 95,  capGainDistPct: 0.0 },
   FXAIX:{ divYield: 1.3, qualifiedPct: 100, capGainDistPct: 0.0 },
-  VXUS: { divYield: 3.1, qualifiedPct: 72,  capGainDistPct: 0.0 },
-  IXUS: { divYield: 3.1, qualifiedPct: 72,  capGainDistPct: 0.0 },
-  VEA:  { divYield: 3.2, qualifiedPct: 75,  capGainDistPct: 0.0 },
-  IEFA: { divYield: 3.1, qualifiedPct: 75,  capGainDistPct: 0.0 },
-  VWO:  { divYield: 2.9, qualifiedPct: 60,  capGainDistPct: 0.0 },
-  IEMG: { divYield: 2.8, qualifiedPct: 60,  capGainDistPct: 0.0 },
+  VXUS: { divYield: 3.1, qualifiedPct: 72,  capGainDistPct: 0.0, ftcEligible: true },
+  IXUS: { divYield: 3.1, qualifiedPct: 72,  capGainDistPct: 0.0, ftcEligible: true },
+  VEA:  { divYield: 3.2, qualifiedPct: 75,  capGainDistPct: 0.0, ftcEligible: true },
+  IEFA: { divYield: 3.1, qualifiedPct: 75,  capGainDistPct: 0.0, ftcEligible: true },
+  VWO:  { divYield: 2.9, qualifiedPct: 60,  capGainDistPct: 0.0, ftcEligible: true },
+  IEMG: { divYield: 2.8, qualifiedPct: 60,  capGainDistPct: 0.0, ftcEligible: true },
   BND:  { divYield: 4.1, qualifiedPct: 0,   capGainDistPct: 0.0, usGovtPct: 37 }, // ~37% US Treasuries (state-exempt)
   AGG:  { divYield: 4.0, qualifiedPct: 0,   capGainDistPct: 0.0, usGovtPct: 28 },
   BNDX: { divYield: 3.4, qualifiedPct: 0,   capGainDistPct: 0.0 },
@@ -672,9 +672,13 @@ function ordinaryInterestRate(profile, rates) {
   const fedOrd = profile.qbiEligible ? 0.8 * rates.r_ord : rates.r_ord;
   return fedOrd + rates.niit + rates.r_state * (1 - govt) + rates.surtax;
 }
+// Foreign tax credit: ~7% of an international fund's dividend is foreign tax you
+// recover in a taxable account (but lose inside a sheltered one) — §13.3.
+const FTC_RECOVERY = 0.07;
 // §13.2 — annual $ tax drag for one taxable holding.
 //  · Collectible profiles (physical-metal ETFs): gains at the collectibles rate (≤28%).
 //  · §1256 futures funds (sixtyForty): 60% long-term / 40% ordinary on gains.
+//  · International funds (ftcEligible): net of the recoverable foreign tax credit.
 function holdingDrag(mv, profile, rates) {
   const dy = (profile.divYield || 0) / 100;
   const q  = (profile.qualifiedPct || 0) / 100;
@@ -684,7 +688,8 @@ function holdingDrag(mv, profile, rates) {
   if (profile.collectible && rates.r_collectible_eff != null) rCg = rates.r_collectible_eff;
   else if (profile.sixtyForty) rCg = 0.6 * rates.r_ltcg_eff + 0.4 * rates.r_ord_eff;
   else rCg = rates.r_ltcg_eff;
-  return mv * (dy * q * rates.r_qdi_eff + dy * (1 - q) * rOrd + cg * rCg);
+  const ftc = profile.ftcEligible ? FTC_RECOVERY * dy * mv : 0; // recovered foreign tax (taxable placement only)
+  return Math.max(0, mv * (dy * q * rates.r_qdi_eff + dy * (1 - q) * rOrd + cg * rCg) - ftc);
 }
 // Account tax-shelter classification from its vehicle + treatment.
 // Returns { sheltered:bool, reason:string }.
@@ -721,6 +726,7 @@ function defaultTaxSettings() {
     gainBudgetAnnual: 0,
     householdMonthlySavings: 0,
     ytdContributions: {},   // { accountId: dollarsContributedThisYear }
+    inStateMuni: false,     // an in-state muni fund (exempt from BOTH federal + state) is available to you
     networkEnabled: false,  // dormant placeholder — no network feature ships in this build
     override: null,         // { ordinaryRate, ltcgRate, niitApplies, stateRate, surtaxApplies }
   };
@@ -1189,11 +1195,14 @@ function muniRecs(snapshot) {
     if (r.sheltered || r.assetClass !== 'us_bond') continue;
     if (r.profile && r.profile.muni) continue; // already a muni fund
     const y_t = (r.profile.divYield || 0);
+    const inState = !!(portfolio.taxSettings && portfolio.taxSettings.inStateMuni);
     const y_m = DEFAULT_MUNI_YIELD;
     // Taxable-side rate honors any US-Treasury state-exemption in the bond (M1),
     // so a Treasury-heavy fund isn't overtaxed vs the muni.
     const taxableAT = y_t * (1 - ordinaryInterestRate(r.profile, rates));
-    const muniAT = y_m * (1 - rates.r_state);
+    // National muni: federal-exempt, state-taxable. In-state muni (M4): exempt
+    // from BOTH federal and state.
+    const muniAT = inState ? y_m : y_m * (1 - rates.r_state);
     if (muniAT <= taxableAT) continue;
     const savings = r.mv * (muniAT - taxableAT) / 100;
     let oneTime = 0, realizedGain = 0, basisKnown = r.costBasis != null;
@@ -1201,10 +1210,43 @@ function muniRecs(snapshot) {
     recs.push({
       kind: 'muni', amount: r.mv, savingsPerYr: savings, oneTimeCost: oneTime, realizedGain, basisKnown,
       aTicker: r.ticker, aAccountId: r.accountId, aAccountName: r.accountName,
-      muniTicker: 'VTEB', taxableAT, muniAT,
+      muniTicker: inState ? 'in-state muni' : 'VTEB', taxableAT, muniAT, inState,
     });
   }
   return recs;
+}
+
+// Rough expected-return ranking (higher = faster grower → prefer in Roth).
+const EXPECTED_RETURN_RANK = {
+  crypto: 9, em: 8, us_small: 7, us_mid: 6, intl_dev: 5, us_large: 4, us_total: 4,
+  reit: 4, blend: 3, commod: 3, us_bond: 2, intl_bond: 2, cash: 1, other: 3,
+};
+// §13.3 Roth placement: Roth growth is never taxed, so hold the highest-expected-
+// return assets there. Flags a swap when a Roth holds a slow grower while a
+// traditional (pre-tax) sheltered account holds a fast one. Allocation-neutral,
+// both sides tax-free (no realization cost).
+function rothPlacementRecs(snapshot) {
+  const idx = valueIndex(snapshot);
+  const roth = [], trad = [];
+  for (const h of activeHoldings()) {
+    const v = idx[h.id]; if (!v || !(Number(v.marketValue) > 0)) continue;
+    const acct = accountById(h.accountId); if (!acct) continue;
+    const sh = accountShelter(acct); if (!sh.sheltered) continue;
+    const rank = EXPECTED_RETURN_RANK[h.assetClass] != null ? EXPECTED_RETURN_RANK[h.assetClass] : 3;
+    const rec = { ticker: h.ticker, assetClass: h.assetClass, accountId: h.accountId, accountName: acct.name, mv: Number(v.marketValue), rank };
+    if (acct.taxTreatment === 'Roth' || /Roth/.test(sh.reason)) roth.push(rec); else trad.push(rec);
+  }
+  if (!roth.length || !trad.length) return [];
+  const bestTrad = trad.slice().sort((a, b) => b.rank - a.rank)[0];
+  const worstRoth = roth.slice().sort((a, b) => a.rank - b.rank)[0];
+  if (bestTrad.rank <= worstRoth.rank) return []; // already well-placed
+  const X = Math.min(bestTrad.mv, worstRoth.mv);
+  if (X < 500) return [];
+  return [{
+    kind: 'roth-placement', amount: X,
+    highTicker: bestTrad.ticker, highClass: bestTrad.assetClass, tradAccountId: bestTrad.accountId, tradAccountName: bestTrad.accountName,
+    lowTicker: worstRoth.ticker, lowClass: worstRoth.assetClass, rothAccountId: worstRoth.accountId, rothAccountName: worstRoth.accountName,
+  }];
 }
 
 // §13.7 wash-sale scan for a plan's moves + directive.
@@ -1454,6 +1496,9 @@ async function saveFile(forceNew) {
       if (!fileHandle || forceNew) {
         fileHandle = await window.showSaveFilePicker({
           suggestedName: fileName,
+          // Suggest the folder the file came from (a prior handle) so "Save As"
+          // lands where the file was loaded; otherwise start in Documents.
+          startIn: fileHandle || pendingHandle || 'documents',
           types: [{ description: 'Portfolio JSON', accept: { 'application/json': ['.json'] } }],
         });
         fileName = fileHandle.name || fileName;
@@ -2993,6 +3038,7 @@ function renderTax() {
   const swaps = locationSwapRecs(snap);
   const munis = muniRecs(snap);
   ui._taxRecs = [...swaps, ...munis];
+  ui._rothRecs = rothPlacementRecs(snap);
 
   const scoreCls = sc.locScore == null ? 'text-muted' : sc.locScore >= 90 ? 'ok' : sc.locScore >= 70 ? 'warn' : 'crit';
   const scoreColor = sc.locScore == null ? 'inherit' : `var(--color-${scoreCls})`;
@@ -3070,10 +3116,11 @@ function renderTax() {
     const cost = r.basisKnown ? (r.oneTimeCost > 0 ? `one-time tax ${fmtMoney2(r.oneTimeCost)}` : 'no gain to realize') : 'basis unknown — verify realization cost';
     const title = r.kind === 'location-swap'
       ? `Shelter ${fmtMoney(r.amount)} ${esc(r.aTicker)} <span class="text-muted">(${esc(detailLabel(r.aClass))})</span> → move into ${esc(r.bAccountName)}, send ${esc(r.bTicker)} to taxable`
-      : `Swap ${fmtMoney(r.amount)} ${esc(r.aTicker)} → ${esc(r.muniTicker)} <span class="text-muted">(muni, federal-exempt)</span>`;
+      : `Swap ${fmtMoney(r.amount)} ${esc(r.aTicker)} → ${esc(r.muniTicker)} <span class="text-muted">(${r.inState ? 'in-state muni — federal + state exempt' : 'national muni — federal-exempt'})</span>`;
+    const muniCaveat = r.kind === 'muni' ? ` <span title="A national muni is federal-exempt but taxable by your state; an in-state muni fund is exempt from both. Some muni income can be subject to AMT; bonds bought below par may trigger the de-minimis rule. Toggle 'in-state muni' in Tax Profile.">ⓘ</span>` : '';
     return `<div class="blueprint" style="padding:14px 16px;display:flex;gap:14px;align-items:center;flex-wrap:wrap;">
       <div style="flex:1;min-width:260px;">
-        <div style="font-size:14px;">${title}</div>
+        <div style="font-size:14px;">${title}${muniCaveat}</div>
         <div class="text-muted" style="font-size:12px;margin-top:3px;">Est. savings <span style="color:var(--color-ok);">${savings}</span> <span style="color:var(--color-ok);" title="Annual saving ÷ total portfolio value — the percentage points this adds to your return">(+${fmtPct(pct, 3)} return improvement)</span> · ${cost}${r.kind === 'muni' ? ` · after-tax yield ${r.muniAT.toFixed(2)}% vs ${r.taxableAT.toFixed(2)}%` : ''}</div>
       </div>
       <button class="btn btn-sm btn-primary" data-act="send-to-plan" data-rec="${i}">Send to Plan →</button>
@@ -3088,6 +3135,13 @@ function renderTax() {
     ? `${material.length ? material.map(x => recCard(x.r, x.i)).join('') : `<div class="text-muted" style="font-size:13px;padding:2px 2px 4px;">Nothing worth acting on — every recommendation below improves your return by less than ${MATERIAL_MIN_PCT}%.</div>`}
        ${immaterial.length ? divider(`recommended · immaterial (return improvement < ${MATERIAL_MIN_PCT}%)`) + immaterial.map(x => recCard(x.r, x.i)).join('') : ''}`
     : `<div class="text-muted" style="font-size:13px;padding:6px 2px;">No location-swap or muni recommendations — your tax-inefficient assets are already well placed${rates.r_ord < 0.32 ? ' (muni comparison activates at the 32% bracket)' : ''}.</div>`;
+
+  const rothHTML = (ui._rothRecs && ui._rothRecs.length) ? ui._rothRecs.map((r, i) => `
+    <div class="panel" style="border-color:var(--color-accent-2);"><div class="panel-hd" style="border-color:var(--color-accent-2);"><h4>Roth placement</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">tax-free growth · allocation-neutral</span></div>
+      <div style="padding:14px 20px;display:flex;gap:14px;align-items:center;flex-wrap:wrap;">
+        <div style="flex:1;min-width:260px;font-size:13px;">Your Roth (${esc(r.rothAccountName)}) holds <b>${esc(r.lowTicker)}</b> <span class="text-muted">(${esc(detailLabel(r.lowClass))})</span>, while <b>${esc(r.highTicker)}</b> <span class="text-muted">(${esc(detailLabel(r.highClass))})</span> — a faster-growing asset — sits in ${esc(r.tradAccountName)}. Roth growth is never taxed, so swapping ${fmtMoney(r.amount)} to put the fastest grower in the Roth compounds more tax-free. Both sides are sheltered — no tax to realize.</div>
+        <button class="btn btn-sm btn-primary" data-act="send-roth-to-plan" data-rec="${i}">Send to Plan →</button>
+      </div></div>`).join('') : '';
 
   return `<div class="toolbar no-print"><div class="crumb"><span>Tax Analysis</span></div>${snapPickerHTML()}</div>
     ${scorecard}
@@ -3109,6 +3163,7 @@ function renderTax() {
     <div class="panel"><div class="panel-hd"><h4>Recommendations</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">allocation-neutral · not advice</span>
       <button class="btn btn-sm btn-secondary" data-act="nav" data-view="plan" style="margin-left:12px;">${planMoveCount ? `View Plan (${planMoveCount}) →` : 'Open Plan →'}</button></div>
       <div style="padding:16px 20px;display:flex;flex-direction:column;gap:12px;">${recsHTML}</div></div>
+    ${rothHTML}
     <div style="padding:0 2px;"><span class="text-muted" style="font-size:12px;">Estimates only, from your data and simplified rules — not tax advice. Confirm material decisions with a CPA.</span></div>`;
 }
 
@@ -3640,6 +3695,7 @@ function renderTaxProfile() {
     <div style="padding:20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;">
       <div class="field"><label>Annual realized-gain budget ($)</label><input class="input tnum" inputmode="decimal" data-act="ts-gainbudget" value="${ts.gainBudgetAnnual ? fmtEditNum(ts.gainBudgetAnnual) : ''}" placeholder="0"><span class="text-muted" style="font-size:11px;">Caps taxable long-term-gain sales the Plan proposes.</span></div>
       <div class="field"><label>Household savings ($/month)</label><input class="input tnum" inputmode="decimal" data-act="ts-savings" value="${ts.householdMonthlySavings ? fmtEditNum(ts.householdMonthlySavings) : ''}" placeholder="0"><span class="text-muted" style="font-size:11px;">Drives the Plan’s savings directive.</span></div>
+      <div class="field"><label class="radio" style="align-items:center;"><input type="checkbox" data-act="ts-instatemuni" ${ts.inStateMuni ? 'checked' : ''}><span class="dot"></span>In-state muni fund available</label><span class="text-muted" style="font-size:11px;">A muni fund for your state is exempt from <b>both</b> federal and state tax — improves the muni comparison.</span></div>
     </div>
     <div class="panel-hd" style="border-top:1px solid var(--color-divider);"><h4 style="font-size:13px;">YTD contributions (for headroom)</h4></div>
     <div style="padding:16px 20px 20px;display:flex;flex-direction:column;gap:8px;max-width:520px;">${ytdRows}</div>
@@ -3832,7 +3888,14 @@ function boot() {
     updateCheckinTotals();
     if (hid) updateBasisFlag(hid);
   });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape' && ui.dialog) closeDialog(); });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && ui.dialog) { closeDialog(); return; }
+    // Cmd/Ctrl+S → save the file (fast save before leaving).
+    if ((e.metaKey || e.ctrlKey) && (e.key === 's' || e.key === 'S')) {
+      e.preventDefault();
+      saveFile().then(r => { if (r && r.ok) { toast('Saved · ' + fileName); render(); } });
+    }
+  });
   document.addEventListener('pointermove', onDonutHover);
   document.addEventListener('pointermove', onChartHover);
   render();
@@ -3917,12 +3980,22 @@ function onClick(e) {
       const snap = currentSnapshot(); if (!snap) { toast('No snapshot to plan against.'); break; }
       const rec = (ui._taxRecs || [])[Number(ds.rec)]; if (!rec) break;
       if (rec.kind === 'location-swap') {
-        planAddMove(snap.date, { accountId: rec.aAccountId, sellTicker: rec.aTicker, buyTicker: rec.bTicker, amount: Math.round(rec.amount), taxNote: `Location swap · realizes gain on ${rec.aTicker}` });
-        planAddMove(snap.date, { accountId: rec.bAccountId, sellTicker: rec.bTicker, buyTicker: rec.aTicker, amount: Math.round(rec.amount), taxNote: 'Location swap · tax-free side' });
+        planAddMove(snap.date, { accountId: rec.aAccountId, sellTicker: rec.aTicker, buyTicker: rec.bTicker, amount: Math.round(rec.amount), source: 'tax-swap', taxNote: `Location swap · realizes gain on ${rec.aTicker}` });
+        planAddMove(snap.date, { accountId: rec.bAccountId, sellTicker: rec.bTicker, buyTicker: rec.aTicker, amount: Math.round(rec.amount), source: 'tax-swap', taxNote: 'Location swap · tax-free side' });
       } else {
-        planAddMove(snap.date, { accountId: rec.aAccountId, sellTicker: rec.aTicker, buyTicker: rec.muniTicker, amount: Math.round(rec.amount), taxNote: 'Muni swap' });
+        planAddMove(snap.date, { accountId: rec.aAccountId, sellTicker: rec.aTicker, buyTicker: rec.muniTicker, amount: Math.round(rec.amount), source: 'tax-muni', taxNote: 'Muni swap · pick your state’s muni fund' });
       }
       // Stay on the Tax tab so you can send more; the header has a "View Plan" link.
+      render();
+      const n = (planForSnapshot(snap.date) || { moves: [] }).moves.length;
+      toast(`Added to Plan · ${n} move${n === 1 ? '' : 's'}`);
+      break;
+    }
+    case 'send-roth-to-plan': {
+      const snap = currentSnapshot(); if (!snap) { toast('No snapshot to plan against.'); break; }
+      const rec = (ui._rothRecs || [])[Number(ds.rec)]; if (!rec) break;
+      planAddMove(snap.date, { accountId: rec.rothAccountId, sellTicker: rec.lowTicker, buyTicker: rec.highTicker, amount: Math.round(rec.amount), source: 'tax-roth', taxNote: 'Roth placement · hold the fastest grower in Roth' });
+      planAddMove(snap.date, { accountId: rec.tradAccountId, sellTicker: rec.highTicker, buyTicker: rec.lowTicker, amount: Math.round(rec.amount), source: 'tax-roth', taxNote: 'Roth placement · tax-free side' });
       render();
       const n = (planForSnapshot(snap.date) || { moves: [] }).moves.length;
       toast(`Added to Plan · ${n} move${n === 1 ? '' : 's'}`);
@@ -3975,6 +4048,7 @@ function onChange(e) {
   else if (a === 'ts-state') { portfolio.taxSettings.state = t.value; markDirty(); render(); }
   else if (a === 'ts-gainbudget') { portfolio.taxSettings.gainBudgetAnnual = parseNum(t.value) || 0; markDirty(); render(); }
   else if (a === 'ts-savings') { portfolio.taxSettings.householdMonthlySavings = parseNum(t.value) || 0; markDirty(); render(); }
+  else if (a === 'ts-instatemuni') { portfolio.taxSettings.inStateMuni = t.checked; markDirty(); render(); }
   else if (a === 'ts-ytd') { const y = portfolio.taxSettings.ytdContributions = portfolio.taxSettings.ytdContributions || {}; const n = parseNum(t.value); if (n == null) delete y[ds.account]; else y[ds.account] = n; markDirty(); }
   else if (a === 'ov-ord' || a === 'ov-ltcg' || a === 'ov-state' || a === 'ov-niit' || a === 'ov-surtax') { applyOverride(a, t); render(); }
   // Plan (F8) — field edits fire on blur/change so mid-typing keeps focus.
