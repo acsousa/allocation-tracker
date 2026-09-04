@@ -1730,7 +1730,7 @@ function _bestValueInRow(cells) {
   }
   return bestDollar != null ? bestDollar : bestPlain;
 }
-const _IMPORT_SKIP = /^(total|grand total|subtotal|cash balance|pending|positions|account|selected|exported|as of|holdings)\b/i;
+const _IMPORT_SKIP = /^(total|grand total|subtotal|cash balance|cash|pending|positions|account|selected|exported|as of|holdings?|balances?|money account|sweep|core\*?$)/i;
 function _looseImportRow(line) {
   const t = (line || '').trim(); if (!t) return null;
   if (_IMPORT_SKIP.test(t)) return null;
@@ -1751,12 +1751,20 @@ function parseImportRows(text) {
   }
   const rows = rawLines.map(l => hasTab ? l.split('\t') : _splitCSVLine(l)).filter(cs => cs.some(c => c.trim() !== ''));
   if (!rows.length) return [];
-  let headerIdx = -1, valueCol = -1, symbolCol = -1, descCol = -1;
+  // Pick the BEST positions header, not the first — a brokerage summary block
+  // often has its own "Value" column above the real holdings table.
+  let headerIdx = -1, valueCol = -1, symbolCol = -1, descCol = -1, bestScore = 0;
   for (let i = 0; i < rows.length; i++) {
     const cells = rows[i].map(c => c.trim().toLowerCase());
-    const vi = cells.findIndex(c => /^(market value|current value|value|market val|balance|amount)$/.test(c));
-    const hasOther = cells.some(c => /quantity|shares|price|symbol|description|positions|holding|security|ticker|name|investment/.test(c));
-    if (vi >= 0 && hasOther) { headerIdx = i; valueCol = vi; symbolCol = cells.findIndex(c => /^(symbol|ticker)$/.test(c)); descCol = cells.findIndex(c => /description|positions|holding|security|name|investment/.test(c)); break; }
+    const vi = cells.findIndex(c => /^(market value|current value|market val|value)$/.test(c));
+    if (vi < 0) continue;
+    const sym = cells.findIndex(c => /^(symbol|ticker)$/.test(c));
+    const desc = cells.findIndex(c => /^(description|positions?|holdings?|security|name|investments?|fund( name)?)$/.test(c));
+    let score = 1;                                  // has an exact value column
+    if (sym >= 0) score += 2;
+    if (desc >= 0) score += 2;
+    score += cells.filter(c => /^(quantity|qty|shares|price|last price|unit cost|cost basis|cost|% of portfolio|percent|allocation|% of account)$/.test(c)).length;
+    if (score > bestScore) { bestScore = score; headerIdx = i; valueCol = vi; symbolCol = sym; descCol = desc; }
   }
   const out = [];
   for (let i = (headerIdx >= 0 ? headerIdx + 1 : 0); i < rows.length; i++) {
@@ -2846,9 +2854,22 @@ function updateBasisFlag(hid) {
 }
 
 /* One account's collapsible block in the check-in. */
+// An account is "updated" in this check-in if any holding value differs from
+// the prefilled baseline (or is a newly added/imported holding with a value).
+function checkinAccountUpdated(acct, ci, baseVals) {
+  for (const h of activeHoldings(acct.id)) {
+    const cur = parseNum((ci.values[h.id] || {}).marketValue);
+    const base = baseVals[h.id] != null ? Number(baseVals[h.id].marketValue) : null;
+    if (cur != null && (base == null || Math.abs(cur - base) > 0.005)) return true;
+  }
+  return false;
+}
+
 function checkinAccountBlock(acct, ci, baseVals) {
   const open = !!ui.checkinOpen[acct.id];
   const holds = activeHoldings(acct.id);
+  const updated = checkinAccountUpdated(acct, ci, baseVals);
+  const reviewed = ui.checkin && ui.checkin.reviewed && ui.checkin.reviewed[acct.id];
   const acctIssues = holds.filter(h => holdingBasisIssue(h, baseVals)).length;
   let acctTotal = 0, baseTotal = 0;
   for (const h of holds) {
@@ -2862,6 +2883,11 @@ function checkinAccountBlock(acct, ci, baseVals) {
       ${acct.institution ? `<span class="text-muted" style="font-size:13px;">${esc(acct.institution)}</span>` : ''}
       ${acct.taxTreatment ? `<span class="tag tag-outline">${esc(acct.taxTreatment)}</span>` : ''}
       <button class="btn btn-ghost btn-sm" title="Edit account" data-act="edit-account" data-account="${esc(acct.id)}">edit</button>
+      ${updated
+        ? '<span class="tag tag-ok" style="font-size:9px;opacity:0.9;" title="A value changed from last check-in">✓ updated</span>'
+        : (reviewed
+          ? `<button class="btn btn-ghost btn-sm" data-act="ci-review" data-account="${esc(acct.id)}" title="Marked reviewed — click to undo" style="padding:0 4px;"><span class="tag tag-neutral" style="font-size:9px;">✓ reviewed</span></button>`
+          : `<button class="btn btn-ghost btn-sm" data-act="ci-review" data-account="${esc(acct.id)}" title="No change this quarter? Mark it reviewed" style="font-size:10px;padding:1px 6px;">mark reviewed</button>`)}
       <span id="ci-acctbadge-${esc(acct.id)}" style="margin-left:auto;">${acctIssues ? `<span class="tag tag-warn">${acctIssues} basis</span>` : ''}</span>
       <span class="text-muted tnum" style="font-size:12px;${acctIssues ? '' : 'margin-left:auto;'}">${fmtMoney2(acctTotal)} ${baseTotal ? `<span style="color:var(--color-accent-700);">${fmtMoneySigned2(delta)}</span>` : ''}</span>
     </div>`;
@@ -2927,6 +2953,9 @@ function renderCheckin() {
   const total = checkinTotal();
   const sanity = checkinSanityHTML(total);
   const issueCount = checkinBasisIssues().length;
+  const _allAccts = portfolio.accounts.filter(a => a.status !== 'archived');
+  const _doneCount = _allAccts.filter(a => checkinAccountUpdated(a, ci, baseVals) || (ci.reviewed && ci.reviewed[a.id])).length;
+  const doneTag = _allAccts.length ? `<span class="tag ${_doneCount === _allAccts.length ? 'tag-ok' : 'tag-neutral'}" title="An account counts as done once a value changed or you marked it reviewed">${_doneCount}/${_allAccts.length} accounts done</span>` : '';
 
   return `<div class="panel">
     <div style="display:flex;align-items:flex-end;gap:20px;padding:18px 20px;border-bottom:1px solid var(--color-divider);">
@@ -2936,6 +2965,7 @@ function renderCheckin() {
       </div>
       <div class="field" style="width:150px;margin-left:8px;"><label>Snapshot date</label><input class="input" type="date" value="${esc(ci.date)}" data-act="ci-date"></div>
       <div style="margin-left:auto;display:flex;align-items:center;gap:10px;">
+        ${doneTag}
         <span id="ci-issue-badge">${issueCount ? `<span class="tag tag-warn">${issueCount} need cost basis</span>` : ''}</span>
         <button class="btn btn-secondary" data-act="ci-discard">Discard</button>
         <button class="btn btn-secondary" data-act="add-account">+ Account</button>
@@ -4151,6 +4181,7 @@ function onClick(e) {
       if (ds.level === 'account') { const ac = accountById(ds.account); ui.drill.category = ac ? ac.category : null; ui.drill.categoryLabel = ac ? (ac.categoryLabel || null) : null; }
       ui.view = 'dashboard'; render(); break;
     case 'ci-toggle': ui.checkinOpen[ds.account] = !ui.checkinOpen[ds.account]; render(); break;
+    case 'ci-review': { ui.checkin.reviewed = ui.checkin.reviewed || {}; ui.checkin.reviewed[ds.account] = !ui.checkin.reviewed[ds.account]; render(); break; }
     case 'ci-discard': ui.checkin = null; ui.view = 'dashboard'; render(); break;
     case 'ci-save': saveCheckin(); break;
     case 'add-account': openDialog({ type: 'account' }); break;

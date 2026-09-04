@@ -215,6 +215,20 @@ const merrill = '"Exported on: x"\n\n"Positions","Quantity","Price","% of Portfo
 const mr = P(merrill);
 ok('import: merrill combined ticker+name', mr.length === 2 && mr[0].value + mr[1].value === 332679.31);
 ok('import: merrill picks Value col not Price', (mr.find(r => r.ticker === 'VOO') || {}).value === 317589.51);
+// Summary block with its OWN "Value" column ABOVE the real positions header (Merrill 2nd format)
+const summaryAbove = '"Family Investments","Value","Day\'s Value Change","Unrealized Gain/Loss"\n'
+  + '"CMA-Edge 53Z","$330,895.78","$0.00 0.00%","+$38,660.31"\n'
+  + '""\n'
+  + '"Symbol","Quantity","Price","% of Portfolio","Value","Unit Cost"\n'
+  + '"VOO","159.4493","$436.80","21.05%","$69,647.46","$303.58"\n'
+  + '"GLD","58","$191.17","3.35%","$11,087.86","$164.49"\n'
+  + '"Money accounts","47,111","$1.00","14%","$47,111.00","$1.00"\n'
+  + '"Total","","","104%","$330,895.78",""';
+const sa = P(summaryAbove);
+ok('import: picks real positions header, not summary', sa.length === 2);
+ok('import: reads Value col (not Quantity) after summary', (sa.find(r => r.ticker === 'VOO') || {}).value === 69647.46);
+ok('import: excludes account-summary row', !sa.some(r => /CMA/i.test(r.ticker)));
+ok('import: skips Money-accounts cash row', !sa.some(r => /MONEY/i.test(r.ticker)));
 
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);
