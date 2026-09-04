@@ -2810,7 +2810,7 @@ function ensureCheckinDraft() {
   const open = {};
   const firstAcct = accountsSorted()[0];
   if (firstAcct) open[firstAcct.id] = true;
-  ui.checkin = { date: todayISO(), baseDate: base ? base.date : null, note: '', values };
+  ui.checkin = { date: todayISO(), baseDate: base ? base.date : null, note: '', values, basisSet: {} };
   ui.checkinOpen = open;
   ui.checkinNetWorth = '';
 }
@@ -2846,6 +2846,7 @@ function updateCheckinTotals() {
 function holdingBasisIssue(h, baseVals) {
   const ci = ui.checkin;
   if (!ci || !ci.baseDate) return false;
+  if (ci.basisSet && ci.basisSet[h.id]) return false;      // basis imported or edited this check-in → authoritative
   const base = (baseVals || valueIndex(snapshotByDate(ci.baseDate)))[h.id];
   if (!base) return false;                                 // new holding this check-in
   const v = ci.values[h.id] || {};
@@ -4185,10 +4186,11 @@ function onClick(e) {
       const imp = ui.import; if (!imp || !imp.parsed) break;
       ensureCheckinDraft(); const ci = ui.checkin;
       const mc = importMatches(); let filled = 0, added = 0;
+      ci.basisSet = ci.basisSet || {};
       for (const r of mc.matched) {
         const cv = ci.values[r.holdingId] = ci.values[r.holdingId] || {};
         cv.marketValue = fmtEditNum(r.value);
-        if (r.costBasis != null) cv.costBasis = fmtEditNum(r.costBasis);
+        if (r.costBasis != null) { cv.costBasis = fmtEditNum(r.costBasis); ci.basisSet[r.holdingId] = true; }
         filled++;
       }
       for (const r of mc.created) {
@@ -4197,7 +4199,7 @@ function onClick(e) {
         const h = { id: uid('h'), accountId: imp.accountId, ticker: r.ticker, name: r.name || undefined, assetClass: cls, status: 'active' };
         portfolio.holdings.push(h);
         ci.values[h.id] = { marketValue: fmtEditNum(r.value) };
-        if (r.costBasis != null) ci.values[h.id].costBasis = fmtEditNum(r.costBasis);
+        if (r.costBasis != null) { ci.values[h.id].costBasis = fmtEditNum(r.costBasis); ci.basisSet[h.id] = true; }
         added++;
       }
       ui.import = null; markDirty(); closeDialog(); render();
@@ -4339,7 +4341,7 @@ function onInput(e) {
   const a = t.dataset.act, ds = t.dataset;
   // check-in fields — mutate draft WITHOUT re-render (preserve focus); recompute totals lazily
   if (a === 'ci-val')   { ui.checkin.values[ds.hid] = ui.checkin.values[ds.hid] || {}; ui.checkin.values[ds.hid].marketValue = t.value; updateCheckinTotals(); updateBasisFlag(ds.hid); }
-  else if (a === 'ci-basis') { ui.checkin.values[ds.hid] = ui.checkin.values[ds.hid] || {}; ui.checkin.values[ds.hid].costBasis = t.value; updateBasisFlag(ds.hid); }
+  else if (a === 'ci-basis') { ui.checkin.values[ds.hid] = ui.checkin.values[ds.hid] || {}; ui.checkin.values[ds.hid].costBasis = t.value; (ui.checkin.basisSet = ui.checkin.basisSet || {})[ds.hid] = true; updateBasisFlag(ds.hid); }
   else if (a === 'ci-note') { ui.checkin.note = t.value; }
   else if (a === 'import-text') { ui.import = ui.import || {}; ui.import.text = t.value; }
   else if (a === 'ci-date') { ui.checkin.date = t.value; }
