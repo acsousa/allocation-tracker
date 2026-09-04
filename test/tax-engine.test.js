@@ -229,6 +229,20 @@ ok('import: picks real positions header, not summary', sa.length === 2);
 ok('import: reads Value col (not Quantity) after summary', (sa.find(r => r.ticker === 'VOO') || {}).value === 69647.46);
 ok('import: excludes account-summary row', !sa.some(r => /CMA/i.test(r.ticker)));
 ok('import: skips Money-accounts cash row', !sa.some(r => /MONEY/i.test(r.ticker)));
+// cost basis: per-share Unit Cost × Quantity
+const perShare = P('Symbol,Quantity,Price,Value,Unit Cost\nVOO,10,"$700.00","$7,000.00","$400.00"');
+ok('import: per-share cost × qty = total basis', (perShare[0] || {}).costBasis === 4000);
+// cost basis: explicit TOTAL column used as-is
+const totalCost = P('Symbol,Quantity,Value,Cost Basis\nVOO,10,"$7,000.00","$4,000.00"');
+ok('import: total cost basis used directly', (totalCost[0] || {}).costBasis === 4000);
+// ambiguous "Cost" with a per-share magnitude → ×qty
+const ambig = P('Symbol,Quantity,Value,Cost\nVOO,10,"$7,000.00","$400.00"');
+ok('import: ambiguous per-share cost → ×qty', (ambig[0] || {}).costBasis === 4000);
+// ambiguous "Cost" already a total magnitude → as-is
+const ambigT = P('Symbol,Quantity,Value,Cost\nVOO,10,"$7,000.00","$4,000.00"');
+ok('import: ambiguous total cost → as-is', (ambigT[0] || {}).costBasis === 4000);
+// no cost column → no basis
+ok('import: no cost column → no basis', P('Symbol,Value\nVOO,"$7,000.00"')[0].costBasis === undefined);
 
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

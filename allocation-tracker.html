@@ -1753,7 +1753,7 @@ function parseImportRows(text) {
   if (!rows.length) return [];
   // Pick the BEST positions header, not the first — a brokerage summary block
   // often has its own "Value" column above the real holdings table.
-  let headerIdx = -1, valueCol = -1, symbolCol = -1, descCol = -1, bestScore = 0;
+  let headerIdx = -1, valueCol = -1, symbolCol = -1, descCol = -1, qtyCol = -1, costCol = -1, costKind = '', bestScore = 0;
   for (let i = 0; i < rows.length; i++) {
     const cells = rows[i].map(c => c.trim().toLowerCase());
     const vi = cells.findIndex(c => /^(market value|current value|market val|value)$/.test(c));
@@ -1764,7 +1764,16 @@ function parseImportRows(text) {
     if (sym >= 0) score += 2;
     if (desc >= 0) score += 2;
     score += cells.filter(c => /^(quantity|qty|shares|price|last price|unit cost|cost basis|cost|% of portfolio|percent|allocation|% of account)$/.test(c)).length;
-    if (score > bestScore) { bestScore = score; headerIdx = i; valueCol = vi; symbolCol = sym; descCol = desc; }
+    if (score > bestScore) {
+      bestScore = score; headerIdx = i; valueCol = vi; symbolCol = sym; descCol = desc;
+      qtyCol = cells.findIndex(c => /^(quantity|qty|shares)$/.test(c));
+      // Cost column: prefer an explicit TOTAL cost basis; else a PER-SHARE (unit) cost; else generic.
+      const perShareIdx = cells.findIndex(c => /(unit cost|cost per share|per[\s-]?share|avg\.? ?cost|average cost|cost ?\/ ?share|unit price|unit cost basis)/.test(c));
+      const totalIdx = cells.findIndex(c => /(total cost|cost basis total|amount invested|book value)/.test(c) || c === 'cost basis' || c === 'cost');
+      if (totalIdx >= 0 && !/unit|per|average|avg/.test(cells[totalIdx])) { costCol = totalIdx; costKind = (cells[totalIdx] === 'cost') ? 'ambiguous' : 'total'; }
+      else if (perShareIdx >= 0) { costCol = perShareIdx; costKind = 'perShare'; }
+      else { costCol = cells.findIndex(c => /\bcost\b/.test(c)); costKind = costCol >= 0 ? 'ambiguous' : ''; }
+    }
   }
   const out = [];
   for (let i = (headerIdx >= 0 ? headerIdx + 1 : 0); i < rows.length; i++) {
@@ -1778,7 +1787,23 @@ function parseImportRows(text) {
     let value = valueCol >= 0 ? parseNum(cells[valueCol]) : null;
     if (value == null || !(value > 0)) value = _bestValueInRow(cells);
     if (value == null || !(value > 0)) continue;
-    out.push({ ticker, name, value });
+    // Cost basis (optional): grab a TOTAL cost basis, or derive it from a
+    // per-share unit cost × quantity. For an ambiguous "Cost" column, pick the
+    // candidate whose magnitude best matches the market value.
+    let costBasis = null;
+    if (costCol >= 0) {
+      const cr = parseNum(cells[costCol]);
+      if (cr != null && cr > 0) {
+        const qty = qtyCol >= 0 ? parseNum(cells[qtyCol]) : null;
+        if (costKind === 'perShare') costBasis = (qty != null && qty > 0) ? cr * qty : null;
+        else if (costKind === 'total') costBasis = cr;
+        else if (qty != null && qty > 0 && value > 0) { const pst = cr * qty; costBasis = Math.abs(Math.log(pst / value)) <= Math.abs(Math.log(cr / value)) ? pst : cr; }
+        else costBasis = cr;
+      }
+    }
+    const row = { ticker, name, value };
+    if (costBasis != null && costBasis > 0) row.costBasis = Math.round(costBasis * 100) / 100;
+    out.push(row);
   }
   return _dedupeImport(out);
 }
@@ -2967,9 +2992,9 @@ function renderCheckin() {
       <div style="margin-left:auto;display:flex;align-items:center;gap:10px;">
         ${doneTag}
         <span id="ci-issue-badge">${issueCount ? `<span class="tag tag-warn">${issueCount} need cost basis</span>` : ''}</span>
-        <button class="btn btn-secondary" data-act="ci-discard">Discard</button>
-        <button class="btn btn-secondary" data-act="add-account">+ Account</button>
-        <button class="btn btn-secondary" data-act="open-import" title="Paste or upload a brokerage export to fill values">Import / paste</button>
+        <button class="btn btn-secondary" data-act="ci-discard">Discard check-in</button>
+        <button class="btn btn-secondary" data-act="add-account">Add account</button>
+        <button class="btn btn-secondary" data-act="open-import" title="Paste or upload a brokerage export to fill values">Import</button>
         <button class="btn btn-primary" data-act="ci-save">Save snapshot</button>
       </div>
     </div>
@@ -4017,13 +4042,14 @@ function dialogHTML() {
     const mc = imp.parsed ? importMatches() : null;
     let preview = '';
     if (mc) {
-      const rowHTML = (tk, nm, val, action) => `<tr><td style="font-family:var(--font-heading);">${esc(tk)}</td><td class="text-muted" style="font-size:12px;">${esc((nm || '').slice(0, 34))}</td><td class="tnum" style="text-align:right;">${val == null ? '' : fmtMoney2(val)}</td><td style="text-align:right;">${action}</td></tr>`;
-      const mRows = mc.matched.map(r => rowHTML(r.ticker, r.name, r.value, '<span class="tag tag-ok" style="font-size:9px;">fill</span>')).join('');
-      const cRows = mc.created.map(r => rowHTML(r.ticker, r.name, r.value, `<label style="font-size:11px;cursor:pointer;white-space:nowrap;"><input type="checkbox" data-act="import-addnew" data-ticker="${esc(r.ticker)}" ${(imp.addSet && imp.addSet[r.ticker] === false) ? '' : 'checked'}> add</label>`)).join('');
-      const xRows = mc.missing.map(h => rowHTML(h.ticker, 'in account, not in import', null, '<span class="tag tag-neutral" style="font-size:9px;">keep</span>')).join('');
+      const rowHTML = (tk, nm, val, basis, action) => `<tr><td style="font-family:var(--font-heading);">${esc(tk)}</td><td class="text-muted" style="font-size:12px;">${esc((nm || '').slice(0, 30))}</td><td class="tnum" style="text-align:right;">${val == null ? '' : fmtMoney2(val)}</td><td class="tnum text-muted" style="text-align:right;">${basis == null ? '—' : fmtMoney2(basis)}</td><td style="text-align:right;">${action}</td></tr>`;
+      const mRows = mc.matched.map(r => rowHTML(r.ticker, r.name, r.value, r.costBasis, '<span class="tag tag-ok" style="font-size:9px;">fill</span>')).join('');
+      const cRows = mc.created.map(r => rowHTML(r.ticker, r.name, r.value, r.costBasis, `<label style="font-size:11px;cursor:pointer;white-space:nowrap;"><input type="checkbox" data-act="import-addnew" data-ticker="${esc(r.ticker)}" ${(imp.addSet && imp.addSet[r.ticker] === false) ? '' : 'checked'}> add</label>`)).join('');
+      const xRows = mc.missing.map(h => rowHTML(h.ticker, 'in account, not in import', null, null, '<span class="tag tag-neutral" style="font-size:9px;">keep</span>')).join('');
+      const anyBasis = mc.matched.concat(mc.created).some(r => r.costBasis != null);
       preview = imp.parsed.length
-        ? `<div class="panel" style="margin-top:2px;"><div style="padding:8px 12px;font-size:12px;" class="text-muted">${mc.matched.length} matched · ${mc.created.length} new · ${mc.missing.length} untouched</div>
-            <div style="max-height:230px;overflow:auto;"><table class="table"><thead><tr><th>Ticker</th><th>Name</th><th style="text-align:right;">Value</th><th style="text-align:right;">Action</th></tr></thead><tbody>${mRows}${cRows}${xRows}</tbody></table></div></div>`
+        ? `<div class="panel" style="margin-top:2px;"><div style="padding:8px 12px;font-size:12px;" class="text-muted">${mc.matched.length} matched · ${mc.created.length} new · ${mc.missing.length} untouched${anyBasis ? ' · cost basis included' : ''}</div>
+            <div style="max-height:230px;overflow:auto;"><table class="table"><thead><tr><th>Ticker</th><th>Name</th><th style="text-align:right;">Value</th><th style="text-align:right;">Cost basis</th><th style="text-align:right;">Action</th></tr></thead><tbody>${mRows}${cRows}${xRows}</tbody></table></div></div>`
         : `<div class="text-muted" style="font-size:13px;padding:6px 2px;">No holdings found in that text. Make sure it includes tickers and values.</div>`;
     }
     const canApply = mc && (mc.matched.length + mc.created.length) > 0;
@@ -4159,13 +4185,20 @@ function onClick(e) {
       const imp = ui.import; if (!imp || !imp.parsed) break;
       ensureCheckinDraft(); const ci = ui.checkin;
       const mc = importMatches(); let filled = 0, added = 0;
-      for (const r of mc.matched) { ci.values[r.holdingId] = ci.values[r.holdingId] || {}; ci.values[r.holdingId].marketValue = fmtEditNum(r.value); filled++; }
+      for (const r of mc.matched) {
+        const cv = ci.values[r.holdingId] = ci.values[r.holdingId] || {};
+        cv.marketValue = fmtEditNum(r.value);
+        if (r.costBasis != null) cv.costBasis = fmtEditNum(r.costBasis);
+        filled++;
+      }
       for (const r of mc.created) {
         if (imp.addSet && imp.addSet[r.ticker] === false) continue;
         const cls = classifyTicker(r.ticker, portfolio.tickerMap) || 'other';
         const h = { id: uid('h'), accountId: imp.accountId, ticker: r.ticker, name: r.name || undefined, assetClass: cls, status: 'active' };
         portfolio.holdings.push(h);
-        ci.values[h.id] = { marketValue: fmtEditNum(r.value) }; added++;
+        ci.values[h.id] = { marketValue: fmtEditNum(r.value) };
+        if (r.costBasis != null) ci.values[h.id].costBasis = fmtEditNum(r.costBasis);
+        added++;
       }
       ui.import = null; markDirty(); closeDialog(); render();
       toast(`Imported ${filled} value${filled === 1 ? '' : 's'}${added ? ` · added ${added} holding${added === 1 ? '' : 's'}` : ''}`);
