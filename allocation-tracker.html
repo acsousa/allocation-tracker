@@ -1705,6 +1705,88 @@ function parseNum(v) {
   const n = Number(s);
   return Number.isFinite(n) ? n : null;
 }
+
+/* ===============================================================
+   HOLDINGS IMPORT PARSER — robust against real brokerage exports
+   (Merrill/Fidelity/Schwab CSVs, pasted spreadsheets, loose lines).
+   Returns [{ ticker, name, value }] for rows with a ticker + positive value.
+   =============================================================== */
+function _splitCSVLine(line) {
+  const out = []; let cur = '', inQ = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (inQ) { if (ch === '"') { if (line[i + 1] === '"') { cur += '"'; i++; } else inQ = false; } else cur += ch; }
+    else { if (ch === '"') inQ = true; else if (ch === ',') { out.push(cur); cur = ''; } else cur += ch; }
+  }
+  out.push(cur); return out;
+}
+function _bestValueInRow(cells) {
+  let bestDollar = null, bestPlain = null;
+  for (const c of cells) {
+    const s = String(c);
+    const money = s.match(/\$\s*[\d,]+(?:\.\d+)?/g);
+    if (money) for (const t of money) { const n = parseNum(t); if (n != null && n > 0 && (bestDollar == null || n > bestDollar)) bestDollar = n; }
+    if (!/%/.test(s)) { const plains = s.match(/[\d,]+(?:\.\d+)?/g); if (plains) for (const t of plains) { const n = parseNum(t); if (n != null && n > 0 && (bestPlain == null || n > bestPlain)) bestPlain = n; } }
+  }
+  return bestDollar != null ? bestDollar : bestPlain;
+}
+const _IMPORT_SKIP = /^(total|grand total|subtotal|cash balance|pending|positions|account|selected|exported|as of|holdings)\b/i;
+function _looseImportRow(line) {
+  const t = (line || '').trim(); if (!t) return null;
+  if (_IMPORT_SKIP.test(t)) return null;
+  const tk = t.match(/^([A-Za-z0-9.\-]{1,12})\b/); if (!tk) return null;
+  const nums = t.match(/\$?\s*\d[\d,]*(?:\.\d+)?/g) || [];
+  let best = null; for (const n of nums) { const v = parseNum(n); if (v != null && v > 0 && (best == null || v > best)) best = v; }
+  return best != null ? { ticker: tk[1].toUpperCase(), name: t.slice(tk[0].length).trim(), value: best } : null;
+}
+function parseImportRows(text) {
+  if (!text) return [];
+  const norm = String(text).replace(/\r\n?/g, '\n');
+  const rawLines = norm.split('\n');
+  const hasTab = /\t/.test(norm), hasQuote = /"/.test(norm);
+  const hasDelimComma = norm.replace(/(\d),(?=\d{3}(\D|$))/g, '$1').includes(','); // ignore thousands commas
+  if (!(hasTab || hasQuote || hasDelimComma)) {   // loose: one holding per line
+    const out = []; for (const l of rawLines) { const r = _looseImportRow(l); if (r) out.push(r); }
+    return _dedupeImport(out);
+  }
+  const rows = rawLines.map(l => hasTab ? l.split('\t') : _splitCSVLine(l)).filter(cs => cs.some(c => c.trim() !== ''));
+  if (!rows.length) return [];
+  let headerIdx = -1, valueCol = -1, symbolCol = -1, descCol = -1;
+  for (let i = 0; i < rows.length; i++) {
+    const cells = rows[i].map(c => c.trim().toLowerCase());
+    const vi = cells.findIndex(c => /^(market value|current value|value|market val|balance|amount)$/.test(c));
+    const hasOther = cells.some(c => /quantity|shares|price|symbol|description|positions|holding|security|ticker|name|investment/.test(c));
+    if (vi >= 0 && hasOther) { headerIdx = i; valueCol = vi; symbolCol = cells.findIndex(c => /^(symbol|ticker)$/.test(c)); descCol = cells.findIndex(c => /description|positions|holding|security|name|investment/.test(c)); break; }
+  }
+  const out = [];
+  for (let i = (headerIdx >= 0 ? headerIdx + 1 : 0); i < rows.length; i++) {
+    const cells = rows[i]; const first = (cells[0] || '').trim();
+    if (/^(total|grand total|subtotal)\b/i.test(first)) break;
+    if (_IMPORT_SKIP.test(first)) continue;
+    let ticker = '', name = '';
+    if (symbolCol >= 0 && (cells[symbolCol] || '').trim()) { ticker = cells[symbolCol].trim(); name = (descCol >= 0 ? cells[descCol] : '').trim(); }
+    else { const srcCol = descCol >= 0 ? descCol : 0; const src = (cells[srcCol] || '').trim(); const mt = src.match(/^([A-Za-z0-9.\-]{1,12})\s+(.+)$/); if (mt) { ticker = mt[1]; name = mt[2].trim(); } else { ticker = (src.split(/\s+/)[0] || ''); } }
+    ticker = ticker.toUpperCase(); if (!ticker) continue;
+    let value = valueCol >= 0 ? parseNum(cells[valueCol]) : null;
+    if (value == null || !(value > 0)) value = _bestValueInRow(cells);
+    if (value == null || !(value > 0)) continue;
+    out.push({ ticker, name, value });
+  }
+  return _dedupeImport(out);
+}
+function _dedupeImport(rows) { const b = {}; for (const r of rows) if (!b[r.ticker] || r.value > b[r.ticker].value) b[r.ticker] = r; return Object.values(b); }
+// Split parsed import rows against the chosen account's current holdings.
+function importMatches() {
+  const imp = ui.import || {};
+  const parsed = imp.parsed || [];
+  const held = {};
+  for (const h of activeHoldings(imp.accountId)) held[(h.ticker || '').toUpperCase()] = h;
+  const matched = [], created = [];
+  for (const r of parsed) { if (held[r.ticker]) matched.push(Object.assign({ holdingId: held[r.ticker].id }, r)); else created.push(r); }
+  const inParsed = new Set(parsed.map(r => r.ticker));
+  const missing = activeHoldings(imp.accountId).filter(h => !inParsed.has((h.ticker || '').toUpperCase()));
+  return { matched, created, missing };
+}
 function fmtMoney(n)  { return '$' + Math.round(Number(n) || 0).toLocaleString('en-US'); }
 function fmtMoneySigned(n) { const v = Math.round(Number(n) || 0); return (v >= 0 ? '+' : '−') + '$' + Math.abs(v).toLocaleString('en-US'); }
 /* Two-decimal, comma-grouped variants (used in the check-in view). */
@@ -2857,6 +2939,7 @@ function renderCheckin() {
         <span id="ci-issue-badge">${issueCount ? `<span class="tag tag-warn">${issueCount} need cost basis</span>` : ''}</span>
         <button class="btn btn-secondary" data-act="ci-discard">Discard</button>
         <button class="btn btn-secondary" data-act="add-account">+ Account</button>
+        <button class="btn btn-secondary" data-act="open-import" title="Paste or upload a brokerage export to fill values">Import / paste</button>
         <button class="btn btn-primary" data-act="ci-save">Save snapshot</button>
       </div>
     </div>
@@ -3898,6 +3981,32 @@ function dialogHTML() {
       <div class="kicker" style="margin-top:6px;">Targets (rollup %, sum 100)</div>
       <div style="display:flex;flex-direction:column;gap:6px;">${tInputs}</div>
       <div class="dialog-actions"><button class="btn btn-secondary" data-act="close-dialog">Cancel</button><button class="btn btn-primary" data-act="save-band" data-child="${esc(d.child)}" data-idx="${d.idx != null ? d.idx : ''}">Save band</button></div>`;
+  } else if (d.type === 'import') {
+    const imp = ui.import || {};
+    const acctOpts = portfolio.accounts.filter(a => a.status !== 'archived').map(a => `<option value="${esc(a.id)}" ${a.id === imp.accountId ? 'selected' : ''}>${esc(a.name)}</option>`).join('');
+    const mc = imp.parsed ? importMatches() : null;
+    let preview = '';
+    if (mc) {
+      const rowHTML = (tk, nm, val, action) => `<tr><td style="font-family:var(--font-heading);">${esc(tk)}</td><td class="text-muted" style="font-size:12px;">${esc((nm || '').slice(0, 34))}</td><td class="tnum" style="text-align:right;">${val == null ? '' : fmtMoney2(val)}</td><td style="text-align:right;">${action}</td></tr>`;
+      const mRows = mc.matched.map(r => rowHTML(r.ticker, r.name, r.value, '<span class="tag tag-ok" style="font-size:9px;">fill</span>')).join('');
+      const cRows = mc.created.map(r => rowHTML(r.ticker, r.name, r.value, `<label style="font-size:11px;cursor:pointer;white-space:nowrap;"><input type="checkbox" data-act="import-addnew" data-ticker="${esc(r.ticker)}" ${(imp.addSet && imp.addSet[r.ticker] === false) ? '' : 'checked'}> add</label>`)).join('');
+      const xRows = mc.missing.map(h => rowHTML(h.ticker, 'in account, not in import', null, '<span class="tag tag-neutral" style="font-size:9px;">keep</span>')).join('');
+      preview = imp.parsed.length
+        ? `<div class="panel" style="margin-top:2px;"><div style="padding:8px 12px;font-size:12px;" class="text-muted">${mc.matched.length} matched · ${mc.created.length} new · ${mc.missing.length} untouched</div>
+            <div style="max-height:230px;overflow:auto;"><table class="table"><thead><tr><th>Ticker</th><th>Name</th><th style="text-align:right;">Value</th><th style="text-align:right;">Action</th></tr></thead><tbody>${mRows}${cRows}${xRows}</tbody></table></div></div>`
+        : `<div class="text-muted" style="font-size:13px;padding:6px 2px;">No holdings found in that text. Make sure it includes tickers and values.</div>`;
+    }
+    const canApply = mc && (mc.matched.length + mc.created.length) > 0;
+    inner = `<div class="dialog-title">Import holdings</div>
+      <div class="dialog-body">Paste a brokerage export (CSV), a spreadsheet, or "TICKER value" per line — or choose a CSV file. Values fill the check-in for the chosen account by matching tickers. Nothing leaves your browser.</div>
+      <div class="field"><label>Account</label><select class="input" data-act="import-account">${acctOpts}</select></div>
+      <div class="field"><label>Paste here</label><textarea class="input" data-act="import-text" rows="5" style="font-family:var(--font-mono);font-size:12px;" placeholder="VOO   317,589.51&#10;BND   $1,400.00">${esc(imp.text || '')}</textarea></div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+        <label class="btn btn-sm btn-secondary" style="cursor:pointer;">Choose CSV…<input type="file" data-act="import-file" accept=".csv,.txt,.tsv" style="display:none;"></label>
+        <button class="btn btn-sm btn-primary" data-act="import-parse">Parse</button>
+      </div>
+      ${preview}
+      <div class="dialog-actions"><button class="btn btn-secondary" data-act="close-dialog">Cancel</button>${canApply ? `<button class="btn btn-primary" data-act="import-apply">Fill check-in</button>` : ''}</div>`;
   } else if (d.type === 'confirm') {
     inner = `<div class="dialog-title">${esc(d.title)}</div><div class="dialog-body">${esc(d.body)}</div>
       <div class="dialog-actions"><button class="btn btn-secondary" data-act="close-dialog">Cancel</button><button class="btn ${d.danger ? 'btn-danger' : 'btn-primary'}" data-act="confirm-yes">${esc(d.ok || 'Confirm')}</button></div>`;
@@ -4010,6 +4119,28 @@ function onClick(e) {
     case 'new-checkin': startCheckin(); break;
     case 'load-demo': loadDemoData(); resetViewState(); render(); toast('Demo data loaded'); break;
     case 'onboard-start': openDialog({ type: 'account' }); break;
+    case 'open-import': {
+      const first = portfolio.accounts.find(a => a.status !== 'archived');
+      ui.import = { accountId: first ? first.id : '', text: '', parsed: null, addSet: {} };
+      openDialog({ type: 'import' }); break;
+    }
+    case 'import-parse': { ui.import = ui.import || {}; ui.import.parsed = parseImportRows(ui.import.text || ''); render(); break; }
+    case 'import-apply': {
+      const imp = ui.import; if (!imp || !imp.parsed) break;
+      ensureCheckinDraft(); const ci = ui.checkin;
+      const mc = importMatches(); let filled = 0, added = 0;
+      for (const r of mc.matched) { ci.values[r.holdingId] = ci.values[r.holdingId] || {}; ci.values[r.holdingId].marketValue = fmtEditNum(r.value); filled++; }
+      for (const r of mc.created) {
+        if (imp.addSet && imp.addSet[r.ticker] === false) continue;
+        const cls = classifyTicker(r.ticker, portfolio.tickerMap) || 'other';
+        const h = { id: uid('h'), accountId: imp.accountId, ticker: r.ticker, name: r.name || undefined, assetClass: cls, status: 'active' };
+        portfolio.holdings.push(h);
+        ci.values[h.id] = { marketValue: fmtEditNum(r.value) }; added++;
+      }
+      ui.import = null; markDirty(); closeDialog(); render();
+      toast(`Imported ${filled} value${filled === 1 ? '' : 's'}${added ? ` · added ${added} holding${added === 1 ? '' : 's'}` : ''}`);
+      break;
+    }
     case 'reopen-file': reopenPending(); break;
     case 'pos-sort': { const k = ds.key, s = ui.positionsSort || (ui.positionsSort = { key: 'category', dir: 1 }); if (s.key === k) s.dir = -s.dir; else { s.key = k; s.dir = (k === 'value' || k === 'pct' || k === 'gain') ? -1 : 1; } render(); break; }
     case 'pos-class': ui.posClass = (ui.posClass === ds.class) ? '' : ds.class; render(); break;
@@ -4123,6 +4254,14 @@ function onChange(e) {
   else if (a === 'ov-ord' || a === 'ov-ltcg' || a === 'ov-state' || a === 'ov-niit' || a === 'ov-surtax') { applyOverride(a, t); render(); }
   // Plan (F8) — field edits fire on blur/change so mid-typing keeps focus.
   else if (a === 'plan-account' || a === 'plan-done' || a === 'plan-sell' || a === 'plan-buy' || a === 'plan-amount') { applyPlanEdit(a, ds, t); }
+  else if (a === 'import-account') { ui.import = ui.import || {}; ui.import.accountId = t.value; render(); }
+  else if (a === 'import-addnew') { ui.import = ui.import || {}; ui.import.addSet = ui.import.addSet || {}; ui.import.addSet[ds.ticker] = t.checked; }
+  else if (a === 'import-file') {
+    const f = t.files && t.files[0]; if (!f) return;
+    const rd = new FileReader();
+    rd.onload = () => { ui.import = ui.import || {}; ui.import.text = String(rd.result || ''); ui.import.parsed = parseImportRows(ui.import.text); render(); };
+    rd.readAsText(f);
+  }
   else if (a === 'acct-cat') {
     const other = document.getElementById('f-other-wrap'), child = document.getElementById('f-child-wrap');
     if (other) other.style.display = t.value === 'Other' ? 'block' : 'none';
@@ -4138,6 +4277,7 @@ function onInput(e) {
   if (a === 'ci-val')   { ui.checkin.values[ds.hid] = ui.checkin.values[ds.hid] || {}; ui.checkin.values[ds.hid].marketValue = t.value; updateCheckinTotals(); updateBasisFlag(ds.hid); }
   else if (a === 'ci-basis') { ui.checkin.values[ds.hid] = ui.checkin.values[ds.hid] || {}; ui.checkin.values[ds.hid].costBasis = t.value; updateBasisFlag(ds.hid); }
   else if (a === 'ci-note') { ui.checkin.note = t.value; }
+  else if (a === 'import-text') { ui.import = ui.import || {}; ui.import.text = t.value; }
   else if (a === 'ci-date') { ui.checkin.date = t.value; }
   else if (a === 'ci-nw') { ui.checkinNetWorth = t.value; updateCheckinTotals(); }
   else if (a === 'comp-input') { updateCompSum(); }

@@ -16,7 +16,7 @@ const shim = `
   marginalRate, ltcgRateFor, deriveRates, tickerProfile, holdingDrag, ordinaryInterestRate,
   accountShelter, accountVehicle, inferVehicle, washCloneSet, taxRates, holdingDragRows,
   taxScorecard, locationSwapRecs, muniRecs, rothPlacementRecs, washWarnings, savingsDirective,
-  moveRealizedGain, simulateAfter, classForTicker, underweightClasses,
+  moveRealizedGain, simulateAfter, classForTicker, underweightClasses, parseImportRows,
 });`;
 const src = m[1] + shim;
 
@@ -198,6 +198,23 @@ const gp = A.GLIDE_PRESETS || {};
 ok('3 glide preset tracks', Object.keys(gp).length === 3);
 const gsums = Object.values(gp).flatMap(t => t.bands.map(b => Object.values(b.targets).reduce((s, v) => s + v, 0)));
 ok('every glide band sums to 100', gsums.length > 0 && gsums.every(s => s === 100));
+
+/* ---------- holdings-import parser ---------- */
+const P = A.parseImportRows;
+const fidelity = 'Symbol,Description,Quantity,Last Price,Current Value\nVTI,VANGUARD,10,"$250.00","$2,500.00"\nBND,BND,20,"$70.00","$1,400.00"\nAccount Total,,,,"$3,900.00"';
+const fr = P(fidelity);
+ok('import: fidelity 2 rows', fr.length === 2);
+ok('import: value parsed with $/commas', (fr.find(r => r.ticker === 'VTI') || {}).value === 2500 && (fr.find(r => r.ticker === 'BND') || {}).value === 1400);
+ok('import: Total row excluded', !fr.some(r => /total/i.test(r.ticker)));
+const loose = P('VOO 317,589.51\nBND $1,400.00\nGLD  15089.80');
+ok('import: loose thousands-comma not split', (loose.find(r => r.ticker === 'BND') || {}).value === 1400 && (loose.find(r => r.ticker === 'VOO') || {}).value === 317589.51);
+const tsv = P('Symbol\tValue\nVOO\t100\nBND\t200');
+ok('import: TSV', tsv.length === 2 && tsv.find(r => r.ticker === 'BND').value === 200);
+// Merrill-style: ticker+name combined column, $ value col, timestamped price, preamble + Total
+const merrill = '"Exported on: x"\n\n"Positions","Quantity","Price","% of Portfolio","Value","Unit cost"\n"VOO VANGUARD 500 INDEX ETF","454","$699.14 02:39 PM ET","25%","$317,589.51","$447.36"\n"GLD SPDR GOLD TRUST","38","$397.10 02:39 PM ET","1%","$15,089.80","$296.01"\n"Total","","","100%","$332,679.31",""';
+const mr = P(merrill);
+ok('import: merrill combined ticker+name', mr.length === 2 && mr[0].value + mr[1].value === 332679.31);
+ok('import: merrill picks Value col not Price', (mr.find(r => r.ticker === 'VOO') || {}).value === 317589.51);
 
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);
