@@ -1,7 +1,8 @@
-# Allocation Tracker
+# Quartermaster
 
-A single-file, fully-offline web app for tracking your true asset allocation
-across every account.
+**Asset Allocation Tracker** — a single-file, fully-offline web app for tracking
+your true asset allocation across every account. It's an allocation tool, not a
+net-worth tracker.
 
 It's one `allocation-tracker.html` file. Open it in a browser and it runs; your
 numbers live in a JSON file you save yourself. No server, no accounts, no
