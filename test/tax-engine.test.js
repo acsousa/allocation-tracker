@@ -17,6 +17,10 @@ const shim = `
   accountShelter, accountVehicle, inferVehicle, washCloneSet, taxRates, holdingDragRows,
   taxScorecard, locationSwapRecs, muniRecs, rothPlacementRecs, washWarnings, savingsDirective,
   moveRealizedGain, simulateAfter, classForTicker, underweightClasses, parseImportRows,
+  RETIRE_DATA, defaultRetirementSettings, retireCorr, blendMuSigma, retireBracketTax, retireBracketMarginal,
+  ltcgStackTax, rmdStartAge, rmdDivisor, rmdAmount, mulberry32, gaussFrom, drawReturnFrom, ssFactor,
+  estimatePIAmonthly, doWithdraw, decumulateYear, runProjection, switchPointVerdict, conversionFillTop,
+  defaultCollegeSettings, collegeGroupMuSigma, runCollegeProjection, fmtCompactMoney,
 });`;
 const src = m[1] + shim;
 
@@ -59,36 +63,47 @@ const v2 = {
   goals: [], glidePaths: [], tickerMap: {}, children: [],
 };
 
-/* ---------- migration (v2 -> v4) ---------- */
+/* ---------- migration (v2 -> v5) ---------- */
 const p = A.migrate(JSON.parse(JSON.stringify(v2)));
-ok('migrate: schemaVersion -> 4', p.meta.schemaVersion === 4);
+ok('migrate: schemaVersion -> 5', p.meta.schemaVersion === 5);
 ok('migrate: plans[] added', Array.isArray(p.plans));
 ok('migrate: taxSettings added', p.taxSettings && p.taxSettings.networkEnabled === false);
 ok('migrate: taxSettings.inStateMuni default false', p.taxSettings.inStateMuni === false);
 ok('migrate: taxData.tickers added', p.taxData && typeof p.taxData.tickers === 'object');
+ok('migrate: retirementSettings added', p.retirementSettings && p.retirementSettings.retirementAge === 65 && p.retirementSettings.mappingConfirmed === false);
+ok('migrate: collegeSettings added', p.collegeSettings && p.collegeSettings.defaultAnnualCostReal === 35000 && typeof p.collegeSettings.byChild === 'object');
 ok('migrate: keeps accounts + holdings', p.accounts.length === 3 && p.holdings.length === 3);
 const vById = Object.fromEntries(p.accounts.map(a => [a.id, a.vehicle]));
 ok('migrate infers vehicle: Roth IRA -> ira', vById.a_roth === 'ira');
 ok('migrate infers vehicle: 401k -> 401k', vById.a_pre === '401k');
 ok('migrate infers vehicle: Brokerage -> taxable', vById.a_tax === 'taxable');
-ok('migrate idempotent', (() => { const q = A.migrate(JSON.parse(JSON.stringify(p))); return q.plans.length === 0 && q.accounts.length === 3 && q.meta.schemaVersion === 4; })());
+ok('migrate idempotent', (() => { const q = A.migrate(JSON.parse(JSON.stringify(p))); return q.plans.length === 0 && q.accounts.length === 3 && q.meta.schemaVersion === 5; })());
 
-/* v3 -> v4 specifically: a v3 file (tax module present, no vehicle) gets vehicle + inStateMuni */
+/* v4 -> v5 specifically: a v4 file (no retirementSettings) gains them without losing data */
+const v4 = JSON.parse(JSON.stringify(p));
+v4.meta.schemaVersion = 4;
+delete v4.retirementSettings;
+const p5 = A.migrate(v4);
+ok('v4->v5: bumps to 5', p5.meta.schemaVersion === 5);
+ok('v4->v5: adds retirementSettings', p5.retirementSettings && p5.retirementSettings.paths === 5000 && p5.retirementSettings.accountScope === 'retirement');
+ok('v4->v5: adds collegeSettings', p5.collegeSettings && p5.collegeSettings.years === 4);
+ok('v4->v5: preserves holdings + accounts', p5.holdings.length === 3 && p5.accounts.length === 3);
+/* v3 -> v5: a v3 file (no vehicle, no inStateMuni, no retirementSettings) */
 const v3 = JSON.parse(JSON.stringify(p));
 v3.meta.schemaVersion = 3;
 v3.accounts.forEach(a => { delete a.vehicle; });
-delete v3.taxSettings.inStateMuni;
-const p4 = A.migrate(v3);
-ok('v3->v4: bumps to 4', p4.meta.schemaVersion === 4);
-ok('v3->v4: back-fills vehicle', p4.accounts.every(a => !!a.vehicle));
-ok('v3->v4: adds inStateMuni', p4.taxSettings.inStateMuni === false);
-ok('v3->v4: preserves holdings', p4.holdings.length === 3);
-ok('emptyPortfolio is v4 with tax fields', (() => { const e = A.migrate({ meta: { schemaVersion: 4 } }); return e.meta.schemaVersion === 4 && Array.isArray(e.plans) && !!e.taxSettings.inStateMuni === false; })());
+delete v3.taxSettings.inStateMuni; delete v3.retirementSettings;
+const p35 = A.migrate(v3);
+ok('v3->v5: bumps to 5', p35.meta.schemaVersion === 5);
+ok('v3->v5: back-fills vehicle', p35.accounts.every(a => !!a.vehicle));
+ok('v3->v5: adds inStateMuni', p35.taxSettings.inStateMuni === false);
+ok('v3->v5: adds retirementSettings', !!p35.retirementSettings);
+ok('emptyPortfolio is v5 with tax + retirement fields', (() => { const e = A.migrate({ meta: { schemaVersion: 5 } }); return e.meta.schemaVersion === 5 && Array.isArray(e.plans) && e.taxSettings.inStateMuni === false && !!e.retirementSettings; })());
 
 /* ---------- brackets + rates ---------- */
 ok('marginalRate single 150k = 24%', A.marginalRate(R.federalBrackets.single, 150000) === 0.24);
 ok('marginalRate single 300k = 35%', A.marginalRate(R.federalBrackets.single, 300000) === 0.35);
-ok('marginalRate boundary 11925 = 10%', A.marginalRate(R.federalBrackets.single, 11925) === 0.10);
+ok('marginalRate boundary 12400 = 10% (TY2026 single top of 10% band)', A.marginalRate(R.federalBrackets.single, 12400) === 0.10);
 ok('ltcg single 40k = 0%', A.ltcgRateFor(R.ltcgBrackets.single, 40000) === 0.00);
 ok('ltcg single 150k = 15%', A.ltcgRateFor(R.ltcgBrackets.single, 150000) === 0.15);
 
@@ -99,7 +114,7 @@ near('deriveRates niit 3.8%', r3.niit, 0.038, 1e-9);
 near('deriveRates r_ord_eff 38.8%', r3.r_ord_eff, 0.388, 1e-9);
 near('deriveRates r_qdi_eff 18.8%', r3.r_qdi_eff, 0.188, 1e-9);
 near('collectibles rate = min(ord,28%)+niit', r3.r_collectible_eff, 0.28 + 0.038, 1e-9);
-near('MA surtax at >$1.083M', A.deriveRates(R, { filingStatus: 'single', incomeBand: 'gt1m', state: 'MA' }).surtax, 0.04, 1e-9);
+near('MA surtax at >$1.11M (TY2026)', A.deriveRates(R, { filingStatus: 'single', incomeBand: 'gt1m', state: 'MA' }).surtax, 0.04, 1e-9);
 near('override r_ord honored', A.deriveRates(R, { filingStatus: 'single', incomeBand: '200_400', override: { ordinaryRate: 0.5 } }).r_ord, 0.5, 1e-9);
 
 /* ---------- holdingDrag mechanics ---------- */
@@ -185,8 +200,8 @@ p.taxSettings.householdMonthlySavings = 3000;
 const dir = A.savingsDirective(snap);
 const ira = dir.splits.find(s => s.accountId === 'a_roth');
 const k401 = dir.splits.find(s => s.accountId === 'a_pre');
-ok('Roth IRA capped at $7,000/yr (not $23,500)', ira && Math.round(ira.pctOrAmt * 12) === 7000);
-ok('401k capped at $23,500/yr', k401 && Math.round(k401.pctOrAmt * 12) === 23500);
+ok('Roth IRA capped at IRS 2026 $7,500/yr (not the 401k limit)', ira && Math.round(ira.pctOrAmt * 12) === 7500);
+ok('401k capped at IRS 2026 $24,500/yr', k401 && Math.round(k401.pctOrAmt * 12) === 24500);
 ok('401k filled before IRA', dir.splits.findIndex(s => s.accountId === 'a_pre') < dir.splits.findIndex(s => s.accountId === 'a_roth'));
 
 /* ---------- wash sale ---------- */
@@ -243,6 +258,158 @@ const ambigT = P('Symbol,Quantity,Value,Cost\nVOO,10,"$7,000.00","$4,000.00"');
 ok('import: ambiguous total cost → as-is', (ambigT[0] || {}).costBasis === 4000);
 // no cost column → no basis
 ok('import: no cost column → no basis', P('Symbol,Value\nVOO,"$7,000.00"')[0].costBasis === undefined);
+
+/* ================= RETIREMENT ENGINE — spec §6.8 acceptance tests ================= */
+const mfjB = R.federalBrackets.mfj, mfjL = R.ltcgBrackets.mfj, singB = R.federalBrackets.single, singL = R.ltcgBrackets.single;
+
+// §6.8-1 — $100k pre-tax withdrawal minus the MFJ standard deduction, walked through brackets, NOT a flat rate.
+// (Spec wrote $30k std ded for TY2025; refreshed to the TY2026 figure of $32,200 per the user's 2026 update.)
+const ti1 = 100000 - A.RETIRE_DATA.standardDeduction.mfj; // 100,000 − 32,200 = 67,800
+near('§6.8-1 $100k pretax − MFJ std ded, walked through TY2026 brackets', A.retireBracketTax(mfjB, ti1), 24800 * 0.10 + (ti1 - 24800) * 0.12, 0.5);
+ok('§6.8-1 std deduction MFJ = $32,200 (TY2026)', A.RETIRE_DATA.standardDeduction.mfj === 32200);
+ok('§6.8-1 progressive != flat 22%', Math.abs(A.retireBracketTax(mfjB, ti1) - ti1 * 0.22) > 1000);
+
+// §6.8-2 — Age-75 RMD on $2,000,000 pre-tax = 2,000,000 / 24.6 = $81,301.
+ok('§6.8-2 divisor age75 = 24.6', A.rmdDivisor(75) === 24.6);
+near('§6.8-2 RMD age75 $2M', A.rmdAmount(2000000, 75), 2000000 / 24.6, 0.01);
+ok('§6.8-2 RMD rounds to $81,301', Math.round(A.rmdAmount(2000000, 75)) === 81301);
+ok('§6.8-2 RMD checkpoints 73/80/85/90/95', A.rmdDivisor(73) === 26.5 && A.rmdDivisor(80) === 20.2 && A.rmdDivisor(85) === 16.0 && A.rmdDivisor(90) === 12.2 && A.rmdDivisor(95) === 8.9);
+ok('§6.8-2 RMD start 75 for 1960+, 73 before', A.rmdStartAge(1960) === 75 && A.rmdStartAge(1959) === 73);
+
+// §6.8-3 — 60/40 US-Large/Bonds → μ=3.72%; σ from the full formula (covariance term ⇒ 10.0%; spec prose "9.8" drops it).
+const blend = A.blendMuSigma({ us_large: 0.6, us_bond: 0.4 });
+near('§6.8-3 blend μ = 3.72%', blend.mu * 100, 3.72, 0.01);
+const sig2 = 0.36 * (0.16 ** 2) + 0.16 * (0.05 ** 2) + 2 * 0.6 * 0.4 * 0.16 * 0.05 * 0.10;
+near('§6.8-3 blend σ matches ΣΣwᵢwⱼσᵢσⱼρᵢⱼ', blend.sigma, Math.sqrt(sig2), 1e-6);
+near('§6.8-3 blend σ = 10.0%', blend.sigma * 100, 10.0, 0.05);
+
+// §6.8-4 — deterministic (σ=0, μ=5%): $100k grows to $432,194 in 30 years.
+const mu5 = A.blendMuSigma({ us_large: 1 }).mu;
+ok('§6.8-4 us_large μ = 5.0%', Math.abs(mu5 - 0.05) < 1e-9);
+let dbal = 100000; for (let i = 0; i < 30; i++) dbal *= 1 + mu5;
+near('§6.8-4 $100k → $432,194 in 30y', dbal, 432194.24, 1);
+ok('§6.8-4 drawReturn σ=0 is deterministic μ', A.drawReturnFrom(A.mulberry32(1), 0.05, 0) === 0.05);
+
+// §6.8-5 — seeded MC twice with same seed → identical output arrays.
+(() => {
+  const g1 = A.mulberry32(4242), g2 = A.mulberry32(4242), s1 = [], s2 = [];
+  for (let i = 0; i < 12; i++) { s1.push(A.drawReturnFrom(g1, 0.05, 0.16)); s2.push(A.drawReturnFrom(g2, 0.05, 0.16)); }
+  ok('§6.8-5 same seed → identical draws', JSON.stringify(s1) === JSON.stringify(s2));
+})();
+
+/* ---- engine mechanics beyond the 5 acceptance numbers ---- */
+// LTCG stacked on top of ordinary against the 0/15/20 thresholds.
+near('LTCG: $50k ord + $50k gain (single) all at 15%', A.ltcgStackTax(singL, 50000, 50000), 50000 * 0.15, 1);
+ok('LTCG: gains inside the 0% band pay nothing', A.ltcgStackTax(singL, 20000, 20000) === 0);
+// correlations
+ok('corr equity×equity = 0.85', A.retireCorr('us_large', 'intl_dev') === 0.85);
+ok('corr equity×bond = 0.10', A.retireCorr('us_large', 'us_bond') === 0.10);
+ok('corr REIT×equity = 0.70', A.retireCorr('reit', 'us_large') === 0.70);
+ok('corr cash×anything = 0', A.retireCorr('cash', 'crypto') === 0);
+ok('corr diagonal = 1', A.retireCorr('em', 'em') === 1);
+// SS actuarial factors
+ok('SS factor: FRA=1, 62=0.70, 70=1.24', A.ssFactor(67) === 1 && Math.abs(A.ssFactor(62) - 0.70) < 1e-9 && Math.abs(A.ssFactor(70) - 1.24) < 1e-9);
+// conversion-fill bracket mapping
+ok('conversionFillTop 24% MFJ = 403550 (TY2026)', A.conversionFillTop('24%', mfjB) === 403550);
+ok('conversionFillTop off = 0', A.conversionFillTop('off', mfjB) === 0);
+
+// One-year decumulation: $100k spend from a $1M pre-tax pile, MFJ, std ded 30k, 5% state.
+(() => {
+  const out = A.decumulateYear({ pretax: 1000000, taxable: 0, roth: 0, taxfree: 0 }, 0, {
+    age: 68, spendNet: 100000, ssGross: 0, fedBrackets: mfjB, ltcgBrackets: mfjL, stdDed: 30000,
+    stateRate: 0.05, niitRate: 0.038, niitThreshold: 250000, taxesSSstate: false, forcedRMD: 0,
+  });
+  ok('decum funds spend net of tax', Math.abs(out.netCash - 100000) < 100 && out.shortfall < 100);
+  ok('decum pays progressive tax (>0, <flat 27%)', out.tax > 0 && out.tax < 100000 * 0.27);
+})();
+
+// Full projection: deterministic pure growth (never retire) reproduces §6.8-4 end-to-end.
+(() => {
+  const cfg = {
+    start: { pretax: 100000, taxable: 0, roth: 0, taxfree: 0, basis: 0 }, contrib: {}, contribGrowth: 0,
+    currentAge: 65, retireAge: 999, spend: 0, weightsNow: { us_large: 1 }, weightsTarget: null, muSigma: A.RETIRE_DATA.muSigma,
+    filing: 'mfj', fedBrackets: mfjB, ltcgBrackets: mfjL, stdDed: 30000, stateRate: 0, niitRate: 0.038, niitThreshold: 250000,
+    taxesSSstate: false, ssGross: 0, ssClaimAge: 67, birthYearPrimary: 1960, survivorAtAge: 90, survivorStdDed: 15000,
+    survivorFedBrackets: singB, survivorLtcgBrackets: singL, survivorStateRate: 0, rNow: 0.32, conversionFill: 0, paths: 1, seed: 1, deterministic: true,
+  };
+  const res = A.runProjection(cfg);
+  ok('projection band[0] = starting balance', Math.round(res.bands[0].p50) === 100000);
+  near('projection age95 = $432,194 (30 compounds)', res.bands[res.bands.length - 1].p50, 100000 * Math.pow(1.05, 30), 1);
+  ok('projection spans age 65..95', res.bands.length === 31 && res.bands[res.bands.length - 1].age === 95);
+})();
+
+// Full MC: 1000 paths reproducible, bands ordered, success in (0,1), survivor marginal computed.
+(() => {
+  const cfg = {
+    start: { pretax: 800000, taxable: 400000, roth: 200000, taxfree: 20000, basis: 250000 },
+    contrib: { pretax: 23500, roth: 7000, taxable: 10000, taxfree: 4000 }, contribGrowth: 0,
+    currentAge: 45, retireAge: 65, spend: 90000, weightsNow: { us_large: 0.5, intl_dev: 0.2, us_bond: 0.25, reit: 0.05 },
+    weightsTarget: { us_large: 0.35, intl_dev: 0.15, us_bond: 0.45, cash: 0.05 }, muSigma: A.RETIRE_DATA.muSigma,
+    filing: 'mfj', fedBrackets: mfjB, ltcgBrackets: mfjL, stdDed: 30000, stateRate: 0.05, niitRate: 0.038, niitThreshold: 250000,
+    taxesSSstate: false, ssGross: 42000, ssClaimAge: 67, birthYearPrimary: 1981, survivorAtAge: 90, survivorStdDed: 15000,
+    survivorFedBrackets: singB, survivorLtcgBrackets: singL, survivorStateRate: 0.05, rNow: 0.32, conversionFill: 0, paths: 1000, seed: 12345,
+  };
+  const r1 = A.runProjection(Object.assign({}, cfg, { deterministic: false }));
+  const r2 = A.runProjection(Object.assign({}, cfg, { deterministic: false }));
+  ok('MC reproducible (same seed → identical bands + success)', JSON.stringify(r1.bands) === JSON.stringify(r2.bands) && r1.success === r2.success);
+  ok('MC success in (0,1)', r1.success > 0 && r1.success < 1);
+  ok('MC bands ordered p10<=p50<=p90', r1.bands.every(b => b.p10 <= b.p50 + 1 && b.p50 <= b.p90 + 1));
+  const det = A.runProjection(Object.assign({}, cfg, { deterministic: true, paths: 1 }));
+  ok('survivor marginal >= joint (single brackets, half std ded)', det.rThenSurvivor >= det.rThenJoint - 1e-9);
+  const v = A.switchPointVerdict(cfg.rNow, det.rThenJoint, det.rThenSurvivor);
+  ok('switch-point verdict is Roth or Traditional', ['Roth', 'Traditional'].includes(v.verdict));
+  // §6.6 conversion window: filling 24% bracket converts >0 and lowers the first RMD
+  const conv = A.runProjection(Object.assign({}, cfg, { deterministic: true, paths: 1, conversionFill: 394600 }));
+  ok('conversion converts >0 and cuts first RMD', conv.converted > 0 && conv.convTax > 0 && conv.firstRmd < det.firstRmd);
+  // Regression: a well-funded plan must read ~fully successful, NOT 0% (the gross-up rounding residual once
+  // left net cash ~$5 short of spend and flagged every healthy path as depleted).
+  const rich = A.runProjection(Object.assign({}, cfg, { deterministic: false, start: { pretax: 3000000, taxable: 1000000, roth: 1000000, taxfree: 100000, basis: 600000 }, spend: 80000 }));
+  ok('well-funded plan is ~fully successful (not 0)', rich.success > 0.95);
+  // Monotonic: higher spending lowers success.
+  const lo = A.runProjection(Object.assign({}, cfg, { deterministic: false, spend: 60000 }));
+  const hi = A.runProjection(Object.assign({}, cfg, { deterministic: false, spend: 200000 }));
+  ok('higher spend → lower success', lo.success >= hi.success);
+})();
+
+/* ================= COLLEGE ENGINE + compact money ================= */
+// Compact currency (chart axes): K/M/B/T, full dollars under $1,000.
+ok('fmtCompactMoney 1,500 = $1.5K', A.fmtCompactMoney(1500) === '$1.5K');
+ok('fmtCompactMoney 2.5M', A.fmtCompactMoney(2500000) === '$2.5M');
+ok('fmtCompactMoney 3.4B', A.fmtCompactMoney(3.4e9) === '$3.4B');
+ok('fmtCompactMoney 1.2T', A.fmtCompactMoney(1.2e12) === '$1.2T');
+ok('fmtCompactMoney under 1k = full', A.fmtCompactMoney(940) === '$940');
+
+// 529 glide group targets → μ/σ (stocks/bonds map to representative classes)
+near('college 60/40 group μ = 3.72%', A.collegeGroupMuSigma({ stocks: 60, bonds: 40 }).mu * 100, 3.72, 0.01);
+
+// Deterministic 529 projection: 5% growth, no contributions, no cost → grows startBal to college age.
+(() => {
+  const cfg = { startBal: 200000, currentAge: 10, startAge: 18, years: 4, annualCost: 0, annualContrib: 0, contribGrowth: 0,
+    msByAge: () => ({ mu: 0.05, sigma: 0 }), paths: 1, seed: 1, deterministic: true };
+  const r = A.runCollegeProjection(cfg);
+  ok('college band[0] = starting balance', Math.round(r.bands[0].p50) === 200000);
+  near('college balance at 18 = 200k×1.05^8', r.bands.find(b => b.age === 18).p50, 200000 * Math.pow(1.05, 8), 1);
+  ok('college fully funded when cost is 0', r.fullSuccess === 1 && r.avgYearsFunded === 4);
+})();
+
+// Deterministic 529: modest balance, real cost, 5% growth → partial funding, funded-years counted.
+(() => {
+  const cfg = { startBal: 60000, currentAge: 16, startAge: 18, years: 4, annualCost: 40000, annualContrib: 0, contribGrowth: 0,
+    msByAge: () => ({ mu: 0.05, sigma: 0 }), paths: 1, seed: 1, deterministic: true };
+  const r = A.runCollegeProjection(cfg);
+  ok('college underfunded → fullSuccess 0', r.fullSuccess === 0);
+  ok('college funds some but not all years', r.avgYearsFunded >= 1 && r.avgYearsFunded < 4);
+})();
+
+// MC 529 reproducible + success in [0,1]
+(() => {
+  const cfg = { startBal: 50000, currentAge: 8, startAge: 18, years: 4, annualCost: 30000, annualContrib: 3000, contribGrowth: 0,
+    msByAge: () => A.blendMuSigma({ us_large: 60, us_bond: 40 }), paths: 500, seed: 24680 };
+  const r1 = A.runCollegeProjection(Object.assign({}, cfg, { deterministic: false }));
+  const r2 = A.runCollegeProjection(Object.assign({}, cfg, { deterministic: false }));
+  ok('college MC reproducible', JSON.stringify(r1.bands) === JSON.stringify(r2.bands) && r1.fullSuccess === r2.fullSuccess);
+  ok('college success in [0,1]', r1.fullSuccess >= 0 && r1.fullSuccess <= 1);
+})();
 
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

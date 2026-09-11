@@ -474,24 +474,24 @@ const SEED_MAP_EXT = {"A":"us_large","AA":"us_mid","AAAU":"commod","AAL":"us_mid
    data, NOT part of the user's saved JSON.
    =============================================================== */
 const REFERENCE_DATA = {
-  taxYear: 2025,
-  source: 'IRS Rev. Proc. 2024-40 (TY2025)',
-  verifyNote: 'Estimates for Tax Year 2025 — verify against IRS.gov. Every value is editable in Settings › Tax Profile.',
+  taxYear: 2026,
+  source: 'IRS Rev. Proc. 2025-32 (TY2026)',
+  verifyNote: 'Estimates for Tax Year 2026 — verify against IRS.gov. Every value is editable in Settings › Tax Profile.',
   federalBrackets: {
-    single: [ { upTo: 11925, rate: 0.10 }, { upTo: 48475, rate: 0.12 }, { upTo: 103350, rate: 0.22 }, { upTo: 197300, rate: 0.24 }, { upTo: 250525, rate: 0.32 }, { upTo: 626350, rate: 0.35 }, { upTo: Infinity, rate: 0.37 } ],
-    mfj:    [ { upTo: 23850, rate: 0.10 }, { upTo: 96950, rate: 0.12 }, { upTo: 206700, rate: 0.22 }, { upTo: 394600, rate: 0.24 }, { upTo: 501050, rate: 0.32 }, { upTo: 751600, rate: 0.35 }, { upTo: Infinity, rate: 0.37 } ],
-    hoh:    [ { upTo: 17000, rate: 0.10 }, { upTo: 64850, rate: 0.12 }, { upTo: 103350, rate: 0.22 }, { upTo: 197300, rate: 0.24 }, { upTo: 250500, rate: 0.32 }, { upTo: 626350, rate: 0.35 }, { upTo: Infinity, rate: 0.37 } ],
-    mfs:    [ { upTo: 11925, rate: 0.10 }, { upTo: 48475, rate: 0.12 }, { upTo: 103350, rate: 0.22 }, { upTo: 197300, rate: 0.24 }, { upTo: 250525, rate: 0.32 }, { upTo: 375800, rate: 0.35 }, { upTo: Infinity, rate: 0.37 } ],
+    single: [ { upTo: 12400, rate: 0.10 }, { upTo: 50400, rate: 0.12 }, { upTo: 105700, rate: 0.22 }, { upTo: 201775, rate: 0.24 }, { upTo: 256225, rate: 0.32 }, { upTo: 640600, rate: 0.35 }, { upTo: Infinity, rate: 0.37 } ],
+    mfj:    [ { upTo: 24800, rate: 0.10 }, { upTo: 100800, rate: 0.12 }, { upTo: 211400, rate: 0.22 }, { upTo: 403550, rate: 0.24 }, { upTo: 512450, rate: 0.32 }, { upTo: 768700, rate: 0.35 }, { upTo: Infinity, rate: 0.37 } ],
+    hoh:    [ { upTo: 17700, rate: 0.10 }, { upTo: 67450, rate: 0.12 }, { upTo: 105700, rate: 0.22 }, { upTo: 201775, rate: 0.24 }, { upTo: 256200, rate: 0.32 }, { upTo: 640600, rate: 0.35 }, { upTo: Infinity, rate: 0.37 } ],
+    mfs:    [ { upTo: 12400, rate: 0.10 }, { upTo: 50400, rate: 0.12 }, { upTo: 105700, rate: 0.22 }, { upTo: 201775, rate: 0.24 }, { upTo: 256225, rate: 0.32 }, { upTo: 384350, rate: 0.35 }, { upTo: Infinity, rate: 0.37 } ],
   },
   ltcgBrackets: {
-    single: [ { upTo: 48350, rate: 0.00 }, { upTo: 533400, rate: 0.15 }, { upTo: Infinity, rate: 0.20 } ],
-    mfj:    [ { upTo: 96700, rate: 0.00 }, { upTo: 600050, rate: 0.15 }, { upTo: Infinity, rate: 0.20 } ],
-    hoh:    [ { upTo: 64750, rate: 0.00 }, { upTo: 566700, rate: 0.15 }, { upTo: Infinity, rate: 0.20 } ],
-    mfs:    [ { upTo: 48350, rate: 0.00 }, { upTo: 300000, rate: 0.15 }, { upTo: Infinity, rate: 0.20 } ],
+    single: [ { upTo: 49450, rate: 0.00 }, { upTo: 545500, rate: 0.15 }, { upTo: Infinity, rate: 0.20 } ],
+    mfj:    [ { upTo: 98900, rate: 0.00 }, { upTo: 613700, rate: 0.15 }, { upTo: Infinity, rate: 0.20 } ],
+    hoh:    [ { upTo: 66200, rate: 0.00 }, { upTo: 579600, rate: 0.15 }, { upTo: Infinity, rate: 0.20 } ],
+    mfs:    [ { upTo: 49450, rate: 0.00 }, { upTo: 306850, rate: 0.15 }, { upTo: Infinity, rate: 0.20 } ],
   },
   niitRate: 0.038,
-  niitThreshold: { single: 200000, mfj: 250000, hoh: 200000, mfs: 125000 },
-  maSurtax: { rate: 0.04, threshold: 1083150 },
+  niitThreshold: { single: 200000, mfj: 250000, hoh: 200000, mfs: 125000 }, // statutory, not inflation-indexed
+  maSurtax: { rate: 0.04, threshold: 1112000 }, // MA "millionaire's tax" — 2026 indexed threshold
   collectiblesMaxRate: 0.28, // long-term gains on collectibles (physical-metal ETFs) capped here, not the 15/20% LTCG rate
 
   // Top marginal STATE income-tax rate, TY2025, as PERCENT. 0 = no wage tax.
@@ -511,10 +511,12 @@ const REFERENCE_DATA = {
     TN: 'No income tax (Hall tax repealed 2021).',
   },
   contribLimits: {
-    k401_elective: 23500, k401_catchup_50: 7500, k401_catchup_60_63: 11250,
-    ira: 7000, ira_catchup_50: 1000,
-    hsa_self: 4300, hsa_family: 8550, hsa_catchup_55: 1000,
+    // IRS 2026 contribution limits (Rev. Proc. 2025-32 / HSA Rev. Proc. 2025-19).
+    k401_elective: 24500, k401_catchup_50: 8000, k401_catchup_60_63: 11250,
+    ira: 7500, ira_catchup_50: 1100,
+    hsa_self: 4400, hsa_family: 8750, hsa_catchup_55: 1000,
   },
+  contribLimitsYear: 2026,
   incomeBands: [
     { key: 'lt50',    label: 'Under $50k',   income: 40000 },
     { key: '50_100',  label: '$50k – $100k', income: 75000 },
@@ -715,10 +717,552 @@ function washCloneSet(ticker) {
   return row ? row : [t];
 }
 
+/* ===============================================================
+   RETIREMENT ENGINE — Monte Carlo projector (spec §6, NORMATIVE).
+   Pure functions; real (inflation-adjusted) throughout. All rates
+   decimals, all balances today's dollars. Embedded data, not saved.
+   =============================================================== */
+const RETIRE_DATA = {
+  // Real geometric μ (%), σ (%) per detail asset class (§6.1). Editable defaults.
+  muSigma: {
+    us_large: [5.0, 16], us_total: [5.0, 16], us_mid: [5.5, 20], us_small: [5.5, 20],
+    intl_dev: [5.5, 17], em: [6.0, 21], us_bond: [1.8, 5], intl_bond: [1.8, 5],
+    reit: [4.5, 19], commod: [1.0, 16], cash: [0.5, 1], crypto: [5.0, 70],
+    blend: [3.7, 10], other: [3.0, 10],
+  },
+  standardDeduction: { single: 16100, mfj: 32200, hoh: 24150, mfs: 16100 }, // TY2026 (Rev. Proc. 2025-32)
+  // IRS Pub 590-B Uniform Lifetime Table divisors (RMD).
+  uniformLifetime: { 73:26.5,74:25.5,75:24.6,76:23.7,77:22.9,78:22.0,79:21.1,80:20.2,81:19.4,82:18.5,83:17.7,84:16.8,85:16.0,86:15.2,87:14.4,88:13.7,89:12.9,90:12.2,91:11.5,92:10.8,93:10.1,94:9.5,95:8.9,96:8.4,97:7.8,98:7.3,99:6.8,100:6.4,101:6.0,102:5.6,103:5.2,104:4.9,105:4.6 },
+  ssTaxablePct: 0.85,   // flat 85% taxable (simplification, declared; 0/50/85 ladder is out of scope)
+  ssTaxingStates: ['CO','CT','MN','MT','NM','RI','UT','VT','WV'], // states that tax SS; all others (incl. MA) exempt
+  ssFRA: 67, endAge: 95, penaltyAge: 59.5, penaltyRate: 0.10,
+};
+
+// Correlation family of an asset class (§6.1 correlation rule).
+const retireCatOf = c => c==='cash'?'cash':c==='crypto'?'crypto':c==='commod'?'commod':(c==='us_bond'||c==='intl_bond')?'bond':c==='reit'?'reit':'equity';
+function retireCorr(a, b) {
+  if (a === b) return 1;
+  const ca = retireCatOf(a), cb = retireCatOf(b);
+  if (ca === 'cash' || cb === 'cash') return 0;
+  const isEq = x => x === 'equity';
+  if ((ca === 'reit' && isEq(cb)) || (cb === 'reit' && isEq(ca))) return 0.70; // REIT↔equity
+  const na = ca === 'reit' ? 'equity' : ca, nb = cb === 'reit' ? 'equity' : cb;
+  if (na === nb) return na === 'bond' ? 0.70 : 0.85;
+  const s = new Set([na, nb]);
+  if (s.has('bond')) return 0.10;                        // bond × anything-nonbond
+  if (s.has('equity') && s.has('commod')) return 0.30;
+  if (s.has('equity') && s.has('crypto')) return 0.50;
+  if (s.has('crypto')) return 0.20;                      // crypto × commodity
+  return 0.20;
+}
+// Blend weights {classId:fraction} → {mu, sigma} decimals. σ² = ΣΣ wᵢwⱼσᵢσⱼρᵢⱼ.
+function blendMuSigma(weights, muSigma) {
+  const ms = muSigma || RETIRE_DATA.muSigma;
+  const cls = Object.keys(weights).filter(c => weights[c] > 0);
+  const wsum = cls.reduce((s, c) => s + weights[c], 0) || 1;
+  let mu = 0;
+  for (const c of cls) mu += (weights[c] / wsum) * ((ms[c] || ms.other)[0] / 100);
+  let v = 0;
+  for (const i of cls) for (const j of cls) {
+    const si = (ms[i] || ms.other)[1] / 100, sj = (ms[j] || ms.other)[1] / 100;
+    v += (weights[i] / wsum) * (weights[j] / wsum) * si * sj * retireCorr(i, j);
+  }
+  return { mu, sigma: Math.sqrt(Math.max(0, v)) };
+}
+
+// Progressive tax on a taxable-income amount against a bracket list.
+function retireBracketTax(brackets, ti) {
+  if (!(ti > 0)) return 0;
+  let tax = 0, prev = 0;
+  for (const b of brackets) { const top = Math.min(ti, b.upTo); if (top > prev) tax += (top - prev) * b.rate; if (ti <= b.upTo) break; prev = b.upTo; }
+  return tax;
+}
+function retireBracketMarginal(brackets, ti) {
+  for (const b of brackets) if (ti <= b.upTo) return b.rate;
+  return brackets[brackets.length - 1].rate;
+}
+// LTCG stacked ON TOP of ordinary taxable income against the 0/15/20 thresholds.
+function ltcgStackTax(ltcgBrackets, ordinary, ltcg) {
+  if (!(ltcg > 0)) return 0;
+  let tax = 0, lo = Math.max(0, ordinary), rem = ltcg;
+  for (const b of ltcgBrackets) { if (lo >= b.upTo) continue; const amt = Math.min(rem, b.upTo - lo); tax += amt * b.rate; rem -= amt; lo += amt; if (rem <= 0) break; }
+  return tax;
+}
+
+// RMD (§6.4): start 75 if born 1960+, else 73. Amount = balance ÷ Uniform Lifetime divisor.
+function rmdStartAge(birthYear) { return Number(birthYear) >= 1960 ? 75 : 73; }
+function rmdDivisor(age) { const t = RETIRE_DATA.uniformLifetime; return t[Math.max(73, Math.floor(age))] || t[105]; }
+function rmdAmount(pretaxBalance, age) { return Math.max(0, pretaxBalance) / rmdDivisor(age); }
+
+// Seeded RNG (mulberry32) + lognormal annual return so the GEOMETRIC mean ≈ μ.
+function mulberry32(seed) { let a = (seed >>> 0) || 1; return function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+function gaussFrom(rng) { let u = 0, v = 0; while (u === 0) u = rng(); while (v === 0) v = rng(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); }
+function drawReturnFrom(rng, mu, sigma) { if (sigma <= 0) return mu; const z = gaussFrom(rng); const arithMean = mu + sigma * sigma / 2; return Math.exp((arithMean - sigma * sigma / 2) + sigma * z) - 1; }
+
+// Social Security actuarial factor vs PIA at full retirement age.
+function ssFactor(claimAge, fra) {
+  fra = fra || RETIRE_DATA.ssFRA;
+  const m = Math.round((claimAge - fra) * 12);
+  if (m === 0) return 1;
+  if (m < 0) { const e = -m; return Math.max(0.7, 1 - (Math.min(e, 36) * (5 / 900) + Math.max(0, e - 36) * (5 / 1200))); }
+  return Math.min(1.24, 1 + m * (8 / 1200)); // +8%/yr delayed credit to age 70
+}
+// Rough real monthly PIA from annual income (2026 bend points; wage base $184,500) when no benefit entered.
+function estimatePIAmonthly(annualIncome) {
+  const aime = Math.min(annualIncome, 184500) / 12, b1 = 1286, b2 = 7750;
+  return 0.9 * Math.min(aime, b1) + 0.32 * Math.max(0, Math.min(aime, b2) - b1) + 0.15 * Math.max(0, aime - b2);
+}
+
+// Withdraw `need` gross dollars in order RMD→taxable→pre-tax→Roth→tax-free (§6.4).
+function doWithdraw(B, basis, need, forcedRMD) {
+  let pretaxOut = 0, taxableOut = 0, rothOut = 0, taxfreeOut = 0, ltcgOut = 0, newBasis = basis, reinvest = 0, pretaxDiscretionary = 0;
+  const gainFrac = B.taxable > 0 ? Math.max(0, Math.min(1, (B.taxable - basis) / B.taxable)) : 0; // average-basis (declared)
+  // unmet = the part of `need` the buckets couldn't cover (true funds-exhausted shortfall, not a rounding gap).
+  const finalize = () => { if (newBasis < 0) newBasis = 0; const totalOut = pretaxOut + taxableOut + rothOut + taxfreeOut; return { pretaxOut, taxableOut, rothOut, taxfreeOut, ltcgOut, newBasis, reinvest, pretaxDiscretionary, unmet: Math.max(0, need - totalOut) }; };
+  if (forcedRMD > 0) pretaxOut += forcedRMD;
+  let raised = pretaxOut;
+  if (raised >= need) { reinvest = raised - need; return finalize(); } // excess RMD reinvested to taxable
+  let rem = need - raised;
+  const takeT = Math.min(rem, B.taxable);
+  taxableOut += takeT; ltcgOut += takeT * gainFrac; newBasis -= takeT * (1 - gainFrac); raised += takeT; rem -= takeT;
+  if (rem <= 0) return finalize();
+  const takeP = Math.min(rem, Math.max(0, B.pretax - forcedRMD));
+  pretaxOut += takeP; pretaxDiscretionary += takeP; raised += takeP; rem -= takeP;
+  if (rem <= 0) return finalize();
+  const takeR = Math.min(rem, B.roth); rothOut += takeR; raised += takeR; rem -= takeR;
+  if (rem <= 0) return finalize();
+  const takeF = Math.min(rem, B.taxfree); taxfreeOut += takeF; rem -= takeF;
+  return finalize();
+}
+
+// One year of decumulation with the full retirement tax stack (§6.3). Gross-up loop for tax-on-withdrawals.
+function decumulateYear(buckets, basis, opts) {
+  const B = Object.assign({}, buckets);
+  let taxableBasis = basis;
+  const ssTaxableFed = opts.ssGross * RETIRE_DATA.ssTaxablePct;                 // fed: flat 85%
+  const ssTaxableState = opts.taxesSSstate ? opts.ssGross * RETIRE_DATA.ssTaxablePct : 0;
+  const forcedRMD = Math.min(opts.forcedRMD || 0, B.pretax);
+  let taxGuess = 0, res = null;
+  for (let iter = 0; iter < 6; iter++) {
+    let need = opts.spendNet + taxGuess - opts.ssGross;
+    if (need < 0) need = 0;
+    res = doWithdraw(B, taxableBasis, need, forcedRMD);
+    const ordinary = res.pretaxOut + ssTaxableFed;
+    const ti = Math.max(0, ordinary - opts.stdDed);
+    const fed = retireBracketTax(opts.fedBrackets, ti);
+    const ltcgTax = ltcgStackTax(opts.ltcgBrackets, ti, res.ltcgOut);
+    const magi = ordinary + res.ltcgOut;
+    const niit = magi > opts.niitThreshold ? opts.niitRate * Math.min(res.ltcgOut, magi - opts.niitThreshold) : 0;
+    const state = opts.stateRate * Math.max(0, res.pretaxOut + ssTaxableState + res.ltcgOut);
+    const penalty = (opts.age < RETIRE_DATA.penaltyAge) ? RETIRE_DATA.penaltyRate * res.pretaxDiscretionary : 0;
+    const tax = fed + ltcgTax + niit + state + penalty;
+    if (Math.abs(tax - taxGuess) < 1) { taxGuess = tax; break; }
+    taxGuess = tax;
+  }
+  const w = res;
+  B.pretax  = Math.max(0, B.pretax  - w.pretaxOut);
+  B.taxable = Math.max(0, B.taxable - w.taxableOut);
+  B.roth    = Math.max(0, B.roth    - w.rothOut);
+  B.taxfree = Math.max(0, B.taxfree - w.taxfreeOut);
+  taxableBasis = w.newBasis;
+  if (w.reinvest > 0) { B.taxable += w.reinvest; taxableBasis += w.reinvest; } // basis = value on reinvest
+  const totalOut = w.pretaxOut + w.taxableOut + w.rothOut + w.taxfreeOut;
+  const netCash = opts.ssGross + totalOut - taxGuess;
+  return { buckets: B, basis: taxableBasis, tax: taxGuess, ltcg: w.ltcgOut, ssTaxable: ssTaxableFed,
+           withdrawn: totalOut, netCash, shortfall: w.unmet, // true funds-exhausted gap, not the gross-up rounding residual
+           ordinaryTI: Math.max(0, w.pretaxOut + ssTaxableFed - opts.stdDed), pretaxOut: w.pretaxOut };
+}
+
+// Full projection: `paths` Monte Carlo runs (or one deterministic median path). See §6.2–6.6.
+function runProjection(cfg) {
+  const endAge = RETIRE_DATA.endAge;
+  const nYears = endAge - cfg.currentAge + 1;
+  const rmdAge = rmdStartAge(cfg.birthYearPrimary);
+  const glideYears = Math.max(1, cfg.retireAge - cfg.currentAge);
+  const yearWeights = (k) => {
+    if (!cfg.weightsTarget) return cfg.weightsNow;
+    const f = Math.max(0, Math.min(1, k / glideYears));
+    const out = {}, keys = new Set([...Object.keys(cfg.weightsNow), ...Object.keys(cfg.weightsTarget)]);
+    for (const c of keys) out[c] = (cfg.weightsNow[c] || 0) * (1 - f) + (cfg.weightsTarget[c] || 0) * f;
+    return out;
+  };
+  const musig = [];
+  for (let k = 0; k < nYears; k++) musig.push(blendMuSigma(yearWeights(k), cfg.muSigma));
+
+  const nPaths = cfg.deterministic ? 1 : cfg.paths;
+  const totalsByYear = Array.from({ length: nYears }, () => []);
+  let successes = 0, detTable = null, rThenJoint = 0, rThenSurvivor = 0, converted = 0, convTax = 0, detFirstRmdPretax = 0;
+
+  for (let p = 0; p < nPaths; p++) {
+    const rng = cfg.deterministic ? null : mulberry32((cfg.seed >>> 0) + p * 2654435761);
+    let B = { pretax: cfg.start.pretax, taxable: cfg.start.taxable, roth: cfg.start.roth, taxfree: cfg.start.taxfree };
+    let basis = cfg.start.basis, depleted = false, prevPretax = B.pretax;
+    const rows = cfg.deterministic ? [] : null;
+    totalsByYear[0].push(Math.max(0, B.pretax + B.taxable + B.roth + B.taxfree)); // k=0 anchors at today
+    if (rows) rows.push({ age: cfg.currentAge, phase: 'start', r: 0, total: B.pretax + B.taxable + B.roth + B.taxfree });
+    for (let k = 1; k < nYears; k++) {
+      const age = cfg.currentAge + k, ms = musig[k];
+      const r = cfg.deterministic ? ms.mu : drawReturnFrom(rng, ms.mu, ms.sigma);
+      prevPretax = B.pretax;
+      if (age < cfg.retireAge) {
+        const c = cfg.contrib, g = Math.pow(1 + cfg.contribGrowth, k);
+        B.pretax  = B.pretax  * (1 + r) + (c.pretax  || 0) * g;
+        B.roth    = B.roth    * (1 + r) + (c.roth    || 0) * g;
+        B.taxfree = B.taxfree * (1 + r) + (c.taxfree || 0) * g;
+        const divs = B.taxable * (cfg.workDrag ? cfg.workDrag.divYield : 0);
+        const dragTax = B.taxable * (cfg.workDrag ? cfg.workDrag.dragRate : 0);
+        B.taxable = B.taxable * (1 + r) + (c.taxable || 0) - dragTax;
+        basis += (c.taxable || 0) + divs; // reinvested dividends raise basis (declared)
+        if (rows) rows.push({ age, phase: 'accum', r, contrib: (c.pretax||0)+(c.roth||0)+(c.taxfree||0)+(c.taxable||0), tax: dragTax, pretax: B.pretax, total: B.pretax + B.taxable + B.roth + B.taxfree });
+      } else {
+        B.pretax *= (1 + r); B.taxable *= (1 + r); B.roth *= (1 + r); B.taxfree *= (1 + r);
+        const survivor = age >= cfg.survivorAtAge;
+        const forcedRMD = age >= rmdAge ? rmdAmount(prevPretax * (1 + r), age) : 0;
+        if (cfg.deterministic && age === rmdAge) detFirstRmdPretax = prevPretax * (1 + r);
+        const ssGross = age >= cfg.ssClaimAge ? cfg.ssGross : 0;
+        const out = decumulateYear(B, basis, {
+          age, spendNet: cfg.spend, ssGross,
+          fedBrackets: survivor ? cfg.survivorFedBrackets : cfg.fedBrackets,
+          ltcgBrackets: survivor ? cfg.survivorLtcgBrackets : cfg.ltcgBrackets,
+          stdDed: survivor ? cfg.survivorStdDed : cfg.stdDed,
+          stateRate: survivor ? cfg.survivorStateRate : cfg.stateRate,
+          niitRate: cfg.niitRate, niitThreshold: cfg.niitThreshold, taxesSSstate: cfg.taxesSSstate, forcedRMD,
+        });
+        B = out.buckets; basis = out.basis;
+        if (out.shortfall > 1) depleted = true;
+        if (cfg.deterministic) {
+          const grossOrd = out.pretaxOut + out.ssTaxable;
+          rThenJoint    = Math.max(rThenJoint,    retireBracketMarginal(cfg.fedBrackets, Math.max(0, grossOrd - cfg.stdDed)) + cfg.stateRate);
+          rThenSurvivor = Math.max(rThenSurvivor, retireBracketMarginal(cfg.survivorFedBrackets, Math.max(0, grossOrd - cfg.survivorStdDed)) + cfg.survivorStateRate);
+          if (cfg.conversionFill > 0 && age < rmdAge && age < cfg.ssClaimAge && !survivor) {
+            const convAmt = Math.min(Math.max(0, cfg.conversionFill - out.ordinaryTI), B.pretax);
+            if (convAmt > 0) {
+              const t = retireBracketTax(cfg.fedBrackets, out.ordinaryTI + convAmt) - retireBracketTax(cfg.fedBrackets, out.ordinaryTI) + cfg.stateRate * convAmt;
+              const payable = Math.min(t, B.taxable);            // conversion tax paid from taxable (§6.6)
+              const actualConv = t > 0 && payable < t ? convAmt * (payable / t) : convAmt;
+              const bt = B.taxable > 0 ? Math.max(0, Math.min(1, (B.taxable - basis) / B.taxable)) : 0;
+              B.pretax -= actualConv; B.roth += actualConv;
+              B.taxable -= payable; basis -= payable * (1 - bt); if (basis < 0) basis = 0;
+              converted += actualConv; convTax += payable;
+            }
+          }
+        }
+        if (rows) rows.push({ age, phase: 'decum', r, ss: ssGross, rmd: forcedRMD, withdrawn: out.withdrawn, tax: out.tax, net: out.netCash, pretax: B.pretax, total: B.pretax + B.taxable + B.roth + B.taxfree });
+      }
+      totalsByYear[k].push(Math.max(0, B.pretax + B.taxable + B.roth + B.taxfree));
+    }
+    if (!depleted && (B.pretax + B.taxable + B.roth + B.taxfree) > 0) successes++;
+    if (cfg.deterministic) detTable = rows;
+  }
+  const pct = (arr, q) => { const a = arr.slice().sort((x, y) => x - y); if (!a.length) return 0; const i = (a.length - 1) * q, lo = Math.floor(i), hi = Math.ceil(i); return lo === hi ? a[lo] : a[lo] + (a[hi] - a[lo]) * (i - lo); };
+  const bands = totalsByYear.map((arr, k) => ({ age: cfg.currentAge + k, p10: pct(arr, .1), p25: pct(arr, .25), p50: pct(arr, .5), p75: pct(arr, .75), p90: pct(arr, .9) }));
+  return { bands, success: nPaths ? successes / nPaths : 0, detTable, rmdAge, nYears, rThenJoint, rThenSurvivor,
+           converted, convTax, pretaxAtRmd: detFirstRmdPretax, firstRmd: rmdAmount(detFirstRmdPretax, rmdAge) };
+}
+
+// Roth-vs-Traditional verdict. The headline comparison uses the household's projected retirement rate
+// (joint, or single for a one-person household); the survivor-alone rate is surfaced as a tiebreaker/hedge.
+function switchPointVerdict(rNow, jointMarginal, survivorMarginal) {
+  const rThen = jointMarginal;
+  const survivorHigher = survivorMarginal > jointMarginal + 1e-9;
+  let verdict, why;
+  if (rNow > rThen + 0.02) { verdict = 'Traditional'; why = 'Your rate this year is above your projected retirement rate — take the deduction now at the higher rate.'; }
+  else if (rNow < rThen - 0.02) { verdict = 'Roth'; why = 'Your projected retirement rate is higher than today — pay the tax now at the lower rate.'; }
+  else { verdict = 'Roth'; why = 'The two rates are close, so Roth wins the tiebreakers: no forced withdrawals later, and it shelters more after-tax wealth per dollar of limit.'; }
+  if (survivorHigher && verdict === 'Traditional') why += ' A surviving spouse filing alone would face an even higher rate, which argues the other way — consider splitting toward Roth.';
+  else if (survivorHigher && verdict !== 'Roth') why += ' It also hedges the higher rate a surviving spouse would pay alone.';
+  return { verdict, rNow, rThen, rThenJoint: jointMarginal, rThenSurvivor: survivorMarginal, why };
+}
+
+/* ---- Portfolio glue: read the schema into engine inputs (spec §2) ---- */
+// Which tax bucket an account's balance belongs to.
+function retireBucketOf(a) {
+  const v = accountVehicle(a), tt = a.taxTreatment;
+  if (v === 'hsa') return 'taxfree';                 // HSA: pre-tax in, tax-free out
+  if (tt === 'Roth' || tt === 'Tax-free') return 'roth';
+  if (v === 'ira' || v === '401k') return 'pretax';  // traditional retirement
+  if (tt === 'Pre-tax') return 'pretax';
+  return 'taxable';
+}
+// Accounts feeding the retirement model. 529s always excluded (§2). When the
+// account scope is 'retirement' (default), plain taxable brokerage is excluded too;
+// 'all' includes it as a taxable bridge.
+function retireAccounts() {
+  const scope = (portfolio.retirementSettings && portfolio.retirementSettings.accountScope) || 'retirement';
+  return portfolio.accounts.filter(a => {
+    if (a.status === 'archived' || a.category === '529') return false;
+    if (scope === 'all') return true;
+    return retireBucketOf(a) !== 'taxable';
+  });
+}
+// Starting balances by bucket + taxable basis, from the latest snapshot.
+function retireStartBuckets(snap) {
+  snap = snap || latestSnapshot();
+  const out = { pretax: 0, taxable: 0, roth: 0, taxfree: 0, basis: 0 };
+  if (!snap) return out;
+  const idx = valueIndex(snap);
+  for (const a of retireAccounts()) {
+    const bucket = retireBucketOf(a);
+    for (const h of activeHoldings(a.id)) {
+      const v = idx[h.id]; if (!v) continue;
+      const mv = Number(v.marketValue) || 0; if (mv <= 0) continue;
+      out[bucket] += mv;
+      if (bucket === 'taxable') {
+        const cb = v.costBasis != null ? Number(v.costBasis) : (h.costBasis != null ? Number(h.costBasis) : mv);
+        out.basis += cb;
+      }
+    }
+  }
+  return out;
+}
+// Current allocation weights across detail classes (composition-decomposed), non-529.
+function retireCurrentWeights(snap) {
+  snap = snap || latestSnapshot();
+  const holds = portfolio.holdings.filter(h => h.status !== 'archived');
+  const acctOk = new Set(retireAccounts().map(a => a.id));
+  const a = allocate(holds.filter(h => acctOk.has(h.accountId)), snap);
+  const w = {}; if (a.total > 0) for (const [cls, val] of Object.entries(a.detail)) w[cls] = val / a.total;
+  return Object.keys(w).length ? w : { us_large: 1 };
+}
+// Infer real contribution run-rate per bucket from ≥3 snapshots (§2), else null.
+function retireInferContributions() {
+  const snaps = sortedSnapshots();
+  if (snaps.length < 3) return null;
+  const first = snaps[0], last = snaps[snaps.length - 1];
+  const years = Math.max(0.25, (new Date(last.date) - new Date(first.date)) / (365.25 * 864e5));
+  const w = retireCurrentWeights(last), mu = blendMuSigma(w).mu;
+  const b0 = retireStartBucketsFor(first), b1 = retireStartBucketsFor(last);
+  const growthFactor = Math.pow(1 + mu, years) - 1;
+  const out = {};
+  for (const k of ['pretax', 'taxable', 'roth', 'taxfree']) {
+    const contrib = (b1[k] - b0[k] - b0[k] * growthFactor) / years;
+    out[k] = Math.max(0, Math.round(contrib));
+  }
+  out._years = Math.round(years * 10) / 10;
+  return out;
+}
+function retireStartBucketsFor(snap) { return retireStartBuckets(snap); }
+
+// Blended taxable dividend yield + tax drag at the user's working-years rates (feeds §6.2).
+function retireWorkDrag(weights) {
+  const rates = taxRates();
+  let dy = 0, drag = 0;
+  for (const [cls, w] of Object.entries(weights)) {
+    const prof = DEFAULT_TAX_PROFILE[cls] || DEFAULT_TAX_PROFILE.other;
+    dy += w * (prof.divYield || 0) / 100;
+    drag += w * holdingDrag(1, prof, rates);
+  }
+  return { divYield: dy, dragRate: drag };
+}
+
+// Map a conversion-fill setting ('22%'|'24%'|'off') to the top-of-bracket dollar amount.
+function conversionFillTop(setting, fedBrackets) {
+  if (!setting || setting === 'off') return 0;
+  const rate = parseFloat(setting) / 100;
+  const b = fedBrackets.find(x => Math.abs(x.rate - rate) < 1e-6);
+  return b ? b.upTo : 0;
+}
+
+// Assemble the engine cfg from portfolio + retirementSettings + tax profile.
+function buildRetireConfig(overrides) {
+  const rs = portfolio.retirementSettings || defaultRetirementSettings();
+  const ts = portfolio.taxSettings || defaultTaxSettings();
+  const ref = REFERENCE_DATA, rates = taxRates();
+  const fs = ts.filingStatus || 'single';
+  const income = bandIncome(ref, ts.incomeBand);
+  const nowYear = new Date().getFullYear();
+  const birthYou = Number(rs.birthYears && rs.birthYears[0]) || (nowYear - 40);
+  const birthSpouse = rs.birthYears && rs.birthYears[1] ? Number(rs.birthYears[1]) : null;
+  const currentAge = nowYear - birthYou;
+  const claim = (rs.ssClaimAge && rs.ssClaimAge[0]) || 67;
+  // SS gross (real): user PIA, else estimate from income. Both spouses summed, started at your claim age (declared).
+  let ssGross;
+  if (rs.ssPIA === 'estimate' || !rs.ssPIA) {
+    ssGross = estimatePIAmonthly(income) * 12 * ssFactor(claim);
+    if (birthSpouse) ssGross += estimatePIAmonthly(income) * 0.5 * 12 * ssFactor((rs.ssClaimAge && rs.ssClaimAge[1]) || claim);
+  } else {
+    ssGross = (Number(rs.ssPIA[0]) || 0) * 12 * ssFactor(claim);
+    if (rs.ssPIA[1]) ssGross += (Number(rs.ssPIA[1]) || 0) * 12 * ssFactor((rs.ssClaimAge && rs.ssClaimAge[1]) || claim);
+  }
+  const weightsNow = retireCurrentWeights();
+  let weightsTarget = null;
+  if (rs.retirementAllocation && rs.retirementAllocation !== 'current' && typeof rs.retirementAllocation === 'object') {
+    const t = rs.retirementAllocation, sum = Object.values(t).reduce((s, v) => s + Number(v), 0) || 1;
+    weightsTarget = {}; for (const [c, v] of Object.entries(t)) weightsTarget[c] = Number(v) / sum;
+  }
+  const inferred = retireInferContributions();
+  const contrib = Object.assign({ pretax: 0, taxable: 0, roth: 0, taxfree: 0 },
+    inferred ? { pretax: inferred.pretax, taxable: inferred.taxable, roth: inferred.roth, taxfree: inferred.taxfree } : {},
+    rs.contribOverride || {});
+  const muSigma = rs.muSigma ? Object.assign({}, RETIRE_DATA.muSigma, rs.muSigma) : RETIRE_DATA.muSigma;
+  const spend = overrides && overrides.spend != null ? overrides.spend : (rs.spendingTargetRealAnnual || 80000);
+  return {
+    start: retireStartBuckets(), contrib, contribGrowth: (rs.contribGrowthReal || 0) / 100,
+    currentAge, retireAge: rs.retirementAge || 65, spend,
+    weightsNow, weightsTarget, muSigma,
+    filing: fs, fedBrackets: ref.federalBrackets[fs], ltcgBrackets: ref.ltcgBrackets[fs],
+    stdDed: RETIRE_DATA.standardDeduction[fs], stateRate: rates.r_state, niitRate: ref.niitRate, niitThreshold: ref.niitThreshold[fs] || 200000,
+    taxesSSstate: RETIRE_DATA.ssTaxingStates.includes(ts.state), ssGross, ssClaimAge: claim, birthYearPrimary: birthYou,
+    survivorAtAge: rs.survivorAge || 90, survivorStdDed: RETIRE_DATA.standardDeduction.single,
+    survivorFedBrackets: ref.federalBrackets.single, survivorLtcgBrackets: ref.ltcgBrackets.single, survivorStateRate: rates.r_state,
+    // r_now = marginal on last contributed dollar (fed+state, NIIT excluded — contribution doesn't displace investment income)
+    rNow: marginalRate(ref.federalBrackets[fs], income) + rates.r_state + rates.surtax,
+    conversionFill: conversionFillTop(rs.conversionFillBracket, ref.federalBrackets[fs]),
+    paths: rs.paths || 1000, seed: (rs.seed >>> 0) || 12345,
+  };
+}
+
+// Cached model runner — base MC + deterministic median + (optional) conversion pass. Invalidated by signature.
+let RETIRE_CACHE = null;
+function retireModel(spendOverride) {
+  const cfg = buildRetireConfig(spendOverride != null ? { spend: spendOverride } : null);
+  const sig = JSON.stringify(cfg);
+  if (RETIRE_CACHE && RETIRE_CACHE.sig === sig) return RETIRE_CACHE.model;
+  // Base fan/table/verdict use the plan AS-IS (no conversions, §6.5 step 2).
+  const base = runProjection(Object.assign({}, cfg, { deterministic: false, conversionFill: 0 }));
+  const det  = runProjection(Object.assign({}, cfg, { deterministic: true, paths: 1, conversionFill: 0 }));
+  const verdict = switchPointVerdict(cfg.rNow, det.rThenJoint, det.rThenSurvivor);
+  // §6.6 conversion card: a separate deterministic pass WITH the fill bracket, and the recomputed verdict.
+  let conv = null, verdictWithConv = null;
+  if (cfg.conversionFill > 0) {
+    const withConv = runProjection(Object.assign({}, cfg, { deterministic: true, paths: 1 }));
+    conv = { converted: withConv.converted, convTax: withConv.convTax, firstRmdWith: withConv.firstRmd, firstRmdWithout: det.firstRmd,
+             rThenJointWith: withConv.rThenJoint, rThenSurvivorWith: withConv.rThenSurvivor };
+    verdictWithConv = switchPointVerdict(cfg.rNow, withConv.rThenJoint, withConv.rThenSurvivor);
+  }
+  const model = { cfg, base, det, verdict, conv, verdictWithConv };
+  RETIRE_CACHE = { sig, model };
+  return model;
+}
+function invalidateRetireCache() { RETIRE_CACHE = null; }
+
+/* ===============================================================
+   COLLEGE ENGINE — Monte Carlo 529 projector (follow-on to retirement).
+   529 withdrawals for qualified education are tax-free → no tax stack.
+   Uses the same lognormal return engine; allocation comes from the
+   child's 529 glide path (group targets → μ/σ) or current 529 mix.
+   =============================================================== */
+// 529 accounts belonging to one child.
+function child529Accounts(childId) { return portfolio.accounts.filter(a => a.status !== 'archived' && a.category === '529' && a.childId === childId); }
+// Starting 529 balance for a child at a snapshot.
+function collegeStartBalance(childId, snap) {
+  snap = snap || latestSnapshot(); if (!snap) return 0;
+  const idx = valueIndex(snap); let sum = 0;
+  for (const a of child529Accounts(childId)) for (const h of activeHoldings(a.id)) { const v = idx[h.id]; if (v) sum += Number(v.marketValue) || 0; }
+  return sum;
+}
+// Current 529 allocation weights (detail classes) for a child, else null.
+function collegeCurrentWeights(childId, snap) {
+  snap = snap || latestSnapshot(); if (!snap) return null;
+  const acctIds = new Set(child529Accounts(childId).map(a => a.id));
+  const holds = portfolio.holdings.filter(h => h.status !== 'archived' && acctIds.has(h.accountId));
+  const a = allocate(holds, snap); const w = {};
+  if (a.total > 0) for (const [c, val] of Object.entries(a.detail)) w[c] = val / a.total;
+  return Object.keys(w).length ? w : null;
+}
+// Map 529 glide GROUP targets (stocks/bonds/cash/…) to μ/σ via representative classes.
+function collegeGroupMuSigma(groupTargets) {
+  const map = { stocks: 'us_large', bonds: 'us_bond', cash: 'cash', real_assets: 'reit', crypto: 'crypto', blend_other: 'blend' };
+  const w = {}; for (const [g, pct] of Object.entries(groupTargets || {})) { const d = map[g] || 'blend', v = Number(pct) || 0; if (v > 0) w[d] = (w[d] || 0) + v; }
+  return Object.keys(w).length ? blendMuSigma(w) : blendMuSigma({ us_large: 60, us_bond: 40 });
+}
+// μ/σ provider for a child by age: glide-path band if set, else current mix, else a moderate default.
+function collegeMsByAge(childId) {
+  const gp = portfolio.glidePaths.find(g => g.childId === childId);
+  const curW = collegeCurrentWeights(childId);
+  return (age) => {
+    if (gp && gp.bands && gp.bands.length) { const band = gp.bands.find(b => age >= b.ageFrom && age <= b.ageTo) || gp.bands[gp.bands.length - 1]; if (band && band.targets) return collegeGroupMuSigma(band.targets); }
+    if (curW) return blendMuSigma(curW);
+    return blendMuSigma({ us_large: 60, us_bond: 40 });
+  };
+}
+// Monte Carlo 529 projection to the end of college. Anchored at today (k=0 = current balance).
+function runCollegeProjection(cfg) {
+  const endAge = cfg.startAge + cfg.years;              // track balance through the last college year
+  const nYears = Math.max(1, endAge - cfg.currentAge + 1);
+  const nPaths = cfg.deterministic ? 1 : cfg.paths;
+  const totalsByYear = Array.from({ length: nYears }, () => []);
+  let fullSuccess = 0, fundedYearsSum = 0, detTable = cfg.deterministic ? [] : null;
+  for (let p = 0; p < nPaths; p++) {
+    const rng = cfg.deterministic ? null : mulberry32((cfg.seed >>> 0) + p * 2654435761);
+    let bal = cfg.startBal, funded = 0;
+    totalsByYear[0].push(Math.max(0, bal));
+    if (detTable) detTable.push({ age: cfg.currentAge, phase: 'start', r: 0, contrib: 0, draw: 0, bal });
+    for (let k = 1; k < nYears; k++) {
+      const age = cfg.currentAge + k, ms = cfg.msByAge(age);
+      const r = cfg.deterministic ? ms.mu : drawReturnFrom(rng, ms.mu, ms.sigma);
+      bal *= (1 + r);
+      let contrib = 0, draw = 0;
+      if (age < cfg.startAge) { contrib = cfg.annualContrib * Math.pow(1 + cfg.contribGrowth, k); bal += contrib; }
+      else if (age < cfg.startAge + cfg.years) { draw = Math.min(cfg.annualCost, Math.max(0, bal)); bal -= draw; if (draw >= cfg.annualCost - 1) funded++; }
+      if (bal < 0) bal = 0;
+      totalsByYear[k].push(Math.max(0, bal));
+      if (detTable) detTable.push({ age, phase: age < cfg.startAge ? 'save' : 'college', r, contrib, draw, bal });
+    }
+    fundedYearsSum += funded;
+    if (funded >= cfg.years) fullSuccess++;
+  }
+  const pct = (arr, q) => { const a = arr.slice().sort((x, y) => x - y); if (!a.length) return 0; const i = (a.length - 1) * q, lo = Math.floor(i), hi = Math.ceil(i); return lo === hi ? a[lo] : a[lo] + (a[hi] - a[lo]) * (i - lo); };
+  const bands = totalsByYear.map((arr, k) => ({ age: cfg.currentAge + k, p10: pct(arr, .1), p25: pct(arr, .25), p50: pct(arr, .5), p75: pct(arr, .75), p90: pct(arr, .9) }));
+  return { bands, fullSuccess: nPaths ? fullSuccess / nPaths : 0, avgYearsFunded: nPaths ? fundedYearsSum / nPaths : 0, detTable, endAge };
+}
+// Assemble a child's college cfg from collegeSettings (with optional cost override for the live slider).
+function buildCollegeConfig(childId, overrides) {
+  const cs = portfolio.collegeSettings || defaultCollegeSettings();
+  const child = childById(childId), oc = (cs.byChild && cs.byChild[childId]) || {};
+  const startAge = oc.startAge != null ? oc.startAge : cs.startAge;
+  const years = oc.years != null ? oc.years : cs.years;
+  const annualCost = overrides && overrides.annualCost != null ? overrides.annualCost : (oc.annualCostReal != null ? oc.annualCostReal : cs.defaultAnnualCostReal);
+  return {
+    startBal: collegeStartBalance(childId), currentAge: child ? childAge(child.birthYear) : 0,
+    startAge, years, annualCost, annualContrib: oc.annualContribReal != null ? oc.annualContribReal : 0, contribGrowth: 0,
+    msByAge: collegeMsByAge(childId), paths: cs.paths || 1000, seed: (cs.seed >>> 0) || 24680,
+  };
+}
+function collegeModel(childId, overrides) {
+  const cfg = buildCollegeConfig(childId, overrides);
+  return { cfg, base: runCollegeProjection(Object.assign({}, cfg, { deterministic: false })) };
+}
+
 /* ---------------------------------------------------------------
    SCHEMA + MIGRATION (spec §10)
    --------------------------------------------------------------- */
-const SCHEMA_VERSION = 4;
+const SCHEMA_VERSION = 5;
+
+// Retirement modeler settings (spec §3). All real (today's dollars).
+function defaultRetirementSettings() {
+  const nowYear = new Date().getFullYear();
+  return {
+    birthYears: [nowYear - 40, null],   // [you, spouse|null]
+    retirementAge: 65,
+    spendingTargetRealAnnual: 80000,
+    ssPIA: 'estimate',                  // 'estimate' | [youMonthly, spouseMonthly]
+    ssClaimAge: [67, 67],
+    contribGrowthReal: 0,               // % real annual growth of contributions
+    retirementAllocation: 'current',    // 'current' | { class: pct }
+    conversionFillBracket: 'off',       // '22%' | '24%' | 'off'
+    survivorAge: 90,                    // older spouse's age at first death (survivor files single after)
+    accountScope: 'retirement',         // 'retirement' (exclude taxable brokerage) | 'all'
+    inflationPct: 2.5,                   // used ONLY to translate real → actual future dollars for display
+    contribOverride: null,              // { pretax, taxable, roth, taxfree } user overrides of inferred run-rate
+    muSigma: null,                      // per-class [μ%,σ%] overrides of RETIRE_DATA.muSigma
+    mappingConfirmed: false,            // validation gate: user confirmed account→bucket mapping
+    paths: 5000,
+    seed: 12345,
+  };
+}
+
+// College-planning settings (spec follow-on) — real dollars. Per-child overrides fall back to defaults.
+function defaultCollegeSettings() {
+  return {
+    defaultAnnualCostReal: 35000,       // all-in cost per year, today's dollars
+    years: 4,
+    startAge: 18,
+    paths: 5000,
+    seed: 24680,
+    byChild: {},                        // { childId: { annualCostReal, years, startAge, annualContribReal, glideTrack } }
+  };
+}
 
 function defaultTaxSettings() {
   return {
@@ -747,6 +1291,8 @@ function emptyPortfolio() {
     plans: [],
     taxSettings: defaultTaxSettings(),
     taxData: { lastRefreshed: null, source: 'bundled', tickers: {} },
+    retirementSettings: defaultRetirementSettings(),
+    collegeSettings: defaultCollegeSettings(),
   };
 }
 
@@ -775,6 +1321,10 @@ function migrate(data) {
   // v3 → v4: account "vehicle" (401k/IRA/HSA/529/taxable) for correct
   // contribution limits + shelter status. Infer from name/category if absent.
   for (const a of merged.accounts || []) { if (!a.vehicle) a.vehicle = inferVehicle(a); }
+  // v4 → v5: retirement modeler settings. Additive; merge so new fields fill in.
+  merged.retirementSettings = Object.assign(defaultRetirementSettings(), data.retirementSettings || {});
+  merged.collegeSettings = Object.assign(defaultCollegeSettings(), data.collegeSettings || {});
+  if (!merged.collegeSettings.byChild || typeof merged.collegeSettings.byChild !== 'object') merged.collegeSettings.byChild = {};
   // v1 → v2: US Total Market retired as a goal class; redistribute any goal
   // target on us_total into Large/Mid/Small by the default split.
   if (v < 2) {
@@ -1672,8 +2222,8 @@ const ui = {
 };
 
 // §14 IA: which internal views sit under each top-level nav tab.
-const REVIEW_VIEWS = ['dashboard', 'positions', 'goal', 'tax', 'history'];
-const SETTINGS_VIEWS = ['accounts', 'household', 'taxprofile', 'data'];
+const REVIEW_VIEWS = ['dashboard', 'positions', 'goal', 'tax', 'retire', 'college', 'history'];
+const SETTINGS_VIEWS = ['accounts', 'household', 'taxprofile', 'retirement', 'data'];
 function topTabOf(view) {
   if (view === 'welcome') return 'welcome'; // landing — no top tab active, no subnav
   if (view === 'checkin') return 'checkin';
@@ -1822,6 +2372,15 @@ function importMatches() {
 }
 function fmtMoney(n)  { return '$' + Math.round(Number(n) || 0).toLocaleString('en-US'); }
 function fmtMoneySigned(n) { const v = Math.round(Number(n) || 0); return (v >= 0 ? '+' : '−') + '$' + Math.abs(v).toLocaleString('en-US'); }
+// Compact currency for tight chart axes: $340K / $1.2M / $2.1B / $1.0T. Full dollars under $1,000.
+function fmtCompactMoney(n) {
+  const v = Number(n) || 0, a = Math.abs(v), s = v < 0 ? '−' : '';
+  if (a >= 1e12) return s + '$' + (a / 1e12).toFixed(a >= 1e13 ? 0 : 1) + 'T';
+  if (a >= 1e9)  return s + '$' + (a / 1e9).toFixed(a >= 1e10 ? 0 : 1) + 'B';
+  if (a >= 1e6)  return s + '$' + (a / 1e6).toFixed(a >= 1e7 ? 0 : 1) + 'M';
+  if (a >= 1e3)  return s + '$' + (a / 1e3).toFixed(a >= 1e4 ? 0 : 1) + 'K';
+  return s + '$' + Math.round(a).toLocaleString('en-US');
+}
 /* Two-decimal, comma-grouped variants (used in the check-in view). */
 const _2dp = { minimumFractionDigits: 2, maximumFractionDigits: 2 };
 function fmtNum2(n) { return (Number(n) || 0).toLocaleString('en-US', _2dp); }
@@ -2139,11 +2698,14 @@ function render() {
     case 'history':    body = renderHistory();  break;
     case 'goal':       body = renderGoal();     break;
     case 'tax':        body = renderTax();      break;
+    case 'retire':     body = renderRetire();   break;
+    case 'college':    body = renderCollege();  break;
     case 'plan':       body = renderPlan();     break;
     case 'report':     body = renderReport();   break;
     case 'accounts':   body = renderAccounts(); break;
     case 'household':  body = renderHousehold(); break;
     case 'taxprofile': body = renderTaxProfile(); break;
+    case 'retirement': body = renderRetireSettings(); break;
     case 'data':       body = renderDataPrivacy(); break;
     default:           body = renderDashboard();
   }
@@ -2163,13 +2725,19 @@ const NAV_TABS = [
   ['report',   'Report',    'report'],
   ['settings', 'Settings',  'accounts'],    // default sub-view = Accounts
 ];
-const REVIEW_SUBTABS = [
-  ['dashboard', 'Overview'], ['positions', 'Positions'], ['goal', 'Goals'],
-  ['tax', 'Tax'], ['history', 'History'],
-];
+// Review sub-tabs. College planning appears only when the household has children.
+function reviewSubtabs() {
+  const base = [
+    ['dashboard', 'Overview'], ['positions', 'Positions'], ['goal', 'Goals'],
+    ['tax', 'Tax'], ['retire', 'Retirement planning'],
+  ];
+  if (portfolio.children && portfolio.children.length) base.push(['college', 'College planning']);
+  base.push(['history', 'History']);
+  return base;
+}
 const SETTINGS_SUBTABS = [
   ['accounts', 'Accounts'], ['household', 'Household'],
-  ['taxprofile', 'Tax Profile'], ['data', 'Data & Privacy'],
+  ['taxprofile', 'Tax Profile'], ['retirement', 'Retirement'], ['data', 'Data & Privacy'],
 ];
 function navHTML() {
   const active = topTabOf(ui.view);
@@ -2177,7 +2745,7 @@ function navHTML() {
     `<a data-act="nav" data-view="${defView}" ${active === tab ? 'aria-current="page"' : ''}>${label}</a>`).join('');
   const saveCls = dirty ? 'btn btn-sm save-dirty' : 'btn btn-sm btn-secondary';
   const savedNote = dirty ? 'unsaved changes' : esc(fileName);
-  const subtabs = active === 'review' ? REVIEW_SUBTABS : active === 'settings' ? SETTINGS_SUBTABS : null;
+  const subtabs = active === 'review' ? reviewSubtabs() : active === 'settings' ? SETTINGS_SUBTABS : null;
   const subBar = subtabs ? `<div class="subnav no-print">${subtabs.map(([v, label]) =>
       `<a data-act="nav" data-view="${v}" class="${ui.view === v ? 'subnav-active' : ''}">${label}</a>`).join('')}</div>` : '';
   return `<div class="nav no-print">
@@ -3738,6 +4306,45 @@ function reportPlanSection(snap) {
   </section>`;
 }
 
+/* F7 report — Retirement section (§5.7). Only when the mapping is confirmed. */
+function reportRetireSection(snap) {
+  const rs = portfolio.retirementSettings;
+  if (!rs || !rs.mappingConfirmed) return '';
+  if (!retireAccounts().length || !latestSnapshot()) return '';
+  const model = retireModel();
+  const { cfg, base, verdict, conv } = model;
+  const endBand = base.bands[base.bands.length - 1];
+  const convLine = cfg.conversionFill > 0 && conv
+    ? `<br>Roth conversion window (${esc(rs.conversionFillBracket)}): convert ${fmtMoney(conv.converted)} for ${fmtMoney(conv.convTax)} tax; first RMD ${fmtMoney(conv.firstRmdWithout)} → ${fmtMoney(conv.firstRmdWith)}.`
+    : '';
+  return `<section class="rep-section" style="margin-bottom:26px;">
+    <h3 style="margin:0 0 2px;">Retirement projection</h3>
+    <div class="rep-sub text-muted" style="font-size:13px;margin-bottom:12px;">Real dollars · retire at ${cfg.retireAge} · ${cfg.paths.toLocaleString()} paths · to age ${RETIRE_DATA.endAge}</div>
+    <div style="margin-bottom:10px;">${fanChartSVG(base.bands, { age: cfg.retireAge, label: 'Retire at' }, 'reportfan', { static: true })}</div>
+    <div style="font-size:13px;line-height:1.7;">
+      Funds ${fmtMoney(cfg.spend)}/yr spending in <b>${fmtPct(base.success * 100, 0)}</b> of paths · median ending balance ${fmtMoney(endBand.p50)} (P10 ${fmtMoney(endBand.p10)}).<br>
+      This year's contributions: <b>${verdict.verdict}</b> — rate now ${fmtPct(verdict.rNow * 100, 1)} vs projected retirement rate ${fmtPct(verdict.rThen * 100, 1)} (a surviving spouse alone: ${fmtPct(verdict.rThenSurvivor * 100, 0)}).${convLine}
+    </div>
+  </section>`;
+}
+
+/* F7 report — College projection section (one line per child), when there are children + a snapshot. */
+function reportCollegeSection(snap) {
+  if (!portfolio.children.length || !latestSnapshot()) return '';
+  const rows = portfolio.children.map(child => {
+    const model = collegeModel(child.id), { cfg, base } = model;
+    return `<tr><td>${esc(child.label)}</td><td class="tnum" style="text-align:right;">${fmtMoney(collegeStartBalance(child.id))}</td>
+      <td class="tnum" style="text-align:right;">${fmtMoney(cfg.annualCost)}/yr × ${cfg.years}</td>
+      <td class="tnum" style="text-align:right;">${fmtPct(base.fullSuccess * 100, 0)}</td>
+      <td class="tnum" style="text-align:right;">${base.avgYearsFunded.toFixed(1)} / ${cfg.years}</td></tr>`;
+  }).join('');
+  return `<section class="rep-section" style="margin-bottom:26px;">
+    <h3 style="margin:0 0 2px;">College projection</h3>
+    <div class="rep-sub text-muted" style="font-size:13px;margin-bottom:12px;">Real dollars · per child, 529 grown on its glide path then drawn down for college</div>
+    <table class="table"><thead><tr><th>Child</th><th style="text-align:right;">529 today</th><th style="text-align:right;">Cost</th><th style="text-align:right;">Fully funded</th><th style="text-align:right;">Avg years funded</th></tr></thead><tbody>${rows}</tbody></table>
+  </section>`;
+}
+
 function reportHTML(snap) {
   if (!snap) return '<p class="text-muted">No snapshot to report on yet.</p>';
   const band = portfolio.meta.driftBandPct || 5;
@@ -3774,6 +4381,8 @@ function reportHTML(snap) {
 
   out += reportTaxSection(snap);
   out += reportPlanSection(snap);
+  out += reportRetireSection(snap);
+  out += reportCollegeSection(snap);
 
   out += `<footer style="border-top:1px solid var(--color-divider);margin-top:20px;padding-top:12px;font-size:12px;" class="text-muted">
     Snapshot ${esc(snap.date)} · Goal effective ${goal ? esc(goal.effectiveDate) : '—'} · Drift band ±${band}% absolute · Tax figures TY ${REFERENCE_DATA.taxYear} (estimates, not advice).
@@ -3910,6 +4519,504 @@ function renderTaxProfile() {
     <div style="padding:16px 20px 20px;display:flex;flex-direction:column;gap:8px;max-width:520px;">${ytdRows}</div>
   </div>
   <div style="padding:0 2px;"><span class="text-muted" style="font-size:12px;">Estimates only — confirm material decisions with a CPA.</span></div>`;
+}
+
+/* ===============================================================
+   REVIEW › RETIRE (spec §5–6) — Monte Carlo retirement projector.
+   =============================================================== */
+
+// Interactive fan chart: outcome bands + median on an age axis, a marker age called out,
+// hover shows the balance at any age. `id` scopes hover state; `marker` = {age,label}.
+let FAN_STATE = {};
+function fanChartSVG(bands, marker, id, opts) {
+  id = id || 'fan'; opts = opts || {};
+  const isStatic = !!opts.static;
+  const W = 720, H = 280, padL = 60, padB = 30, padT = 22, plotW = W - padL - 14, plotH = H - padB - padT;
+  const a0 = bands[0].age, a1 = bands[bands.length - 1].age;
+  const maxV = Math.max(1, ...bands.map(b => b.p90));
+  const x = age => padL + (a1 === a0 ? plotW / 2 : (age - a0) / (a1 - a0) * plotW);
+  const y = v => padT + plotH - (Math.max(0, v) / maxV) * plotH;
+  const poly = (lo, hi) => bands.map(b => `${x(b.age).toFixed(1)},${y(b[hi]).toFixed(1)}`)
+    .concat(bands.slice().reverse().map(b => `${x(b.age).toFixed(1)},${y(b[lo]).toFixed(1)}`)).join(' ');
+  const median = bands.map(b => `${x(b.age).toFixed(1)},${y(b.p50).toFixed(1)}`).join(' ');
+  // y-axis: 5 gridlines with compact labels (no clipping in the millions)
+  const yTicks = [0, 0.25, 0.5, 0.75, 1].map(f => { const v = maxV * f; return `<line x1="${padL}" y1="${y(v).toFixed(1)}" x2="${W - 14}" y2="${y(v).toFixed(1)}" stroke="var(--color-divider)"></line>
+    <text x="${padL - 7}" y="${(y(v) + 3).toFixed(1)}" text-anchor="end" style="font-size:10px;fill:var(--color-text);opacity:0.7;">${esc(fmtCompactMoney(v))}</text>`; }).join('');
+  // x-axis: a tick every 5 years (denser)
+  const ageTicks = bands.filter(b => b.age % 5 === 0 || b.age === a1).map(b =>
+    `<line x1="${x(b.age).toFixed(1)}" y1="${padT + plotH}" x2="${x(b.age).toFixed(1)}" y2="${padT + plotH + 4}" stroke="var(--color-text)" opacity="0.35"></line>
+     <text x="${x(b.age).toFixed(1)}" y="${H - 9}" text-anchor="middle" style="font-size:10px;fill:var(--color-text);opacity:0.7;">${b.age}</text>`).join('');
+  // marker (retirement / college start): dashed line + callout of the median balance there
+  let markerEls = '';
+  const mBand = marker ? bands.find(b => b.age === marker.age) : null;
+  if (marker && marker.age >= a0 && marker.age <= a1) {
+    const mx = x(marker.age), my = y(mBand ? mBand.p50 : 0);
+    markerEls = `<line x1="${mx.toFixed(1)}" y1="${padT}" x2="${mx.toFixed(1)}" y2="${(padT + plotH).toFixed(1)}" stroke="var(--color-text)" stroke-dasharray="3 3" opacity="0.55"></line>
+      <text x="${mx.toFixed(1)}" y="${padT - 10}" text-anchor="middle" style="font-size:10px;fill:var(--color-text);opacity:0.85;">${esc(marker.label)} ${marker.age}</text>
+      ${mBand ? `<circle cx="${mx.toFixed(1)}" cy="${my.toFixed(1)}" r="3.5" fill="var(--color-accent-700)"></circle>
+      <text x="${(mx + 6).toFixed(1)}" y="${(my - 6).toFixed(1)}" style="font-size:11px;font-weight:600;fill:var(--color-accent-900);">${esc(fmtCompactMoney(mBand.p50))}</text>` : ''}`;
+  }
+  // hover hit columns + cursor + per-age lookup state (interactive mode only)
+  const byAge = {}; bands.forEach(b => byAge[b.age] = b);
+  let hits = '', cursor = '', readout = '';
+  if (!isStatic) {
+    FAN_STATE[id] = { byAge };
+    hits = bands.map((b, i) => {
+      const cx = x(b.age);
+      const left = i === 0 ? padL : (x(bands[i - 1].age) + cx) / 2;
+      const right = i === bands.length - 1 ? padL + plotW : (cx + x(bands[i + 1].age)) / 2;
+      return `<rect class="fanhit" data-fanid="${id}" data-age="${b.age}" data-cx="${cx.toFixed(1)}" x="${left.toFixed(1)}" y="${padT}" width="${(right - left).toFixed(1)}" height="${plotH}" fill="transparent"></rect>`;
+    }).join('');
+    cursor = `<line id="${id}-cursor" x1="0" y1="${padT}" x2="0" y2="${(padT + plotH).toFixed(1)}" stroke="var(--color-accent-900)" stroke-width="1" style="display:none;"></line>`;
+    readout = `<div class="fan-readout" id="${id}-readout" style="min-height:18px;font-size:12px;margin-bottom:4px;color:var(--color-text);">Hover the chart to see the balance at any age.</div>`;
+  }
+  return `<div data-fanwrap="${id}">
+    ${readout}
+    <svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;" role="img" aria-label="Projected balance by age, with a range of outcomes">
+      ${yTicks}
+      <polygon points="${poly('p10', 'p90')}" fill="var(--color-accent-100)"></polygon>
+      <polygon points="${poly('p25', 'p75')}" fill="var(--color-accent-300)" opacity="0.75"></polygon>
+      <polyline points="${median}" fill="none" stroke="var(--color-accent-700)" stroke-width="2.5"></polyline>
+      ${markerEls}${ageTicks}${hits}${cursor}
+    </svg>
+    <div style="display:flex;gap:18px;flex-wrap:wrap;font-size:11px;margin-top:8px;" class="text-muted">
+      <span><span class="swatch" style="background:var(--color-accent-700);"></span> Most likely (median)</span>
+      <span><span class="swatch" style="background:var(--color-accent-300);"></span> Middle half of outcomes</span>
+      <span><span class="swatch" style="background:var(--color-accent-100);"></span> 10th–90th percentile range</span>
+    </div>
+  </div>`;
+}
+// Fan-chart hover → show the balance at the hovered age in plain language.
+function onFanHover(e) {
+  const hit = e.target.closest && e.target.closest('.fanhit');
+  if (!hit) return;
+  const id = hit.dataset.fanid, age = +hit.dataset.age, st = FAN_STATE[id];
+  if (!st) return;
+  const b = st.byAge[age]; if (!b) return;
+  const ro = document.getElementById(id + '-readout');
+  if (ro) ro.innerHTML = `<b>Age ${age}:</b> most likely <b>${fmtCompactMoney(b.p50)}</b> · likely between ${fmtCompactMoney(b.p25)} and ${fmtCompactMoney(b.p75)} · full range ${fmtCompactMoney(b.p10)}–${fmtCompactMoney(b.p90)}`;
+  const cur = document.getElementById(id + '-cursor');
+  if (cur) { cur.setAttribute('x1', hit.dataset.cx); cur.setAttribute('x2', hit.dataset.cx); cur.style.display = ''; }
+}
+
+// Two-bar marginal-rate compare (r_now vs r_then joint & survivor).
+function marginalCompareSVG(rNow, rJoint, rSurv) {
+  const rows = [['This year (contribution)', rNow, 'var(--color-accent-700)'], ['Retirement — joint', rJoint, 'var(--color-accent-500)'], ['Retirement — survivor', rSurv, 'var(--color-accent-900)']];
+  const maxR = Math.max(0.37, rNow, rJoint, rSurv);
+  return `<div style="display:flex;flex-direction:column;gap:10px;">` + rows.map(([label, r, col]) => `
+    <div style="display:grid;grid-template-columns:170px 1fr 48px;gap:8px;align-items:center;">
+      <span style="font-size:12px;">${esc(label)}</span>
+      <div style="background:var(--color-neutral-200);height:16px;border-radius:2px;overflow:hidden;"><div style="width:${(r / maxR * 100).toFixed(1)}%;height:100%;background:${col};"></div></div>
+      <span class="tnum" style="font-size:12px;text-align:right;">${fmtPct(r * 100, 1)}</span>
+    </div>`).join('') + `</div>`;
+}
+
+function retireEmptyState(msg) {
+  return `<div class="toolbar no-print"><div class="crumb"><span>Retirement planning</span></div></div>
+  <div class="panel"><div style="padding:34px 24px;text-align:center;">
+    <div style="font-family:var(--font-heading);font-size:18px;margin-bottom:8px;">Retirement projection</div>
+    <p class="text-muted" style="max-width:460px;margin:0 auto 16px;font-size:14px;line-height:1.6;">${msg}</p>
+    <button class="btn btn-primary" data-act="nav" data-view="retirement">Open retirement settings →</button>
+  </div></div>`;
+}
+
+// Validation gate (§2): show the account→bucket mapping, editable inline, flag likely-mistagged accounts.
+// Once confirmed it collapses into a closed <details> (not critical to keep on screen).
+function retireMappingPanel(confirmed) {
+  const bucketLabel = { pretax: 'Pre-tax', roth: 'Roth', taxable: 'Taxable', taxfree: 'Tax-free (HSA)' };
+  const accts = retireAccounts();
+  const vehSel = a => `<select class="input" style="min-height:30px;padding:2px 6px;font-size:12px;" data-act="rd-map-vehicle" data-account="${esc(a.id)}">${ACCOUNT_VEHICLES.map(v => `<option value="${v}" ${accountVehicle(a) === v ? 'selected' : ''}>${esc(v)}</option>`).join('')}</select>`;
+  const treatSel = a => `<select class="input" style="min-height:30px;padding:2px 6px;font-size:12px;" data-act="rd-map-treatment" data-account="${esc(a.id)}"><option value="">— none —</option>${TAX_TREATMENTS.map(t => `<option ${a.taxTreatment === t ? 'selected' : ''}>${t}</option>`).join('')}</select>`;
+  const rows = accts.map(a => {
+    const bucket = retireBucketOf(a), veh = accountVehicle(a);
+    const suspect = (veh === 'ira' || veh === '401k') && bucket === 'taxable';
+    return `<tr${suspect ? ' style="background:color-mix(in srgb,var(--color-accent-900) 12%,transparent);"' : ''}>
+      <td style="font-size:13px;">${esc(a.name)}</td>
+      <td>${vehSel(a)}</td>
+      <td>${treatSel(a)}</td>
+      <td style="font-size:13px;"><b>${esc(bucketLabel[bucket])}</b>${suspect ? ` <span class="tag tag-crit" style="font-size:10px;">looks like a retirement account tagged Taxable</span>` : ''}</td>
+    </tr>`;
+  }).join('');
+  const anySuspect = accts.some(a => { const v = accountVehicle(a); return (v === 'ira' || v === '401k') && retireBucketOf(a) === 'taxable'; });
+  const intro = `<div style="padding:14px 20px 4px;"><span class="text-muted" style="font-size:12px;">Each account's balance is grown and taxed by its bucket. A mistagged account throws off every number — edit the vehicle or tax treatment right here. 529 college accounts are excluded (they have their own tab).</span></div>`;
+  const table = `<table class="table"><thead><tr><th>Account</th><th>Vehicle</th><th>Tax treatment</th><th>Retirement bucket</th></tr></thead><tbody>${rows || '<tr><td colspan="4" class="text-muted" style="padding:14px 20px;">No non-529 accounts yet.</td></tr>'}</tbody></table>`;
+
+  if (confirmed) {
+    // Collapsed by default — the user can reopen, but it's not front-and-center once set.
+    return `<div class="panel"><details><summary style="padding:14px 20px;cursor:pointer;font-family:var(--font-heading);display:flex;align-items:center;gap:10px;">Account mapping <span class="tag tag-ok" style="font-size:10px;">confirmed</span> <span class="text-muted" style="font-size:12px;font-family:var(--font-body);">${accts.length} account${accts.length === 1 ? '' : 's'} — click to review or edit</span></summary>
+      ${intro}${table}
+      <div style="padding:12px 20px 18px;">${anySuspect ? `<span class="text-muted" style="font-size:12px;">Highlighted rows look like retirement accounts tagged “Taxable” — fix them if so.</span>` : ''}</div>
+    </details></div>`;
+  }
+  return `<div class="panel" style="border-color:var(--color-accent);">
+    <div class="panel-hd" style="border-color:var(--color-accent);"><h4>First, confirm your accounts</h4>
+      <span class="text-muted" style="font-size:12px;margin-left:auto;">529s excluded</span></div>
+    ${intro}${table}
+    <div style="padding:12px 20px 18px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+      <button class="btn btn-primary" data-act="rd-confirm-mapping">Looks right — run my projection</button>
+      ${anySuspect ? `<span class="text-muted" style="font-size:12px;">Highlighted rows look like retirement accounts tagged “Taxable” — fix them first if so.</span>` : ''}
+    </div>
+  </div>`;
+}
+
+function renderRetire() {
+  if (!portfolio.accounts.some(a => a.status !== 'archived' && a.category !== '529'))
+    return retireEmptyState('Add a non-529 account and record a check-in, then set your retirement inputs to project your balances, spending success, and the Roth-vs-traditional answer.');
+  if (!latestSnapshot())
+    return retireEmptyState('Record at least one check-in (snapshot) so the projection has starting balances to grow.');
+  const rs = portfolio.retirementSettings;
+  const confirmed = !!rs.mappingConfirmed;
+  const header = `<div class="toolbar no-print"><div class="crumb"><span>Retirement planning</span></div>
+    <span class="tag tag-accent" style="margin-left:auto;">Today's dollars</span>
+    <a data-act="nav" data-view="retirement" style="margin-left:12px;cursor:pointer;color:var(--color-accent);">Edit inputs →</a></div>`;
+  if (!confirmed) {
+    const lead = `<div class="panel" style="background:var(--color-accent-100);border-color:var(--color-accent);"><div style="padding:18px 20px;">
+      <div style="font-family:var(--font-heading);font-size:16px;margin-bottom:4px;">Will your savings last through retirement?</div>
+      <p style="font-size:13px;line-height:1.6;margin:0;" class="text-muted">This tool grows your accounts to retirement, then spends them down — running it a thousand times over different market outcomes — to show the range of where you could land, whether your spending is safe, and whether this year's savings should go Roth or pre-tax. Everything is in today's dollars (inflation already removed). One quick step first:</p>
+    </div></div>`;
+    return header + `<div style="display:flex;flex-direction:column;gap:22px;margin-top:16px;">${lead}${retireMappingPanel(false)}</div>`;
+  }
+
+  const model = retireModel();
+  const { cfg, base, det, verdict, conv, verdictWithConv } = model;
+  const endBand = base.bands[base.bands.length - 1];
+  const spend = cfg.spend;
+  const retBand = base.bands.find(b => b.age === cfg.retireAge);
+  const inflPct = rs.inflationPct != null ? rs.inflationPct : 2.5;
+  const infl = inflPct / 100;
+  const nominalAt = (real, atAge) => real * Math.pow(1 + infl, Math.max(0, atAge - cfg.currentAge));
+
+  // Account-scope control (top of tab)
+  const scopeRadio = (mode, label) => `<label style="display:inline-flex;align-items:center;gap:7px;cursor:pointer;font-size:13px;"><input type="radio" name="rdscope" data-act="rd-scope" data-mode="${mode}" ${(rs.accountScope || 'retirement') === mode ? 'checked' : ''} style="margin:0;">${esc(label)}</label>`;
+  const scopeCtl = `<div class="panel"><div style="padding:14px 20px;display:flex;gap:22px;align-items:center;flex-wrap:wrap;">
+    <span style="font-size:13px;font-weight:600;">Model which accounts?</span>
+    ${scopeRadio('retirement', 'Retirement accounts only')}
+    ${scopeRadio('all', 'All accounts (incl. taxable brokerage)')}
+    <span class="text-muted" style="font-size:11px;flex:1;min-width:200px;">Retirement-only counts your 401(k), IRA, Roth and HSA. Adding taxable brokerage gives an early-retirement “bridge” to spend before 59½.</span>
+  </div></div>`;
+
+  // Section 1 — Fan chart
+  const fan = `<section>
+    <div class="kicker" style="margin-bottom:6px;">Your projected balance · today's dollars</div>
+    <div class="panel"><div class="panel-hd"><h4>Where your money could land, by age</h4>
+      <span class="text-muted" style="font-size:12px;margin-left:auto;">${(cfg.paths).toLocaleString()} simulations</span></div>
+    <div style="padding:18px 20px;">
+      <p class="text-muted" style="font-size:12px;line-height:1.6;margin:0 0 6px;">Every figure here is in <b>today's dollars</b> (inflation already removed), so you can compare it to what money buys now. The dark line is the most likely path; the shaded areas show the spread — good markets land you high, poor markets low. ${retBand ? `At your retirement age ${cfg.retireAge} the balance is most likely around <b>${fmtCompactMoney(retBand.p50)}</b> in today's dollars — about <b>${fmtCompactMoney(nominalAt(retBand.p50, cfg.retireAge))}</b> in actual dollars of that year (at ${fmtPct(inflPct, 1)} inflation).` : ''} Hover any age to read the numbers.</p>
+      <p class="text-muted" style="font-size:11px;margin:0 0 12px;">Investment mix: ${cfg.weightsTarget ? `glides from your current allocation to a more conservative target by age ${cfg.retireAge} (auto de-risking).` : `held at your <b>current allocation</b> for the whole projection — it does not automatically de-risk with age.`} Change this under Edit inputs → Strategy. Based on the return, volatility, and inflation assumptions in the <b>Assumptions</b> section below — all editable.</p>
+      <div id="retire-fan">${fanChartSVG(base.bands, { age: cfg.retireAge, label: 'Retire at' }, 'retirefan')}</div>
+    </div></div></section>`;
+
+  // Section 2 — Spending success (walk the user through it)
+  const sliderMin = 20000, sliderMax = Math.max(200000, Math.round(spend * 1.5 / 5000) * 5000);
+  const success = `<section>
+    <div class="kicker" style="margin-bottom:6px;">Can you afford your spending?</div>
+    <div class="panel"><div class="panel-hd"><h4>Spending confidence</h4></div>
+    <div style="padding:20px;">
+      <div style="font-size:15px;line-height:1.5;margin-bottom:10px;">Out of ${cfg.paths.toLocaleString()} simulated futures, your savings cover <b id="retire-spend-label">${fmtMoney(spend)}</b>/yr of spending (in today's dollars) all the way to age ${RETIRE_DATA.endAge} in <b id="retire-success" style="color:var(--color-accent-700);font-size:22px;">${fmtPct(base.success * 100, 0)}</b> of them.</div>
+      <p class="text-muted" style="font-size:12px;line-height:1.6;margin:0 0 14px;">Think of it as a confidence score. Planners often aim for 80–90%. Higher means more cushion; lower means you'd likely need to trim spending, save more, or work a little longer. In the tougher outcomes your money could run low — even in the worst 10%, you'd still have about ${fmtCompactMoney(endBand.p10)} left at ${RETIRE_DATA.endAge}; most likely you'd have ${fmtCompactMoney(endBand.p50)} (today's dollars — about ${fmtCompactMoney(nominalAt(endBand.p50, RETIRE_DATA.endAge))} in actual dollars of that year).</p>
+      <label style="font-size:12px;font-weight:600;">Try a different spending level</label>
+      <input type="range" min="${sliderMin}" max="${sliderMax}" step="2500" value="${spend}" data-act="rd-spend" style="width:100%;margin-top:6px;">
+      <div style="display:flex;justify-content:space-between;font-size:11px;" class="text-muted"><span>${fmtCompactMoney(sliderMin)}/yr</span><span>drag to see how confidence changes</span><span>${fmtCompactMoney(sliderMax)}/yr</span></div>
+    </div></div></section>`;
+
+  // Section 3 — Roth/Traditional verdict
+  const vcol = verdict.verdict === 'Roth' ? 'var(--color-accent-700)' : 'var(--color-accent-900)';
+  const hasSpouse = !!(rs.birthYears && rs.birthYears[1]);
+  const thenFootnote = hasSpouse
+    ? `you and your spouse as a couple. A surviving spouse filing alone would face about ${fmtPct(verdict.rThenSurvivor * 100, 0)}.`
+    : `on your projected retirement income.`;
+  const verdictCard = `<section>
+    <div class="kicker" style="margin-bottom:6px;">This year's savings</div>
+    <div class="panel" style="border-color:${vcol};"><div class="panel-hd" style="border-color:${vcol};"><h4>Save as <span style="color:${vcol};">${verdict.verdict}</span> this year</h4></div>
+    <div style="padding:20px;">
+      <p class="text-muted" style="font-size:12px;line-height:1.6;margin:0 0 12px;">Roth means you pay tax now; traditional (pre-tax) means you pay it in retirement. Whichever rate is lower wins. We compare your tax rate on the last dollar you'd save today against the rate you're on track to pay in retirement.</p>
+      <div style="display:flex;gap:26px;flex-wrap:wrap;margin-bottom:12px;align-items:center;">
+        <div><span class="kicker" style="font-size:10px;">Your rate now</span><div class="tnum" style="font-size:24px;font-family:var(--font-heading);">${fmtPct(verdict.rNow * 100, 1)}</div></div>
+        <div style="font-size:18px;color:var(--color-text);opacity:0.4;">vs</div>
+        <div><span class="kicker" style="font-size:10px;">Your likely rate in retirement</span><div class="tnum" style="font-size:24px;font-family:var(--font-heading);">${fmtPct(verdict.rThen * 100, 1)}</div><span class="text-muted" style="font-size:11px;">${thenFootnote}</span></div>
+      </div>
+      <p style="font-size:13px;line-height:1.6;margin:0;">${esc(verdict.why)}</p>
+      ${verdictWithConv && verdictWithConv.verdict !== verdict.verdict ? `<p class="text-muted" style="font-size:12px;margin:8px 0 0;">With Roth conversions turned on (below), your future rate falls and this flips to <b>${verdictWithConv.verdict}</b>.</p>` : ''}
+    </div></div></section>`;
+
+  // Section 4 — Marginal-rate chart
+  const marginalCard = `<section>
+    <div class="panel"><div class="panel-hd"><h4>Tax rate: now vs. in retirement</h4></div>
+    <div style="padding:20px;">${marginalCompareSVG(verdict.rNow, verdict.rThenJoint, verdict.rThenSurvivor)}
+      <p class="text-muted" style="font-size:11px;margin:14px 0 0;line-height:1.6;">Your retirement rate is driven by the income you'll draw — pre-tax withdrawals, required minimum withdrawals after ${det.rmdAge}, and the taxable part of Social Security. A surviving spouse files single, which uses a smaller standard deduction and tighter brackets, so that rate is usually higher.</p>
+    </div></div></section>`;
+
+  // Section 5 — Conversion window
+  let convCard = '';
+  if (cfg.conversionFill > 0 && conv) {
+    convCard = `<section>
+      <div class="kicker" style="margin-bottom:6px;">Optional strategy</div>
+      <div class="panel"><div class="panel-hd"><h4>Roth conversion window</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">fill the ${esc(rs.conversionFillBracket)} bracket, ages ${cfg.retireAge}–${det.rmdAge}</span></div>
+      <div style="padding:20px;">
+        <p class="text-muted" style="font-size:12px;line-height:1.6;margin:0 0 14px;">In the low-income years between retiring and your first required withdrawal, you can move pre-tax money into Roth while your rate is low. That shrinks the forced withdrawals (and the tax) later.</p>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;">
+          <div><span class="kicker" style="font-size:10px;">Total moved to Roth</span><div class="tnum" style="font-size:18px;font-family:var(--font-heading);">${fmtMoney(conv.converted)}</div></div>
+          <div><span class="kicker" style="font-size:10px;">Tax paid (from taxable)</span><div class="tnum" style="font-size:18px;font-family:var(--font-heading);">${fmtMoney(conv.convTax)}</div></div>
+          <div><span class="kicker" style="font-size:10px;">First required withdrawal, without → with</span><div class="tnum" style="font-size:18px;font-family:var(--font-heading);">${fmtMoney(conv.firstRmdWithout)} → ${fmtMoney(conv.firstRmdWith)}</div></div>
+        </div>
+      </div></div></section>`;
+  }
+
+  // Section 6 — audit table + assumptions (both collapsed)
+  const detRows = det.detTable.filter(r => r.age % 2 === 0 || r.phase !== 'accum').map(r => `<tr>
+      <td class="tnum">${r.age}</td><td>${r.phase === 'accum' ? 'Saving' : r.phase === 'decum' ? 'Drawing' : 'Start'}</td>
+      <td class="tnum" style="text-align:right;">${fmtPct((r.r || 0) * 100, 1)}</td>
+      <td class="tnum" style="text-align:right;">${r.phase === 'accum' ? fmtMoney(r.contrib || 0) : r.phase === 'decum' ? '−' + fmtMoney(r.withdrawn || 0) : '—'}</td>
+      <td class="tnum" style="text-align:right;">${r.phase === 'decum' ? fmtMoney(r.rmd || 0) : '—'}</td>
+      <td class="tnum" style="text-align:right;">${fmtMoney(r.tax || 0)}</td>
+      <td class="tnum" style="text-align:right;">${fmtMoney(r.total || 0)}</td></tr>`).join('');
+  const detTable = `<div class="panel"><details><summary style="padding:14px 20px;cursor:pointer;font-family:var(--font-heading);">Show the year-by-year median path — check the math</summary>
+    <div style="padding:6px 20px 2px;"><p class="text-muted" style="font-size:12px;line-height:1.6;margin:0;"><b>Flows</b> is the cash moving in or out that year: in your <b>saving</b> years it's the money you add (your contributions); in your <b>drawing</b> years it's the total pulled from your accounts (shown negative) to cover spending plus taxes — sourced in order from required withdrawals, then taxable, then pre-tax, then Roth.</p></div>
+    <div style="overflow-x:auto;"><table class="table"><thead><tr><th>Age</th><th>Phase</th><th style="text-align:right;">Return</th><th style="text-align:right;">${abbr('Flows', 'Contributions in (saving years) or total withdrawals out (drawing years); out is shown negative')}</th><th style="text-align:right;">${abbr('RMD', 'Required Minimum Distribution')}</th><th style="text-align:right;">Tax</th><th style="text-align:right;">Balance</th></tr></thead><tbody>${detRows}</tbody></table></div>
+    </details></div>`;
+
+  // RMD schedule (collapsed) — required withdrawals by age from the median pre-tax path.
+  const rmdRows = det.detTable.filter(r => r.phase === 'decum' && r.age >= det.rmdAge && (r.rmd || 0) > 0).map(r => {
+    const div = rmdDivisor(r.age), base = (r.rmd || 0) * div; // balance the RMD is figured on
+    return `<tr><td class="tnum">${r.age}</td><td class="tnum" style="text-align:right;">${fmtMoney(base)}</td><td class="tnum" style="text-align:right;">${div.toFixed(1)}</td><td class="tnum" style="text-align:right;"><b>${fmtMoney(r.rmd)}</b></td></tr>`;
+  }).join('');
+  const rmdCard = `<div class="panel"><details><summary style="padding:14px 20px;cursor:pointer;font-family:var(--font-heading);">Your required withdrawal (${abbr('RMD', 'Required Minimum Distribution')}) schedule — starts at age ${det.rmdAge}</summary>
+    <div style="padding:8px 20px 4px;"><p class="text-muted" style="font-size:12px;line-height:1.6;margin:0;">Starting at age ${det.rmdAge}, the IRS makes you withdraw a minimum from pre-tax accounts each year (your pre-tax balance ÷ an IRS life-expectancy factor). These are the amounts on your <b>median</b> projected path, in today's dollars — bigger pre-tax balances mean bigger forced withdrawals and more tax, which is what the Roth conversion window can soften.</p></div>
+    ${rmdRows ? `<div style="overflow-x:auto;"><table class="table"><thead><tr><th>Age</th><th style="text-align:right;">Pre-tax balance</th><th style="text-align:right;">IRS factor</th><th style="text-align:right;">Required withdrawal</th></tr></thead><tbody>${rmdRows}</tbody></table></div>` : `<div style="padding:0 20px 18px;"><span class="text-muted" style="font-size:13px;">No required withdrawals projected — little or no pre-tax balance remains by age ${det.rmdAge}.</span></div>`}
+    </details></div>`;
+
+  return header + `<div style="display:flex;flex-direction:column;gap:26px;margin-top:16px;">${scopeCtl}${retireMappingPanel(true)}${fan}${success}${verdictCard}${marginalCard}${convCard}${rmdCard}${detTable}${retireAssumptionsPanel(model)}</div>`;
+}
+
+// Assumptions panel (§4, §6.1, §6.7) — editable μ/σ + declared simplifications.
+function retireAssumptionsPanel(model) {
+  const rs = portfolio.retirementSettings;
+  const eff = rs.muSigma ? Object.assign({}, RETIRE_DATA.muSigma, rs.muSigma) : RETIRE_DATA.muSigma;
+  const inflPct = rs.inflationPct != null ? rs.inflationPct : 2.5;
+  // Fixed-layout table so the two columns fit their half-width with no horizontal scrollbar.
+  const th = 'letter-spacing:0.01em;white-space:normal;font-size:10px;';
+  const headerRow = `<tr>
+    <th style="text-align:left;${th}">Asset class</th>
+    <th style="text-align:right;${th}">${abbr('Return', 'Expected average yearly return above inflation (real). The long-run mean annual real return for this asset class.')} <span class="text-muted" style="font-weight:400;">real&nbsp;%</span></th>
+    <th style="text-align:right;${th}">${abbr('Volatility', 'Standard deviation of yearly returns — how much a typical year swings above or below the average. Higher = bumpier.')} <span class="text-muted" style="font-weight:400;">%</span></th></tr>`;
+  const rowFor = d => {
+    const [mu, sg] = eff[d.id] || RETIRE_DATA.muSigma.other;
+    const inp = (act, v) => `<input class="input tnum" style="min-height:28px;padding:2px 4px;text-align:right;width:100%;box-sizing:border-box;" inputmode="decimal" data-act="${act}" data-cls="${d.id}" value="${v}">`;
+    return `<tr>
+      <td style="font-size:12px;"><span class="swatch" style="background:${detailColor(d.id)};"></span>${esc(d.label)}</td>
+      <td>${inp('rd-mu', mu)}</td>
+      <td>${inp('rd-sigma', sg)}</td></tr>`;
+  };
+  const classes = TAXONOMY.detail.filter(d => d.id !== 'us_total');
+  const half = Math.ceil(classes.length / 2);
+  const tbl = list => `<table class="table" style="font-size:12px;table-layout:fixed;width:100%;">
+    <colgroup><col style="width:44%"><col style="width:28%"><col style="width:28%"></colgroup>
+    <thead>${headerRow}</thead><tbody>${list.map(rowFor).join('')}</tbody></table>`;
+
+  const sims = [
+    ['Returns are “real” (above inflation)', 'Every return here is growth on top of inflation, and every dollar shown is in today\'s buying power. We convert to actual future dollars only where labeled, using the inflation rate below.'],
+    ['Social Security taxed at a flat 85%', 'We treat 85% of your benefit as taxable. The real IRS rule phases in 0% → 50% → 85% based on income; the flat 85% is slightly conservative for most households.'],
+    ['No IRMAA (Medicare premium surcharge)', 'High retirement income (roughly above $212k for a couple) raises Medicare premiums. We don\'t model that surcharge, so taxes are slightly understated at high incomes.'],
+    ['No ACA health-subsidy bridge', 'Retiring before 65 can qualify you for subsidized health insurance if income is kept low. We don\'t model those savings.'],
+    ['One state tax rate, held constant', 'We use your current state rate for all years. Moving to a no-income-tax state in retirement would lower the retirement rate and push the Roth/traditional call toward traditional.'],
+    ['Yearly (not monthly) steps', 'The simulation advances one year at a time — fast and accurate enough for planning, but it can\'t capture within-year timing.'],
+    ['One blended portfolio, not per-fund', 'We roll your whole mix into a single return each year rather than simulating each fund and rebalancing — simpler and robust at this altitude.'],
+    ['Both spouses\' Social Security start at your claim age', 'A simplification; if your spouse claims at a very different age the timing will be slightly off.'],
+  ];
+  return `<div class="panel"><details><summary style="padding:14px 20px;cursor:pointer;font-family:var(--font-heading);">Assumptions — returns, volatility, inflation &amp; simplifications</summary>
+    <div style="padding:8px 20px 18px;">
+      <div class="kicker" style="margin:6px 0 4px;">Expected return &amp; volatility by asset class — editable, saved to your file</div>
+      <p class="text-muted" style="font-size:12px;line-height:1.6;margin:0 0 12px;">These are <b>real</b> returns — growth <i>above</i> inflation — so a 5% figure means about 5% more buying power per year. “Volatility” is how much a typical year swings around that average; a higher number means a wider range of outcomes on the chart. Defaults are long-run, forward-looking estimates; lower them for a more cautious plan.</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0 28px;">
+        <div style="min-width:0;">${tbl(classes.slice(0, half))}</div>
+        <div style="min-width:0;">${tbl(classes.slice(half))}</div>
+      </div>
+      ${rs.muSigma ? `<div style="margin-top:10px;"><button class="btn btn-sm btn-secondary" data-act="rd-reset-musigma">Reset returns to defaults</button></div>` : ''}
+
+      <div class="kicker" style="margin:20px 0 4px;">Inflation (for converting today's dollars → actual future dollars)</div>
+      <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;">
+        <div class="field" style="width:150px;margin:0;"><label>Assumed inflation (%/yr)</label><input class="input tnum" inputmode="decimal" data-act="rd-inflation" value="${inflPct}" placeholder="2.5"></div>
+        <span class="text-muted" style="font-size:12px;line-height:1.6;flex:1;min-width:220px;">Long-run US inflation has averaged about 2.5–3%/yr. This does <b>not</b> change the projection (that runs in today's dollars) — it's only used to also show the “actual dollars” figures, so you can see both what the balance is worth today and its bigger sticker number in the future.</span>
+      </div>
+
+      <div class="kicker" style="margin:20px 0 6px;">Simplifications — what this model leaves out</div>
+      <div style="display:flex;flex-direction:column;gap:9px;">${sims.map(([t, d]) => `<div style="font-size:12px;line-height:1.55;"><b>${esc(t)}.</b> <span class="text-muted">${esc(d)}</span></div>`).join('')}</div>
+    </div></details></div>`;
+}
+
+/* ===============================================================
+   SETTINGS › RETIREMENT (spec §3) — the modeler's inputs.
+   =============================================================== */
+function renderRetireSettings() {
+  const rs = portfolio.retirementSettings || defaultRetirementSettings();
+  const nowYear = new Date().getFullYear();
+  const inferred = retireInferContributions();
+  const start = retireStartBuckets();
+  const lim = REFERENCE_DATA.contribLimits;
+  const hasSpouse = !!rs.birthYears[1];
+  const persons = hasSpouse ? 2 : 1;
+  // Per-bucket ceilings used for the over-contribution check (per-person limits × earners).
+  const maxes = { pretax: (lim.k401_elective + lim.ira) * persons, roth: (lim.k401_elective + lim.ira) * persons, taxfree: lim.hsa_family };
+  const bkt = (label, key) => `<div><span class="kicker" style="font-size:10px;">${label}</span><div class="tnum" style="font-size:16px;font-family:var(--font-heading);">${fmtMoney(start[key])}</div></div>`;
+  const num = (label, act, val, ph, hint) => `<div class="field"><label>${label}</label><input class="input tnum" inputmode="decimal" data-act="${act}" value="${val === '' || val == null ? '' : val}" placeholder="${ph || ''}">${hint ? `<span class="text-muted" style="font-size:11px;">${hint}</span>` : ''}</div>`;
+  const radio = (name, act, mode, on, label) => `<label style="display:inline-flex;align-items:center;gap:7px;cursor:pointer;font-size:13px;"><input type="radio" name="${name}" data-act="${act}" data-mode="${mode}" ${on ? 'checked' : ''} style="margin:0;">${esc(label)}</label>`;
+  const ssEstimate = rs.ssPIA === 'estimate' || !rs.ssPIA;
+  const contrib = Object.assign({ pretax: 0, taxable: 0, roth: 0, taxfree: 0 }, inferred || {}, rs.contribOverride || {});
+  const allocMode = rs.retirementAllocation && rs.retirementAllocation !== 'current' ? 'target' : 'current';
+  const convOpt = v => `<option value="${v}" ${rs.conversionFillBracket === v ? 'selected' : ''}>${v === 'off' ? 'Off' : 'Fill ' + v + ' bracket'}</option>`;
+  // Contribution field with an over-limit warning when the entered amount exceeds the bucket ceiling.
+  const contribField = (label, act, key) => {
+    const val = contrib[key], over = maxes[key] != null && Number(val) > maxes[key] + 0.5;
+    return `<div class="field"><label>${label}</label><input class="input tnum${over ? ' input-warn' : ''}" inputmode="decimal" data-act="${act}" value="${fmtEditNum(val)}" placeholder="0" style="${over ? 'border-color:var(--color-accent-900);' : ''}">${over ? `<span style="font-size:11px;color:var(--color-accent-900);">Over the ${fmtMoney(maxes[key])} limit${persons === 2 ? ' (you + spouse)' : ''} — double-check.</span>` : ''}</div>`;
+  };
+  const contribScope = hasSpouse ? 'you + your spouse combined' : 'you';
+
+  return `<div class="toolbar no-print"><div class="crumb"><span>Retirement</span></div>
+    <a data-act="nav" data-view="retire" style="margin-left:auto;cursor:pointer;color:var(--color-accent);">View projection →</a></div>
+  <div style="display:flex;flex-direction:column;gap:22px;margin-top:8px;">
+
+  <div class="panel"><div class="panel-hd"><h4>You &amp; your household</h4></div>
+    <div style="padding:20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:18px;">
+      ${num('Your birth year', 'rd-birth-you', rs.birthYears[0], String(nowYear - 40))}
+      ${num('Spouse birth year (optional)', 'rd-birth-spouse', rs.birthYears[1] || '', 'none')}
+      ${num('Target retirement age', 'rd-retire-age', rs.retirementAge, '65')}
+      ${num('Spending target ($/yr)', 'rd-spend-target', rs.spendingTargetRealAnnual ? fmtEditNum(rs.spendingTargetRealAnnual) : '', '80,000', 'What you plan to spend per year in retirement, in current dollars')}
+      ${num('Survivor age (first death)', 'rd-survivor-age', rs.survivorAge, '90', 'After this age the survivor files taxes as single')}
+    </div>
+  </div>
+
+  <div class="panel"><div class="panel-hd"><h4>Social Security</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">monthly benefit, today's dollars</span></div>
+    <div style="padding:20px;">
+      <div style="display:flex;gap:22px;margin-bottom:16px;flex-wrap:wrap;">
+        ${radio('sspia', 'rd-ss-mode', 'estimate', ssEstimate, 'Estimate from my income')}
+        ${radio('sspia', 'rd-ss-mode', 'manual', !ssEstimate, 'Enter my benefit amount')}
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:16px;">
+        ${ssEstimate ? '' : num('Your benefit ($/mo)', 'rd-ss-you', Array.isArray(rs.ssPIA) && rs.ssPIA[0] ? fmtEditNum(rs.ssPIA[0]) : '', '2,800')}
+        ${ssEstimate ? '' : num('Spouse benefit ($/mo)', 'rd-ss-spouse', Array.isArray(rs.ssPIA) && rs.ssPIA[1] ? fmtEditNum(rs.ssPIA[1]) : '', '1,400')}
+        ${num('Your claim age (62–70)', 'rd-claim-you', rs.ssClaimAge[0], '67', 'Later = bigger monthly check')}
+        ${num('Spouse claim age (62–70)', 'rd-claim-spouse', rs.ssClaimAge[1], '67')}
+      </div>
+    </div>
+  </div>
+
+  <div class="panel"><div class="panel-hd"><h4>Contributions</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">${inferred ? `inferred from ${inferred._years} yr of check-ins` : 'no history yet (need ≥3 check-ins) — enter below'}</span></div>
+    <div style="padding:20px;">
+      <div style="display:flex;gap:24px;flex-wrap:wrap;margin-bottom:16px;">${bkt('Pre-tax now', 'pretax')}${bkt('Roth now', 'roth')}${bkt('Taxable now', 'taxable')}${bkt('Tax-free now', 'taxfree')}</div>
+      <div class="kicker" style="margin-bottom:4px;">How much you add each year (${contribScope}, today's dollars)</div>
+      <p class="text-muted" style="font-size:12px;margin:0 0 8px;">IRS ${REFERENCE_DATA.contribLimitsYear} limits per person: 401(k) ${fmtMoney(lim.k401_elective)} · IRA ${fmtMoney(lim.ira)} · HSA family ${fmtMoney(lim.hsa_family)}${hasSpouse ? ' — roughly double if you and your spouse each have your own accounts.' : '.'}</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;">
+        ${contribField('Pre-tax — traditional 401(k)/IRA', 'rd-contrib-pretax', 'pretax')}
+        ${contribField('Roth — Roth 401(k)/Roth IRA', 'rd-contrib-roth', 'roth')}
+        ${num('Taxable brokerage', 'rd-contrib-taxable', fmtEditNum(contrib.taxable), '0')}
+        ${contribField('Tax-free (HSA)', 'rd-contrib-taxfree', 'taxfree')}
+        ${num('Real growth of contributions (%/yr)', 'rd-contrib-growth', rs.contribGrowthReal, '0')}
+      </div>
+      <p class="text-muted" style="font-size:11px;margin:8px 0 0;line-height:1.6;"><b>Roth 401(k) vs. traditional?</b> A 401(k) can be either, and you can split it. Put the traditional (pre-tax) part in the <b>Pre-tax</b> row and the Roth part in the <b>Roth</b> row — the combined 401(k) piece just can't exceed the ${fmtMoney(lim.k401_elective)} limit${hasSpouse ? ' each' : ''}.</p>
+      <div style="margin-top:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+        <button class="btn btn-sm btn-primary" data-act="rd-maxout">Max out every year</button>
+        ${rs.contribOverride ? `<button class="btn btn-sm btn-secondary" data-act="rd-contrib-reset">Reset to inferred</button>` : ''}
+      </div>
+      <p class="text-muted" style="font-size:11px;margin:8px 0 0;line-height:1.6;">“Max out” fills the 401(k), IRA, and HSA to this year's limits${hasSpouse ? ' for both of you' : ''}. IRS limits typically rise about 2–3% a year with inflation; because this tool works in today's dollars, we hold them flat in real terms — so maxing out today keeps maxing out every future year.</p>
+    </div>
+  </div>
+
+  <div class="panel"><div class="panel-hd"><h4>Strategy</h4></div>
+    <div style="padding:20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;align-items:start;">
+      <div class="field"><label>Retirement allocation</label>
+        <select class="input" data-act="rd-alloc-mode">
+          <option value="current" ${allocMode === 'current' ? 'selected' : ''}>Keep current allocation</option>
+          <option value="conservative" ${allocMode === 'target' ? 'selected' : ''}>Glide to a conservative 40/60</option>
+        </select>
+        <span class="text-muted" style="font-size:11px;">Gradually shifts from today's mix to the target by retirement age.</span>
+      </div>
+      <div class="field"><label>Roth conversion window</label>
+        <select class="input" data-act="rd-conversion">${convOpt('off')}${convOpt('22%')}${convOpt('24%')}</select>
+        <span class="text-muted" style="font-size:11px;">Move pre-tax → Roth up to the top of this bracket in the low-income years before required withdrawals.</span>
+      </div>
+      ${num('Simulations to run', 'rd-paths', rs.paths, '1000', 'More = smoother, slower')}
+      ${num('Random seed', 'rd-seed', rs.seed, '12345', 'Same seed reproduces the same result')}
+    </div>
+  </div>
+  <div style="padding:0 2px;"><span class="text-muted" style="font-size:12px;">All values are in today's dollars. Estimates only — confirm material decisions with a CPA.</span></div>
+  </div>`;
+}
+
+/* ===============================================================
+   REVIEW › COLLEGE PLANNING — Monte Carlo 529 projector per child.
+   Only reachable when the household has children.
+   =============================================================== */
+function renderCollege() {
+  const header = `<div class="toolbar no-print"><div class="crumb"><span>College planning</span></div>
+    <span class="tag tag-accent" style="margin-left:auto;">Today's dollars</span></div>`;
+  if (!portfolio.children.length)
+    return header + `<div class="panel"><div style="padding:30px 24px;text-align:center;"><p class="text-muted" style="max-width:460px;margin:0 auto;font-size:14px;line-height:1.6;">Add a child in <a data-act="nav" data-view="household" style="cursor:pointer;color:var(--color-accent);">Settings › Household</a> to plan for college.</p></div></div>`;
+  if (!latestSnapshot())
+    return header + `<div class="panel"><div style="padding:30px 24px;text-align:center;"><p class="text-muted" style="max-width:460px;margin:0 auto;font-size:14px;line-height:1.6;">Record a check-in first so the projection has a starting 529 balance to grow.</p></div></div>`;
+
+  const cs = portfolio.collegeSettings || defaultCollegeSettings();
+  const lead = `<div class="panel" style="background:var(--color-accent-100);border-color:var(--color-accent);"><div style="padding:18px 20px;">
+    <div style="font-family:var(--font-heading);font-size:16px;margin-bottom:4px;">Will each 529 cover college?</div>
+    <p style="font-size:13px;line-height:1.6;margin:0;" class="text-muted">For every child we grow their 529 to college age using its glide path, then draw the yearly cost — run a thousand times — to show whether the money lasts all the way through. Set the age-based glide in <a data-act="nav" data-view="goal" style="cursor:pointer;color:var(--color-accent);">Review › Goals</a>. Everything is in today's dollars.</p>
+  </div></div>`;
+
+  const blocks = portfolio.children.map(child => {
+    const cid = child.id, oc = (cs.byChild && cs.byChild[cid]) || {};
+    const accts = child529Accounts(cid);
+    const startBal = collegeStartBalance(cid);
+    const age = childAge(child.birthYear);
+    const model = collegeModel(cid);
+    const { cfg, base } = model;
+    const totalCost = cfg.annualCost * cfg.years;
+    const startBand = base.bands.find(b => b.age === cfg.startAge);
+    const successPct = fmtPct(base.fullSuccess * 100, 0);
+    const yrsFunded = base.avgYearsFunded.toFixed(1);
+    const costMin = 10000, costMax = 90000;
+    const noAcct = accts.length === 0;
+    const fanId = 'collegefan-' + cid;
+    // Glide-path transition note — the aggressive→conservative shift is pulled from Review › Goals.
+    const gp = portfolio.glidePaths.find(g => g.childId === cid);
+    let glideNote;
+    if (gp && gp.bands && gp.bands.length) {
+      const band = gp.bands.find(b => age >= b.ageFrom && age <= b.ageTo) || gp.bands[gp.bands.length - 1];
+      const alloc = band && band.targets ? TAXONOMY.groups.filter(g2 => band.targets[g2.id]).map(g2 => `${g2.label.split(' ')[0]} ${band.targets[g2.id]}%`).join(' · ') : '';
+      glideNote = `<p class="text-muted" style="font-size:12px;line-height:1.6;margin:0 0 14px;"><b>Risk glides down automatically.</b> This uses ${esc(child.label)}'s age-based 529 glide path from <a data-act="nav" data-view="goal" style="cursor:pointer;color:var(--color-accent);">Goals</a>, which shifts from stock-heavy toward bonds &amp; cash as college nears. At age ${age} it's currently ${alloc || 'set there'}.</p>`;
+    } else {
+      glideNote = `<p class="text-muted" style="font-size:12px;line-height:1.6;margin:0 0 14px;"><b>No age-based glide set.</b> Using a steady 60/40 mix throughout. For a realistic projection, set an aggressive-early → conservative-near-college glide in <a data-act="nav" data-view="goal" style="cursor:pointer;color:var(--color-accent);">Review › Goals</a>.</p>`;
+    }
+    return `<section>
+      <div class="kicker" style="margin-bottom:6px;">${esc(child.label)} · age ${age} · college in ${Math.max(0, cfg.startAge - age)} year${cfg.startAge - age === 1 ? '' : 's'}</div>
+      <div class="panel"><div class="panel-hd"><h4>${esc(child.label)}'s 529</h4>
+        <span class="text-muted" style="font-size:12px;margin-left:auto;">${noAcct ? 'no 529 account linked yet' : `${fmtMoney(startBal)} saved today`}</span></div>
+      <div style="padding:20px;">
+        ${noAcct ? `<p class="text-muted" style="font-size:13px;margin:0 0 14px;">No 529 account is linked to ${esc(child.label)}. Link one in <a data-act="nav" data-view="accounts" style="cursor:pointer;color:var(--color-accent);">Settings › Accounts</a> (edit the account, set category 529 and pick the child). The projection below assumes a $0 starting balance until then.</p>` : ''}
+        ${glideNote}
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;margin-bottom:16px;">
+          <div class="field"><label>Cost per year</label><input class="input tnum" inputmode="decimal" data-act="cl-cost" data-child="${esc(cid)}" value="${fmtEditNum(cfg.annualCost)}" placeholder="35,000"><span class="text-muted" style="font-size:11px;">all-in: tuition, room &amp; board</span></div>
+          <div class="field"><label>Years of college</label><input class="input tnum" inputmode="numeric" data-act="cl-years" data-child="${esc(cid)}" value="${cfg.years}" placeholder="4"></div>
+          <div class="field"><label>Starting age</label><input class="input tnum" inputmode="numeric" data-act="cl-startage" data-child="${esc(cid)}" value="${cfg.startAge}" placeholder="18"></div>
+          <div class="field"><label>You add each year</label><input class="input tnum" inputmode="decimal" data-act="cl-contrib" data-child="${esc(cid)}" value="${fmtEditNum(cfg.annualContrib)}" placeholder="0"></div>
+        </div>
+        <div style="font-size:15px;line-height:1.5;margin-bottom:8px;">That's <b>${fmtMoney(totalCost)}</b> total over ${cfg.years} years. This 529 covers <b>all ${cfg.years} years in <span style="color:var(--color-accent-700);">${successPct}</span></b> of outcomes${base.fullSuccess < 1 ? `, and on average funds <b>${yrsFunded}</b> of ${cfg.years} years` : ''}.</div>
+        <p class="text-muted" style="font-size:12px;line-height:1.6;margin:0 0 12px;">${startBand ? `By age ${cfg.startAge} the balance is most likely around <b>${fmtCompactMoney(startBand.p50)}</b> (range ${fmtCompactMoney(startBand.p10)}–${fmtCompactMoney(startBand.p90)}).` : ''} Hover the chart to read any age.</p>
+        ${fanChartSVG(base.bands, { age: cfg.startAge, label: 'College at' }, fanId)}
+      </div></div>
+    </section>`;
+  }).join('');
+
+  return header + `<div style="display:flex;flex-direction:column;gap:26px;margin-top:16px;">${lead}${blocks}</div>`;
+}
+
+/* College field commit (per child). */
+function applyCollegeSetting(a, ds, el) {
+  const cs = portfolio.collegeSettings = portfolio.collegeSettings || defaultCollegeSettings();
+  cs.byChild = cs.byChild || {};
+  const oc = cs.byChild[ds.child] = cs.byChild[ds.child] || {};
+  if (a === 'cl-cost') oc.annualCostReal = parseNum(el.value) || 0;
+  else if (a === 'cl-years') oc.years = Math.max(1, Math.min(10, parseInt(el.value, 10) || 4));
+  else if (a === 'cl-startage') oc.startAge = Math.max(15, Math.min(25, parseInt(el.value, 10) || 18));
+  else if (a === 'cl-contrib') oc.annualContribReal = parseNum(el.value) || 0;
+  markDirty();
 }
 
 /* ===============================================================
@@ -4134,6 +5241,7 @@ function boot() {
   });
   document.addEventListener('pointermove', onDonutHover);
   document.addEventListener('pointermove', onChartHover);
+  document.addEventListener('pointermove', onFanHover);
   render();
   // Auto-restore the last file where the browser permits (Chrome/Edge handle,
   // or a served sibling my-portfolio.json). Falls back to the one-click reopen.
@@ -4281,6 +5389,17 @@ function onClick(e) {
     }
     case 'ov-toggle': ui.taxAdvanced = true; render(); break;
     case 'ov-clear': portfolio.taxSettings.override = null; ui.taxAdvanced = false; markDirty(); render(); break;
+    // Retirement modeler
+    case 'rd-confirm-mapping': portfolio.retirementSettings.mappingConfirmed = true; invalidateRetireCache(); markDirty(); render(); break;
+    case 'rd-unconfirm': portfolio.retirementSettings.mappingConfirmed = false; markDirty(); render(); break;
+    case 'rd-reset-musigma': portfolio.retirementSettings.muSigma = null; invalidateRetireCache(); markDirty(); render(); break;
+    case 'rd-contrib-reset': portfolio.retirementSettings.contribOverride = null; invalidateRetireCache(); markDirty(); render(); break;
+    case 'rd-maxout': {
+      const rs = portfolio.retirementSettings, lim = REFERENCE_DATA.contribLimits, persons = rs.birthYears[1] ? 2 : 1;
+      // Max the tax-advantaged accounts: 401(k) pre-tax, Roth IRA, family HSA.
+      rs.contribOverride = Object.assign({}, rs.contribOverride || {}, { pretax: lim.k401_elective * persons, roth: lim.ira * persons, taxfree: lim.hsa_family });
+      invalidateRetireCache(); markDirty(); render(); toast('Contributions set to this year’s IRS maximums'); break;
+    }
     case 'confirm-yes': handleConfirm(); break;
     case 'close-dialog': closeDialog(); break;
     case 'backdrop': if (!e.target.closest('[data-stop]')) closeDialog(); break;
@@ -4333,6 +5452,47 @@ function onChange(e) {
     if (other) other.style.display = t.value === 'Other' ? 'block' : 'none';
     if (child) child.style.display = t.value === '529' ? 'block' : 'none';
   }
+  // Retirement modeler settings (commit on change → re-render to refresh derived values)
+  else if (a === 'rd-ss-mode') { const rs = portfolio.retirementSettings; rs.ssPIA = ds.mode === 'estimate' ? 'estimate' : (Array.isArray(rs.ssPIA) ? rs.ssPIA : [0, 0]); invalidateRetireCache(); markDirty(); render(); }
+  else if (a === 'rd-spend') { portfolio.retirementSettings.spendingTargetRealAnnual = Number(t.value) || 0; invalidateRetireCache(); markDirty(); render(); }
+  else if (a === 'rd-scope') { portfolio.retirementSettings.accountScope = ds.mode; invalidateRetireCache(); markDirty(); render(); }
+  else if (a === 'rd-map-vehicle') { const acc = accountById(ds.account); if (acc) { acc.vehicle = t.value; invalidateRetireCache(); markDirty(); render(); } }
+  else if (a === 'rd-map-treatment') { const acc = accountById(ds.account); if (acc) { acc.taxTreatment = t.value || undefined; invalidateRetireCache(); markDirty(); render(); } }
+  else if (a && a.indexOf('rd-') === 0) { applyRetireSetting(a, ds, t); render(); }
+  else if (a && a.indexOf('cl-') === 0) { applyCollegeSetting(a, ds, t); render(); }
+}
+
+/* Retirement modeler field commit. Mutates retirementSettings, invalidates cache. */
+function applyRetireSetting(a, ds, el) {
+  const rs = portfolio.retirementSettings;
+  const clamp = (n, lo, hi) => Math.max(lo, Math.min(hi, n));
+  const ensureManualPIA = () => { if (!Array.isArray(rs.ssPIA)) rs.ssPIA = [0, 0]; };
+  const setContrib = (k) => { rs.contribOverride = rs.contribOverride || {}; rs.contribOverride[k] = parseNum(el.value) || 0; };
+  const setMS = (idx) => { rs.muSigma = rs.muSigma || {}; const cur = (rs.muSigma[ds.cls] || RETIRE_DATA.muSigma[ds.cls] || RETIRE_DATA.muSigma.other).slice(); const n = parseFloat(el.value); if (!isNaN(n)) { cur[idx] = n; rs.muSigma[ds.cls] = cur; } };
+  switch (a) {
+    case 'rd-birth-you': rs.birthYears[0] = parseInt(el.value, 10) || rs.birthYears[0]; break;
+    case 'rd-birth-spouse': { const n = parseInt(el.value, 10); rs.birthYears[1] = n ? n : null; break; }
+    case 'rd-retire-age': rs.retirementAge = clamp(parseInt(el.value, 10) || 65, 40, 80); break;
+    case 'rd-spend-target': rs.spendingTargetRealAnnual = parseNum(el.value) || 0; break;
+    case 'rd-survivor-age': rs.survivorAge = clamp(parseInt(el.value, 10) || 90, 60, 95); break;
+    case 'rd-inflation': rs.inflationPct = Math.max(0, Math.min(10, parseNum(el.value) || 0)); break;
+    case 'rd-ss-you': ensureManualPIA(); rs.ssPIA[0] = parseNum(el.value) || 0; break;
+    case 'rd-ss-spouse': ensureManualPIA(); rs.ssPIA[1] = parseNum(el.value) || 0; break;
+    case 'rd-claim-you': rs.ssClaimAge[0] = clamp(parseInt(el.value, 10) || 67, 62, 70); break;
+    case 'rd-claim-spouse': rs.ssClaimAge[1] = clamp(parseInt(el.value, 10) || 67, 62, 70); break;
+    case 'rd-contrib-pretax': setContrib('pretax'); break;
+    case 'rd-contrib-roth': setContrib('roth'); break;
+    case 'rd-contrib-taxable': setContrib('taxable'); break;
+    case 'rd-contrib-taxfree': setContrib('taxfree'); break;
+    case 'rd-contrib-growth': rs.contribGrowthReal = parseNum(el.value) || 0; break;
+    case 'rd-paths': rs.paths = clamp(parseInt(el.value, 10) || 1000, 100, 5000); break;
+    case 'rd-seed': rs.seed = (parseInt(el.value, 10) >>> 0) || 12345; break;
+    case 'rd-conversion': rs.conversionFillBracket = el.value; break;
+    case 'rd-alloc-mode': rs.retirementAllocation = el.value === 'conservative' ? { us_large: 0.28, intl_dev: 0.12, us_bond: 0.55, cash: 0.05 } : 'current'; break;
+    case 'rd-mu': setMS(0); break;
+    case 'rd-sigma': setMS(1); break;
+  }
+  invalidateRetireCache(); markDirty();
 }
 
 function onInput(e) {
@@ -4357,6 +5517,19 @@ function onInput(e) {
   else if (a === 'rename-goal') { const g = portfolio.goals.find(x => x.effectiveDate === ds.date); if (g) { const v = t.value.trim(); if (v) g.name = v; else delete g.name; markDirty(); } }
   else if (a === 'set-band') { const n = parseNum(t.value); if (n != null) { portfolio.meta.driftBandPct = Math.max(1, Math.min(50, n)); markDirty(); } }
   else if (a === 'glide-rationale') { const gp = ensureGlide(ds.child); gp.rationale = t.value; markDirty(); }
+  else if (a === 'rd-spend') { // live while dragging; coalesce to one recompute per frame (5k paths is heavy)
+    _retireSpendPending = Number(t.value) || 0;
+    if (!_retireSpendRAF) _retireSpendRAF = requestAnimationFrame(() => { _retireSpendRAF = 0; updateRetireLive(_retireSpendPending); });
+  }
+}
+let _retireSpendPending = 0, _retireSpendRAF = 0;
+
+/* Spending-slider live recompute — reruns the MC at the dragged spend without a full re-render. */
+function updateRetireLive(spend) {
+  const model = retireModel(spend);
+  const lab = document.getElementById('retire-spend-label'); if (lab) lab.textContent = fmtMoney(spend);
+  const suc = document.getElementById('retire-success'); if (suc) suc.textContent = fmtPct(model.base.success * 100, 0);
+  const fan = document.getElementById('retire-fan'); if (fan) fan.innerHTML = fanChartSVG(model.base.bands, { age: model.cfg.retireAge, label: 'Retire at' }, 'retirefan');
 }
 
 /* Tax Profile expert override (§13.1) — blank clears a field. */
