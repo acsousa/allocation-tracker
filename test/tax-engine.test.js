@@ -19,8 +19,8 @@ const shim = `
   moveRealizedGain, simulateAfter, classForTicker, underweightClasses, parseImportRows,
   RETIRE_DATA, defaultRetirementSettings, retireCorr, blendMuSigma, retireBracketTax, retireBracketMarginal,
   ltcgStackTax, rmdStartAge, rmdDivisor, rmdAmount, mulberry32, gaussFrom, drawReturnFrom, ssFactor,
-  estimatePIAmonthly, doWithdraw, decumulateYear, runProjection, switchPointVerdict, conversionFillTop,
-  defaultCollegeSettings, collegeGroupMuSigma, runCollegeProjection, fmtCompactMoney,
+  estimatePIAmonthly, taxableSocialSecurity, doWithdraw, decumulateYear, runProjection, switchPointVerdict, conversionFillTop,
+  defaultCollegeSettings, collegeGroupMuSigma, runCollegeProjection, fmtCompactMoney, allocTableHTML,
 });`;
 const src = m[1] + shim;
 
@@ -30,6 +30,7 @@ const sandbox = {
   self: { crypto: { getRandomValues: (a) => { for (let i = 0; i < a.length; i++) a[i] = Math.floor(Math.random() * 256); return a; } } },
   document: { addEventListener() {}, getElementById() { return null; }, querySelectorAll() { return []; }, querySelector() { return null; }, createElement() { return { style: {} }; }, body: { appendChild() {} } },
   console,
+  getComputedStyle: () => ({getPropertyValue: () => '#123456'}),
 };
 vm.createContext(sandbox);
 try { vm.runInContext(src, sandbox, { filename: 'aat.js' }); }
@@ -409,6 +410,70 @@ near('college 60/40 group μ = 3.72%', A.collegeGroupMuSigma({ stocks: 60, bonds
   const r2 = A.runCollegeProjection(Object.assign({}, cfg, { deterministic: false }));
   ok('college MC reproducible', JSON.stringify(r1.bands) === JSON.stringify(r2.bands) && r1.fullSuccess === r2.fullSuccess);
   ok('college success in [0,1]', r1.fullSuccess >= 0 && r1.fullSuccess <= 1);
+})();
+
+(() => {
+  const q = A.migrate(JSON.parse(JSON.stringify(v2)));
+  q.accounts.push({id: 'second_ira', name: 'Traditional IRA', vehicle: 'ira', category: 'Retirement', taxTreatment: 'Pre-tax', status: 'active'});
+  q.taxSettings.householdMonthlySavings = 10000;
+  q.taxSettings.ytdContributions = {second_ira: 2000};
+  A.portfolio = q;
+  const d = A.savingsDirective(q.snapshots[0]);
+  const iraAnnual = d.splits.filter(x => ['a_roth', 'second_ira'].includes(x.accountId)).reduce((sum, x) => sum + x.pctOrAmt * 12, 0);
+  near('all IRAs share remaining contribution limit', iraAnnual, 5500, 0.01);
+})();
+
+near('MA 2026 indexed surtax threshold', R.maSurtax.threshold, 1107750, 0);
+near('SSA 2026 second PIA bend point', A.estimatePIAmonthly(7749 * 12), 1286 * 0.9 + (7749 - 1286) * 0.32, 1e-9);
+
+(() => {
+  const cfg = {startBal: 40000, currentAge: 18, startAge: 18, years: 4, annualCost: 10000,
+    annualContrib: 0, contribGrowth: 0, msByAge: () => ({mu: 0, sigma: 0}), deterministic: true};
+  const c = A.runCollegeProjection(cfg);
+  near('college entry year tuition is included', c.bands[0].p50, 30000, 0.01);
+  near('college current entry year funds all four years', c.fullSuccess, 1, 0);
+  const late = A.runCollegeProjection({...cfg, currentAge: 20, startBal: 20000});
+  near('already enrolled college counts remaining years only', late.remainingYears, 2, 0);
+  near('already enrolled college can succeed', late.fullSuccess, 1, 0);
+})();
+
+ok('report includes target classes with zero holdings', A.allocTableHTML([{id: 'us_large', label: 'US Large', value: 100, pct: 100}], {us_large: 80, em: 20}, 5).includes('Emerging'));
+
+/* Financial review regressions: independent cash-flow and tax identities. */
+near('SS only below combined-income threshold is federally exempt', A.taxableSocialSecurity(30000, 0, 'single'), 0, 1e-9);
+near('SS single lower tier', A.taxableSocialSecurity(20000, 20000, 'single'), 2500, 1e-9);
+near('SS joint upper tier', A.taxableSocialSecurity(30000, 40000, 'mfj'), 15350, 1e-9);
+near('SS capped at 85%', A.taxableSocialSecurity(20000, 200000, 'single'), 17000, 1e-9);
+near('SS includes tax exempt interest', A.taxableSocialSecurity(20000, 0, 'single', 20000), 2500, 1e-9);
+// Box-Muller z=0 must produce the same geometric growth as the deterministic path.
+let zeroNormalIndex = 0;
+near('lognormal median matches deterministic 5%', A.drawReturnFrom(() => ++zeroNormalIndex % 2 ? 0.5 : 0.25, 0.05, 0.16), 0.05, 1e-12);
+(() => {
+  const opts = {age: 70, spendNet: 60000, ssGross: 0, filing: 'single', fedBrackets: singB, ltcgBrackets: singL,
+    stdDed: 16100, stateRate: 0, niitRate: 0.038, niitThreshold: 200000, taxesSSstate: false, forcedRMD: 0};
+  const gains = A.decumulateYear({pretax: 0, taxable: 100000, roth: 0, taxfree: 0}, 0, opts);
+  near('unused deduction shelters gains before 0% threshold', gains.tax, 0, 1e-6);
+  const pension = A.decumulateYear({pretax: 0, taxable: 0, roth: 0, taxfree: 0}, 0,
+    {...opts, spendNet: 10000, pensionGross: 50000});
+  near('surplus pension cash is reinvested after tax', pension.buckets.taxable + pension.tax + pension.netCash, 50000, 1e-6);
+  near('surplus reinvestment receives cost basis', pension.basis, pension.buckets.taxable, 1e-6);
+  const rich = A.decumulateYear({pretax: 1000000, taxable: 0, roth: 0, taxfree: 0}, 0,
+    {...opts, age: 50, spendNet: 300000, stateRate: 0.13});
+  near('high-tax gross-up actually delivers requested cash', rich.netCash, 300000, 0.01);
+  const exhausted = A.decumulateYear({pretax: 10000, taxable: 0, roth: 0, taxfree: 0}, 0,
+    {...opts, spendNet: 10000, stdDed: 0});
+  near('final tax bill counted as shortfall', exhausted.shortfall, 1000, 0.01);
+  const cfg = {start: {pretax: 100000, taxable: 0, roth: 0, taxfree: 0, basis: 0}, contrib: {}, contribGrowth: 0,
+    currentAge: 74, retireAge: 74, spend: 0, weightsNow: {us_large: 1}, muSigma: A.RETIRE_DATA.muSigma,
+    filing: 'single', fedBrackets: singB, ltcgBrackets: singL, stdDed: 16100, stateRate: 0, niitRate: 0.038,
+    niitThreshold: 200000, taxesSSstate: false, ssGross: 0, ssClaimAge: 67, birthYearPrimary: 1960,
+    survivorAtAge: 999, survivorStdDed: 16100, survivorFedBrackets: singB, survivorLtcgBrackets: singL,
+    survivorStateRate: 0, paths: 1, deterministic: true};
+  const rmd = A.runProjection(cfg);
+  near('RMD uses previous year-end balance before current growth', rmd.firstRmd, 100000 / 24.6, 1e-6);
+  const incomeOnly = A.runProjection({...cfg, start: {pretax: 0, taxable: 0, roth: 0, taxfree: 0, basis: 0},
+    ssGross: 20000, spend: 20000});
+  near('fully funded income-only plan succeeds with zero ending assets', incomeOnly.success, 1, 1e-9);
 })();
 
 console.log(`\n${pass} passed, ${fail} failed`);

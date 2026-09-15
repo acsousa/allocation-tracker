@@ -1,12 +1,12 @@
 # Quartermaster
 
 **Asset Allocation Tracker** — a single-file, fully-offline web app for tracking
-your true asset allocation across every account. It's an allocation tool, not a
+your real allocation across every account. It's an allocation tool, not a
 net-worth tracker.
 
 It's one `allocation-tracker.html` file. Open it in a browser and it runs; your
-numbers live in a JSON file you save yourself. No server, no accounts, no
-network, no tracking. You can email the same file to a friend and they can use
+numbers live in a JSON file you save yourself. The standalone app needs no server or account and contains no analytics. The hosted
+site at realallocation.com uses Cloudflare Web Analytics and includes pricing and privacy pages. You can email the same file to a friend and they can use
 it too.
 
 ![Allocation Tracker — Review › Overview](docs/screenshot.png)
@@ -57,7 +57,7 @@ Your data is saved to `my-portfolio.json`. Keep it in an iCloud/Dropbox folder
 for automatic version history. **The app never uploads or stores your data in
 the browser — the file is the only copy, so remember to Save.**
 
-### The five tabs
+### The main tabs
 
 - **Check-In** — record current values (pre-filled from last time). First run
   shows the onboarding here.
@@ -68,6 +68,7 @@ the browser — the file is the only copy, so remember to Save.**
   edit the moves, simulate before/after, or record an explicit no-action.
 - **Report** — a print-to-PDF summary as of a snapshot, including the committed
   plan and tax scorecard. Also exports CSV.
+- **Outlook** — retirement and per-child college projections, with editable assumptions and simulated outcome ranges.
 - **Settings** — *Accounts*, *Household* (children + 529 glide assignments),
   *Tax Profile* (bracket picker, gain budget, monthly savings), *Data & Privacy*
   (save/load/export/start-fresh).
@@ -78,8 +79,8 @@ Click the logo any time for the About/Help panel.
 
 ## Privacy & offline
 
-- **Zero network requests.** No CDN, no fonts, no telemetry, no fund-data
-  refresh. Verify it yourself: open dev tools → Network, or turn off Wi-Fi.
+- **Standalone download:** no analytics, CDN, fonts, or fund-data refresh. It works offline.
+- **Hosted site:** Cloudflare Web Analytics measures page visits/performance when enabled. Portfolio contents are not included; pricing-page visits help assess demand. See [launch and analytics setup](docs/launch-analytics.md).
 - Nothing is written to browser storage except a *reference* to your chosen
   file (so it can re-open it) — never the data itself.
 
@@ -87,8 +88,8 @@ Click the logo any time for the About/Help panel.
 
 ## Tech
 
-Vanilla JavaScript, inline CSS, hand-rolled SVG charts. No framework, no build
-step, no dependencies — the HTML file *is* the source. Styled in
+Vanilla JavaScript, inline CSS, hand-rolled SVG charts. No framework or runtime dependencies — the HTML file is the app source.
+A dependency-free Node build assembles the hosted site and its public pages into `dist/`. Styled in
 "Industry" blueprint design system.
 
 Tax reference data (brackets, thresholds, state rates, contribution limits) is
@@ -99,7 +100,7 @@ Settings › Tax Profile.
 
 ## Development
 
-Golden rules: **one file** (all CSS/JS inline), **zero network requests**,
+Golden rules for the standalone app: **one file** (all CSS/JS inline), **zero network requests**,
 **never touch a real user's data file** (test only on throwaway copies),
 **additive schema migrations only** (never drop data), and **`$`+comma currency
 formatting** everywhere. A local `CLAUDE.md` (untracked) holds the full agent
@@ -110,6 +111,9 @@ Quick checks:
 ```bash
 # tax-engine + migration test suite (loads the real <script> in a sandbox)
 node test/tax-engine.test.js
+node test/persistence.test.js
+node test/projection-display.test.js
+node test/site-build.test.js
 
 # syntax
 python3 - <<'PY'
@@ -130,3 +134,13 @@ cd /private/tmp/aat && python3 -m http.server 8747   # → http://localhost:8747
 This tool is for personal tracking and education. Tax and allocation figures are
 estimates from simplified rules and the data you enter. It never executes any
 trade. Confirm material financial decisions with a qualified professional.
+
+## Review and future development
+
+The September 2026 review covers financial correctness, accessibility and design, and data integrity. See [review summary](docs/review-summary.md), [financial review](docs/financial-review.md), [UX review](docs/ux-review.md), and [architecture roadmap](docs/architecture-review.md). The roadmap describes an opt-in saved-portfolio/subscription product; the current app remains an offline file-based tool.
+
+## Hosted release
+
+The public pages are self-contained `pricing.html` and `privacy.html` beside `allocation-tracker.html`; they work on localhost without building. Pricing buttons open email drafts. For the optional packaged deployment, run `node scripts/build-site.js` and publish `dist/`. The default uses your existing Cloudflare automatic analytics injection. It adds pricing and privacy pages without adding another tracker. The offline download remains isolated. See [deployment and measurement instructions](docs/launch-analytics.md) for the hosting configuration and post-deployment checks.
+
+Paid capabilities are **coming soon**: optional cloud portfolio saving, quarterly/annual reminders, and ongoing downloadable reports. Reports remain free throughout this introductory release, with no quota or checkout yet.

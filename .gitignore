@@ -2,3 +2,6 @@
 *.bak
 my-portfolio.json
 CLAUDE.md
+
+# Generated public deployment output
+dist/
