@@ -21,67 +21,119 @@
      the file makes NO network requests. Barlow/Barlow Condensed stay
      in the stack for users who have them; otherwise system-ui.
      ============================================================ */
+  /* ============================================================
+     DESIGN TOKENS — light palette on :root (2026 redesign).
+     Warmer paper ground, white cards, multi-hue accent + chart set.
+     Dark palette redefines the changed tokens in the blocks below.
+     ============================================================ */
   :root {
-    --color-bg: #f2f2f3;
-    --color-surface: #e9e9ea;
-    --color-text: #1d1f20;
-    --color-accent: #5980a6;
-    --color-accent-2: #728fab;
-    --color-divider: color-mix(in srgb, #1d1f20 16%, transparent);
+    color-scheme: light;
+    --color-bg: #f2f4f1;        /* paper ground */
+    --color-panel: #ffffff;     /* card surface */
+    --color-panel-2: #f7f9f7;   /* subtle raised */
+    --color-surface: #ebefeb;   /* sunk wells / inputs */
+    --color-text: #151823;      /* ink */
+    --color-ink-2: #48525c;
+    --color-ink-3: #7a8590;
+    --color-accent: #0f6493;
+    --color-accent-2: #1e8175;  /* teal (secondary) */
+    --color-divider: #d6dcda;   /* line */
+    --color-line-2: #e8ece9;
 
-    --color-neutral-100: #f5f5f8; --color-neutral-200: #e7e7ea;
-    --color-neutral-300: #d4d4d7; --color-neutral-400: #b7b7ba;
-    --color-neutral-500: #98989b; --color-neutral-600: #7a7a7d;
-    --color-neutral-700: #5d5d60; --color-neutral-800: #424244;
-    --color-neutral-900: #2b2b2d;
+    --color-neutral-100: #f2f5f3; --color-neutral-200: #e6ebe8;
+    --color-neutral-300: #d3dad6; --color-neutral-400: #aab4b0;
+    --color-neutral-500: #8a949e; --color-neutral-600: #6b7580;
+    --color-neutral-700: #525b64; --color-neutral-800: #3a424a;
+    --color-neutral-900: #232a31;
 
-    --color-accent-100: #eef6ff; --color-accent-200: #d6ebff;
-    --color-accent-300: #b5d9fd; --color-accent-400: #94bce3;
-    --color-accent-500: #749dc4; --color-accent-600: #597ea3;
-    --color-accent-700: #416180; --color-accent-800: #2c455d;
-    --color-accent-900: #1d2d3d;
+    --color-accent-100: #f0f7fc; --color-accent-200: #dbeaf5;
+    --color-accent-300: #bfddf0; --color-accent-400: #7fbbe0;
+    --color-accent-500: #3e92c4; --color-accent-600: #1e77a8;
+    --color-accent-700: #0a4a6d; --color-accent-800: #0a3a54;
+    --color-accent-900: #08293b;
+    --color-accent-soft: #dbeaf5; --color-accent-wash: #f0f7fc;
 
-    --color-accent-2-100: #eef6ff; --color-accent-2-200: #d6ebff;
-    --color-accent-2-300: #bdd8f2; --color-accent-2-400: #9ebbd8;
-    --color-accent-2-500: #7e9cb8; --color-accent-2-600: #627d98;
-    --color-accent-2-700: #486077; --color-accent-2-800: #314457;
-    --color-accent-2-900: #1f2d3a;
+    /* teal (accent-2 family) */
+    --color-accent-2-100: #eaf6f3; --color-accent-2-200: #dcefeb;
+    --color-accent-2-300: #b6ddd6; --color-accent-2-400: #74c2b6;
+    --color-accent-2-500: #3fa294; --color-accent-2-600: #1e8175;
+    --color-accent-2-700: #196a60; --color-accent-2-800: #144f48;
+    --color-accent-2-900: #0f2e2a;
+    --color-teal: #1e8175; --color-teal-soft: #dcefeb;
+    --color-plum: #6c5aa8; --color-plum-soft: #e8e4f5;
 
-    /* status — kept muted to sit in the blueprint palette */
-    --color-ok:   #4a7a5c;
-    --color-warn: #a6772f;
-    --color-crit: #a6493f;
+    /* status */
+    --color-ok:   #1c7150; --color-ok-soft:   #dcf0e6;
+    --color-warn: #96590b; --color-warn-soft: #fbedd0;
+    --color-crit: #a83f33; --color-crit-soft: #fae3e0;
 
-    /* rollup-group chart colors (6) — mockup legend order */
-    --g-stocks:      #1d2d3d;  /* accent-900 */
-    --g-bonds:       #416180;  /* accent-700 */
-    --g-real_assets: #749dc4;  /* accent-500 */
-    --g-crypto:      #94bce3;  /* accent-400 */
-    --g-cash:        #b5d9fd;  /* accent-300 */
-    --g-blend_other: #b7b7ba;  /* neutral-400 */
+    /* rollup-group chart colors (6) — distinct hues */
+    --g-stocks:      #1b6f9b;  /* blue */
+    --g-bonds:       #6c5aa8;  /* plum */
+    --g-real_assets: #c08a2e;  /* gold */
+    --g-crypto:      #1e8175;  /* teal */
+    --g-cash:        #8a949e;  /* gray */
+    --g-blend_other: #a4566b;  /* rose */
 
-    /* 14 detail-class chart colors — grouped by family for a coherent detail donut */
-    --c-us_large:  #14212e; --c-us_mid:  #24384a; --c-us_small: #34506a;
-    --c-us_total:  #1d2d3d; --c-intl_dev:#5a83a8; --c-em:       #7ea7cc;
-    --c-us_bond:   #314457; --c-intl_bond:#5e7d97;
-    --c-reit:      #6f97b9; --c-commod:  #9ebbd8;
-    --c-crypto:    #94bce3;
-    --c-cash:      #98989b;
-    --c-blend:     #b7b7ba; --c-other:   #d4d4d7;
+    /* 14 detail-class chart colors — grouped by family, multi-hue */
+    --c-us_large:  #114863; --c-us_mid:  #1b6f9b; --c-us_small: #3e92c4;
+    --c-us_total:  #1b6f9b; --c-intl_dev:#1e8175; --c-em:       #45bfae;
+    --c-us_bond:   #6c5aa8; --c-intl_bond:#9b8dd0;
+    --c-reit:      #c08a2e; --c-commod:  #e0b25a;
+    --c-crypto:    #a4566b;
+    --c-cash:      #8a949e;
+    --c-blend:     #a0aab2; --c-other:   #c4ccd2;
+
+    /* landing/marketing chart accents (redesign c1–c6) */
+    --c1: #1b6f9b; --c2: #1e8175; --c3: #c08a2e; --c4: #6c5aa8; --c5: #8a949e; --c6: #a4566b;
 
     --font-heading: "Barlow Condensed", system-ui, "Segoe UI", sans-serif;
     --font-heading-weight: 600;
     --font-body: "Barlow", system-ui, "Segoe UI", Roboto, sans-serif;
-    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 
-    --space-1: 3.4px; --space-2: 6.8px; --space-3: 10.2px;
-    --space-4: 13.6px; --space-6: 20.4px; --space-8: 27.2px;
+    /* airy density (redesign) — generous gaps + card padding */
+    --space-1: 4px; --space-2: 8px; --space-3: 13px;
+    --space-4: 18px; --space-6: 28px; --space-8: 44px;
+    --qm-pad: 30px; --qm-gap: 26px;
+    /* one horizontal gutter for every full-bleed bar + the body, so tab labels,
+       sub-nav labels and card edges all line up down the same left/right edge */
+    --shell-x: 24px;
 
     --radius-sm: 2px; --radius-md: 4px; --radius-lg: 7px;
 
-    --shadow-sm: 0 1px 2px color-mix(in srgb, #2b2b2d 14%, transparent);
-    --shadow-md: 0 3px 10px color-mix(in srgb, #2b2b2d 16%, transparent);
-    --shadow-lg: 0 12px 32px color-mix(in srgb, #2b2b2d 22%, transparent);
+    --shadow-sm: 0 1px 2px color-mix(in srgb, #151823 12%, transparent);
+    --shadow-md: 0 4px 14px color-mix(in srgb, #151823 14%, transparent);
+    --shadow-lg: 0 20px 48px color-mix(in srgb, #0f6493 30%, transparent);
+  }
+
+  /* Dark palette — dormant for now (light-only launch). Applied only when the root
+     carries data-theme="dark" (no auto prefers-color-scheme switch yet). */
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --color-bg: #0b0d14; --color-panel: #151823; --color-panel-2: #1c2030; --color-surface: #10131c;
+    --color-text: #eceff3; --color-ink-2: #aab4c0; --color-ink-3: #7b8694;
+    --color-accent: #57acdc; --color-divider: #2b3140; --color-line-2: #212637;
+    --color-neutral-100: #1c2030; --color-neutral-200: #232a37; --color-neutral-300: #2f3745;
+    --color-neutral-400: #4a545f; --color-neutral-500: #6b7580; --color-neutral-600: #8a949e;
+    --color-neutral-700: #aab4c0; --color-neutral-800: #cdd4dc; --color-neutral-900: #eceff3;
+    --color-accent-100: #101f2b; --color-accent-200: #123347; --color-accent-300: #17435e;
+    --color-accent-400: #2f6f96; --color-accent-500: #57acdc; --color-accent-600: #7cc2e8;
+    --color-accent-700: #a6d8f2; --color-accent-800: #c8e7f8; --color-accent-900: #e4f3fc;
+    --color-accent-soft: #123347; --color-accent-wash: #101f2b;
+    --color-accent-2: #45bfae;
+    --color-accent-2-100: #0f2e2a; --color-accent-2-200: #124039; --color-accent-2-300: #1a5c52;
+    --color-accent-2-400: #2f8b7d; --color-accent-2-500: #45bfae; --color-accent-2-600: #6fd0c2;
+    --color-accent-2-700: #9fe0d6; --color-accent-2-800: #c4ece5; --color-accent-2-900: #e3f5f1;
+    --color-teal: #45bfae; --color-teal-soft: #0f2e2a;
+    --color-plum: #a99be0; --color-plum-soft: #211e38;
+    --color-ok: #4fc894; --color-ok-soft: #0f2c21;
+    --color-warn: #e5ae4c; --color-warn-soft: #332810;
+    --color-crit: #e3826f; --color-crit-soft: #33191a;
+    --g-stocks: #4fa0cb; --g-bonds: #a99be0; --g-real_assets: #dea94a; --g-crypto: #45bfae; --g-cash: #a6b0b9; --g-blend_other: #c97e92;
+    --c-us_large: #3f8fbf; --c-us_mid: #4fa0cb; --c-us_small: #79bde0; --c-us_total: #4fa0cb; --c-intl_dev: #45bfae; --c-em: #74d3c6;
+    --c-us_bond: #a99be0; --c-intl_bond: #c3b8ee; --c-reit: #dea94a; --c-commod: #ecc887; --c-crypto: #c97e92; --c-cash: #a6b0b9; --c-blend: #7b8694; --c-other: #5a636e;
+    --shadow-lg: 0 20px 48px color-mix(in srgb, #000 55%, transparent);
   }
 
   *, *::before, *::after { box-sizing: border-box; }
@@ -104,7 +156,7 @@
   .mono { font-family: var(--mono); }
   .tnum { font-variant-numeric: tabular-nums; }
   .text-muted { color: color-mix(in srgb, var(--color-text) 55%, transparent); }
-  .kicker { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: color-mix(in srgb, var(--color-text) 55%, transparent); }
+  .kicker { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--color-ink-3); }
   :focus { outline: none; }
   :focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
   ::selection { background: color-mix(in srgb, var(--color-accent) 30%, transparent); }
@@ -124,7 +176,7 @@
   /* — buttons — */
   .btn {
     display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-    cursor: pointer; text-decoration: none;
+    cursor: pointer; text-decoration: none; white-space: nowrap;
     font-family: var(--font-heading); font-weight: var(--font-heading-weight);
     font-size: 14px; line-height: 1.2; color: var(--color-text);
     background: transparent; border: 1px solid var(--color-divider);
@@ -163,7 +215,7 @@
   .seg-opt:not(:has(input:checked)):hover { background: color-mix(in srgb, var(--color-text) 7%, transparent); }
 
   /* — cards / tags — */
-  .card { display: flex; flex-direction: column; gap: var(--space-2); padding: var(--space-3); border-radius: 0; background: transparent; border: 1px solid var(--color-divider); }
+  .card { display: flex; flex-direction: column; gap: var(--space-2); padding: var(--space-3); border-radius: 0; background: var(--color-panel); border: 1px solid var(--color-divider); }
   .card-kicker { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-accent); }
   .card-title { font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 17px; line-height: 1.2; }
   .card-meta { display: flex; align-items: center; gap: 6px; font-size: 11px; color: color-mix(in srgb, var(--color-text) 50%, transparent); }
@@ -177,16 +229,51 @@
   .tag-crit { background: color-mix(in srgb, var(--color-crit) 16%, transparent); color: var(--color-crit); }
 
   /* — nav / tables — */
-  .nav { display: flex; align-items: center; gap: var(--space-4); padding: var(--space-3) var(--space-6); border-bottom: 1px solid var(--color-divider); }
+  .nav { display: flex; align-items: center; gap: var(--space-4); padding: var(--space-3) var(--space-6); background: var(--color-panel); border-bottom: 1px solid var(--color-divider); }
   .nav-brand { font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 18px; }
   .nav a { color: inherit; text-decoration: none; font-size: 14px; cursor: pointer; letter-spacing: 0.01em; }
   .nav a:hover { color: var(--color-accent); }
   .nav a[aria-current='page'] { color: var(--color-accent); font-weight: 700; }
   /* Sub-tab strip under a master tab — flush with the content padding, underline indicator. */
-  .subnav { display: flex; gap: 2px; padding: 0 var(--space-6); border-bottom: 1px solid var(--color-divider); background: color-mix(in srgb, var(--color-text) 3%, transparent); flex-wrap: wrap; }
-  .subnav a { color: color-mix(in srgb, var(--color-text) 60%, transparent); text-decoration: none; font-size: 13px; cursor: pointer; padding: 10px 14px; border-bottom: 2px solid transparent; margin-bottom: -1px; line-height: 1; white-space: nowrap; }
+  .subnav { display: flex; gap: 4px; padding: 0 var(--shell-x); border-bottom: 1px solid var(--color-divider); background: var(--color-panel-2); flex-wrap: wrap; }
+  .subnav a { color: var(--color-ink-2); text-decoration: none; font-family: var(--font-heading); font-size: 14px; letter-spacing: 0.04em; cursor: pointer; padding: 12px 16px; border-bottom: 2px solid transparent; margin-bottom: -1px; line-height: 1; white-space: nowrap; }
+  .subnav a:first-child { padding-left: 0; }   /* first label flush with the content gutter */
   .subnav a:hover { color: var(--color-text); background: color-mix(in srgb, var(--color-text) 5%, transparent); }
   .subnav a.subnav-active { color: var(--color-accent); border-bottom-color: var(--color-accent); font-weight: 600; }
+
+  /* — redesign app shell: file bar + numbered tab bar + reference drawer.
+       Bars run full-bleed to the shell edges (no side gutter); their content is padded to --shell-x,
+       and the body cards run full-bleed too, so every left/right edge lines up with no floating borders. — */
+  .filebar { display: flex; align-items: center; gap: 14px; padding: 9px var(--shell-x); background: var(--color-surface); border-bottom: 1px solid var(--color-divider); flex-wrap: wrap; }
+  .filebar .brand { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+  .file-chip { display: flex; align-items: center; gap: 9px; padding: 6px 13px; background: var(--color-panel); border: 1px solid var(--color-divider); font-size: 12.5px; }
+  .file-chip .dot { width: 7px; height: 7px; border-radius: 50%; flex: none; background: var(--color-ok); }
+  .file-chip .fname { font-family: var(--mono); font-size: 12px; }
+  .file-chip .fmeta { color: var(--color-ink-3); font-size: 12px; }
+  .filebtn { padding: 6px 12px; border: 1px solid var(--color-divider); background: var(--color-panel); font-size: 13px; color: var(--color-ink-2); cursor: pointer; font-family: var(--font-body); }
+  .filebtn:hover { border-color: var(--color-accent); color: var(--color-accent); }
+  .netpill { display: flex; align-items: center; gap: 8px; font-family: var(--font-heading); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-ok); }
+  .netpill .ring { width: 8px; height: 8px; border-radius: 50%; border: 1px solid var(--color-ok); flex: none; }
+
+  .tabbar { display: flex; align-items: stretch; background: var(--color-panel); border-bottom: 1px solid var(--color-divider); overflow-x: auto; }
+  .apptab { display: block; text-align: left; padding: 10px 18px; border: 0; border-right: 1px solid var(--color-line-2); background: transparent; color: var(--color-ink-3); cursor: pointer; white-space: nowrap; }
+  .apptab:first-child { padding-left: var(--shell-x); }   /* first tab label at the content gutter */
+  .apptab .step { display: block; font-family: var(--font-heading); font-size: 10px; letter-spacing: 0.16em; opacity: 0.62; }
+  .apptab .lbl { display: block; font-family: var(--font-heading); font-weight: 600; font-size: 15px; letter-spacing: 0.06em; text-transform: uppercase; margin-top: 2px; }
+  .apptab:hover { color: var(--color-text); background: var(--color-panel-2); }
+  .apptab.active { background: var(--color-accent); color: #fff; }
+  .apptab.active .step { opacity: 0.85; }
+  .otab { margin-left: 14px; border-left: 1px solid var(--color-divider); border-right: 0; }
+  .otab.active { background: var(--color-plum); color: #fff; }
+  .tabmetrics { margin-left: auto; display: flex; align-items: center; gap: 18px; padding-right: var(--shell-x); }
+  .tabmetric { text-align: right; }
+  .tabmetric .t { font-family: var(--font-heading); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-ink-3); }
+  .tabmetric .v { font-family: var(--font-heading); font-weight: 700; font-size: 19px; line-height: 1.15; font-variant-numeric: tabular-nums; }
+  .tabmetric + .tabmetric { padding-left: 18px; border-left: 1px solid var(--color-line-2); }
+  .refdrawer { display: flex; align-items: center; gap: 22px; padding: 11px var(--shell-x); background: var(--color-accent-wash); border-bottom: 1px solid var(--color-divider); flex-wrap: wrap; }
+  .refdrawer .rlabel { font-family: var(--font-heading); font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--color-accent); }
+  .refdrawer a { font-size: 13.5px; color: var(--color-ink-2); cursor: pointer; }
+  .refdrawer a:hover, .refdrawer a.active { color: var(--color-accent); }
   /* Acronym helper: dotted underline + readable hover bubble (full name) */
   abbr.tip { position: relative; text-decoration: underline dotted; text-underline-offset: 2px; text-decoration-thickness: 1px; cursor: help; }
   abbr.tip::after {
@@ -200,31 +287,42 @@
   }
   abbr.tip:hover::after { opacity: 1; visibility: visible; }
   .table { width: 100%; border-collapse: collapse; font-size: 14px; }
-  .table th { text-align: left; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: color-mix(in srgb, var(--color-text) 60%, transparent); padding: var(--space-2); border-bottom: 1px solid var(--color-divider); }
-  .table td { padding: var(--space-2); border-bottom: 1px solid color-mix(in srgb, var(--color-text) 8%, transparent); }
+  .table th { text-align: left; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-ink-3); padding: 10px var(--space-2); border-bottom: 1px solid var(--color-divider); }
+  .table td { padding: 12px var(--space-2); border-bottom: 1px solid var(--color-line-2); }
   .table tbody tr:hover { background: color-mix(in srgb, var(--color-text) 4%, transparent); }
   .table tbody tr.pos-class-active { background: var(--color-accent-100); }
 
   /* — dialog — */
   .dialog-backdrop { position: fixed; inset: 0; z-index: 40; display: grid; place-items: center; padding: var(--space-6); background: color-mix(in srgb, var(--color-neutral-900) 50%, transparent); }
-  .dialog { width: min(560px, 100%); max-height: 88vh; overflow: auto; display: flex; flex-direction: column; gap: var(--space-3); padding: var(--space-6); border-radius: 0; background: var(--color-bg); border: 1px solid var(--color-text); box-shadow: var(--shadow-lg); }
+  .dialog { width: min(560px, 100%); max-height: 88vh; overflow: auto; display: flex; flex-direction: column; gap: var(--space-3); padding: var(--space-6); border-radius: 0; background: var(--color-panel); border: 1px solid var(--color-divider); border-top: 3px solid var(--color-accent); box-shadow: var(--shadow-lg); }
   .dialog-title { font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 22px; }
   .dialog-actions { display: flex; justify-content: flex-end; gap: var(--space-2); margin-top: var(--space-2); }
 
   /* — app shell / layout — */
   #app { min-height: 100vh; display: flex; flex-direction: column; }
-  .shell { max-width: 1280px; width: 100%; margin: 0 auto; }
+  .shell { max-width: 1520px; width: 100%; margin: 0 auto; }
   /* Breathing room at the bottom of every page so the last content clears the fold. */
-  .app-body { padding-bottom: 96px; }
-  .view { padding: var(--space-6) var(--space-6) var(--space-8); display: flex; flex-direction: column; gap: var(--space-6); }
-  .panel { border: 1px solid var(--color-divider); }
-  .panel-hd { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3) var(--space-4); border-bottom: 1px solid var(--color-divider); }
+  /* Body runs full-bleed to the shell edges, matching the bars; card interiors carry their own padding. */
+  .app-body { display: flex; flex-direction: column; gap: var(--space-6); padding: var(--space-6) 0 96px; }
+  .view { padding: var(--space-6) var(--shell-x) var(--space-8); display: flex; flex-direction: column; gap: var(--space-6); }
+  /* White cards on the paper ground, with a fine accent top-edge and a soft lift. */
+  .panel { background: var(--color-panel); border: 1px solid var(--color-divider); border-top: 3px solid var(--color-accent); box-shadow: var(--shadow-sm); }
+  .panel-hd { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3) var(--space-4); border-bottom: 1px solid var(--color-line-2); }
   .panel-hd h4 { margin: 0; }
-  .grid-kpi { display: grid; grid-template-columns: repeat(4, 1fr); border: 1px solid var(--color-divider); }
-  .kpi { padding: var(--space-4) var(--space-6); border-right: 1px solid var(--color-divider); }
+  .grid-kpi { display: grid; grid-template-columns: repeat(4, 1fr); background: var(--color-panel); border: 1px solid var(--color-divider); border-top: 3px solid var(--color-accent); box-shadow: var(--shadow-sm); }
+  /* Flexible layout for smaller windows: KPI row wraps, fixed two-column grids stack. */
+  @media (max-width: 900px) {
+    .grid-kpi { grid-template-columns: repeat(2, 1fr); }
+    .app-body [style*="grid-template-columns:1fr 1fr"],
+    .app-body [style*="grid-template-columns: 1fr 1fr"] { grid-template-columns: 1fr !important; }
+  }
+  @media (max-width: 520px) {
+    .grid-kpi { grid-template-columns: 1fr; }
+  }
+  .kpi { padding: var(--space-4) var(--space-6); border-right: 1px solid var(--color-line-2); }
   .kpi:last-child { border-right: 0; }
-  .kpi-val { font-family: var(--font-heading); font-size: 32px; line-height: 1.1; }
-  .toolbar { display: flex; align-items: center; gap: var(--space-4); padding: var(--space-3) var(--space-4); border: 1px solid var(--color-divider); }
+  .kpi-val { font-family: var(--font-heading); font-size: 32px; line-height: 1.1; font-variant-numeric: tabular-nums; }
+  .toolbar { display: flex; align-items: center; gap: var(--space-4); padding: var(--space-3) var(--space-4); background: var(--color-panel); border: 1px solid var(--color-divider); }
   .crumb { display: flex; align-items: center; gap: 8px; font-family: var(--font-heading); font-size: 16px; }
   .crumb .sep { color: color-mix(in srgb, var(--color-text) 40%, transparent); }
   .crumb a { cursor: pointer; }
@@ -842,18 +940,19 @@ function decumulateYear(buckets, basis, opts) {
   const ssTaxableFed = opts.ssGross * RETIRE_DATA.ssTaxablePct;                 // fed: flat 85%
   const ssTaxableState = opts.taxesSSstate ? opts.ssGross * RETIRE_DATA.ssTaxablePct : 0;
   const forcedRMD = Math.min(opts.forcedRMD || 0, B.pretax);
+  const pensionGross = opts.pensionGross || 0;   // guaranteed income, fully taxable as ordinary (fed + state)
   let taxGuess = 0, res = null;
   for (let iter = 0; iter < 6; iter++) {
-    let need = opts.spendNet + taxGuess - opts.ssGross;
+    let need = opts.spendNet + taxGuess - opts.ssGross - pensionGross;
     if (need < 0) need = 0;
     res = doWithdraw(B, taxableBasis, need, forcedRMD);
-    const ordinary = res.pretaxOut + ssTaxableFed;
+    const ordinary = res.pretaxOut + ssTaxableFed + pensionGross;
     const ti = Math.max(0, ordinary - opts.stdDed);
     const fed = retireBracketTax(opts.fedBrackets, ti);
     const ltcgTax = ltcgStackTax(opts.ltcgBrackets, ti, res.ltcgOut);
     const magi = ordinary + res.ltcgOut;
     const niit = magi > opts.niitThreshold ? opts.niitRate * Math.min(res.ltcgOut, magi - opts.niitThreshold) : 0;
-    const state = opts.stateRate * Math.max(0, res.pretaxOut + ssTaxableState + res.ltcgOut);
+    const state = opts.stateRate * Math.max(0, res.pretaxOut + ssTaxableState + pensionGross + res.ltcgOut);
     const penalty = (opts.age < RETIRE_DATA.penaltyAge) ? RETIRE_DATA.penaltyRate * res.pretaxDiscretionary : 0;
     const tax = fed + ltcgTax + niit + state + penalty;
     if (Math.abs(tax - taxGuess) < 1) { taxGuess = tax; break; }
@@ -867,10 +966,12 @@ function decumulateYear(buckets, basis, opts) {
   taxableBasis = w.newBasis;
   if (w.reinvest > 0) { B.taxable += w.reinvest; taxableBasis += w.reinvest; } // basis = value on reinvest
   const totalOut = w.pretaxOut + w.taxableOut + w.rothOut + w.taxfreeOut;
-  const netCash = opts.ssGross + totalOut - taxGuess;
+  const netCash = opts.ssGross + pensionGross + totalOut - taxGuess;
   return { buckets: B, basis: taxableBasis, tax: taxGuess, ltcg: w.ltcgOut, ssTaxable: ssTaxableFed,
            withdrawn: totalOut, netCash, shortfall: w.unmet, // true funds-exhausted gap, not the gross-up rounding residual
-           ordinaryTI: Math.max(0, w.pretaxOut + ssTaxableFed - opts.stdDed), pretaxOut: w.pretaxOut };
+           // where the year's cash came from, in draw order (RMD is the required part of the pre-tax bucket)
+           bySource: { ss: opts.ssGross, pension: pensionGross, rmd: forcedRMD, taxable: w.taxableOut, pretax: w.pretaxDiscretionary, roth: w.rothOut, taxfree: w.taxfreeOut },
+           ordinaryTI: Math.max(0, w.pretaxOut + ssTaxableFed + pensionGross - opts.stdDed), pretaxOut: w.pretaxOut };
 }
 
 // Full projection: `paths` Monte Carlo runs (or one deterministic median path). See §6.2–6.6.
@@ -920,8 +1021,15 @@ function runProjection(cfg) {
         const forcedRMD = age >= rmdAge ? rmdAmount(prevPretax * (1 + r), age) : 0;
         if (cfg.deterministic && age === rmdAge) detFirstRmdPretax = prevPretax * (1 + r);
         const ssGross = age >= cfg.ssClaimAge ? cfg.ssGross : 0;
+        let pensionGross = 0;
+        for (const pen of (cfg.pensions || [])) {
+          if (age < pen.startAge) continue;
+          let amt = pen.cola ? pen.amount : pen.amount / Math.pow(1 + (cfg.inflation || 0), age - pen.startAge);
+          if (survivor) amt *= (pen.survivorPct || 0) / 100;
+          pensionGross += amt;
+        }
         const out = decumulateYear(B, basis, {
-          age, spendNet: cfg.spend, ssGross,
+          age, spendNet: cfg.spend, ssGross, pensionGross,
           fedBrackets: survivor ? cfg.survivorFedBrackets : cfg.fedBrackets,
           ltcgBrackets: survivor ? cfg.survivorLtcgBrackets : cfg.ltcgBrackets,
           stdDed: survivor ? cfg.survivorStdDed : cfg.stdDed,
@@ -931,7 +1039,7 @@ function runProjection(cfg) {
         B = out.buckets; basis = out.basis;
         if (out.shortfall > 1) depleted = true;
         if (cfg.deterministic) {
-          const grossOrd = out.pretaxOut + out.ssTaxable;
+          const grossOrd = out.pretaxOut + out.ssTaxable + pensionGross;
           rThenJoint    = Math.max(rThenJoint,    retireBracketMarginal(cfg.fedBrackets, Math.max(0, grossOrd - cfg.stdDed)) + cfg.stateRate);
           rThenSurvivor = Math.max(rThenSurvivor, retireBracketMarginal(cfg.survivorFedBrackets, Math.max(0, grossOrd - cfg.survivorStdDed)) + cfg.survivorStateRate);
           if (cfg.conversionFill > 0 && age < rmdAge && age < cfg.ssClaimAge && !survivor) {
@@ -947,7 +1055,7 @@ function runProjection(cfg) {
             }
           }
         }
-        if (rows) rows.push({ age, phase: 'decum', r, ss: ssGross, rmd: forcedRMD, withdrawn: out.withdrawn, tax: out.tax, net: out.netCash, pretax: B.pretax, total: B.pretax + B.taxable + B.roth + B.taxfree });
+        if (rows) rows.push({ age, phase: 'decum', r, ss: ssGross, rmd: forcedRMD, withdrawn: out.withdrawn, src: out.bySource, tax: out.tax, net: out.netCash, pretax: B.pretax, total: B.pretax + B.taxable + B.roth + B.taxfree });
       }
       totalsByYear[k].push(Math.max(0, B.pretax + B.taxable + B.roth + B.taxfree));
     }
@@ -1096,7 +1204,15 @@ function buildRetireConfig(overrides) {
     rs.contribOverride || {});
   const muSigma = rs.muSigma ? Object.assign({}, RETIRE_DATA.muSigma, rs.muSigma) : RETIRE_DATA.muSigma;
   const spend = overrides && overrides.spend != null ? overrides.spend : (rs.spendingTargetRealAnnual || 80000);
+  const inflation = (rs.inflationPct != null ? rs.inflationPct : 2.5) / 100;
+  // Guaranteed income streams (today's dollars). No-COLA pensions erode in real terms; joint pensions
+  // continue to a survivor at survivorPct. Taxed as ordinary income (fed + state), like a pre-tax withdrawal.
+  const pensions = (rs.pensions || [])
+    .filter(p => (Number(p.amountReal) || 0) > 0)
+    .map(p => ({ amount: Number(p.amountReal) || 0, startAge: Number(p.startAge) || 65,
+                 cola: p.cola !== false, survivorPct: p.survivorPct != null ? Number(p.survivorPct) : 100 }));
   return {
+    pensions, inflation,
     start: retireStartBuckets(), contrib, contribGrowth: (rs.contribGrowthReal || 0) / 100,
     currentAge, retireAge: rs.retirementAge || 65, spend,
     weightsNow, weightsTarget, muSigma,
@@ -1247,6 +1363,7 @@ function defaultRetirementSettings() {
     contribOverride: null,              // { pretax, taxable, roth, taxfree } user overrides of inferred run-rate
     muSigma: null,                      // per-class [μ%,σ%] overrides of RETIRE_DATA.muSigma
     mappingConfirmed: false,            // validation gate: user confirmed account→bucket mapping
+    pensions: [],                       // [{ label, amountReal, startAge, cola, survivorPct }] — guaranteed income streams
     paths: 5000,
     seed: 12345,
   };
@@ -2070,6 +2187,28 @@ async function saveFile(forceNew) {
   return { ok: true, via: 'download' };
 }
 
+// Classic hidden <input type=file> loader — works everywhere, including sandboxed webviews
+// where the File System Access picker is blocked. Used as the fallback (and sole path) below.
+function openFileViaInput() {
+  return new Promise(resolve => {
+    const input = document.createElement('input');
+    input.type = 'file'; input.accept = '.json,application/json';
+    input.onchange = async () => {
+      const file = input.files && input.files[0];
+      if (!file) return resolve({ ok: false, aborted: true });
+      try {
+        const data = JSON.parse(await file.text());
+        portfolio = migrate(data);
+        fileHandle = null; fileName = file.name || fileName; dirty = false;
+        resolve({ ok: true });
+      } catch (e) { resolve({ ok: false, error: e.message }); }
+    };
+    // Some webviews only fire the picker when the input is in the DOM.
+    input.style.display = 'none'; document.body.appendChild(input);
+    input.click();
+    setTimeout(() => input.remove(), 60000);
+  });
+}
 async function openFile() {
   if (HAS_FSA) {
     try {
@@ -2085,25 +2224,11 @@ async function openFile() {
       return { ok: true };
     } catch (e) {
       if (e && e.name === 'AbortError') return { ok: false, aborted: true };
-      return { ok: false, error: e.message };
+      // Picker blocked/failed in this environment (e.g. sandboxed webview) — fall back to <input type=file>.
+      return openFileViaInput();
     }
   }
-  // fallback: hidden <input type=file>
-  return new Promise(resolve => {
-    const input = document.createElement('input');
-    input.type = 'file'; input.accept = '.json,application/json';
-    input.onchange = async () => {
-      const file = input.files && input.files[0];
-      if (!file) return resolve({ ok: false, aborted: true });
-      try {
-        const data = JSON.parse(await file.text());
-        portfolio = migrate(data);
-        fileHandle = null; fileName = file.name || fileName; dirty = false;
-        resolve({ ok: true });
-      } catch (e) { resolve({ ok: false, error: e.message }); }
-    };
-    input.click();
-  });
+  return openFileViaInput();
 }
 
 /* Autosave reminder if there are unsaved changes (spec §10). */
@@ -2219,16 +2344,19 @@ const ui = {
   historyTab: 'value',     // value | pct | growth
   planSim: null,           // live simulator overlay for the Plan tab
   dialog: null,            // active modal descriptor
+  dollarMode: 'today',     // Outlook display unit: 'today' (real) | 'future' (nominal, inflation-adjusted)
 };
 
 // §14 IA: which internal views sit under each top-level nav tab.
-const REVIEW_VIEWS = ['dashboard', 'positions', 'goal', 'tax', 'retire', 'college', 'history'];
+const REVIEW_VIEWS = ['dashboard', 'positions', 'goal', 'tax', 'history'];
+const OUTLOOK_VIEWS = ['retire', 'college'];              // long-term projections (redesign: "Outlook")
 const SETTINGS_VIEWS = ['accounts', 'household', 'taxprofile', 'retirement', 'data'];
 function topTabOf(view) {
   if (view === 'welcome') return 'welcome'; // landing — no top tab active, no subnav
   if (view === 'checkin') return 'checkin';
   if (view === 'plan') return 'plan';
   if (view === 'report') return 'report';
+  if (OUTLOOK_VIEWS.includes(view)) return 'outlook';
   if (SETTINGS_VIEWS.includes(view)) return 'settings';
   return 'review';
 }
@@ -2686,6 +2814,7 @@ function resetViewState() {
 
 function render() {
   const app = document.getElementById('app');
+  applyTheme();
   const hasData = portfolio.accounts.some(a => a.status !== 'archived');
   // No data → land on the welcome/landing view (its onboarding) or a Settings pane.
   if (!hasData && !['welcome', ...SETTINGS_VIEWS].includes(ui.view)) ui.view = 'welcome';
@@ -2711,53 +2840,98 @@ function render() {
   }
   // The report markup is always in the DOM (hidden) so print + preview share it.
   const reportHidden = (ui.view === 'report') ? '' : reportHTML(currentSnapshot());
-  app.innerHTML = shellHTML(navHTML() + `<div class="app-body">${body}${reportHidden ? `<div class="report">${reportHidden}</div>` : ''}</div>`);
+  // The marketing landing is a standalone page with its own header — no app file-bar/tab-bar.
+  const chrome = ui.view === 'welcome' ? '' : navHTML();
+  const bodyPad = ui.view === 'welcome' ? 'padding:24px 24px 64px;' : '';
+  app.innerHTML = shellHTML(chrome + `<div class="app-body" style="${bodyPad}">${body}${reportHidden ? `<div class="report">${reportHidden}</div>` : ''}</div>`);
   afterRender();
 }
 
 function shellHTML(inner) { return `<div class="shell">${inner}</div>`; }
 
-/* §14 top-level nav + contextual sub-tab bar. */
-const NAV_TABS = [
-  ['checkin',  'Check-In',  'checkin'],
-  ['review',   'Review',    'dashboard'],   // default sub-view = Overview
-  ['plan',     'Plan',      'plan'],
-  ['report',   'Report',    'report'],
-  ['settings', 'Settings',  'accounts'],    // default sub-view = Accounts
+/* Top-level nav (redesign): a file bar over a numbered tab bar. The quarterly ritual
+   is the spine — 01 Check-In · 02 Review · 03 Plan · 04 Report — with Outlook detached
+   to the right (any-time projections) and Settings folded into a Reference drawer. */
+const APP_TABS = [
+  ['checkin', '01', 'Check-In', 'checkin'],
+  ['review',  '02', 'Review',   'dashboard'],
+  ['plan',    '03', 'Plan',     'plan'],
+  ['report',  '04', 'Report',   'report'],
 ];
-// Review sub-tabs. College planning appears only when the household has children.
 function reviewSubtabs() {
-  const base = [
+  return [
     ['dashboard', 'Overview'], ['positions', 'Positions'], ['goal', 'Goals'],
-    ['tax', 'Tax'], ['retire', 'Retirement planning'],
+    ['tax', 'Tax'], ['history', 'History'],
   ];
+}
+// Outlook sub-tabs. College planning appears only when the household has children.
+function outlookSubtabs() {
+  const base = [['retire', 'Retirement planning']];
   if (portfolio.children && portfolio.children.length) base.push(['college', 'College planning']);
-  base.push(['history', 'History']);
   return base;
 }
-const SETTINGS_SUBTABS = [
-  ['accounts', 'Accounts'], ['household', 'Household'],
-  ['taxprofile', 'Tax Profile'], ['retirement', 'Retirement'], ['data', 'Data & Privacy'],
+// Reference drawer entry points (Settings folded in, plus goals/import).
+const REFERENCE_LINKS = [
+  ['accounts', 'Accounts'], ['household', 'Household'], ['taxprofile', 'Tax profile'],
+  ['retirement', 'Retirement'], ['goal', 'Target &amp; glide'], ['data', 'Data &amp; privacy'],
 ];
+// Total portfolio + days since last check-in, for the tab-bar metrics.
+function navTotals() {
+  const snap = latestSnapshot();
+  if (!snap) return { hasSnap: false };
+  const total = allocate(activeHoldings(), snap).total;
+  const days = Math.max(0, Math.round((Date.now() - new Date(snap.date + 'T00:00:00').getTime()) / 864e5));
+  return { hasSnap: true, total, days };
+}
 function navHTML() {
   const active = topTabOf(ui.view);
-  const links = NAV_TABS.map(([tab, label, defView]) =>
-    `<a data-act="nav" data-view="${defView}" ${active === tab ? 'aria-current="page"' : ''}>${label}</a>`).join('');
-  const saveCls = dirty ? 'btn btn-sm save-dirty' : 'btn btn-sm btn-secondary';
-  const savedNote = dirty ? 'unsaved changes' : esc(fileName);
-  const subtabs = active === 'review' ? reviewSubtabs() : active === 'settings' ? SETTINGS_SUBTABS : null;
+  const tot = navTotals();
+  const tabs = APP_TABS.map(([tab, step, label, defView]) =>
+    `<button class="apptab ${active === tab ? 'active' : ''}" data-act="nav" data-view="${defView}"><span class="step">${step}</span><span class="lbl">${label}</span></button>`).join('');
+  const outlook = `<button class="apptab otab ${active === 'outlook' ? 'active' : ''}" data-act="nav" data-view="retire"><span class="step">Any time</span><span class="lbl">Outlook</span></button>`;
+  const metrics = tot.hasSnap ? `<div class="tabmetrics">
+      <div class="tabmetric"><div class="t">Total portfolio</div><div class="v">${fmtMoney(tot.total)}</div></div>
+      <div class="tabmetric"><div class="t">Last check-in</div><div class="v">${tot.days}${tot.days === 1 ? ' day' : ' days'}</div></div>
+    </div>` : '';
+  const subtabs = active === 'review' ? reviewSubtabs() : active === 'outlook' ? outlookSubtabs() : null;
   const subBar = subtabs ? `<div class="subnav no-print">${subtabs.map(([v, label]) =>
       `<a data-act="nav" data-view="${v}" class="${ui.view === v ? 'subnav-active' : ''}">${label}</a>`).join('')}</div>` : '';
-  return `<div class="nav no-print">
-    <span class="nav-brand" data-act="nav" data-view="welcome" title="Quartermaster — home" style="display:flex;align-items:center;gap:9px;cursor:pointer;">${logoSVG(26)}Quartermaster</span>
-    <div style="display:flex;gap:18px;align-items:center;margin-right:auto;margin-left:24px;flex-wrap:wrap;">${links}</div>
-    <div style="display:flex;align-items:center;gap:10px;">
-      <span class="text-muted" style="font-size:12px;">${savedNote}</span>
-      <button class="${saveCls}" data-act="save">Save</button>
-      <button class="btn btn-sm btn-secondary" data-act="open">Open</button>
+  const refOpen = !!ui.drawer; // drawer visibility is purely the toggle — the Settings button opens AND closes it
+  const drawer = refOpen ? `<div class="refdrawer no-print"><span class="rlabel">Settings</span>${
+    REFERENCE_LINKS.map(([v, l]) => `<a data-act="nav" data-view="${v}" class="${ui.view === v ? 'active' : ''}">${l}</a>`).join('')}
+    <a data-act="open-import">Import / paste</a>
+    <span style="margin-left:auto;"><a data-act="toggle-drawer">Close ✕</a></span></div>` : '';
+  const dirtyNote = dirty ? 'unsaved' : 'saved';
+  const settingsActive = ui.drawer || SETTINGS_VIEWS.includes(ui.view);
+  return `<div class="filebar no-print">
+      <span class="brand" data-act="nav" data-view="welcome" title="Quartermaster — home">${logoSVG(24)}<span style="font-family:var(--font-heading);font-weight:700;font-size:19px;letter-spacing:.06em;text-transform:uppercase;">Quartermaster</span></span>
+      <span class="file-chip"><span class="dot" style="${dirty ? 'background:var(--color-warn);' : ''}"></span><span class="fname">${esc(fileName)}</span><span class="fmeta">· ${dirtyNote} · local disk</span></span>
+      <button class="filebtn" data-act="save">Save</button>
+      <button class="filebtn" data-act="open">Open</button>
+      <span class="netpill" style="margin-left:auto;"><span class="ring"></span>0 network requests</span>
       <button class="btn btn-sm btn-primary" data-act="new-checkin">New check-in</button>
-    </div>
-  </div>${subBar}`;
+      <button class="filebtn" data-act="toggle-drawer" style="${settingsActive ? 'border-color:var(--color-accent);color:var(--color-accent);' : ''}">Settings ${ui.drawer ? '▾' : '▸'}</button>
+    </div>${drawer}
+    <div class="tabbar no-print">${tabs}${outlook}${metrics}</div>${subBar}`;
+}
+/* Theme: portfolio.meta.theme is 'system' | 'light' | 'dark'. applyTheme reflects it
+   onto <html data-theme>; 'system' leaves it unset so prefers-color-scheme decides. */
+function themeEffective() {
+  const t = (portfolio.meta && portfolio.meta.theme) || 'system';
+  if (t === 'light' || t === 'dark') return t;
+  return (self.matchMedia && self.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+}
+function themeIsDark() { return themeEffective() === 'dark'; }
+function applyTheme() {
+  const t = (portfolio.meta && portfolio.meta.theme) || 'system';
+  const root = document.documentElement;
+  if (t === 'light' || t === 'dark') root.setAttribute('data-theme', t);
+  else root.removeAttribute('data-theme');
+}
+function toggleTheme() {
+  // Flip to the opposite of what's currently showing, and remember it in the file.
+  portfolio.meta.theme = themeIsDark() ? 'light' : 'dark';
+  applyTheme(); markDirty(); render();
 }
 
 /* ===============================================================
@@ -2769,7 +2943,165 @@ function navHTML() {
    data is loaded. */
 function renderWelcome() {
   const hasData = portfolio.accounts.some(a => a.status !== 'archived');
-  return hasData ? renderHighlights() : renderCheckinEmpty();
+  // Public front door: the marketing landing for new visitors; portfolio highlights once data is loaded.
+  return hasData ? renderHighlights() : renderMarketingLanding();
+}
+
+/* Marketing landing (redesign) — the public homepage. Static copy; illustrative sample
+   figures. All CTAs route into the app; no network. Rendered full-bleed (no .view padding). */
+function renderMarketingLanding() {
+  const F = 'font-family:var(--font-heading);', cond = F + 'font-weight:700;';
+  const eyebrow = (color, txt) => `<div style="display:inline-flex;align-items:center;gap:10px;${F}font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:${color};"><span style="width:26px;height:2px;background:${color};"></span>${txt}</div>`;
+  // Hero mock — drift rows (illustrative)
+  const mock = [
+    ['US Equity', '+3.6pp', 80, 'var(--color-warn)'], ['Intl Equity', '−3.2pp', 23.3, 'var(--color-warn)'],
+    ['REIT', '−0.8pp', 43.3, 'var(--color-ok)'], ['Bonds', '−0.8pp', 43.3, 'var(--color-ok)'], ['Cash', '+1.2pp', 60, 'var(--color-ok)'],
+  ].map(([k, d, ml, col]) => `<div style="display:grid;grid-template-columns:66px 1fr 46px;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid var(--color-line-2);">
+      <span style="font-size:12.5px;color:var(--color-ink-2);">${k}</span>
+      <div style="position:relative;height:13px;background:var(--color-surface);"><div style="position:absolute;top:0;bottom:0;left:25%;width:50%;background:var(--color-accent-soft);"></div><div style="position:absolute;top:-2px;bottom:-2px;width:1px;left:50%;background:var(--color-ink-3);"></div><div style="position:absolute;top:1px;bottom:1px;width:3px;margin-left:-1.5px;left:${ml}%;background:${col};"></div></div>
+      <span style="text-align:right;font-size:12px;font-variant-numeric:tabular-nums;font-weight:600;color:${col};">${d}</span></div>`).join('');
+  const waterfall = [
+    ['What you see today', '6', 'separate dashboards, none of which agree on what you own', '#a6b0b9'],
+    ['What you actually hold', '80.6%', 'equity across all six, against a target of 81.0%', '#57acdc'],
+    ['Sitting in the wrong account', '$29,900', 'one bond fund, costing real money every year', '#e5ae4c'],
+    ['Cost of doing nothing', '$4,430', 'estimated annual tax drag at your current bracket', '#e3826f'],
+  ].map(([k, v, sub, col]) => `<div style="background:#232a3d;padding:28px 26px 30px;border-top:3px solid ${col};">
+      <div style="${F}font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:#9aa4b0;">${k}</div>
+      <div style="${cond}font-size:40px;line-height:1.05;font-variant-numeric:tabular-nums;margin-top:12px;color:${col};">${v}</div>
+      <div style="font-size:14.5px;color:#c4ccd6;margin-top:10px;">${sub}</div></div>`).join('');
+  const locRows = [
+    ['FXNAX', 'Taxable brokerage', '401(k)', '−$740 / yr', 'var(--color-crit)'],
+    ['VTEB', 'Taxable brokerage', 'Taxable', '$0', 'var(--color-ok)'],
+    ['VNQ', 'Roth IRA', 'Roth IRA', '$0', 'var(--color-ok)'],
+    ['VXUS', 'Taxable brokerage', 'Taxable', '+$310 credit', 'var(--color-ok)'],
+    ['VTTSX', '529 plan', '—', '—', 'var(--color-ink-3)'],
+  ].map(([t, now, should, cost, col]) => `<div style="display:grid;grid-template-columns:86px 1fr 96px 112px;gap:14px;align-items:center;padding:16px 0;border-bottom:1px solid var(--color-line-2);">
+      <span style="font-family:var(--mono);font-size:13px;font-weight:500;">${t}</span>
+      <span style="font-size:15px;color:var(--color-ink-2);">${now}</span>
+      <span style="text-align:right;font-size:15px;color:var(--color-ink-2);">${should}</span>
+      <span style="text-align:right;font-variant-numeric:tabular-nums;font-weight:600;font-size:15px;color:${col};">${cost}</span></div>`).join('');
+  const ritual = [
+    ['01', 'Refresh', 'Enter the six balances from your statements. Nothing is fetched, so nothing can be wrong behind your back.', 'var(--color-accent)'],
+    ['02', 'Confirm', 'See what moved since last quarter, account by account, before any math runs.', 'var(--color-teal)'],
+    ['03', 'Review drift', 'Blended allocation against target, with bands so ordinary noise doesn\'t look like a problem.', 'var(--color-plum)'],
+    ['04', 'Decide', 'A named list of moves, each priced in tax. Accept it, edit it, or close the tab.', 'var(--color-warn)'],
+  ].map(([n, k, v, col]) => `<div style="background:var(--color-panel);border:1px solid var(--color-divider);padding:28px 28px 30px;border-top:3px solid ${col};">
+      <div style="${cond}font-size:32px;line-height:1;color:${col};">${n}</div>
+      <div style="${cond}font-size:24px;letter-spacing:.03em;margin-top:14px;">${k}</div>
+      <div style="font-size:15px;color:var(--color-ink-2);margin-top:10px;">${v}</div></div>`).join('');
+  const honesty = [
+    ['Stale tax tables get a date, not a warning triangle.', 'The report prints the day you last reviewed them on its face.', 'var(--color-warn)'],
+    ['An unknown cost basis reads as unknown.', 'It is never quietly assumed to be zero to make an estimate possible.', 'var(--color-accent)'],
+    ['Every proposal shows its tax before you accept it.', 'Including the ones that cost nothing, so you learn which are which.', 'var(--color-teal)'],
+    ['It will not place a trade.', 'Accepting a plan records your intent. Execution stays where your money is.', 'var(--color-plum)'],
+  ].map(([k, v, col]) => `<div style="padding:18px 22px;background:var(--color-panel-2);border-left:3px solid ${col};font-size:15.5px;color:var(--color-ink-2);"><strong style="color:var(--color-text);">${k}</strong> ${v}</div>`).join('');
+  const navlink = 'font-size:15px;color:var(--color-ink-2);cursor:pointer;';
+
+  return `<div style="max-width:1520px;margin:0 auto;background:var(--color-panel);border:1px solid var(--color-divider);">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:20px;padding:20px 56px;border-bottom:1px solid var(--color-line-2);flex-wrap:wrap;">
+      <span style="display:flex;align-items:center;gap:12px;">${logoSVG(30)}<span style="${cond}font-size:22px;letter-spacing:.08em;text-transform:uppercase;">Quartermaster</span></span>
+      <div style="display:flex;align-items:center;gap:28px;flex-wrap:wrap;">
+        <span style="${navlink}" data-act="lp-scroll" data-target="lp-ritual">The quarterly check-in</span><span style="${navlink}" data-act="lp-scroll" data-target="lp-location">Asset location</span><span style="${navlink}" data-act="lp-scroll" data-target="lp-trust">Keep your data</span>
+        <span style="padding:10px 24px;background:var(--color-accent);color:#fff;font-weight:600;cursor:pointer;" data-act="landing-open">Open the app</span>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1.05fr .95fr;gap:64px;padding:84px 56px 76px;align-items:center;background:linear-gradient(160deg,var(--color-accent-wash) 0%,var(--color-panel) 62%);">
+      <div>
+        ${eyebrow('var(--color-teal)', 'Allocation tracking for individual investors')}
+        <h1 style="${cond}font-size:60px;line-height:.97;letter-spacing:-.015em;margin:22px 0 0;">Six accounts.<br><span style="color:var(--color-accent);">One real portfolio.</span></h1>
+        <p style="font-size:17px;line-height:1.6;color:var(--color-ink-2);margin:24px 0 0;max-width:34em;">The 401(k), both IRAs, the brokerage, the 529 and the cash all belong to one allocation — and no institution will ever show you that. Quartermaster does, then runs the quarterly check-in and hands you the short list of moves that closes the gap.</p>
+        <div style="display:flex;gap:14px;margin-top:32px;flex-wrap:wrap;">
+          <span style="padding:14px 30px;background:var(--color-accent);color:#fff;font-weight:600;font-size:16px;cursor:pointer;" data-act="landing-open">Open the app</span>
+          <span style="padding:14px 30px;border:1px solid var(--color-divider);background:var(--color-panel);font-weight:600;font-size:16px;cursor:pointer;" data-act="load-demo">Explore with demo data</span>
+        </div>
+        <p style="font-size:14px;color:var(--color-ink-3);margin:18px 0 0;">No account, no email, nothing to cancel. Your portfolio stays in a file on your disk.</p>
+      </div>
+      <div style="position:relative;background:var(--color-panel);border:1px solid var(--color-divider);border-top:3px solid var(--color-accent);padding:22px;box-shadow:var(--shadow-lg);">
+        <div style="display:flex;align-items:center;gap:9px;padding-bottom:16px;margin-bottom:4px;border-bottom:1px solid var(--color-line-2);">
+          <span style="width:7px;height:7px;border-radius:50%;background:var(--color-ok);flex:none;"></span>
+          <span style="font-family:var(--mono);font-size:12px;color:var(--color-ink-2);">retirement-2026.qm.json</span>
+          <span style="margin-left:auto;${F}font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--color-ink-3);">Review</span>
+        </div>
+        <div style="display:grid;grid-template-columns:160px 1fr;gap:26px;align-items:center;">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:12px;">
+            <div style="position:relative;width:150px;height:150px;border-radius:50%;background:conic-gradient(var(--c1) 0 55.6%,var(--c2) 0 77.4%,var(--c3) 0 80.6%,var(--c4) 0 94.8%,var(--c5) 0 100%);">
+              <div style="position:absolute;inset:30px;border-radius:50%;background:var(--color-panel);display:flex;flex-direction:column;align-items:center;justify-content:center;">
+                <div style="${cond}font-size:26px;line-height:1;font-variant-numeric:tabular-nums;">$1.30M</div>
+                <div style="${F}font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--color-ink-3);margin-top:3px;">6 accounts</div></div></div>
+            <div style="${F}font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--color-ink-3);">Blended allocation</div>
+          </div>
+          <div>
+            <div style="${F}font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--color-ink-3);padding-bottom:8px;border-bottom:1px solid var(--color-line-2);">Drift vs target</div>
+            ${mock}
+            <div style="margin-top:12px;padding:10px 12px;background:var(--color-warn-soft);border-left:3px solid var(--color-warn);font-size:12px;color:var(--color-ink-2);">2 classes outside band · $41,800 to move · $0 tax</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:#151823;color:#eceff3;padding:74px 56px;">
+      ${eyebrow('#45bfae', 'The gap')}
+      <h2 style="${cond}font-size:42px;line-height:1.04;margin:20px 0 0;max-width:16em;color:#eceff3;">A balance in six places is not an allocation.</h2>
+      <p style="font-size:17px;color:#aab4c0;margin:20px 0 0;max-width:42em;">Each institution shows you a pie of its own slice. Quartermaster stacks all six, compares the blend to your target, and keeps going — into which account each holding sits in, and what that placement costs you every single year.</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;margin-top:48px;">${waterfall}</div>
+    </div>
+
+    <div id="lp-location" style="scroll-margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:64px;padding:74px 56px;border-bottom:1px solid var(--color-line-2);">
+      <div>
+        ${eyebrow('var(--color-plum)', 'Asset location')}
+        <h2 style="${cond}font-size:38px;line-height:1.05;margin:18px 0 0;">Your best fund can be in your worst account.</h2>
+        <p style="font-size:17px;color:var(--color-ink-2);margin:20px 0 0;">Bonds in a taxable account and international in a Roth are both defensible in isolation. Together they can cost you more than the expense ratios you spent a weekend choosing. Quartermaster prices the difference rather than quoting the rule of thumb.</p>
+        <div style="margin-top:28px;padding:22px 26px;background:var(--color-teal-soft);border-left:3px solid var(--color-teal);font-size:16px;color:var(--color-ink-2);">VTEB in taxable saves <strong style="color:var(--color-text);">$1,180 a year</strong> over the equivalent taxable-bond fund at your bracket. VNQ in the Roth saves another <strong style="color:var(--color-text);">$960</strong>. The app shows you what is <em>left</em>.</div>
+      </div>
+      <div>
+        <div style="display:grid;grid-template-columns:86px 1fr 96px 112px;gap:14px;${F}font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--color-ink-3);padding-bottom:10px;border-bottom:1px solid var(--color-divider);">
+          <span>Holding</span><span>Sits in</span><span style="text-align:right;">Should be</span><span style="text-align:right;">Cost / yr</span></div>
+        ${locRows}
+        <div style="font-size:14px;color:var(--color-ink-3);margin-top:16px;">FXNAX is the expensive one, and it is not the one with the largest balance. A dash means the cost is unknown, not zero.</div>
+      </div>
+    </div>
+
+    <div id="lp-ritual" style="scroll-margin-top:20px;padding:74px 56px;border-bottom:1px solid var(--color-line-2);background:var(--color-panel-2);">
+      ${eyebrow('var(--color-accent)', 'The quarterly check-in')}
+      <h2 style="${cond}font-size:38px;line-height:1.05;margin:18px 0 0;">Four steps, once a quarter, about twenty minutes.</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:20px;margin-top:44px;">${ritual}</div>
+    </div>
+
+    <div id="lp-trust" style="scroll-margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:64px;padding:74px 56px;">
+      <div>
+        ${eyebrow('var(--color-warn)', 'Why trust the number')}
+        <h2 style="${cond}font-size:38px;line-height:1.05;margin:18px 0 0;">When it doesn't know, it says so.</h2>
+        <p style="font-size:17px;color:var(--color-ink-2);margin:20px 0 0;">Any tool can print a tax figure. What matters is what it prints when the input is missing, stale, or genuinely ambiguous.</p>
+        <div style="display:grid;gap:14px;margin-top:28px;">${honesty}</div>
+      </div>
+      <div>
+        ${eyebrow('var(--color-ok)', 'And it stays on your machine')}
+        <p style="font-size:17px;color:var(--color-ink-2);margin:18px 0 0;">The app has no server to send anything to, and the browser is configured to refuse even if it tried. Check it yourself — the Network tab stays empty.</p>
+        <div style="background:var(--color-surface);border:1px solid var(--color-divider);padding:22px;margin-top:26px;">
+          <div style="${F}font-size:11.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--color-ink-3);margin-bottom:12px;">Response headers · /app/*</div>
+          <pre style="margin:0;font-family:var(--mono);font-size:12.5px;line-height:1.8;color:var(--color-ink-2);white-space:pre-wrap;">content-security-policy: default-src 'self';
+  <span style="background:var(--color-accent-soft);color:var(--color-accent-700);font-weight:500;padding:2px 4px;">connect-src 'none'</span>; script-src 'self';
+  img-src 'self' data:; form-action 'none'</pre>
+          <div style="display:flex;align-items:center;gap:12px;margin-top:18px;padding-top:16px;border-top:1px solid var(--color-divider);">
+            <span style="font-family:var(--mono);font-size:12.5px;color:var(--color-ink-3);">Network · 0 requests · 0 B transferred</span>
+            <span style="margin-left:auto;width:8px;height:8px;background:var(--color-ok);border-radius:50%;"></span></div>
+        </div>
+        <div style="font-size:15.5px;color:var(--color-ink-2);margin-top:22px;">Every release also publishes the whole app as one HTML file. Keep it beside your portfolio. If this site disappears, your copy still opens.</div>
+      </div>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:36px;padding:56px 48px;background:linear-gradient(105deg,var(--color-accent) 0%,var(--color-teal) 100%);color:#fff;flex-wrap:wrap;">
+      <h2 style="${cond}font-size:38px;line-height:1.05;margin:0;max-width:13em;color:#fff;">See what you actually hold.</h2>
+      <div style="margin-left:auto;display:flex;gap:14px;flex:none;flex-wrap:wrap;">
+        <span style="padding:15px 30px;background:#fff;color:var(--color-accent-700);font-weight:600;font-size:17px;cursor:pointer;" data-act="landing-open">Open the app</span>
+        <span style="padding:15px 30px;border:1px solid rgba(255,255,255,.55);font-weight:600;font-size:17px;color:#fff;cursor:pointer;" data-act="load-demo">Explore with demo data</span>
+      </div>
+    </div>
+    <div style="padding:26px 48px;font-size:13px;color:var(--color-ink-3);display:flex;gap:28px;flex-wrap:wrap;">
+      <span>Informational only — no trade instructions.</span><span>Not investment, tax or legal advice.</span>
+    </div>
+  </div>`;
 }
 
 function renderHighlights() {
@@ -2920,7 +3252,12 @@ function renderDashboard() {
   }
 
   const band = portfolio.meta.driftBandPct || 5;
-  const drift = goalTargets ? computeDrift(actualRows, alloc.total, goalTargets, band) : [];
+  // Drift must compare like against like. 529 glide targets (and legacy rollup goals) are group-keyed, so
+  // when the goal is group-level we always drift against group-rolled actuals — even in Detail view, where
+  // actualRows are the 14 detail classes (otherwise a "Stocks" target with no "Stocks" detail row read −100%).
+  const targetsAreGroup = goalTargets && Object.keys(goalTargets).length > 0 && Object.keys(goalTargets).every(k => GROUP_BY_ID[k]);
+  const driftRows = (targetsAreGroup && level !== 'group') ? toRows(alloc.group, alloc.total, 'group') : actualRows;
+  const drift = goalTargets ? computeDrift(driftRows, alloc.total, goalTargets, band) : [];
   const breaches = drift.filter(d => d.breach);
 
   return `
@@ -3382,7 +3719,7 @@ function ensureCheckinDraft() {
   ui.checkinOpen = open;
   ui.checkinNetWorth = '';
 }
-function startCheckin() { ui.checkin = null; ensureCheckinDraft(); ui.view = 'checkin'; render(); }
+function startCheckin() { ui.checkin = null; ensureCheckinDraft(); ui.view = 'checkin'; ui.drawer = false; render(); window.scrollTo(0, 0); }
 
 function checkinTotal() {
   let t = 0;
@@ -3552,13 +3889,13 @@ function renderCheckin() {
   const doneTag = _allAccts.length ? `<span class="tag ${_doneCount === _allAccts.length ? 'tag-ok' : 'tag-neutral'}" title="An account counts as done once a value changed or you marked it reviewed">${_doneCount}/${_allAccts.length} accounts done</span>` : '';
 
   return `<div class="panel">
-    <div style="display:flex;align-items:flex-end;gap:20px;padding:18px 20px;border-bottom:1px solid var(--color-divider);">
+    <div style="display:flex;align-items:flex-end;gap:20px;padding:18px 20px;border-bottom:1px solid var(--color-divider);flex-wrap:wrap;">
       <div>
         <h3 style="margin:0 0 4px;">New check-in</h3>
         <span class="text-muted" style="font-size:13px;">${ci.baseDate ? `Prefilled from ${esc(ci.baseDate)} · overtype what changed. If you change a value, update or clear its cost basis.` : 'First snapshot — enter current values'}</span>
       </div>
       <div class="field" style="width:150px;margin-left:8px;"><label>Snapshot date</label><input class="input" type="date" value="${esc(ci.date)}" data-act="ci-date"></div>
-      <div style="margin-left:auto;display:flex;align-items:center;gap:10px;">
+      <div style="margin-left:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
         ${doneTag}
         <span id="ci-issue-badge">${issueCount ? `<span class="tag tag-warn">${issueCount} need cost basis</span>` : ''}</span>
         <button class="btn btn-secondary" data-act="ci-discard">Discard check-in</button>
@@ -4525,6 +4862,28 @@ function renderTaxProfile() {
    REVIEW › RETIRE (spec §5–6) — Monte Carlo retirement projector.
    =============================================================== */
 
+// Outlook display-unit toggle (today's/real vs future/nominal dollars). Purely a display choice —
+// it NEVER re-runs the simulation (which always computes in real dollars); it only re-inflates the
+// figures that are tied to a future year, using the assumed inflation rate.
+function dollarModeIsFuture() { return ui.dollarMode === 'future'; }
+// Outlook page header with the today's/future-dollars toggle attached to its bottom edge (one connected bar).
+function outlookHeaderBlock(title, editView) {
+  const future = dollarModeIsFuture();
+  const seg = (mode, label, on, col) => `<button data-act="dollar-mode" data-mode="${mode}" style="border:0;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:600;font-family:var(--font-heading);letter-spacing:.02em;${on ? `background:${col};color:#fff;` : 'background:transparent;color:var(--color-ink-2);'}">${label}</button>`;
+  return `<div class="panel no-print" style="border-top-color:${future ? 'var(--color-warn)' : 'var(--color-accent)'};">
+    <div style="display:flex;align-items:center;gap:12px;padding:14px 18px;flex-wrap:wrap;">
+      <span style="font-family:var(--font-heading);font-size:17px;">${esc(title)}</span>
+      ${editView ? `<a data-act="nav" data-view="${editView}" style="margin-left:auto;cursor:pointer;color:var(--color-accent);white-space:nowrap;">Edit inputs →</a>` : ''}
+    </div>
+    <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;padding:11px 18px;border-top:1px solid var(--color-line-2);background:${future ? 'var(--color-warn-soft)' : 'var(--color-teal-soft)'};">
+      <span style="font-size:13px;font-weight:600;">Show amounts in</span>
+      <div style="display:inline-flex;border:1px solid var(--color-divider);background:var(--color-panel);overflow:hidden;">${seg('today', "Today's dollars", !future, 'var(--color-teal)')}${seg('future', 'Future dollars', future, 'var(--color-warn)')}</div>
+      <span class="text-muted" style="font-size:12px;flex:1;min-width:220px;line-height:1.5;">${future
+        ? "Projected balances &amp; withdrawals are inflated to each future year's sticker price — bigger numbers, same buying power. Inputs stay in today's dollars."
+        : "Everything is in today's buying power, inflation removed — the honest way to compare against what money buys now."}</span>
+    </div></div>`;
+}
+
 // Interactive fan chart: outcome bands + median on an age axis, a marker age called out,
 // hover shows the balance at any age. `id` scopes hover state; `marker` = {age,label}.
 let FAN_STATE = {};
@@ -4542,8 +4901,16 @@ function fanChartSVG(bands, marker, id, opts) {
   // y-axis: 5 gridlines with compact labels (no clipping in the millions)
   const yTicks = [0, 0.25, 0.5, 0.75, 1].map(f => { const v = maxV * f; return `<line x1="${padL}" y1="${y(v).toFixed(1)}" x2="${W - 14}" y2="${y(v).toFixed(1)}" stroke="var(--color-divider)"></line>
     <text x="${padL - 7}" y="${(y(v) + 3).toFixed(1)}" text-anchor="end" style="font-size:10px;fill:var(--color-text);opacity:0.7;">${esc(fmtCompactMoney(v))}</text>`; }).join('');
-  // x-axis: a tick every 5 years (denser)
-  const ageTicks = bands.filter(b => b.age % 5 === 0 || b.age === a1).map(b =>
+  // Optional shaded span (e.g. the college-spending years) so it's unmistakable WHEN money is drawn.
+  let shadeEl = '';
+  if (opts.shadeFrom != null && opts.shadeTo != null) {
+    const sx0 = x(Math.max(a0, opts.shadeFrom)), sx1 = x(Math.min(a1, opts.shadeTo));
+    shadeEl = `<rect x="${sx0.toFixed(1)}" y="${padT}" width="${Math.max(0, sx1 - sx0).toFixed(1)}" height="${plotH.toFixed(1)}" fill="var(--color-warn)" opacity="0.10"></rect>
+      <text x="${((sx0 + sx1) / 2).toFixed(1)}" y="${(padT + 12).toFixed(1)}" text-anchor="middle" style="font-size:10px;fill:var(--color-warn);opacity:0.9;">${esc(opts.shadeLabel || '')}</text>`;
+  }
+  // x-axis: a tick every `tickEvery` years (default 5; denser for short spans like college)
+  const tickEvery = opts.tickEvery || 5;
+  const ageTicks = bands.filter(b => b.age % tickEvery === 0 || b.age === a1 || b.age === a0).map(b =>
     `<line x1="${x(b.age).toFixed(1)}" y1="${padT + plotH}" x2="${x(b.age).toFixed(1)}" y2="${padT + plotH + 4}" stroke="var(--color-text)" opacity="0.35"></line>
      <text x="${x(b.age).toFixed(1)}" y="${H - 9}" text-anchor="middle" style="font-size:10px;fill:var(--color-text);opacity:0.7;">${b.age}</text>`).join('');
   // marker (retirement / college start): dashed line + callout of the median balance there
@@ -4560,20 +4927,22 @@ function fanChartSVG(bands, marker, id, opts) {
   const byAge = {}; bands.forEach(b => byAge[b.age] = b);
   let hits = '', cursor = '', readout = '';
   if (!isStatic) {
-    FAN_STATE[id] = { byAge };
+    FAN_STATE[id] = { byAge, maxV, padT, plotH };
     hits = bands.map((b, i) => {
       const cx = x(b.age);
       const left = i === 0 ? padL : (x(bands[i - 1].age) + cx) / 2;
       const right = i === bands.length - 1 ? padL + plotW : (cx + x(bands[i + 1].age)) / 2;
       return `<rect class="fanhit" data-fanid="${id}" data-age="${b.age}" data-cx="${cx.toFixed(1)}" x="${left.toFixed(1)}" y="${padT}" width="${(right - left).toFixed(1)}" height="${plotH}" fill="transparent"></rect>`;
     }).join('');
-    cursor = `<line id="${id}-cursor" x1="0" y1="${padT}" x2="0" y2="${(padT + plotH).toFixed(1)}" stroke="var(--color-accent-900)" stroke-width="1" style="display:none;"></line>`;
+    cursor = `<line id="${id}-cursor" x1="0" y1="${padT}" x2="0" y2="${(padT + plotH).toFixed(1)}" stroke="var(--color-accent-900)" stroke-width="1" style="display:none;"></line>
+      <circle id="${id}-cdot" r="3.8" fill="var(--color-accent-900)" style="display:none;"></circle>
+      <text id="${id}-cval" text-anchor="middle" style="font-size:12px;font-weight:700;fill:var(--color-accent-900);paint-order:stroke;stroke:var(--color-panel);stroke-width:3.5px;display:none;"></text>`;
     readout = `<div class="fan-readout" id="${id}-readout" style="min-height:18px;font-size:12px;margin-bottom:4px;color:var(--color-text);">Hover the chart to see the balance at any age.</div>`;
   }
   return `<div data-fanwrap="${id}">
     ${readout}
     <svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;" role="img" aria-label="Projected balance by age, with a range of outcomes">
-      ${yTicks}
+      ${yTicks}${shadeEl}
       <polygon points="${poly('p10', 'p90')}" fill="var(--color-accent-100)"></polygon>
       <polygon points="${poly('p25', 'p75')}" fill="var(--color-accent-300)" opacity="0.75"></polygon>
       <polyline points="${median}" fill="none" stroke="var(--color-accent-700)" stroke-width="2.5"></polyline>
@@ -4595,8 +4964,20 @@ function onFanHover(e) {
   const b = st.byAge[age]; if (!b) return;
   const ro = document.getElementById(id + '-readout');
   if (ro) ro.innerHTML = `<b>Age ${age}:</b> most likely <b>${fmtCompactMoney(b.p50)}</b> · likely between ${fmtCompactMoney(b.p25)} and ${fmtCompactMoney(b.p75)} · full range ${fmtCompactMoney(b.p10)}–${fmtCompactMoney(b.p90)}`;
+  const cx = +hit.dataset.cx;
   const cur = document.getElementById(id + '-cursor');
-  if (cur) { cur.setAttribute('x1', hit.dataset.cx); cur.setAttribute('x2', hit.dataset.cx); cur.style.display = ''; }
+  if (cur) { cur.setAttribute('x1', cx); cur.setAttribute('x2', cx); cur.style.display = ''; }
+  // Float the median value right at the cursor so the eye doesn't leave the chart.
+  const yv = st.padT + st.plotH - Math.max(0, b.p50) / (st.maxV || 1) * st.plotH;
+  const dot = document.getElementById(id + '-cdot');
+  if (dot) { dot.setAttribute('cx', cx.toFixed(1)); dot.setAttribute('cy', yv.toFixed(1)); dot.style.display = ''; }
+  const lbl = document.getElementById(id + '-cval');
+  if (lbl) {
+    let ly = yv - 9; if (ly < st.padT + 9) ly = yv + 17;   // flip below the dot if too near the top
+    lbl.setAttribute('x', cx.toFixed(1)); lbl.setAttribute('y', ly.toFixed(1));
+    lbl.textContent = fmtCompactMoney(b.p50);
+    lbl.style.display = '';
+  }
 }
 
 // Two-bar marginal-rate compare (r_now vs r_then joint & survivor).
@@ -4622,7 +5003,7 @@ function retireEmptyState(msg) {
 
 // Validation gate (§2): show the account→bucket mapping, editable inline, flag likely-mistagged accounts.
 // Once confirmed it collapses into a closed <details> (not critical to keep on screen).
-function retireMappingPanel(confirmed) {
+function retireMappingPanel(confirmed, scopeRow) {
   const bucketLabel = { pretax: 'Pre-tax', roth: 'Roth', taxable: 'Taxable', taxfree: 'Tax-free (HSA)' };
   const accts = retireAccounts();
   const vehSel = a => `<select class="input" style="min-height:30px;padding:2px 6px;font-size:12px;" data-act="rd-map-vehicle" data-account="${esc(a.id)}">${ACCOUNT_VEHICLES.map(v => `<option value="${v}" ${accountVehicle(a) === v ? 'selected' : ''}>${esc(v)}</option>`).join('')}</select>`;
@@ -4642,8 +5023,8 @@ function retireMappingPanel(confirmed) {
   const table = `<table class="table"><thead><tr><th>Account</th><th>Vehicle</th><th>Tax treatment</th><th>Retirement bucket</th></tr></thead><tbody>${rows || '<tr><td colspan="4" class="text-muted" style="padding:14px 20px;">No non-529 accounts yet.</td></tr>'}</tbody></table>`;
 
   if (confirmed) {
-    // Collapsed by default — the user can reopen, but it's not front-and-center once set.
-    return `<div class="panel"><details><summary style="padding:14px 20px;cursor:pointer;font-family:var(--font-heading);display:flex;align-items:center;gap:10px;">Account mapping <span class="tag tag-ok" style="font-size:10px;">confirmed</span> <span class="text-muted" style="font-size:12px;font-family:var(--font-body);">${accts.length} account${accts.length === 1 ? '' : 's'} — click to review or edit</span></summary>
+    // Scope control on top; the account mapping collapsed below it — one combined bar.
+    return `<div class="panel">${scopeRow || ''}<details${scopeRow ? ' style="border-top:1px solid var(--color-line-2);"' : ''}><summary style="padding:14px 20px;cursor:pointer;font-family:var(--font-heading);display:flex;align-items:center;gap:10px;">Account mapping <span class="tag tag-ok" style="font-size:10px;">confirmed</span> <span class="text-muted" style="font-size:12px;font-family:var(--font-body);">${accts.length} account${accts.length === 1 ? '' : 's'} — click to review or edit</span></summary>
       ${intro}${table}
       <div style="padding:12px 20px 18px;">${anySuspect ? `<span class="text-muted" style="font-size:12px;">Highlighted rows look like retirement accounts tagged “Taxable” — fix them if so.</span>` : ''}</div>
     </details></div>`;
@@ -4667,7 +5048,7 @@ function renderRetire() {
   const rs = portfolio.retirementSettings;
   const confirmed = !!rs.mappingConfirmed;
   const header = `<div class="toolbar no-print"><div class="crumb"><span>Retirement planning</span></div>
-    <span class="tag tag-accent" style="margin-left:auto;">Today's dollars</span>
+    <span class="tag ${dollarModeIsFuture() ? 'tag-warn' : 'tag-accent'}" style="margin-left:auto;">${dollarModeIsFuture() ? 'Future dollars' : "Today's dollars"}</span>
     <a data-act="nav" data-view="retirement" style="margin-left:12px;cursor:pointer;color:var(--color-accent);">Edit inputs →</a></div>`;
   if (!confirmed) {
     const lead = `<div class="panel" style="background:var(--color-accent-100);border-color:var(--color-accent);"><div style="padding:18px 20px;">
@@ -4685,25 +5066,34 @@ function renderRetire() {
   const inflPct = rs.inflationPct != null ? rs.inflationPct : 2.5;
   const infl = inflPct / 100;
   const nominalAt = (real, atAge) => real * Math.pow(1 + infl, Math.max(0, atAge - cfg.currentAge));
+  // Display unit: when "Future dollars" is on, every year-tied figure is re-inflated to that year.
+  const future = dollarModeIsFuture();
+  const M = (real, atAge) => future ? nominalAt(real, atAge) : real;   // display money for an age
+  const dispBands = future ? base.bands.map(b => ({ age: b.age, p10: nominalAt(b.p10, b.age), p25: nominalAt(b.p25, b.age), p50: nominalAt(b.p50, b.age), p75: nominalAt(b.p75, b.age), p90: nominalAt(b.p90, b.age) })) : base.bands;
+  const dispEndBand = dispBands[dispBands.length - 1];
+  const dispRetBand = dispBands.find(b => b.age === cfg.retireAge);
+  const unitTag = future ? 'Future (actual) dollars' : "Today's dollars";
 
-  // Account-scope control (top of tab)
+  // Account-scope control — embedded as the top row of the account-mapping panel (below).
   const scopeRadio = (mode, label) => `<label style="display:inline-flex;align-items:center;gap:7px;cursor:pointer;font-size:13px;"><input type="radio" name="rdscope" data-act="rd-scope" data-mode="${mode}" ${(rs.accountScope || 'retirement') === mode ? 'checked' : ''} style="margin:0;">${esc(label)}</label>`;
-  const scopeCtl = `<div class="panel"><div style="padding:14px 20px;display:flex;gap:22px;align-items:center;flex-wrap:wrap;">
+  const scopeRow = `<div style="padding:14px 20px;display:flex;gap:22px;align-items:center;flex-wrap:wrap;">
     <span style="font-size:13px;font-weight:600;">Model which accounts?</span>
     ${scopeRadio('retirement', 'Retirement accounts only')}
     ${scopeRadio('all', 'All accounts (incl. taxable brokerage)')}
     <span class="text-muted" style="font-size:11px;flex:1;min-width:200px;">Retirement-only counts your 401(k), IRA, Roth and HSA. Adding taxable brokerage gives an early-retirement “bridge” to spend before 59½.</span>
-  </div></div>`;
+  </div>`;
 
   // Section 1 — Fan chart
   const fan = `<section>
-    <div class="kicker" style="margin-bottom:6px;">Your projected balance · today's dollars</div>
+    <div class="kicker" style="margin-bottom:6px;">Your projected balance · ${unitTag.toLowerCase()}</div>
     <div class="panel"><div class="panel-hd"><h4>Where your money could land, by age</h4>
       <span class="text-muted" style="font-size:12px;margin-left:auto;">${(cfg.paths).toLocaleString()} simulations</span></div>
     <div style="padding:18px 20px;">
-      <p class="text-muted" style="font-size:12px;line-height:1.6;margin:0 0 6px;">Every figure here is in <b>today's dollars</b> (inflation already removed), so you can compare it to what money buys now. The dark line is the most likely path; the shaded areas show the spread — good markets land you high, poor markets low. ${retBand ? `At your retirement age ${cfg.retireAge} the balance is most likely around <b>${fmtCompactMoney(retBand.p50)}</b> in today's dollars — about <b>${fmtCompactMoney(nominalAt(retBand.p50, cfg.retireAge))}</b> in actual dollars of that year (at ${fmtPct(inflPct, 1)} inflation).` : ''} Hover any age to read the numbers.</p>
+      <p class="text-muted" style="font-size:12px;line-height:1.6;margin:0 0 6px;">${future
+        ? `Every figure here is in <b>future (actual) dollars</b> — inflated to each year's sticker price at ${fmtPct(inflPct, 1)} inflation. The numbers look big, but their buying power matches the today's-dollars view.`
+        : `Every figure here is in <b>today's dollars</b> (inflation already removed), so you can compare it to what money buys now.`} The dark line is the most likely path; the shaded areas show the spread — good markets land you high, poor markets low. ${retBand ? `At your retirement age ${cfg.retireAge} the balance is most likely around <b>${fmtCompactMoney(dispRetBand ? dispRetBand.p50 : retBand.p50)}</b>${future ? ` in actual dollars of that year — <b>${fmtCompactMoney(retBand.p50)}</b> in today's buying power` : ` in today's dollars — about <b>${fmtCompactMoney(nominalAt(retBand.p50, cfg.retireAge))}</b> in actual dollars of that year (at ${fmtPct(inflPct, 1)} inflation)`}.` : ''} Hover any age to read the numbers.</p>
       <p class="text-muted" style="font-size:11px;margin:0 0 12px;">Investment mix: ${cfg.weightsTarget ? `glides from your current allocation to a more conservative target by age ${cfg.retireAge} (auto de-risking).` : `held at your <b>current allocation</b> for the whole projection — it does not automatically de-risk with age.`} Change this under Edit inputs → Strategy. Based on the return, volatility, and inflation assumptions in the <b>Assumptions</b> section below — all editable.</p>
-      <div id="retire-fan">${fanChartSVG(base.bands, { age: cfg.retireAge, label: 'Retire at' }, 'retirefan')}</div>
+      <div id="retire-fan">${fanChartSVG(dispBands, { age: cfg.retireAge, label: 'Retire at' }, 'retirefan')}</div>
     </div></div></section>`;
 
   // Section 2 — Spending success (walk the user through it)
@@ -4713,7 +5103,7 @@ function renderRetire() {
     <div class="panel"><div class="panel-hd"><h4>Spending confidence</h4></div>
     <div style="padding:20px;">
       <div style="font-size:15px;line-height:1.5;margin-bottom:10px;">Out of ${cfg.paths.toLocaleString()} simulated futures, your savings cover <b id="retire-spend-label">${fmtMoney(spend)}</b>/yr of spending (in today's dollars) all the way to age ${RETIRE_DATA.endAge} in <b id="retire-success" style="color:var(--color-accent-700);font-size:22px;">${fmtPct(base.success * 100, 0)}</b> of them.</div>
-      <p class="text-muted" style="font-size:12px;line-height:1.6;margin:0 0 14px;">Think of it as a confidence score. Planners often aim for 80–90%. Higher means more cushion; lower means you'd likely need to trim spending, save more, or work a little longer. In the tougher outcomes your money could run low — even in the worst 10%, you'd still have about ${fmtCompactMoney(endBand.p10)} left at ${RETIRE_DATA.endAge}; most likely you'd have ${fmtCompactMoney(endBand.p50)} (today's dollars — about ${fmtCompactMoney(nominalAt(endBand.p50, RETIRE_DATA.endAge))} in actual dollars of that year).</p>
+      <p class="text-muted" style="font-size:12px;line-height:1.6;margin:0 0 14px;">Think of it as a confidence score. Planners often aim for 80–90%. Higher means more cushion; lower means you'd likely need to trim spending, save more, or work a little longer. In the tougher outcomes your money could run low — even in the worst 10%, you'd still have about ${fmtCompactMoney(M(endBand.p10, RETIRE_DATA.endAge))} left at ${RETIRE_DATA.endAge}; most likely you'd have ${fmtCompactMoney(M(endBand.p50, RETIRE_DATA.endAge))} (${future ? `actual dollars of that year — ${fmtCompactMoney(endBand.p50)} in today's buying power` : `today's dollars — about ${fmtCompactMoney(nominalAt(endBand.p50, RETIRE_DATA.endAge))} in actual dollars of that year`}).</p>
       <label style="font-size:12px;font-weight:600;">Try a different spending level</label>
       <input type="range" min="${sliderMin}" max="${sliderMax}" step="2500" value="${spend}" data-act="rd-spend" style="width:100%;margin-top:6px;">
       <div style="display:flex;justify-content:space-between;font-size:11px;" class="text-muted"><span>${fmtCompactMoney(sliderMin)}/yr</span><span>drag to see how confidence changes</span><span>${fmtCompactMoney(sliderMax)}/yr</span></div>
@@ -4763,29 +5153,45 @@ function renderRetire() {
   }
 
   // Section 6 — audit table + assumptions (both collapsed)
+  // Flows cell: the total in/out, plus a plain-language line of where a drawing year's cash came from.
+  // Breakdown of the withdrawal only — its parts sum exactly to the Flows figure. Social Security and
+  // pensions are outside income (they reduce what must be withdrawn), so they're noted separately, not summed in.
+  const flowSources = r => {
+    if (r.phase !== 'decum' || !r.src) return '';
+    const s = r.src, parts = [], m = v => fmtCompactMoney(M(v, r.age));
+    if ((s.rmd || 0) > 50) parts.push(`RMD ${m(s.rmd)}`);
+    if ((s.taxable || 0) > 50) parts.push(`taxable ${m(s.taxable)}`);
+    if ((s.pretax || 0) > 50) parts.push(`pre-tax ${m(s.pretax)}`);
+    if ((s.roth || 0) > 50) parts.push(`Roth ${m(s.roth)}`);
+    if ((s.taxfree || 0) > 50) parts.push(`HSA ${m(s.taxfree)}`);
+    const income = (s.ss || 0) + (s.pension || 0);
+    const incomeNote = income > 50 ? `<div class="text-muted" style="font-size:10px;line-height:1.35;font-family:var(--font-body);letter-spacing:0;white-space:normal;opacity:0.8;">+ ${fmtCompactMoney(M(income, r.age))} income (SS${(s.pension || 0) > 50 ? ' + pension' : ''}) covered the rest</div>` : '';
+    const withdrawalNote = parts.length ? `<div class="text-muted" style="font-size:10px;line-height:1.35;font-family:var(--font-body);letter-spacing:0;white-space:normal;margin-top:2px;">from ${parts.join(' · ')}</div>` : '';
+    return withdrawalNote + incomeNote;
+  };
   const detRows = det.detTable.filter(r => r.age % 2 === 0 || r.phase !== 'accum').map(r => `<tr>
-      <td class="tnum">${r.age}</td><td>${r.phase === 'accum' ? 'Saving' : r.phase === 'decum' ? 'Drawing' : 'Start'}</td>
-      <td class="tnum" style="text-align:right;">${fmtPct((r.r || 0) * 100, 1)}</td>
-      <td class="tnum" style="text-align:right;">${r.phase === 'accum' ? fmtMoney(r.contrib || 0) : r.phase === 'decum' ? '−' + fmtMoney(r.withdrawn || 0) : '—'}</td>
-      <td class="tnum" style="text-align:right;">${r.phase === 'decum' ? fmtMoney(r.rmd || 0) : '—'}</td>
-      <td class="tnum" style="text-align:right;">${fmtMoney(r.tax || 0)}</td>
-      <td class="tnum" style="text-align:right;">${fmtMoney(r.total || 0)}</td></tr>`).join('');
+      <td class="tnum" style="vertical-align:top;">${r.age}</td><td style="vertical-align:top;">${r.phase === 'accum' ? 'Saving' : r.phase === 'decum' ? 'Drawing' : 'Start'}</td>
+      <td class="tnum" style="text-align:right;vertical-align:top;">${fmtPct((r.r || 0) * 100, 1)}</td>
+      <td class="tnum" style="text-align:right;vertical-align:top;min-width:150px;">${r.phase === 'accum' ? fmtMoney(M(r.contrib || 0, r.age)) : r.phase === 'decum' ? '−' + fmtMoney(M(r.withdrawn || 0, r.age)) : '—'}${flowSources(r)}</td>
+      <td class="tnum" style="text-align:right;vertical-align:top;">${r.phase === 'decum' ? fmtMoney(M(r.rmd || 0, r.age)) : '—'}</td>
+      <td class="tnum" style="text-align:right;vertical-align:top;">${fmtMoney(M(r.tax || 0, r.age))}</td>
+      <td class="tnum" style="text-align:right;vertical-align:top;">${fmtMoney(M(r.total || 0, r.age))}</td></tr>`).join('');
   const detTable = `<div class="panel"><details><summary style="padding:14px 20px;cursor:pointer;font-family:var(--font-heading);">Show the year-by-year median path — check the math</summary>
-    <div style="padding:6px 20px 2px;"><p class="text-muted" style="font-size:12px;line-height:1.6;margin:0;"><b>Flows</b> is the cash moving in or out that year: in your <b>saving</b> years it's the money you add (your contributions); in your <b>drawing</b> years it's the total pulled from your accounts (shown negative) to cover spending plus taxes — sourced in order from required withdrawals, then taxable, then pre-tax, then Roth.</p></div>
+    <div style="padding:6px 20px 2px;"><p class="text-muted" style="font-size:12px;line-height:1.6;margin:0;"><b>Flows</b> is money moving in or out of your accounts that year: in <b>saving</b> years the contributions you add; in <b>drawing</b> years the total pulled out (shown negative) to cover spending plus taxes. The “from …” line splits that withdrawal into its sources — RMD, then taxable, pre-tax, Roth, HSA in the order the model spends them — and those parts add up to the Flows figure. Any Social Security or pension is separate outside income that covers the rest, so it's noted apart, not added into Flows. All amounts in ${unitTag.toLowerCase()}.</p></div>
     <div style="overflow-x:auto;"><table class="table"><thead><tr><th>Age</th><th>Phase</th><th style="text-align:right;">Return</th><th style="text-align:right;">${abbr('Flows', 'Contributions in (saving years) or total withdrawals out (drawing years); out is shown negative')}</th><th style="text-align:right;">${abbr('RMD', 'Required Minimum Distribution')}</th><th style="text-align:right;">Tax</th><th style="text-align:right;">Balance</th></tr></thead><tbody>${detRows}</tbody></table></div>
     </details></div>`;
 
   // RMD schedule (collapsed) — required withdrawals by age from the median pre-tax path.
   const rmdRows = det.detTable.filter(r => r.phase === 'decum' && r.age >= det.rmdAge && (r.rmd || 0) > 0).map(r => {
     const div = rmdDivisor(r.age), base = (r.rmd || 0) * div; // balance the RMD is figured on
-    return `<tr><td class="tnum">${r.age}</td><td class="tnum" style="text-align:right;">${fmtMoney(base)}</td><td class="tnum" style="text-align:right;">${div.toFixed(1)}</td><td class="tnum" style="text-align:right;"><b>${fmtMoney(r.rmd)}</b></td></tr>`;
+    return `<tr><td class="tnum">${r.age}</td><td class="tnum" style="text-align:right;">${fmtMoney(M(base, r.age))}</td><td class="tnum" style="text-align:right;">${div.toFixed(1)}</td><td class="tnum" style="text-align:right;"><b>${fmtMoney(M(r.rmd, r.age))}</b></td></tr>`;
   }).join('');
   const rmdCard = `<div class="panel"><details><summary style="padding:14px 20px;cursor:pointer;font-family:var(--font-heading);">Your required withdrawal (${abbr('RMD', 'Required Minimum Distribution')}) schedule — starts at age ${det.rmdAge}</summary>
-    <div style="padding:8px 20px 4px;"><p class="text-muted" style="font-size:12px;line-height:1.6;margin:0;">Starting at age ${det.rmdAge}, the IRS makes you withdraw a minimum from pre-tax accounts each year (your pre-tax balance ÷ an IRS life-expectancy factor). These are the amounts on your <b>median</b> projected path, in today's dollars — bigger pre-tax balances mean bigger forced withdrawals and more tax, which is what the Roth conversion window can soften.</p></div>
+    <div style="padding:8px 20px 4px;"><p class="text-muted" style="font-size:12px;line-height:1.6;margin:0;">Starting at age ${det.rmdAge}, the IRS makes you withdraw a minimum from pre-tax accounts each year (your pre-tax balance ÷ an IRS life-expectancy factor). These are the amounts on your <b>median</b> projected path, in ${unitTag.toLowerCase()} — bigger pre-tax balances mean bigger forced withdrawals and more tax, which is what the Roth conversion window can soften.</p></div>
     ${rmdRows ? `<div style="overflow-x:auto;"><table class="table"><thead><tr><th>Age</th><th style="text-align:right;">Pre-tax balance</th><th style="text-align:right;">IRS factor</th><th style="text-align:right;">Required withdrawal</th></tr></thead><tbody>${rmdRows}</tbody></table></div>` : `<div style="padding:0 20px 18px;"><span class="text-muted" style="font-size:13px;">No required withdrawals projected — little or no pre-tax balance remains by age ${det.rmdAge}.</span></div>`}
     </details></div>`;
 
-  return header + `<div style="display:flex;flex-direction:column;gap:26px;margin-top:16px;">${scopeCtl}${retireMappingPanel(true)}${fan}${success}${verdictCard}${marginalCard}${convCard}${rmdCard}${detTable}${retireAssumptionsPanel(model)}</div>`;
+  return `<div style="display:flex;flex-direction:column;gap:26px;margin-top:4px;">${outlookHeaderBlock('Retirement planning', 'retirement')}${retireMappingPanel(true, scopeRow)}${fan}${success}${verdictCard}${marginalCard}${convCard}${rmdCard}${detTable}${retireAssumptionsPanel(model)}</div>`;
 }
 
 // Assumptions panel (§4, §6.1, §6.7) — editable μ/σ + declared simplifications.
@@ -4797,14 +5203,15 @@ function retireAssumptionsPanel(model) {
   const th = 'letter-spacing:0.01em;white-space:normal;font-size:10px;';
   const headerRow = `<tr>
     <th style="text-align:left;${th}">Asset class</th>
-    <th style="text-align:right;${th}">${abbr('Return', 'Expected average yearly return above inflation (real). The long-run mean annual real return for this asset class.')} <span class="text-muted" style="font-weight:400;">real&nbsp;%</span></th>
+    <th style="text-align:right;${th}">${abbr('Return', 'Expected average total yearly return, including inflation (nominal) — the kind of number a fund fact-sheet quotes. The model subtracts your inflation rate from this to get the real return it grows balances by.')} <span class="text-muted" style="font-weight:400;">net&nbsp;%</span></th>
     <th style="text-align:right;${th}">${abbr('Volatility', 'Standard deviation of yearly returns — how much a typical year swings above or below the average. Higher = bumpier.')} <span class="text-muted" style="font-weight:400;">%</span></th></tr>`;
   const rowFor = d => {
     const [mu, sg] = eff[d.id] || RETIRE_DATA.muSigma.other;
+    const muNet = Math.round((mu + inflPct) * 10) / 10;   // display net = stored real + inflation
     const inp = (act, v) => `<input class="input tnum" style="min-height:28px;padding:2px 4px;text-align:right;width:100%;box-sizing:border-box;" inputmode="decimal" data-act="${act}" data-cls="${d.id}" value="${v}">`;
     return `<tr>
-      <td style="font-size:12px;"><span class="swatch" style="background:${detailColor(d.id)};"></span>${esc(d.label)}</td>
-      <td>${inp('rd-mu', mu)}</td>
+      <td style="font-size:12px;"><span class="swatch" style="background:${detailColor(d.id)};margin-right:7px;"></span>${esc(d.label)}</td>
+      <td>${inp('rd-mu', muNet)}</td>
       <td>${inp('rd-sigma', sg)}</td></tr>`;
   };
   const classes = TAXONOMY.detail.filter(d => d.id !== 'us_total');
@@ -4814,7 +5221,7 @@ function retireAssumptionsPanel(model) {
     <thead>${headerRow}</thead><tbody>${list.map(rowFor).join('')}</tbody></table>`;
 
   const sims = [
-    ['Returns are “real” (above inflation)', 'Every return here is growth on top of inflation, and every dollar shown is in today\'s buying power. We convert to actual future dollars only where labeled, using the inflation rate below.'],
+    ['Returns above are “net” (include inflation)', 'The return figures are total nominal returns — the kind a fund quotes. Internally the model subtracts your inflation rate to get the real return and runs the whole projection in today\'s dollars; it converts to actual future dollars only where labeled.'],
     ['Social Security taxed at a flat 85%', 'We treat 85% of your benefit as taxable. The real IRS rule phases in 0% → 50% → 85% based on income; the flat 85% is slightly conservative for most households.'],
     ['No IRMAA (Medicare premium surcharge)', 'High retirement income (roughly above $212k for a couple) raises Medicare premiums. We don\'t model that surcharge, so taxes are slightly understated at high incomes.'],
     ['No ACA health-subsidy bridge', 'Retiring before 65 can qualify you for subsidized health insurance if income is kept low. We don\'t model those savings.'],
@@ -4826,7 +5233,7 @@ function retireAssumptionsPanel(model) {
   return `<div class="panel"><details><summary style="padding:14px 20px;cursor:pointer;font-family:var(--font-heading);">Assumptions — returns, volatility, inflation &amp; simplifications</summary>
     <div style="padding:8px 20px 18px;">
       <div class="kicker" style="margin:6px 0 4px;">Expected return &amp; volatility by asset class — editable, saved to your file</div>
-      <p class="text-muted" style="font-size:12px;line-height:1.6;margin:0 0 12px;">These are <b>real</b> returns — growth <i>above</i> inflation — so a 5% figure means about 5% more buying power per year. “Volatility” is how much a typical year swings around that average; a higher number means a wider range of outcomes on the chart. Defaults are long-run, forward-looking estimates; lower them for a more cautious plan.</p>
+      <p class="text-muted" style="font-size:12px;line-height:1.6;margin:0 0 12px;">These are <b>net</b> returns — the total yearly growth a fund quotes, <i>including</i> inflation — so 7–8% for a stock fund looks about right. The model subtracts your inflation rate (${fmtPct(inflPct, 1)} below) to get the <b>real</b> return it grows balances by, e.g. a ${fmtPct(8, 0)} net stock return ≈ ${fmtPct(8 - inflPct, 1)} real. “Volatility” is how much a typical year swings around that average. Defaults are long-run estimates; lower them for a more cautious plan.</p>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0 28px;">
         <div style="min-width:0;">${tbl(classes.slice(0, half))}</div>
         <div style="min-width:0;">${tbl(classes.slice(half))}</div>
@@ -4871,6 +5278,26 @@ function renderRetireSettings() {
   };
   const contribScope = hasSpouse ? 'you + your spouse combined' : 'you';
 
+  // Pensions & other guaranteed income (§ follow-on) — each stream reduces withdrawals and is taxed as ordinary income.
+  const pensions = rs.pensions || [];
+  const pensionRows = pensions.map((p, i) => `
+    <div style="display:grid;grid-template-columns:1.5fr 1.1fr 0.8fr 0.9fr auto;gap:12px;align-items:end;padding:14px 0;border-top:1px solid var(--color-line-2);">
+      <div class="field" style="margin:0;"><label>Name</label><input class="input" data-act="rd-pension" data-idx="${i}" data-key="label" value="${esc(p.label || '')}" placeholder="e.g. Teacher's pension"></div>
+      <div class="field" style="margin:0;"><label>Amount ($/yr)</label><input class="input tnum" inputmode="decimal" data-act="rd-pension" data-idx="${i}" data-key="amountReal" value="${p.amountReal ? fmtEditNum(p.amountReal) : ''}" placeholder="24,000"></div>
+      <div class="field" style="margin:0;"><label>Starts at age</label><input class="input tnum" inputmode="numeric" data-act="rd-pension" data-idx="${i}" data-key="startAge" value="${p.startAge != null ? p.startAge : ''}" placeholder="65"></div>
+      <div class="field" style="margin:0;"><label>${abbr('To survivor', 'Share of the pension that keeps being paid after the first spouse dies — 100% for a full joint-and-survivor pension, 50% for a half-survivor, 0% if it stops')} (%)</label><input class="input tnum" inputmode="numeric" data-act="rd-pension" data-idx="${i}" data-key="survivorPct" value="${p.survivorPct != null ? p.survivorPct : 100}" placeholder="100"></div>
+      <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-start;padding-bottom:2px;">
+        <label style="display:inline-flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;white-space:nowrap;"><input type="checkbox" data-act="rd-pension" data-idx="${i}" data-key="cola" ${p.cola !== false ? 'checked' : ''} style="margin:0;">${abbr('COLA', 'Cost-of-living adjustment — the pension rises with inflation each year, keeping its buying power')}</label>
+        <button class="btn btn-sm btn-ghost" data-act="rd-pension-del" data-idx="${i}" style="color:var(--color-crit);padding:2px 6px;">Remove</button>
+      </div>
+    </div>`).join('');
+  const pensionPanel = `<div class="panel"><div class="panel-hd"><h4>Pensions &amp; other guaranteed income</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">annual amount, today's dollars</span></div>
+    <div style="padding:20px;">
+      <p class="text-muted" style="font-size:12px;line-height:1.6;margin:0 0 4px;">Add any pension, annuity, or other lifetime income you'll receive on top of Social Security. Each one lowers how much you draw from your accounts and is taxed as ordinary income. Tick <b>COLA</b> if it rises with inflation (keeps its buying power); leave it off for a fixed pension whose real value erodes over the years. <b>To survivor</b> is the share that keeps paying if the first spouse dies.</p>
+      ${pensions.length ? pensionRows : '<p class="text-muted" style="font-size:13px;margin:10px 0 2px;">No pensions added yet.</p>'}
+      <div style="margin-top:14px;"><button class="btn btn-sm btn-primary" data-act="rd-pension-add">+ Add a pension</button></div>
+    </div></div>`;
+
   return `<div class="toolbar no-print"><div class="crumb"><span>Retirement</span></div>
     <a data-act="nav" data-view="retire" style="margin-left:auto;cursor:pointer;color:var(--color-accent);">View projection →</a></div>
   <div style="display:flex;flex-direction:column;gap:22px;margin-top:8px;">
@@ -4899,6 +5326,8 @@ function renderRetireSettings() {
       </div>
     </div>
   </div>
+
+  ${pensionPanel}
 
   <div class="panel"><div class="panel-hd"><h4>Contributions</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">${inferred ? `inferred from ${inferred._years} yr of check-ins` : 'no history yet (need ≥3 check-ins) — enter below'}</span></div>
     <div style="padding:20px;">
@@ -4947,8 +5376,11 @@ function renderRetireSettings() {
    Only reachable when the household has children.
    =============================================================== */
 function renderCollege() {
+  const future = dollarModeIsFuture();
+  const inflPct = (portfolio.retirementSettings && portfolio.retirementSettings.inflationPct != null) ? portfolio.retirementSettings.inflationPct : 2.5;
+  const infl = inflPct / 100;
   const header = `<div class="toolbar no-print"><div class="crumb"><span>College planning</span></div>
-    <span class="tag tag-accent" style="margin-left:auto;">Today's dollars</span></div>`;
+    <span class="tag ${future ? 'tag-warn' : 'tag-accent'}" style="margin-left:auto;">${future ? 'Future dollars' : "Today's dollars"}</span></div>`;
   if (!portfolio.children.length)
     return header + `<div class="panel"><div style="padding:30px 24px;text-align:center;"><p class="text-muted" style="max-width:460px;margin:0 auto;font-size:14px;line-height:1.6;">Add a child in <a data-act="nav" data-view="household" style="cursor:pointer;color:var(--color-accent);">Settings › Household</a> to plan for college.</p></div></div>`;
   if (!latestSnapshot())
@@ -4957,7 +5389,7 @@ function renderCollege() {
   const cs = portfolio.collegeSettings || defaultCollegeSettings();
   const lead = `<div class="panel" style="background:var(--color-accent-100);border-color:var(--color-accent);"><div style="padding:18px 20px;">
     <div style="font-family:var(--font-heading);font-size:16px;margin-bottom:4px;">Will each 529 cover college?</div>
-    <p style="font-size:13px;line-height:1.6;margin:0;" class="text-muted">For every child we grow their 529 to college age using its glide path, then draw the yearly cost — run a thousand times — to show whether the money lasts all the way through. Set the age-based glide in <a data-act="nav" data-view="goal" style="cursor:pointer;color:var(--color-accent);">Review › Goals</a>. Everything is in today's dollars.</p>
+    <p style="font-size:13px;line-height:1.6;margin:0;" class="text-muted">For every child we grow their 529 to college age using its glide path, then draw the yearly cost — run a thousand times — to show whether the money lasts all the way through. Set the age-based glide in <a data-act="nav" data-view="goal" style="cursor:pointer;color:var(--color-accent);">Review › Goals</a>. Toggle below to read the numbers in today's or future dollars.</p>
   </div></div>`;
 
   const blocks = portfolio.children.map(child => {
@@ -4967,8 +5399,14 @@ function renderCollege() {
     const age = childAge(child.birthYear);
     const model = collegeModel(cid);
     const { cfg, base } = model;
-    const totalCost = cfg.annualCost * cfg.years;
-    const startBand = base.bands.find(b => b.age === cfg.startAge);
+    // Display unit: inflate each year-tied figure to that year when "Future dollars" is on.
+    const cAge = cfg.currentAge;
+    const nomAt = (real, atAge) => real * Math.pow(1 + infl, Math.max(0, atAge - cAge));
+    const M = (real, atAge) => future ? nomAt(real, atAge) : real;
+    const dispBands = future ? base.bands.map(b => ({ age: b.age, p10: nomAt(b.p10, b.age), p25: nomAt(b.p25, b.age), p50: nomAt(b.p50, b.age), p75: nomAt(b.p75, b.age), p90: nomAt(b.p90, b.age) })) : base.bands;
+    const unit = future ? 'future dollars' : "today's dollars";
+    const totalCost = future ? Array.from({ length: cfg.years }, (_, i) => nomAt(cfg.annualCost, cfg.startAge + i)).reduce((s, v) => s + v, 0) : cfg.annualCost * cfg.years;
+    const startBand = dispBands.find(b => b.age === cfg.startAge);
     const successPct = fmtPct(base.fullSuccess * 100, 0);
     const yrsFunded = base.avgYearsFunded.toFixed(1);
     const costMin = 10000, costMax = 90000;
@@ -4992,19 +5430,19 @@ function renderCollege() {
         ${noAcct ? `<p class="text-muted" style="font-size:13px;margin:0 0 14px;">No 529 account is linked to ${esc(child.label)}. Link one in <a data-act="nav" data-view="accounts" style="cursor:pointer;color:var(--color-accent);">Settings › Accounts</a> (edit the account, set category 529 and pick the child). The projection below assumes a $0 starting balance until then.</p>` : ''}
         ${glideNote}
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;margin-bottom:16px;">
-          <div class="field"><label>Cost per year</label><input class="input tnum" inputmode="decimal" data-act="cl-cost" data-child="${esc(cid)}" value="${fmtEditNum(cfg.annualCost)}" placeholder="35,000"><span class="text-muted" style="font-size:11px;">all-in: tuition, room &amp; board</span></div>
+          <div class="field"><label>Cost per year</label><input class="input tnum" inputmode="decimal" data-act="cl-cost" data-child="${esc(cid)}" value="${fmtEditNum(cfg.annualCost)}" placeholder="35,000"><span class="text-muted" style="font-size:11px;">all-in: tuition, room &amp; board · today's dollars</span></div>
           <div class="field"><label>Years of college</label><input class="input tnum" inputmode="numeric" data-act="cl-years" data-child="${esc(cid)}" value="${cfg.years}" placeholder="4"></div>
-          <div class="field"><label>Starting age</label><input class="input tnum" inputmode="numeric" data-act="cl-startage" data-child="${esc(cid)}" value="${cfg.startAge}" placeholder="18"></div>
-          <div class="field"><label>You add each year</label><input class="input tnum" inputmode="decimal" data-act="cl-contrib" data-child="${esc(cid)}" value="${fmtEditNum(cfg.annualContrib)}" placeholder="0"></div>
+          <div class="field"><label>Starting age</label><input class="input tnum" inputmode="numeric" data-act="cl-startage" data-child="${esc(cid)}" value="${cfg.startAge}" placeholder="18"><span class="text-muted" style="font-size:11px;">first tuition year</span></div>
+          <div class="field"><label>You add each year</label><input class="input tnum" inputmode="decimal" data-act="cl-contrib" data-child="${esc(cid)}" value="${fmtEditNum(cfg.annualContrib)}" placeholder="0"><span class="text-muted" style="font-size:11px;">today's dollars</span></div>
         </div>
-        <div style="font-size:15px;line-height:1.5;margin-bottom:8px;">That's <b>${fmtMoney(totalCost)}</b> total over ${cfg.years} years. This 529 covers <b>all ${cfg.years} years in <span style="color:var(--color-accent-700);">${successPct}</span></b> of outcomes${base.fullSuccess < 1 ? `, and on average funds <b>${yrsFunded}</b> of ${cfg.years} years` : ''}.</div>
-        <p class="text-muted" style="font-size:12px;line-height:1.6;margin:0 0 12px;">${startBand ? `By age ${cfg.startAge} the balance is most likely around <b>${fmtCompactMoney(startBand.p50)}</b> (range ${fmtCompactMoney(startBand.p10)}–${fmtCompactMoney(startBand.p90)}).` : ''} Hover the chart to read any age.</p>
-        ${fanChartSVG(base.bands, { age: cfg.startAge, label: 'College at' }, fanId)}
+        <div style="font-size:15px;line-height:1.5;margin-bottom:8px;">That's <b>${fmtMoney(totalCost)}</b> total over ${cfg.years} years${future ? ` in future dollars` : ` in today's dollars`}. This 529 covers <b>all ${cfg.years} years in <span style="color:var(--color-accent-700);">${successPct}</span></b> of outcomes${base.fullSuccess < 1 ? `, and on average funds <b>${yrsFunded}</b> of ${cfg.years} years` : ''}.</div>
+        <p class="text-muted" style="font-size:12px;line-height:1.6;margin:0 0 12px;">The 529 grows while you save, then is drawn down across the <b>${cfg.years} college years (ages ${cfg.startAge}–${cfg.startAge + cfg.years - 1})</b> — the shaded band on the chart. It peaks the year before, at age ${cfg.startAge - 1}, which is the balance waiting when the first tuition bill arrives. ${startBand ? `By age ${cfg.startAge} the balance is most likely around <b>${fmtCompactMoney(startBand.p50)}</b> (range ${fmtCompactMoney(startBand.p10)}–${fmtCompactMoney(startBand.p90)}).` : ''} Hover the chart to read any age. All figures in ${unit}.</p>
+        ${fanChartSVG(dispBands, { age: cfg.startAge, label: 'College at' }, fanId, { tickEvery: (base.bands[base.bands.length - 1].age - base.bands[0].age) <= 18 ? 2 : 5, shadeFrom: cfg.startAge, shadeTo: cfg.startAge + cfg.years - 1, shadeLabel: 'college years' })}
       </div></div>
     </section>`;
   }).join('');
 
-  return header + `<div style="display:flex;flex-direction:column;gap:26px;margin-top:16px;">${lead}${blocks}</div>`;
+  return `<div style="display:flex;flex-direction:column;gap:26px;margin-top:4px;">${outlookHeaderBlock('College planning', null)}${lead}${blocks}</div>`;
 }
 
 /* College field commit (per child). */
@@ -5104,7 +5542,8 @@ function dialogHTML() {
       <div class="field"><label>Institution (optional)</label><input class="input" id="f-inst" value="${esc(a ? a.institution || '' : '')}" placeholder="e.g. Fidelity"></div>
       <div style="display:flex;gap:12px;">
         <div class="field" style="flex:1;"><label>Category</label><select class="input" id="f-cat" data-act="acct-cat">${catOpts}</select></div>
-        <div class="field" style="flex:1;"><label>Tax treatment</label><select class="input" id="f-tax">${taxOpts}</select></div>
+        <div class="field" style="flex:1;"><label>Tax treatment</label><select class="input" id="f-tax">${taxOpts}</select>
+          <span class="text-muted" style="font-size:11px;">How it's taxed: <b>Pre-tax</b> (traditional 401(k)/IRA — taxed on withdrawal) · <b>Roth</b> (after-tax in, tax-free out) · <b>Taxable</b> (brokerage — taxed on gains &amp; dividends) · <b>Tax-free</b> (HSA / muni).</span></div>
       </div>
       <div class="field"><label>Account vehicle</label><select class="input" id="f-vehicle">${vehOpts}</select>
         <span class="text-muted" style="font-size:11px;">Sets contribution limits &amp; shelter status — distinguishes a 401(k) ($${lim401} limit) from an IRA ($${limIra}); pick HSA for a health savings account.</span></div>
@@ -5174,6 +5613,22 @@ function dialogHTML() {
   } else if (d.type === 'confirm') {
     inner = `<div class="dialog-title">${esc(d.title)}</div><div class="dialog-body">${esc(d.body)}</div>
       <div class="dialog-actions"><button class="btn btn-secondary" data-act="close-dialog">Cancel</button><button class="btn ${d.danger ? 'btn-danger' : 'btn-primary'}" data-act="confirm-yes">${esc(d.ok || 'Confirm')}</button></div>`;
+  } else if (d.type === 'onboard') {
+    inner = `<div class="dialog-title" style="display:flex;align-items:center;gap:10px;">${logoSVG(24)}Welcome to Quartermaster</div>
+      <div style="font-size:13px;line-height:1.6;">
+        <p style="margin:0 0 10px;">Track your true asset allocation across every account — 401(k), IRAs, brokerage, 529, cash — compare it to a goal, and plan tax-aware moves. Everything stays in one local file on your disk; nothing is uploaded.</p>
+        <p style="margin:0 0 6px;"><strong>Pick where to start:</strong></p>
+        <ul style="margin:0 0 4px;padding-left:20px;display:flex;flex-direction:column;gap:6px;">
+          <li><strong>Load your data</strong> — open a saved <span style="font-family:var(--font-heading);">my-portfolio.json</span> and pick up where you left off.</li>
+          <li><strong>Start from scratch</strong> — set up your accounts and holdings from a blank slate, then check in and save your own file.</li>
+          <li><strong>Explore demo data</strong> — click around a sample household. Nothing is saved to disk.</li>
+        </ul>
+      </div>
+      <div class="dialog-actions" style="flex-wrap:wrap;gap:8px;">
+        <button class="btn btn-secondary" data-act="load-demo">Explore demo data</button>
+        <button class="btn btn-secondary" data-act="onboard-scratch">Start from scratch</button>
+        <button class="btn btn-primary" data-act="open">Load your data</button>
+      </div>`;
   } else if (d.type === 'about') {
     inner = aboutDialogHTML();
   }
@@ -5273,16 +5728,32 @@ function onClick(e) {
   const a = t.dataset.act, ds = t.dataset;
   switch (a) {
     case 'nav': {
+      // Settings drawer: opens when you enter a settings pane, closes when you leave for a non-settings view.
+      const wasSettings = SETTINGS_VIEWS.includes(ui.view);
+      const nowSettings = SETTINGS_VIEWS.includes(ds.view);
       ui.view = ds.view;
+      if (nowSettings && !wasSettings) ui.drawer = true;
+      else if (!nowSettings) ui.drawer = false;
       // Plan auto-generates on first open (from tax + drift + savings, §13.4–13.8).
       if (ds.view === 'plan') { const s = currentSnapshot(); if (s && !planForSnapshot(s.date)) generatePlanProposals(s); }
-      render(); break;
+      render(); window.scrollTo(0, 0); break;
     }
     case 'about': openDialog({ type: 'about' }); break;
+    case 'landing-open': {
+      // "Open the app": straight to the dashboard if data exists, else offer the
+      // load-data / start-fresh / demo choice + how-it-works in an onboarding popup.
+      if (portfolio.accounts.some(a => a.status !== 'archived')) { ui.view = 'dashboard'; render(); window.scrollTo(0, 0); }
+      else openDialog({ type: 'onboard' });
+      break;
+    }
+    case 'onboard-scratch': ui.dialog = null; ui.view = 'accounts'; ui.drawer = true; render(); window.scrollTo(0, 0); break;
+    case 'lp-scroll': { const el = document.getElementById(ds.target); if (el) el.scrollIntoView({ behavior: 'smooth' }); break; }
+    case 'toggle-drawer': ui.drawer = !ui.drawer; render(); break;
+    case 'toggle-theme': toggleTheme(); break;
     case 'save': saveFile().then(r => { if (r && r.ok) toast('Saved · ' + fileName); render(); }); break;
     case 'open': doOpen(); break;
     case 'new-checkin': startCheckin(); break;
-    case 'load-demo': loadDemoData(); resetViewState(); render(); toast('Demo data loaded'); break;
+    case 'load-demo': loadDemoData(); resetViewState(); ui.dialog = null; ui.view = 'dashboard'; ui.drawer = false; render(); window.scrollTo(0, 0); toast('Demo data loaded'); break;
     case 'onboard-start': openDialog({ type: 'account' }); break;
     case 'open-import': {
       const first = portfolio.accounts.find(a => a.status !== 'archived');
@@ -5390,10 +5861,20 @@ function onClick(e) {
     case 'ov-toggle': ui.taxAdvanced = true; render(); break;
     case 'ov-clear': portfolio.taxSettings.override = null; ui.taxAdvanced = false; markDirty(); render(); break;
     // Retirement modeler
+    case 'dollar-mode': ui.dollarMode = ds.mode === 'future' ? 'future' : 'today'; render(); break; // display-only; no re-sim
     case 'rd-confirm-mapping': portfolio.retirementSettings.mappingConfirmed = true; invalidateRetireCache(); markDirty(); render(); break;
     case 'rd-unconfirm': portfolio.retirementSettings.mappingConfirmed = false; markDirty(); render(); break;
     case 'rd-reset-musigma': portfolio.retirementSettings.muSigma = null; invalidateRetireCache(); markDirty(); render(); break;
     case 'rd-contrib-reset': portfolio.retirementSettings.contribOverride = null; invalidateRetireCache(); markDirty(); render(); break;
+    case 'rd-pension-add': {
+      const rs = portfolio.retirementSettings; rs.pensions = rs.pensions || [];
+      rs.pensions.push({ label: '', amountReal: 0, startAge: rs.retirementAge || 65, cola: true, survivorPct: 100 });
+      invalidateRetireCache(); markDirty(); render(); break;
+    }
+    case 'rd-pension-del': {
+      const rs = portfolio.retirementSettings; if (rs.pensions) rs.pensions.splice(Number(ds.idx), 1);
+      invalidateRetireCache(); markDirty(); render(); break;
+    }
     case 'rd-maxout': {
       const rs = portfolio.retirementSettings, lim = REFERENCE_DATA.contribLimits, persons = rs.birthYears[1] ? 2 : 1;
       // Max the tax-advantaged accounts: 401(k) pre-tax, Roth IRA, family HSA.
@@ -5468,7 +5949,9 @@ function applyRetireSetting(a, ds, el) {
   const clamp = (n, lo, hi) => Math.max(lo, Math.min(hi, n));
   const ensureManualPIA = () => { if (!Array.isArray(rs.ssPIA)) rs.ssPIA = [0, 0]; };
   const setContrib = (k) => { rs.contribOverride = rs.contribOverride || {}; rs.contribOverride[k] = parseNum(el.value) || 0; };
-  const setMS = (idx) => { rs.muSigma = rs.muSigma || {}; const cur = (rs.muSigma[ds.cls] || RETIRE_DATA.muSigma[ds.cls] || RETIRE_DATA.muSigma.other).slice(); const n = parseFloat(el.value); if (!isNaN(n)) { cur[idx] = n; rs.muSigma[ds.cls] = cur; } };
+  // μ is entered/displayed as a NET (nominal) return; store it as real = net − inflation (the engine runs in real dollars).
+  const inflNow = rs.inflationPct != null ? rs.inflationPct : 2.5;
+  const setMS = (idx) => { rs.muSigma = rs.muSigma || {}; const cur = (rs.muSigma[ds.cls] || RETIRE_DATA.muSigma[ds.cls] || RETIRE_DATA.muSigma.other).slice(); const n = parseFloat(el.value); if (!isNaN(n)) { cur[idx] = idx === 0 ? (n - inflNow) : n; rs.muSigma[ds.cls] = cur; } };
   switch (a) {
     case 'rd-birth-you': rs.birthYears[0] = parseInt(el.value, 10) || rs.birthYears[0]; break;
     case 'rd-birth-spouse': { const n = parseInt(el.value, 10); rs.birthYears[1] = n ? n : null; break; }
@@ -5491,6 +5974,15 @@ function applyRetireSetting(a, ds, el) {
     case 'rd-alloc-mode': rs.retirementAllocation = el.value === 'conservative' ? { us_large: 0.28, intl_dev: 0.12, us_bond: 0.55, cash: 0.05 } : 'current'; break;
     case 'rd-mu': setMS(0); break;
     case 'rd-sigma': setMS(1); break;
+    case 'rd-pension': {
+      const p = (rs.pensions || [])[Number(ds.idx)]; if (!p) break;
+      if (ds.key === 'label') p.label = el.value;
+      else if (ds.key === 'amountReal') p.amountReal = parseNum(el.value) || 0;
+      else if (ds.key === 'startAge') p.startAge = clamp(parseInt(el.value, 10) || 65, 40, 100);
+      else if (ds.key === 'survivorPct') p.survivorPct = clamp(parseInt(el.value, 10) || 0, 0, 100);
+      else if (ds.key === 'cola') p.cola = !!el.checked;
+      break;
+    }
   }
   invalidateRetireCache(); markDirty();
 }
@@ -5585,10 +6077,18 @@ function toggleGoalSave() {
    MUTATIONS wired from the dispatch
    =============================================================== */
 async function doOpen() {
-  if (dirty && !confirm('You have unsaved changes. Open another file and discard them?')) return;
+  // Guard unsaved work with the app's own modal — the native confirm() is suppressed in some
+  // webviews (returns false), which silently blocked Open whenever data was already loaded.
+  if (dirty) { openDialog({ type: 'confirm', title: 'Discard unsaved changes?', body: 'You have unsaved changes in memory. Open another file and discard them? Your saved file on disk is not touched.', ok: 'Discard & open', danger: true, action: 'discard-open' }); return; }
+  openFileNow();
+}
+async function openFileNow() {
+  // Call the picker FIRST (no render in between) so the click's transient activation is still
+  // live when showOpenFilePicker runs — a re-render first can drop it and silently abort the pick.
   const r = await openFile();
+  ui.dialog = null;
   if (r.ok) { resetViewState(); render(); toast('Loaded · ' + fileName); }
-  else if (r.error) toast('Could not open: ' + r.error);
+  else { render(); if (r.error) toast('Could not open: ' + r.error); }
 }
 
 function setHoldingClass(hid, cls) {
@@ -5754,6 +6254,7 @@ function handleConfirm() {
   if (d.action === 'start-fresh') { portfolio = emptyPortfolio(); fileHandle = null; dirty = false; resetViewState(); closeDialog(); toast('Started fresh'); }
   else if (d.action === 'archive-account') { const a = accountById(d.id); if (a) { a.status = 'archived'; activeHoldings(d.id).forEach(h => h.status = 'archived'); } markDirty(); closeDialog(); }
   else if (d.action === 'load-glide') { const child = d.child, track = d.track; ui.dialog = null; applyGlidePreset(child, track); }
+  else if (d.action === 'discard-open') { openFileNow(); }   // openFileNow clears ui.dialog + renders after the picker
   else closeDialog();
 }
 
