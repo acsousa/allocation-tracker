@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
 const path = require('node:path');
-const source = fs.readFileSync(path.join(__dirname, '..', 'allocation-tracker.html'), 'utf8').match(/\n<script>\n([\s\S]*)\n<\/script>/)[1];
+const source = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8').match(/\n<script>\n([\s\S]*)\n<\/script>/)[1];
 let input, picker, writeHook, downloads = 0;
 const window = { addEventListener() {}, showSaveFilePicker: async () => picker, showOpenFilePicker: async () => [picker] };
 const sandbox = { window, self: {}, console, setTimeout() {}, Blob,
@@ -12,7 +12,7 @@ const sandbox = { window, self: {}, console, setTimeout() {}, Blob,
 };
 vm.createContext(sandbox);
 vm.runInContext(source + `\nwindow.test = { csvEscape, tryAutoload, openFileViaInput,
-  setState(p, h) { portfolio = p; fileHandle = h; dirty = true; },
+  setState(p, h) { portfolio = p; fileHandle = h; demoMode = false; checkinDraftDirty = false; dirty = true; },
   state() { return { portfolio, fileHandle, dirty }; }
 };`, sandbox);
 const A = window.__AAT__, T = window.test;

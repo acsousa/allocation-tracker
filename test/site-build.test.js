@@ -17,6 +17,28 @@ try {
     assert.ok(!headers.split('/downloads/*')[0].includes('no-transform'));
     assert.ok(headers.split('/downloads/*')[1].includes('no-transform'));
   });
+  check('index is canonical and the legacy deployment URL serves the same app', () => {
+    const index = fs.readFileSync(path.join(tmp, 'index.html'), 'utf8');
+    assert.equal(fs.readFileSync(path.join(tmp, 'allocation-tracker.html'), 'utf8'), index);
+    for (const page of pages) assert.ok(!fs.readFileSync(path.join(tmp, page), 'utf8').includes('href="allocation-tracker.html'));
+    assert.match(fs.readFileSync(path.join(tmp, '404.html'), 'utf8'), /href="\/"/);
+  });
+  check('source compatibility redirect preserves section and query', () => {
+    const alias = fs.readFileSync(path.join(__dirname, '..', 'allocation-tracker.html'), 'utf8');
+    let destination;
+    const location = {href:'https://example.com/allocation-tracker.html?preview=1#lp-trust',search:'?preview=1',hash:'#lp-trust',replace(url){destination=url;}};
+    vm.runInNewContext(alias.match(/<script>([\s\S]*?)<\/script>/)[1], {URL, location});
+    assert.equal(destination, 'https://example.com/index.html?preview=1#lp-trust');
+  });
+  check('hosted pages include the deployable favicon and offline copy embeds its icon', () => {
+    assert.match(fs.readFileSync(path.join(tmp, 'favicon.svg'), 'utf8'), /<svg/);
+    for (const name of ['index.html', 'allocation-tracker.html', ...pages]) {
+      const html = fs.readFileSync(path.join(tmp, name), 'utf8');
+      assert.equal((html.match(/rel="icon"/g) || []).length, 1);
+      assert.match(html, /href="favicon.svg"/);
+    }
+    assert.match(fs.readFileSync(path.join(tmp, 'downloads/quartermaster.html'), 'utf8'), /href="data:image\/svg\+xml,/);
+  });
   check('every marketing page has working local navigation', () => {
     for (const name of pages) {
       const html = fs.readFileSync(path.join(tmp, name), 'utf8');
@@ -27,6 +49,16 @@ try {
         assert.ok(fs.existsSync(target), `${name} -> ${href} must exist`);
         if (fs.statSync(target).isDirectory()) assert.ok(fs.existsSync(path.join(target, 'index.html')));
       }
+    }
+  });
+  check('public section links resolve and launch actions enter onboarding', () => {
+    const source = fs.readFileSync(path.join(tmp, 'index.html'), 'utf8');
+    for (const page of ['pricing.html', 'privacy.html']) {
+      const html = fs.readFileSync(path.join(tmp, page), 'utf8');
+      for (const [, id] of html.matchAll(/href="index.html#(lp-[a-z-]+)"/g)) {
+        assert.ok(source.includes('id="' + id + '"'), page + ' section ' + id);
+      }
+      assert.match(html, /href="index.html#start">Start here/);
     }
   });
   check('pricing uses direct email drafts and no interest routes', () => {
@@ -41,7 +73,7 @@ try {
     const html = fs.readFileSync(path.join(__dirname, '..', 'pricing.html'), 'utf8');
     assert.match(html, /<style>/);
     assert.ok(!html.includes('rel="stylesheet"'));
-    assert.match(html, /allocation-tracker.html/);
+    assert.match(html, /index.html/);
   });
   check('standalone download contains no beacon and blocks network execution', () => {
     const html = fs.readFileSync(path.join(tmp, 'downloads/quartermaster.html'), 'utf8');

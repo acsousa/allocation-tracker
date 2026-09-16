@@ -4,11 +4,11 @@
 
 The source app and public pages are ordinary, self-contained HTML files:
 
-- `allocation-tracker.html` — the app and landing page, including retirement/529 simulation introduction.
+- `index.html` — the canonical app and landing page, including retirement/529 simulation introduction.
 - `pricing.html` — plans and upcoming features; all **Get more information** buttons open feature-specific email drafts to hello@realallocation.com.
 - `privacy.html` — local portfolio processing and hosted analytics explained.
 
-Keep these files alongside one another. They work directly from the local server without a build: `/allocation-tracker.html`, `/pricing.html`, `/privacy.html`. Pricing uses the same Quartermaster brand, navigation style, colors and header treatment as the landing page. Pricing links navigate in the same tab. The app's existing unsaved-change warning remains active when leaving a modified portfolio.
+Keep these files alongside one another. They work directly from the local server without a build: `/` (or `/index.html`), `/pricing.html`, `/privacy.html`. Pricing uses the same Quartermaster brand, navigation style, colors and header treatment as the landing page. Pricing links navigate in the same tab. The app's existing unsaved-change warning remains active when leaving a modified portfolio.
 
 For the existing generated deployment workflow, run `node scripts/build-site.js` and publish `dist/`. It copies those pages, provides both `index.html` and `allocation-tracker.html`, and creates an isolated standalone app download. No runtime dependencies or application server are required. Previous generated interest-page routes are removed on rebuilding.
 
@@ -39,3 +39,11 @@ Run `node test/site-build.test.js` for standalone page availability, internal li
 ## Product recommendations
 
 Keep portable portfolio JSON export available independently of report pricing. For a future paid release, prioritize cloud saving with version history/recovery, explicit opt-in reminder cadence and unsubscribe controls. Define report pricing and the introductory offer's end before adding billing. No paid-feature service is implied to be active today.
+
+### Entry-point compatibility
+
+Edit `index.html`; do not manually rename it for deployment. Public navigation uses
+`index.html` and `index.html#start`. The root `allocation-tracker.html` is only a
+compatibility redirect for local/older links. The build emits a full app at the
+legacy URL too, preserving old bookmarks without depending on a redirect.
+Deploy the whole `dist/` folder, including the public pages and `404.html`.
