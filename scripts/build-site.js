@@ -32,16 +32,18 @@ function buildSite(output = path.join(root, 'dist'), token = process.env.CF_WEB_
     fs.mkdirSync(path.dirname(dest), { recursive: true });
     fs.writeFileSync(dest, text);
   };
-  const app = fs.readFileSync(path.join(root, 'allocation-tracker.html'), 'utf8');
-  write('index.html', app.replace('</body>', analytics + '</body>'));
+  write('favicon.svg', fs.readFileSync(path.join(root, 'favicon.svg'), 'utf8'));
+  const hostedIcons = html => html.replace(/<link rel="icon"[^>]*>/g, '<link rel="icon" type="image/svg+xml" href="favicon.svg">');
+  const app = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
+  write('index.html', hostedIcons(app).replace('</body>', analytics + '</body>'));
   // Stable legacy URL, plus a downloadable copy with no injected analytics.
-  write('allocation-tracker.html', app.replace('</body>', analytics + '</body>'));
+  write('allocation-tracker.html', hostedIcons(app).replace('</body>', analytics + '</body>'));
   write('downloads/quartermaster.html', app.replace('<head>', `<head>\n<meta http-equiv="Content-Security-Policy" content="connect-src 'none'; script-src 'unsafe-inline'; object-src 'none'; base-uri 'none'">`));
   for (const name of publicPages) {
     const html = fs.readFileSync(path.join(root, name), 'utf8');
-    write(name, html.replace('</body>', analytics + '</body>'));
+    write(name, hostedIcons(html).replace('</body>', analytics + '</body>'));
   }
-  write('404.html', '<!doctype html><html lang="en"><meta charset="utf-8"><title>Page not found — Quartermaster</title><h1>Page not found</h1><a href="/allocation-tracker.html">Return to Quartermaster</a></html>');
+  write('404.html', '<!doctype html><html lang="en"><meta charset="utf-8"><title>Page not found — Quartermaster</title><h1>Page not found</h1><a href="/">Return to Quartermaster</a></html>');
   // Retire only the generated directories from the previous launch build.
   for (const name of ['pricing', 'privacy', 'interest']) fs.rmSync(path.join(output, name), { recursive: true, force: true });
   fs.rmSync(path.join(output, 'site.css'), { force: true });

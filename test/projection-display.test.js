@@ -3,7 +3,7 @@ const fs = require('node:fs');
 const vm = require('node:vm');
 const assert = require('node:assert/strict');
 const path = require('node:path');
-const html = fs.readFileSync(path.join(__dirname, '..', 'allocation-tracker.html'), 'utf8');
+const html = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
 const script = html.match(/\n<script>\n([\s\S]*)\n<\/script>/)[1];
 const nodes = Object.fromEntries(['retire-spend-label', 'retire-success', 'retire-fan'].map(id => [id, {}]));
 const sandbox = {

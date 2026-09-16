@@ -1,146 +1,175 @@
 # Quartermaster
 
-**Asset Allocation Tracker** — a single-file, fully-offline web app for tracking
-your real allocation across every account. It's an allocation tool, not a
-net-worth tracker.
+**Your real allocation, across all your accounts.** Quartermaster is a local-file
+portfolio tracker at [realallocation.com](https://realallocation.com).
+It combines allocation charts, quarterly reviews, tax estimates, and retirement
+and 529 simulations. It does not connect to your bank or execute trades.
 
-It's one `allocation-tracker.html` file. Open it in a browser and it runs; your
-numbers live in a JSON file you save yourself. The standalone app needs no server or account and contains no analytics. The hosted
-site at realallocation.com uses Cloudflare Web Analytics and includes pricing and privacy pages. You can email the same file to a friend and they can use
-it too.
+## Two files, two jobs
 
-![Allocation Tracker — Review › Overview](docs/screenshot.png)
+- **`index.html` is the app.** This is the canonical source and website entry
+  point. Its JavaScript, styles, and charts are inline; no framework or runtime
+  dependencies are needed. Open it directly in a browser to use it offline.
+- **Your portfolio `.json` file is your data.** Open it locally at the beginning
+  of a session and save it when you finish. Your holdings and balances are never
+  uploaded by this release. Keep a backup somewhere you trust.
 
-*Review › Overview: household allocation vs. goal, drift bars, category drill-down, and history — shown with demo data.*
-
----
-
-## Highlights
-
-- **See what you actually own.** Combine every account — taxable, 401k/IRA,
-  Roth, HSA, 529 — into one allocation picture, by asset class and by rollup
-  (stocks / bonds / real assets / crypto / cash / blend).
-- **Quarterly check-ins.** "New check-in" pre-fills last time's values; you just
-  overtype what changed. A running total sanity-checks against your net worth.
-- **Goals & drift.** Set a target allocation (with a required rationale note,
-  journaled over time) and see drift vs the ±band, per class.
-- **529 glide paths.** Each child gets an age-based glide target; 529s are
-  measured against it instead of the household goal.
-- **Tax analysis.** A tax-posture scorecard: per-holding annual tax drag,
-  a Location Efficiency score, the tax you're *shielding* by good placement,
-  and allocation-neutral **location-swap** and **muni** recommendations.
-- **Quarterly Plan.** Auto-generated from your drift *and* tax posture, then
-  fully editable: moves, an explicit no-action decision, and a savings
-  directive for new contributions — with a live before/after simulator and
-  wash-sale warnings.
-- **Report.** A clean, print-to-PDF allocation report (household, retirement,
-  per-child 529, non-retirement), including the committed plan and tax
-  scorecard. CSV export too.
-
-Everything is computed locally. Tax figures are estimates from simplified rules
-and your inputs — **not tax advice**.
-
----
+The hosted website uses Cloudflare Web Analytics for visits and performance.
+Portfolio contents are not sent to analytics. The standalone download has no
+analytics. Future cloud saving would be optional and would require choosing to
+upload data.
 
 ## Getting started
 
-1. **Open the app.** Double-click `allocation-tracker.html`, or open it from the
-   browser. (Chrome/Edge get one-click save-back via the File System Access API;
-   Safari/Firefox fall back to download/upload.)
-2. **Add accounts & holdings**, or click **Load demo data** to explore.
-3. **Do a check-in** to record current values.
-4. **Set a goal** in Review › Goals.
-5. **Review** your allocation, tax posture, and history.
-6. **Plan** the quarter, then **Save** your file.
+1. Choose **Start here**, then **Build my portfolio**.
+2. Follow **Accounts → Goals → Holdings**. Start with one account, choose an
+   example or custom allocation target (or decide later), and enter holdings.
+   Reset to default clears the setup target; the review band remains ±5 points.
+3. Choose **Finish setup · view dashboard** to record your first check-in in the
+   current session. This does **not** write a file to disk.
+4. Explore your allocation, then choose **Save file** before leaving. An amber
+   **⚠ Save needed** button means there is unsaved work.
+5. Next time, choose **Returning? Open portfolio file** and select your JSON file.
+   This reads the file locally; it is not an upload.
 
-Your data is saved to `my-portfolio.json`. Keep it in an iCloud/Dropbox folder
-for automatic version history. **The app never uploads or stores your data in
-the browser — the file is the only copy, so remember to Save.**
+Finish an in-progress check-in with **Record check-in** before saving the file.
+Chrome/Edge can support saving back to a selected file; browsers without that
+capability download a new copy. Keep the latest copy and check where it was saved.
+There is no automatic portfolio backup or server recovery.
 
-### The main tabs
+**Explore the demo** opens a read-only sample portfolio. Navigation and temporary
+simulation adjustments are available; account, holding, target, and check-in
+edits and portfolio-file saving are blocked. Choose **Start your portfolio** to
+enter setup with empty data. Printed demo reports are labeled as sample data.
 
-- **Check-In** — record current values (pre-filled from last time). First run
-  shows the onboarding here.
-- **Review** — *Overview* (allocation vs. goal + drift), *Positions* (holdings
-  drill-down), *Goals* (targets, 529 glide paths, rationale journal), *Tax*
-  (drag scorecard + recommendations), *History*.
-- **Plan** — a quarterly plan auto-generated from your drift and tax posture;
-  edit the moves, simulate before/after, or record an explicit no-action.
-- **Report** — a print-to-PDF summary as of a snapshot, including the committed
-  plan and tax scorecard. Also exports CSV.
-- **Outlook** — retirement and per-child college projections, with editable assumptions and simulated outcome ranges.
-- **Settings** — *Accounts*, *Household* (children + 529 glide assignments),
-  *Tax Profile* (bracket picker, gain budget, monthly savings), *Data & Privacy*
-  (save/load/export/start-fresh).
+## Navigation
 
-Click the logo any time for the About/Help panel.
+- **Dashboard:** your current allocation, target comparison, drift, and account
+  drill-down. This is the app's landing view after opening a portfolio or setup.
+- **Check-in:** enter balances for a dated snapshot, starting from prior values.
+- **Review:** compare the latest two check-ins by account. Changes include market
+  moves and cash flows, so they are **balance changes, not investment returns**.
+  Holdings, Targets, Tax, and History are available here too.
+- **Plan:** explore proposed changes based on your inputs and record decisions.
+- **Report:** printable allocation summaries and CSV exports.
+- **Outlook:** retirement and college simulations with adjustable assumptions.
+- **Settings:** accounts, children, tax profile, retirement inputs, and file tools.
 
----
+The mobile **Navigate** menu selects the main view. **Help** explains the app and
+local-file model. The logo returns to the public landing page.
 
-## Privacy & offline
+## Cloudflare Pages deployment
 
-- **Standalone download:** no analytics, CDN, fonts, or fund-data refresh. It works offline.
-- **Hosted site:** Cloudflare Web Analytics measures page visits/performance when enabled. Portfolio contents are not included; pricing-page visits help assess demand. See [launch and analytics setup](docs/launch-analytics.md).
-- Nothing is written to browser storage except a *reference* to your chosen
-  file (so it can re-open it) — never the data itself.
+The main deployed page is **`index.html`**. Do not rename files by hand or upload
+only that file: pricing, privacy, and compatibility URLs need to be deployed too.
 
----
+### Git-connected Pages project
 
-## Tech
+| Setting | Value |
+| --- | --- |
+| Framework preset | None |
+| Root directory | Repository root |
+| Build command | `node scripts/build-site.js` |
+| Build output directory | `dist` |
+| Production branch | `main` |
 
-Vanilla JavaScript, inline CSS, hand-rolled SVG charts. No framework or runtime dependencies — the HTML file is the app source.
-A dependency-free Node build assembles the hosted site and its public pages into `dist/`. Styled in
-"Industry" blueprint design system.
+Use the feature branch for a preview deployment before merging. This branch is
+`codex/new-user-experience`; local changes are not automatically published.
 
-Tax reference data (brackets, thresholds, state rates, contribution limits) is
-embedded and labelled with its tax year; it's fully editable in
-Settings › Tax Profile.
+### Manual / Direct Upload
 
----
-
-## Development
-
-Golden rules for the standalone app: **one file** (all CSS/JS inline), **zero network requests**,
-**never touch a real user's data file** (test only on throwaway copies),
-**additive schema migrations only** (never drop data), and **`$`+comma currency
-formatting** everywhere. A local `CLAUDE.md` (untracked) holds the full agent
-guide with architecture and conventions.
-
-Quick checks:
+Run:
 
 ```bash
-# tax-engine + migration test suite (loads the real <script> in a sandbox)
+node scripts/build-site.js
+```
+
+Upload the **contents of `dist/`** as one deployment. Its root should contain:
+
+```text
+dist/
+  index.html                  # main entry at /
+  allocation-tracker.html     # full compatibility copy for old bookmarks
+  pricing.html
+  privacy.html
+  favicon.svg                 # browser tab icon
+  404.html                     # visible error page, with a home link
+  _headers
+  downloads/quartermaster.html # standalone offline copy
+```
+
+Keep Cloudflare's existing automatic analytics injection enabled; the default
+build does not add a duplicate beacon. Exclude `/downloads/*` from injection.
+See [analytics configuration](docs/launch-analytics.md) for manual/disabled modes.
+
+Cloudflare Pages may normalize `/index.html` to `/` and `/pricing.html` to
+`/pricing`. The links and fragment routes support this behavior. See
+[Cloudflare's serving-pages documentation](https://developers.cloudflare.com/pages/configuration/serving-pages/).
+
+### Blank-page fix and deployment checks
+
+During the September 2026 investigation, production `/` served the app, while
+`/allocation-tracker.html` returned **HTTP 404 with an empty body**. Pricing and
+logo links still pointed to that missing URL. The in-page Open the app button
+worked in the browser test; the missing destination was the reproduced failure.
+
+Public links now use `index.html`, and the build retains the legacy app URL.
+The repository's small `allocation-tracker.html` compatibility page redirects to
+`index.html`, preserving query parameters and section anchors. **Edit
+`index.html`, not this compatibility file.**
+
+After deploying, verify:
+
+- `/` displays the landing page, and **Start here** opens the guide.
+- `/pricing` → **Start here** opens the same guide.
+- Pricing's section links land on the intended main-page sections.
+- `/allocation-tracker.html` still opens the app.
+- An unknown URL shows the custom 404 page instead of a blank response.
+- Demo navigation works and portfolio edits are blocked.
+
+If an old page remains after deployment, check for custom Cloudflare cache rules
+and purge stale cached HTML. Do not use aggressive caching for these HTML pages.
+
+## Local development and verification
+
+```bash
+# Build and serve the exact deployment output.
+node scripts/build-site.js
+python3 -m http.server 8747 --directory dist
+# Open http://127.0.0.1:8747/
+
+# Regression suites (no package installation required).
 node test/tax-engine.test.js
 node test/persistence.test.js
 node test/projection-display.test.js
 node test/site-build.test.js
-
-# syntax
-python3 - <<'PY'
-import re; h=open('allocation-tracker.html').read()
-m=re.search(r'\n<script>\n(.*)\n</script>',h,re.S); open('/tmp/_c.js','w').write(m.group(1))
-PY
-node --check /tmp/_c.js
-
-# serve a copy to test in a browser (never test against your real data file)
-mkdir -p /private/tmp/aat && cp allocation-tracker.html /private/tmp/aat/index.html
-cd /private/tmp/aat && python3 -m http.server 8747   # → http://localhost:8747
+node test/onboarding.test.js
 ```
 
----
+For direct source development, serve the repository root instead of `dist`.
+Rebuild after source edits before testing `dist`. Never use a real portfolio file
+for testing; use the demo or a throwaway copy.
 
-## Disclaimer
+### Where to edit copy
 
-This tool is for personal tracking and education. Tax and allocation figures are
-estimates from simplified rules and the data you enter. It never executes any
-trade. Confirm material financial decisions with a qualified professional.
+- `index.html`: landing page (`renderMarketingLanding`), starter dialog
+  (`dialogHTML`, `onboard` case), setup (`renderSetup`), and app text.
+- `pricing.html`: introductory offer and planned paid capabilities.
+- `privacy.html`: privacy disclosures.
 
-## Review and future development
+All three pages are self-contained. `dist/` is generated and ignored by Git.
 
-The September 2026 review covers financial correctness, accessibility and design, and data integrity. See [review summary](docs/review-summary.md), [financial review](docs/financial-review.md), [UX review](docs/ux-review.md), and [architecture roadmap](docs/architecture-review.md). The roadmap describes an opt-in saved-portfolio/subscription product; the current app remains an offline file-based tool.
+## Roadmap and limitations
 
-## Hosted release
+Optional cloud saving, review reminders, and ongoing downloadable reports are
+**coming soon**. Reports are free during the introductory release; there is no
+checkout or download quota yet.
 
-The public pages are self-contained `pricing.html` and `privacy.html` beside `allocation-tracker.html`; they work on localhost without building. Pricing buttons open email drafts. For the optional packaged deployment, run `node scripts/build-site.js` and publish `dist/`. The default uses your existing Cloudflare automatic analytics injection. It adds pricing and privacy pages without adding another tracker. The offline download remains isolated. See [deployment and measurement instructions](docs/launch-analytics.md) for the hosting configuration and post-deployment checks.
+Tax figures use simplified rules and entered assumptions; simulations illustrate
+possible outcomes, not forecasts or guarantees. This is a personal tracking and
+education tool, not investment, tax, or legal advice.
 
-Paid capabilities are **coming soon**: optional cloud portfolio saving, quarterly/annual reminders, and ongoing downloadable reports. Reports remain free throughout this introductory release, with no quota or checkout yet.
+See the [review summary](docs/review-summary.md),
+[financial review](docs/financial-review.md), [UX review](docs/ux-review.md), and
+[architecture roadmap](docs/architecture-review.md). Older review documents refer
+to the app's former source filename, `allocation-tracker.html`.
