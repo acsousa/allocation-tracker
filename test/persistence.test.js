@@ -4,8 +4,8 @@ const fs = require('node:fs');
 const vm = require('node:vm');
 const path = require('node:path');
 const source = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8').match(/\n<script>\n([\s\S]*)\n<\/script>/)[1];
-let input, picker, writeHook, downloads = 0;
-const window = { addEventListener() {}, showSaveFilePicker: async () => picker, showOpenFilePicker: async () => [picker] };
+let input, picker, pickerOptions, writeHook, downloads = 0;
+const window = { addEventListener() {}, showSaveFilePicker: async options => { pickerOptions = options; return picker; }, showOpenFilePicker: async () => [picker] };
 const sandbox = { window, self: {}, console, setTimeout() {}, Blob,
   URL: { createObjectURL() { downloads++; return 'blob:test'; }, revokeObjectURL() {} },
   document: { addEventListener() {}, createElement() { return input = { style: {}, click() {}, remove() { this.removed = true; } }; }, body: { appendChild() {} } },
@@ -13,7 +13,7 @@ const sandbox = { window, self: {}, console, setTimeout() {}, Blob,
 vm.createContext(sandbox);
 vm.runInContext(source + `\nwindow.test = { csvEscape, tryAutoload, openFileViaInput,
   setState(p, h) { portfolio = p; fileHandle = h; demoMode = false; checkinDraftDirty = false; dirty = true; },
-  state() { return { portfolio, fileHandle, dirty }; }
+  state() { return { portfolio, fileHandle, fileName, dirty }; }
 };`, sandbox);
 const A = window.__AAT__, T = window.test;
 const fresh = () => JSON.parse(JSON.stringify(A.emptyPortfolio()));
@@ -55,6 +55,21 @@ async function main() {
   assert.equal((await A.openFile()).ok,false);assert.equal(T.state().portfolio,replacement);checks++;
   const pending=T.openFileViaInput();input.oncancel();assert.equal((await pending).aborted,true);assert.equal(input.removed,true);checks++;
   sandbox.location={protocol:'https:'};sandbox.fetch=()=>{throw Error('Unexpected network');};assert.equal((await T.tryAutoload()).loaded,false);checks++;
-  assert.equal(downloads,0);console.log(`${checks} persistence regression groups passed`);
+  assert.equal(downloads,0);
+  writeHook=null;
+  picker={name:'Retirement.json',createWritable:async()=>({write:async()=>{},close:async()=>{}})};
+  T.setState(fresh(),old);
+  await A.saveFile(false,'Retirement.json');
+  assert.equal(pickerOptions.suggestedName,'Retirement.json');
+  assert.equal(T.state().fileName,'Retirement.json');assert.equal(T.state().fileHandle,picker);checks++;
+  const beforeName=T.state().fileName;
+  window.showSaveFilePicker=async()=>{const e=new Error('cancel');e.name='AbortError';throw e;};
+  assert.equal((await A.saveFile(false,'Cancelled.json')).aborted,true);
+  assert.equal(T.state().fileName,beforeName);checks++;
+  window.showSaveFilePicker=async()=>{throw new Error('Unsupported');};
+  await A.saveFile(false,'Downloaded.json');
+  assert.equal(input.download,'Downloaded.json');assert.equal(T.state().fileName,'Downloaded.json');
+  assert.equal(T.state().fileHandle,null);checks++;
+  console.log(`${checks} persistence regression groups passed`);
 }
 main().catch(e=>{console.error(e);process.exitCode=1;});
