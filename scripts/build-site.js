@@ -32,6 +32,7 @@ function buildSite(output = path.join(root, 'dist'), token = process.env.CF_WEB_
     fs.mkdirSync(path.dirname(dest), { recursive: true });
     fs.writeFileSync(dest, text);
   };
+  write('site-analytics.js', fs.readFileSync(path.join(root, 'site-analytics.js'), 'utf8'));
   write('favicon.svg', fs.readFileSync(path.join(root, 'favicon.svg'), 'utf8'));
   const hostedIcons = html => html.replace(/<link rel="icon"[^>]*>/g, '<link rel="icon" type="image/svg+xml" href="favicon.svg">');
   const app = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
