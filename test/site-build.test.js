@@ -84,6 +84,8 @@ try {
     const offline = fs.readFileSync(path.join(tmp, 'downloads/quartermaster.html'), 'utf8');
     assert.ok(!offline.includes('googletagmanager.com'));
     assert.ok(!offline.includes('G-MM26T8RTHV'));
+    assert.ok(!offline.includes('src="site-analytics.js"'));
+    assert.ok(fs.existsSync(path.join(tmp, 'site-analytics.js')));
   });
   check('standalone download contains no beacon and blocks network execution', () => {
     const html = fs.readFileSync(path.join(tmp, 'downloads/quartermaster.html'), 'utf8');

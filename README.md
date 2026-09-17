@@ -17,7 +17,9 @@ and 529 simulations. It does not connect to your bank or execute trades.
 The hosted website uses Google Analytics (GA4, `G-MM26T8RTHV`) for usage
 measurement and Cloudflare Web Analytics for visits and performance. The Google
 tag is immediately after `<head>` on the main, pricing, and privacy pages; the
-build removes it from the standalone download. Custom app events are not yet configured.
+build removes it from the standalone download. Hosted app views and selected workflow events are configured in `site-analytics.js`;
+only the production HTTPS domains send these events. See
+[analytics setup](docs/launch-analytics.md#google-analytics-4) for reporting configuration.
 Portfolio contents are not sent to analytics. The standalone download has no
 analytics. Future cloud saving would be optional and would require choosing to
 upload data.
