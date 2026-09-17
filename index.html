@@ -1,6 +1,16 @@
 <!doctype html>
 <html lang="en">
 <head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-MM26T8RTHV"></script>
+<script type="text/javascript">
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-MM26T8RTHV');
+</script>
+<!-- End Google tag -->
 <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%20width%3D%2232%22%20height%3D%2232%22%20aria-hidden%3D%22true%22%20style%3D%22flex%3Anone%3Bdisplay%3Ablock%3B%22%3E%3Cg%20fill%3D%22none%22%20stroke-width%3D%225%22%3E%3Cpath%20d%3D%22M%2024.17%208.64%20A%2011%2011%200%200%201%2024.17%2023.36%22%20stroke%3D%22%230f6493%22%2F%3E%3Cpath%20d%3D%22M%2023.36%2024.17%20A%2011%2011%200%200%201%208.64%2024.17%22%20stroke%3D%22%230f6493%22%2F%3E%3Cpath%20d%3D%22M%207.83%2023.36%20A%2011%2011%200%200%201%207.83%208.64%22%20stroke%3D%22%230f6493%22%2F%3E%3Cpath%20d%3D%22M%208.64%207.83%20A%2011%2011%200%200%201%2023.36%207.83%22%20stroke%3D%22%230f6493%22%2F%3E%3Cpath%20d%3D%22M%2022.4%2022.4%20L%2027.4%2027.4%22%20stroke%3D%22%230f6493%22%20stroke-width%3D%224.5%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E">
 
 <meta charset="utf-8" />
@@ -8,7 +18,7 @@
 <title>Quartermaster — your real allocation</title>
 <meta name="description" content="Run your real allocation with Quartermaster. Bring your accounts together, review drift and estimated tax effects, and plan your next check-in at realallocation.com.">
 <!--
-  Quartermaster — Asset Allocation Tracker. Single-file, offline, zero-network.
+  Quartermaster — Asset Allocation Tracker. Single-file app; the standalone build is offline and zero-network.
   Spec: asset-allocation-tool-spec.md. An allocation tool, not a net-worth tracker.
 
   Structure of this file:
@@ -259,7 +269,9 @@
   .filebtn { padding: 6px 12px; border: 1px solid var(--color-divider); background: var(--color-panel); font-size: 13px; color: var(--color-ink-2); cursor: pointer; font-family: var(--font-body); }
   .filebtn:hover { border-color: var(--color-accent); color: var(--color-accent); }
   .netpill { display: flex; align-items: center; gap: 8px; font-family: var(--font-heading); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-ok); }
-  .netpill .ring { width: 8px; height: 8px; border-radius: 50%; border: 1px solid var(--color-ok); flex: none; }
+  .netpill { position: relative; cursor: help; }
+  .netpill .local-tip { position: absolute; top: calc(100% + 8px); right: 0; width: min(310px, 80vw); padding: 12px; background: var(--color-panel); color: var(--color-ink); border: 1px solid var(--color-divider); box-shadow: var(--shadow-lg); font-family: var(--font-body); font-size: 13px; line-height: 1.5; letter-spacing: 0; text-transform: none; z-index: 60; visibility: hidden; opacity: 0; }
+  .netpill:hover .local-tip, .netpill:focus .local-tip { visibility: visible; opacity: 1; }
 
   .tabbar { display: flex; align-items: stretch; background: var(--color-panel); border-bottom: 1px solid var(--color-divider); overflow-x: auto; }
   .apptab { display: block; text-align: left; padding: 10px 18px; border: 0; border-right: 1px solid var(--color-line-2); background: transparent; color: var(--color-ink-3); cursor: pointer; white-space: nowrap; }
@@ -2479,6 +2491,12 @@ async function reopenPending() {
   } catch (e) { toast('Could not open: ' + e.message); }
 }
 
+function requestPortfolioSave() {
+  if (demoMode) { toast('Demo is read only. Start your portfolio to save your own file.'); return; }
+  if (checkinDraftDirty) { toast('Finish your check-in with “Record check-in” before saving your file.'); return; }
+  openDialog({ type: 'save-file' });
+}
+
 function serialize() { return JSON.stringify(portfolio, null, 2); }
 
 function triggerDownload(text, name, mime) {
@@ -2490,9 +2508,11 @@ function triggerDownload(text, name, mime) {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
-async function saveFile(forceNew) {
+async function saveFile(forceNew, requestedName = fileName) {
   if (demoMode) { toast('Demo is read only. Start your portfolio to save your own file.'); return { ok: false }; }
   if (checkinDraftDirty) { toast('Finish your check-in with “Record check-in” before saving your file.'); return { ok: false }; }
+  const saveName = requestedName;
+  forceNew = forceNew || saveName !== fileName;
   const text = serialize();
   const savedPortfolio = portfolio;
   if (HAS_FSA) {
@@ -2500,7 +2520,7 @@ async function saveFile(forceNew) {
       let targetHandle = fileHandle;
       if (!targetHandle || forceNew) {
         targetHandle = await window.showSaveFilePicker({
-          suggestedName: fileName,
+          suggestedName: saveName,
           // Suggest the folder the file came from (a prior handle) so "Save As"
           // lands where the file was loaded; otherwise start in Documents.
           startIn: fileHandle || pendingHandle || 'documents',
@@ -2510,7 +2530,7 @@ async function saveFile(forceNew) {
       const w = await targetHandle.createWritable();
       await w.write(text); await w.close();
       if (portfolio === savedPortfolio) {
-        fileHandle = targetHandle; fileName = targetHandle.name || fileName;
+        fileHandle = targetHandle; fileName = targetHandle.name || saveName;
         dirty = serialize() !== text; updateDirtyIndicator();
         rememberHandle(fileHandle);
       }
@@ -2520,8 +2540,11 @@ async function saveFile(forceNew) {
       // fall through to download
     }
   }
-  triggerDownload(text, fileName, 'application/json');
-  if (portfolio === savedPortfolio) { dirty = serialize() !== text; updateDirtyIndicator(); }
+  triggerDownload(text, saveName, 'application/json');
+  if (portfolio === savedPortfolio) {
+    if (saveName !== fileName) fileHandle = null;
+    fileName = saveName; dirty = serialize() !== text; updateDirtyIndicator();
+  }
   return { ok: true, via: 'download' };
 }
 
@@ -3188,7 +3211,7 @@ function shellHTML(inner) { return `<div class="shell">${inner}</div>`; }
    is the spine — 01 Check-In · 02 Review · 03 Plan · 04 Report — with Outlook detached
    to the right (any-time projections) and Settings folded into a Reference drawer. */
 const APP_TABS = [
-  ['dashboard', '', 'Dashboard', 'dashboard'],
+  ['dashboard', 'Any time', 'Dashboard', 'dashboard'],
   ['checkin', '01', 'Check-In', 'checkin'],
   ['review',  '02', 'Review',   'review'],
   ['plan',    '03', 'Plan',     'plan'],
@@ -3254,7 +3277,7 @@ function navHTML() {
       <button class="filebtn ${dirty || checkinDraftDirty ? 'save-needed' : ''}" data-act="save" ${demoMode ? 'disabled' : ''} title="Save your portfolio file before leaving">${dirty || checkinDraftDirty ? '⚠ Save needed' : 'Save file'}</button>
       <button class="filebtn" data-act="open">Open</button>
       <button class="filebtn" data-act="about">Help</button>
-      <span class="netpill" style="margin-left:auto;"><span class="ring"></span>Local calculations</span>
+      <span class="netpill" style="margin-left:auto;" tabindex="0" aria-describedby="local-mode-tip"><span aria-hidden="true">ⓘ</span>Local mode only<span class="local-tip" id="local-mode-tip" role="tooltip">Your portfolio data and calculations stay in your browser. We don’t receive your holdings or balances. Save your portfolio file before leaving, then open it when you return.</span></span>
       <button ${setupStep ? 'disabled' : ''} class="btn btn-sm btn-primary" data-act="${demoMode ? 'landing-open' : 'new-checkin'}">${demoMode ? 'Start your portfolio' : 'New check-in'}</button>
       <button ${setupStep ? 'disabled' : ''} class="filebtn" data-act="toggle-drawer" style="${settingsActive ? 'border-color:var(--color-accent);color:var(--color-accent);' : ''}">Settings ${ui.drawer ? '▾' : '▸'}</button>
     </div>${setupStep ? '' : drawer}
@@ -3449,7 +3472,7 @@ function renderMarketingLanding() {
           <span style="padding:14px 30px;background:var(--color-accent);color:#fff;font-weight:600;font-size:16px;cursor:pointer;" data-act="landing-open">Start here</span>
           <span style="padding:14px 30px;border:1px solid var(--color-divider);background:var(--color-panel);font-weight:600;font-size:16px;cursor:pointer;" data-act="load-demo">Explore with demo data</span>
         </div>
-        <p style="font-size:14px;color:var(--color-ink-3);margin:18px 0 0;">Free introductory release. No account or card required. Your portfolio stays in a file on your disk.<br><button class="btn btn-ghost btn-sm" data-act="open">Returning? Open portfolio file</button></p>
+        <p style="font-size:14px;color:var(--color-ink-3);margin:18px 0 0;">Free introductory release. No account or card required. Your portfolio stays in a file on your disk.<br><button class="btn btn-ghost btn-sm" data-act="open">Returning user? Start here</button></p>
       </div>
       <div style="position:relative;background:var(--color-panel);border:1px solid var(--color-divider);border-top:3px solid var(--color-accent);padding:22px;box-shadow:var(--shadow-lg);">
         <div style="display:flex;align-items:center;gap:9px;padding-bottom:16px;margin-bottom:4px;border-bottom:1px solid var(--color-line-2);">
@@ -6107,6 +6130,16 @@ function dialogHTML() {
       </div>
       ${preview}
       <div class="dialog-actions"><button class="btn btn-secondary" data-act="close-dialog">Cancel</button>${canApply ? `<button class="btn btn-primary" data-act="import-apply">Fill check-in</button>` : ''}</div>`;
+  } else if (d.type === 'save-file') {
+    inner = `<div class="dialog-title">Your portfolio lives in this file</div>
+      <div class="dialog-body"><p>This file contains your portfolio data. We don’t keep a copy on our website.</p>
+      <p>Give it a name you’ll recognize, such as <strong>My portfolio.json</strong>, and keep it somewhere easy to find, like your Documents folder. Keeping the current name updates the opened file when your browser supports it. Changing the name saves a new copy.</p>
+      <p>Next time you visit, click <strong>Returning user? Start here</strong> and select this file to pick up where you left off.</p>
+      <p>If your browser downloads the file automatically, look in your Downloads folder.</p></div>
+      <label for="save-file-name">File name</label>
+      <input class="input" id="save-file-name" value="${esc(fileName)}" maxlength="200" autocomplete="off" spellcheck="false" aria-describedby="save-file-name-help" style="width:100%;margin-top:8px;">
+      <p id="save-file-name-help" class="text-muted" style="font-size:12px;">We’ll add .json if you leave it off.</p>
+      <div class="dialog-actions"><button class="btn btn-secondary" data-act="close-dialog">Cancel</button><button class="btn btn-primary" data-act="save-file-confirm">Continue to save</button></div>`;
   } else if (d.type === 'confirm') {
     inner = `<div class="dialog-title">${esc(d.title)}</div><div class="dialog-body">${esc(d.body)}</div>
       <div class="dialog-actions"><button class="btn btn-secondary" data-act="close-dialog">Cancel</button><button class="btn ${d.danger ? 'btn-danger' : 'btn-primary'}" data-act="confirm-yes">${esc(d.ok || 'Confirm')}</button></div>`;
@@ -6116,7 +6149,7 @@ function dialogHTML() {
       <ol class="starter-steps"><li><strong>Add your accounts.</strong> Start with at least one account and add more whenever you’re ready.</li><li><strong>Choose your allocation goals.</strong> Select an example mix, enter your own targets, or leave this for later.</li><li><strong>Enter your holdings.</strong> Use the values from your accounts to see your real allocation. Enter manually or import a csv.</li></ol>
       <p class="save-warning"><strong>⚠ Save your work before leaving the page.</strong> Changes stay in your browser session until you save your portfolio file. Save at the end of your session, and keep a backup on your computer or cloud drive. Next time, you'll load in that same file.</p>
       <div class="dialog-actions starter-actions"><button class="btn btn-primary" data-act="onboard-scratch">Build my portfolio</button><button class="btn btn-secondary" data-act="load-demo">Explore the demo</button></div>
-      <button class="btn btn-ghost" data-act="open">Returning? Open portfolio file</button>
+      <button class="btn btn-ghost" data-act="open">Returning user? Start here</button>
       <button class="btn btn-ghost btn-sm" data-act="close-dialog">${portfolio.accounts.length ? 'Continue current portfolio' : 'Close'}</button>`;
 
   } else if (d.type === 'setup-confirm') {
@@ -6234,7 +6267,7 @@ function boot() {
     // Cmd/Ctrl+S → save the file (fast save before leaving).
     if ((e.metaKey || e.ctrlKey) && (e.key === 's' || e.key === 'S')) {
       e.preventDefault();
-      saveFile().then(r => { if (r && r.ok) { toast('Saved · ' + fileName); render(); } });
+      requestPortfolioSave();
     }
   });
   document.addEventListener('pointermove', onDonutHover);
@@ -6310,7 +6343,19 @@ function onClick(e) {
     case 'lp-scroll': { const el = document.getElementById(ds.target); if (el) el.scrollIntoView({ behavior: 'smooth' }); break; }
     case 'toggle-drawer': ui.drawer = !ui.drawer; render(); break;
     case 'toggle-theme': toggleTheme(); break;
-    case 'save': saveFile().then(r => { if (r && r.ok) toast('Saved · ' + fileName); render(); }); break;
+    case 'save': requestPortfolioSave(); break;
+    case 'save-file-confirm': {
+      const field = document.getElementById('save-file-name');
+      let name = field.value.trim();
+      if (!name || /[\\/:*?"<>|\x00-\x1f]/.test(name) || /^\.+$/.test(name)) {
+        field.setCustomValidity('Enter a file name without slashes or special characters such as : * ? " < > |.');
+        field.reportValidity(); field.oninput = () => field.setCustomValidity(''); break;
+      }
+      if (!/\.json$/i.test(name)) name += '.json';
+      closeDialog();
+      saveFile(false, name).then(r => { if (r && r.ok) toast('Saved · ' + fileName); render(); });
+      break;
+    }
     case 'open': doOpen(); break;
     case 'new-checkin': if (demoMode) openDialog({ type: 'onboard' }); else startCheckin(); break;
     case 'load-demo': if (!demoMode && (dirty || checkinDraftDirty)) { openDialog({ type: 'confirm', title: 'Explore demo instead?', body: 'This replaces your unsaved session with sample data. Cancel and save your work first to keep it.', ok: 'Discard and explore', danger: true, action: 'load-demo', view: ds.view }); break; } loadDemoData(); resetViewState(); ui.dialog = null; ui.view = ['retire', 'college'].includes(ds.view) ? ds.view : 'dashboard'; ui.drawer = false; render(); window.scrollTo(0, 0); toast('Demo data loaded'); break;

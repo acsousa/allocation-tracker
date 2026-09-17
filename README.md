@@ -14,7 +14,10 @@ and 529 simulations. It does not connect to your bank or execute trades.
   of a session and save it when you finish. Your holdings and balances are never
   uploaded by this release. Keep a backup somewhere you trust.
 
-The hosted website uses Cloudflare Web Analytics for visits and performance.
+The hosted website uses Google Analytics (GA4, `G-MM26T8RTHV`) for usage
+measurement and Cloudflare Web Analytics for visits and performance. The Google
+tag is immediately after `<head>` on the main, pricing, and privacy pages; the
+build removes it from the standalone download. Custom app events are not yet configured.
 Portfolio contents are not sent to analytics. The standalone download has no
 analytics. Future cloud saving would be optional and would require choosing to
 upload data.

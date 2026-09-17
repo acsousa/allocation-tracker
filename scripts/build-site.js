@@ -38,7 +38,7 @@ function buildSite(output = path.join(root, 'dist'), token = process.env.CF_WEB_
   write('index.html', hostedIcons(app).replace('</body>', analytics + '</body>'));
   // Stable legacy URL, plus a downloadable copy with no injected analytics.
   write('allocation-tracker.html', hostedIcons(app).replace('</body>', analytics + '</body>'));
-  write('downloads/quartermaster.html', app.replace('<head>', `<head>\n<meta http-equiv="Content-Security-Policy" content="connect-src 'none'; script-src 'unsafe-inline'; object-src 'none'; base-uri 'none'">`));
+  write('downloads/quartermaster.html', app.replace(/<!-- Google tag \(gtag\.js\) -->[\s\S]*?<!-- End Google tag -->\n?/, '').replace('<head>', `<head>\n<meta http-equiv="Content-Security-Policy" content="connect-src 'none'; script-src 'unsafe-inline'; object-src 'none'; base-uri 'none'">`));
   for (const name of publicPages) {
     const html = fs.readFileSync(path.join(root, name), 'utf8');
     write(name, hostedIcons(html).replace('</body>', analytics + '</body>'));

@@ -75,6 +75,16 @@ try {
     assert.ok(!html.includes('rel="stylesheet"'));
     assert.match(html, /index.html/);
   });
+  check('Google tag appears once immediately after head on hosted pages only', () => {
+    for (const name of ['index.html', 'allocation-tracker.html', ...pages]) {
+      const html = fs.readFileSync(path.join(tmp, name), 'utf8');
+      assert.match(html, /<head>\n<!-- Google tag \(gtag\.js\) -->/);
+      assert.equal(html.split('https://www.googletagmanager.com/gtag/js?id=G-MM26T8RTHV').length - 1, 1);
+    }
+    const offline = fs.readFileSync(path.join(tmp, 'downloads/quartermaster.html'), 'utf8');
+    assert.ok(!offline.includes('googletagmanager.com'));
+    assert.ok(!offline.includes('G-MM26T8RTHV'));
+  });
   check('standalone download contains no beacon and blocks network execution', () => {
     const html = fs.readFileSync(path.join(tmp, 'downloads/quartermaster.html'), 'utf8');
     assert.ok(!html.includes('beacon.min.js'));
