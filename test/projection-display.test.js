@@ -10,6 +10,8 @@ function check(message, fn) { fn(); checks++; console.log('✓ ' + message); }
 const runPanel = html.match(/function simulationRunPanel[\s\S]*?\n}\n\nfunction retireStaleNotice/)[0];
 const retireView = html.match(/function renderRetire\(\)[\s\S]*?\n}\n\n\/\/ Assumptions panel/)[0];
 const assumptions = html.match(/function retireAssumptionsPanel[\s\S]*?\n}\n\n\/\* =+/)[0];
+const collegeView = html.match(/function renderCollege\(\)[\s\S]*?\n}\n\n\/\* College field commit/)[0];
+const collegeSettings = html.match(/function applyCollegeSetting[\s\S]*?\n}\n\n\/\* =+/)[0];
 
 check('run panel keeps the simple button-only layout', () => {
   assert.match(runPanel, /Run \$\{Number\(count\)\.toLocaleString\(\)\} simulations/);
@@ -48,9 +50,26 @@ check('college drawdown shading begins one year before withdrawal', () => {
   assert.match(html, /yellow band begins one year before the first withdrawal/);
 });
 
+check('college keeps completed results visible while revised inputs are stale', () => {
+  assert.match(collegeView, /const collegeHasResults = portfolio\.children\.every\(child => COLLEGE_CACHE\.has\(child\.id\)\)/);
+  assert.match(collegeView, /const collegeStale = !collegeCacheIsCurrent\(cid\)/);
+  assert.match(collegeView, /collegeStaleNotice\(collegeStale\)/);
+  assert.match(collegeView, /const inputCfg = buildCollegeConfig\(cid\)/);
+  assert.ok(!collegeSettings.includes('invalidateCollegeCache'));
+  assert.match(html, /data-kind="college">Re-run simulation/);
+});
+
 check('shared app footer is the only app-page disclaimer footer', () => {
   assert.equal((html.match(/<footer class="app-base-footer/g) || []).length, 1);
   assert.equal((html.match(/Suggestions, not advice — nothing is executed here/g) || []).length, 1);
+});
+
+check('allocation refinements keep related data compact and grouped', () => {
+  assert.match(html, /\.page-intro-copy \{ flex:1 1 640px;max-width:none;min-width:0; \}/);
+  assert.match(html, /grid-template-columns:repeat\(2,minmax\(180px,240px\)\)/);
+  assert.match(html, /class="swatch" style="background:\$\{d\.color\}/);
+  assert.match(html, /'College savings \(529\)'/);
+  assert.ok(!html.includes('// 529 — one card per child'));
 });
 
 check('projection language does not overstate percentile outcomes', () => {
