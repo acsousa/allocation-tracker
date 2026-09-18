@@ -638,6 +638,7 @@
   @media(max-width:600px) { .dashboard-context .field select { min-height:44px; } }
 
   /* Product redesign — shared app chrome and high-level page composition. */
+  :root { --app-x:clamp(18px,3vw,40px); }
   .shell { max-width:1440px; }
   .filebar { min-height:64px;padding:10px clamp(18px,3vw,40px);gap:10px;box-shadow:0 1px 0 var(--color-divider); }
   .filebar .brand { margin-right:8px; }
@@ -651,7 +652,8 @@
   .subnav a { border:0;border-radius:var(--radius-pill);margin:0;padding:9px 14px; }
   .subnav a:first-child { padding-left:14px; }
   .subnav a.subnav-active { color:#fff;background:var(--color-accent);box-shadow:var(--shadow-accent); }
-  .app-body { gap:22px;padding:30px clamp(18px,3vw,40px) 96px; }
+  .app-body { gap:22px;padding:30px var(--app-x) 96px; }
+  .app-base-footer { width:auto;margin-left:calc(var(--app-x) * -1);margin-right:calc(var(--app-x) * -1);padding-left:var(--app-x);padding-right:var(--app-x); }
   .page-intro { display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;padding:4px 0 8px; }
   .page-intro-copy { max-width:720px; }
   .page-intro .kicker { margin-bottom:8px;color:var(--color-accent);font-weight:700; }
@@ -720,6 +722,7 @@
     .filebar .fmeta,.filebar .netpill { display:none; }
   }
   @media(max-width:600px) {
+    :root { --app-x:14px; }
     body { padding-bottom:76px; }
     .app-body { padding:18px 14px 44px;gap:18px; }
     .filebar { padding:9px 14px;min-height:58px; }
@@ -729,7 +732,8 @@
     .filebar .fname { text-overflow:ellipsis;overflow:hidden; }
     .filebar .filebtn:not(.save-needed),.filebar [data-act="new-checkin"],.filebar [data-act="landing-open"] { display:none; }
     .filebar .save-needed { margin-left:auto;min-height:42px; }
-    .tabbar,.subnav { display:none; }
+    .tabbar { display:none; }
+    .subnav { display:flex;padding:7px 12px;background:var(--color-panel);box-shadow:0 8px 22px -26px rgba(21,24,35,.8); }
     .page-intro { align-items:flex-start; }
     .page-intro h1 { font-size:34px; }
     .toolbar { min-height:58px;padding:12px 14px; }
@@ -5869,9 +5873,7 @@ function renderRetire() {
     return retireEmptyState('Record at least one check-in (snapshot) so the projection has starting balances to grow.');
   const rs = portfolio.retirementSettings;
   const confirmed = !!rs.mappingConfirmed;
-  const header = `<div class="toolbar no-print"><div class="crumb"><span>Retirement planning</span></div>
-    <span class="tag ${dollarModeIsFuture() ? 'tag-warn' : 'tag-accent'}" style="margin-left:auto;">${dollarModeIsFuture() ? 'Future dollars' : "Today's dollars"}</span>
-    <a data-act="nav" data-view="retirement" style="margin-left:12px;cursor:pointer;color:var(--color-accent);">Edit inputs →</a></div>`;
+  const header = outlookHeaderBlock('Retirement planning', 'retirement');
   if (!confirmed) {
     const lead = `<div class="panel" style="background:var(--color-accent-100);border-color:var(--color-accent);"><div style="padding:18px 20px;">
       <div style="font-family:var(--font-heading);font-size:16px;margin-bottom:4px;">Will your savings last through retirement?</div>
@@ -6215,8 +6217,7 @@ function renderCollege() {
   const future = dollarModeIsFuture();
   const inflPct = (portfolio.retirementSettings && portfolio.retirementSettings.inflationPct != null) ? portfolio.retirementSettings.inflationPct : 2.5;
   const infl = inflPct / 100;
-  const header = `<div class="toolbar no-print"><div class="crumb"><span>College planning</span></div>
-    <span class="tag ${future ? 'tag-warn' : 'tag-accent'}" style="margin-left:auto;">${future ? 'Future dollars' : "Today's dollars"}</span></div>`;
+  const header = outlookHeaderBlock('College planning', null);
   if (!portfolio.children.length)
     return header + `<div class="panel"><div style="padding:30px 24px;text-align:center;"><p class="text-muted" style="max-width:460px;margin:0 auto;font-size:14px;line-height:1.6;">Add a child in <a data-act="nav" data-view="household" style="cursor:pointer;color:var(--color-accent);">Settings › Household</a> to plan for college.</p></div></div>`;
   if (!latestSnapshot())
