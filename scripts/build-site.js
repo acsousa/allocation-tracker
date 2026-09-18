@@ -34,12 +34,15 @@ function buildSite(output = path.join(root, 'dist'), token = process.env.CF_WEB_
   };
   write('site-analytics.js', fs.readFileSync(path.join(root, 'site-analytics.js'), 'utf8'));
   write('favicon.svg', fs.readFileSync(path.join(root, 'favicon.svg'), 'utf8'));
+  const productImages = ['quartermaster-review.png', 'quartermaster-history.png'];
+  for (const name of productImages) write('assets/' + name, fs.readFileSync(path.join(root, 'assets', name)));
   const hostedIcons = html => html.replace(/<link rel="icon"[^>]*>/g, '<link rel="icon" type="image/svg+xml" href="favicon.svg">');
   const app = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
   write('index.html', hostedIcons(app).replace('</body>', analytics + '</body>'));
   // Stable legacy URL, plus a downloadable copy with no injected analytics.
   write('allocation-tracker.html', hostedIcons(app).replace('</body>', analytics + '</body>'));
-  write('downloads/quartermaster.html', app.replace(/<!-- Google tag \(gtag\.js\) -->[\s\S]*?<!-- End Google tag -->\n?/, '').replace('<head>', `<head>\n<meta http-equiv="Content-Security-Policy" content="connect-src 'none'; script-src 'unsafe-inline'; object-src 'none'; base-uri 'none'">`));
+  const offlineApp = productImages.reduce((html, name) => html.replaceAll(`assets/${name}`, `data:image/png;base64,${fs.readFileSync(path.join(root, 'assets', name)).toString('base64')}`), app);
+  write('downloads/quartermaster.html', offlineApp.replace(/<!-- Google tag \(gtag\.js\) -->[\s\S]*?<!-- End Google tag -->\n?/, '').replace('<head>', `<head>\n<meta http-equiv="Content-Security-Policy" content="connect-src 'none'; script-src 'unsafe-inline'; object-src 'none'; base-uri 'none'">`));
   for (const name of publicPages) {
     const html = fs.readFileSync(path.join(root, name), 'utf8');
     write(name, hostedIcons(html).replace('</body>', analytics + '</body>'));

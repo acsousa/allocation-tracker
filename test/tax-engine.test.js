@@ -64,9 +64,9 @@ const v2 = {
   goals: [], glidePaths: [], tickerMap: {}, children: [],
 };
 
-/* ---------- migration (v2 -> v5) ---------- */
+/* ---------- migration (v2 -> v6) ---------- */
 const p = A.migrate(JSON.parse(JSON.stringify(v2)));
-ok('migrate: schemaVersion -> 5', p.meta.schemaVersion === 5);
+ok('migrate: schemaVersion -> 6', p.meta.schemaVersion === 6);
 ok('migrate: plans[] added', Array.isArray(p.plans));
 ok('migrate: taxSettings added', p.taxSettings && p.taxSettings.networkEnabled === false);
 ok('migrate: taxSettings.inStateMuni default false', p.taxSettings.inStateMuni === false);
@@ -78,15 +78,15 @@ const vById = Object.fromEntries(p.accounts.map(a => [a.id, a.vehicle]));
 ok('migrate infers vehicle: Roth IRA -> ira', vById.a_roth === 'ira');
 ok('migrate infers vehicle: 401k -> 401k', vById.a_pre === '401k');
 ok('migrate infers vehicle: Brokerage -> taxable', vById.a_tax === 'taxable');
-ok('migrate idempotent', (() => { const q = A.migrate(JSON.parse(JSON.stringify(p))); return q.plans.length === 0 && q.accounts.length === 3 && q.meta.schemaVersion === 5; })());
+ok('migrate idempotent', (() => { const q = A.migrate(JSON.parse(JSON.stringify(p))); return q.plans.length === 0 && q.accounts.length === 3 && q.meta.schemaVersion === 6; })());
 
 /* v4 -> v5 specifically: a v4 file (no retirementSettings) gains them without losing data */
 const v4 = JSON.parse(JSON.stringify(p));
 v4.meta.schemaVersion = 4;
 delete v4.retirementSettings;
 const p5 = A.migrate(v4);
-ok('v4->v5: bumps to 5', p5.meta.schemaVersion === 5);
-ok('v4->v5: adds retirementSettings', p5.retirementSettings && p5.retirementSettings.paths === 5000 && p5.retirementSettings.accountScope === 'retirement');
+ok('v4->v6: bumps to 6', p5.meta.schemaVersion === 6);
+ok('v4->v6: adds retirementSettings', p5.retirementSettings && p5.retirementSettings.paths === 10000 && p5.retirementSettings.accountScope === 'retirement');
 ok('v4->v5: adds collegeSettings', p5.collegeSettings && p5.collegeSettings.years === 4);
 ok('v4->v5: preserves holdings + accounts', p5.holdings.length === 3 && p5.accounts.length === 3);
 /* v3 -> v5: a v3 file (no vehicle, no inStateMuni, no retirementSettings) */
@@ -95,11 +95,11 @@ v3.meta.schemaVersion = 3;
 v3.accounts.forEach(a => { delete a.vehicle; });
 delete v3.taxSettings.inStateMuni; delete v3.retirementSettings;
 const p35 = A.migrate(v3);
-ok('v3->v5: bumps to 5', p35.meta.schemaVersion === 5);
+ok('v3->v6: bumps to 6', p35.meta.schemaVersion === 6);
 ok('v3->v5: back-fills vehicle', p35.accounts.every(a => !!a.vehicle));
 ok('v3->v5: adds inStateMuni', p35.taxSettings.inStateMuni === false);
 ok('v3->v5: adds retirementSettings', !!p35.retirementSettings);
-ok('emptyPortfolio is v5 with tax + retirement fields', (() => { const e = A.migrate({ meta: { schemaVersion: 5 } }); return e.meta.schemaVersion === 5 && Array.isArray(e.plans) && e.taxSettings.inStateMuni === false && !!e.retirementSettings; })());
+ok('emptyPortfolio is v6 with tax + retirement fields', (() => { const e = A.migrate({ meta: { schemaVersion: 6 } }); return e.meta.schemaVersion === 6 && Array.isArray(e.plans) && e.taxSettings.inStateMuni === false && !!e.retirementSettings; })());
 
 /* ---------- brackets + rates ---------- */
 ok('marginalRate single 150k = 24%', A.marginalRate(R.federalBrackets.single, 150000) === 0.24);
