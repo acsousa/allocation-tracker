@@ -42,7 +42,9 @@ check('assumption edits retain cached results and expose a rerun notice', () => 
 });
 
 check('college drawdown shading begins one year before withdrawal', () => {
-  assert.match(html, /shadeFrom: Math\.max\(cfg\.currentAge, cfg\.startAge - 1\)/);
+  assert.match(html, /const drawdownBandStart = Math\.max\(cfg\.currentAge, cfg\.startAge - 1\)/);
+  assert.match(html, /\{ age: drawdownBandStart, label: 'Drawdown years' \}/);
+  assert.match(html, /shadeFrom: drawdownBandStart/);
   assert.match(html, /yellow band begins one year before the first withdrawal/);
 });
 

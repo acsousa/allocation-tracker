@@ -6096,6 +6096,7 @@ function renderCollege() {
     const startBand = dispBands.find(b => b.age === cfg.startAge);
     const successPct = fmtPct(base.fullSuccess * 100, 0);
     const yrsFunded = base.avgYearsFunded.toFixed(1);
+    const drawdownBandStart = Math.max(cfg.currentAge, cfg.startAge - 1);
     const costMin = 10000, costMax = 90000;
     const noAcct = accts.length === 0;
     const fanId = 'collegefan-' + cid;
@@ -6124,7 +6125,7 @@ function renderCollege() {
         </div>
         <div style="font-size:15px;line-height:1.5;margin-bottom:8px;">That's <b>${fmtMoney(totalCost)}</b> total over ${base.remainingYears} remaining years${future ? ` in future dollars` : ` in today's dollars`}. This 529 covers <b>all ${base.remainingYears} remaining years in <span style="color:var(--color-accent-700);">${successPct}</span></b> of outcomes${base.fullSuccess < 1 ? `, and on average funds <b>${yrsFunded}</b> of ${base.remainingYears} remaining years` : ''}.</div>
         <p class="text-muted" style="font-size:12px;line-height:1.6;margin:0 0 12px;">The 529 grows while you save, then is drawn down across the <b>${cfg.years} drawdown years (ages ${cfg.startAge}–${cfg.startAge + cfg.years - 1})</b>. The yellow band begins one year before the first withdrawal so it aligns with the chart segment that drops into the first tuition payment. Each drawdown-year balance is shown after that year’s tuition payment. If college has already started, this assumes the current year’s bill is still unpaid; earlier years are excluded from the funding result. ${startBand ? `After the first tuition payment at age ${cfg.startAge}, the median simulated balance is <b>${fmtCompactMoney(startBand.p50)}</b> (middle 80%: ${fmtCompactMoney(startBand.p10)}–${fmtCompactMoney(startBand.p90)}).` : ''} Hover the chart to read any age. All figures in ${unit}.</p>
-        ${fanChartSVG(dispBands, { age: cfg.startAge, label: 'Drawdown starts' }, fanId, { tickEvery: (base.bands[base.bands.length - 1].age - base.bands[0].age) <= 18 ? 2 : 5, shadeFrom: Math.max(cfg.currentAge, cfg.startAge - 1), shadeTo: cfg.startAge + cfg.years - 1, shadeLabel: 'drawdown years' })}
+        ${fanChartSVG(dispBands, { age: drawdownBandStart, label: 'Drawdown years' }, fanId, { tickEvery: (base.bands[base.bands.length - 1].age - base.bands[0].age) <= 18 ? 2 : 5, shadeFrom: drawdownBandStart, shadeTo: cfg.startAge + cfg.years - 1, shadeLabel: 'drawdown years' })}
       </div></div>
     </section>`;
   }).join('');
