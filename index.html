@@ -487,7 +487,16 @@
 
   .product-shot { margin:0;background:#eef2ef;border:1px solid var(--color-divider);border-radius:var(--radius-md);box-shadow:var(--shadow-lg);overflow:hidden; }
   .product-shot img { display:block;width:100%;height:auto; }
-  .product-shot figcaption { padding:10px 14px;border-top:1px solid var(--color-divider);font-size:12px;color:var(--color-ink-3);background:var(--color-panel); }
+.product-shot figcaption { padding:10px 14px;border-top:1px solid var(--color-divider);font-size:12px;color:var(--color-ink-3);background:var(--color-panel); }
+.landing { border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-lg); }
+.landing .landing-hero-card { border-radius:var(--radius-lg);overflow:hidden; }
+.landing .landing-action { display:inline-flex;align-items:center;justify-content:center;border-radius:var(--radius-pill);box-shadow:var(--shadow-sm);transition:transform var(--dur-fast) var(--ease),box-shadow var(--dur-fast) var(--ease); }
+.landing .landing-action:hover { transform:translateY(-2px);box-shadow:var(--shadow-md); }
+.landing .landing-action.primary { box-shadow:var(--shadow-accent); }
+.landing #lp-location > div:last-child { padding:22px;border:1px solid var(--color-divider);border-radius:var(--radius-lg);background:var(--color-panel);box-shadow:var(--shadow-sm); }
+.landing #lp-ritual > div:last-child > div { border-radius:var(--radius-md);box-shadow:var(--shadow-sm); }
+.landing #lp-trust [style*="border-left:3px"] { border-radius:0 var(--radius-sm) var(--radius-sm) 0; }
+.landing #lp-trust [style*="background:var(--color-surface)"] { border-radius:var(--radius-md); }
   .sim-run { padding:36px 24px;text-align:center;background:linear-gradient(135deg,var(--color-accent-100),var(--color-plum-soft)); }
   .sim-spinner { width:40px;height:40px;margin:0 auto 14px;border:4px solid var(--color-accent-200);border-top-color:var(--color-accent);border-radius:50%;animation:sim-spin .85s linear infinite; }
   @keyframes sim-spin { to { transform:rotate(360deg); } }
@@ -627,6 +636,132 @@
   .dashboard-context .field label { margin:0;white-space:nowrap; }
   .dashboard-context .field select { width:170px;min-height:32px;padding-top:4px;padding-bottom:4px; }
   @media(max-width:600px) { .dashboard-context .field select { min-height:44px; } }
+
+  /* Product redesign — shared app chrome and high-level page composition. */
+  .shell { max-width:1440px; }
+  .filebar { min-height:64px;padding:10px clamp(18px,3vw,40px);gap:10px;box-shadow:0 1px 0 var(--color-divider); }
+  .filebar .brand { margin-right:8px; }
+  .filebar .brand svg { width:28px;height:28px; }
+  .file-chip { background:var(--color-panel-2);box-shadow:inset 0 0 0 1px rgba(255,255,255,.5); }
+  .tabbar { padding:10px clamp(18px,3vw,40px);gap:8px;border-bottom:1px solid var(--color-divider);box-shadow:0 10px 28px -30px rgba(21,24,35,.8); }
+  .tabbar .apptab { min-height:52px;padding:9px 18px;border:0;border-radius:var(--radius-sm); }
+  .tabbar .dashboard-tab { margin-right:12px; }
+  .tabbar .dashboard-tab::after { right:-11px;background:var(--color-divider); }
+  .subnav { padding:8px clamp(18px,3vw,40px);background:var(--color-panel); }
+  .subnav a { border:0;border-radius:var(--radius-pill);margin:0;padding:9px 14px; }
+  .subnav a:first-child { padding-left:14px; }
+  .subnav a.subnav-active { color:#fff;background:var(--color-accent);box-shadow:var(--shadow-accent); }
+  .app-body { gap:22px;padding:30px clamp(18px,3vw,40px) 96px; }
+  .page-intro { display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;padding:4px 0 8px; }
+  .page-intro-copy { max-width:720px; }
+  .page-intro .kicker { margin-bottom:8px;color:var(--color-accent);font-weight:700; }
+  .page-intro h1 { font-size:clamp(34px,4vw,50px);letter-spacing:-.035em;margin-bottom:7px; }
+  .page-intro p { max-width:68ch;font-size:15px;line-height:1.6; }
+  .page-intro-actions { display:flex;gap:10px;align-items:center;flex-wrap:wrap; }
+  .dashboard-context { margin:0;padding:10px 14px;background:var(--color-panel);border:1px solid var(--color-divider);border-radius:var(--radius-md);box-shadow:var(--shadow-sm); }
+  .toolbar { min-height:66px;padding:15px 20px;background:linear-gradient(135deg,var(--color-panel),var(--color-panel-2)); }
+  .toolbar .crumb { font-size:24px;font-weight:700;letter-spacing:-.02em; }
+  .dashboard-layout { display:grid;grid-template-columns:minmax(0,1.1fr) minmax(340px,.9fr);gap:0;align-items:stretch; }
+  .dashboard-layout > div { height:100%; }
+  .dashboard-layout .allocation-chart-panel { border-right:0 !important; }
+  .dashboard-layout .drift-panel { border-left:1px solid var(--color-line-2); }
+  .dashboard-section-title { display:flex;align-items:center;justify-content:space-between;gap:16px;margin:10px 0 -8px; }
+  .dashboard-section-title h2 { font-size:24px;margin:0; }
+  .grid-kpi { border-top-color:var(--color-teal); }
+  .kpi { position:relative;min-height:132px;padding:22px 24px; }
+  .kpi::after { content:"";position:absolute;left:24px;right:24px;bottom:0;height:3px;border-radius:999px;background:var(--color-line-2); }
+  .kpi:first-child::after { background:linear-gradient(90deg,var(--color-accent),var(--color-teal)); }
+  .kpi-val { margin:8px 0 4px;font-size:34px; }
+  .allocation-chart-panel figure { background:linear-gradient(145deg,var(--color-panel-2),var(--color-panel));border-color:var(--color-line-2); }
+  .allocation-chart-panel .legend { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 16px; }
+  .allocation-chart-panel .legend-item { justify-content:space-between;border-bottom:1px solid var(--color-line-2);padding:6px 0; }
+  .drift-panel .drift-row { padding:5px 0;border-bottom:1px solid var(--color-line-2); }
+  .ritual-steps { display:grid;grid-template-columns:repeat(3,1fr);gap:0;background:var(--color-panel);border:1px solid var(--color-divider);border-radius:var(--radius-md);box-shadow:var(--shadow-sm);overflow:hidden; }
+  .ritual-step { display:grid;grid-template-columns:34px 1fr;gap:11px;align-items:center;padding:14px 18px;border-right:1px solid var(--color-line-2); }
+  .ritual-step:last-child { border-right:0; }
+  .ritual-step .n { width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--color-surface);color:var(--color-ink-3);font:700 12px var(--font-heading); }
+  .ritual-step.active .n { background:var(--color-accent);color:#fff;box-shadow:var(--shadow-accent); }
+  .ritual-step strong { display:block;font-family:var(--font-heading);font-size:15px; }
+  .ritual-step small { display:block;color:var(--color-ink-3);font-size:11px;line-height:1.35; }
+  .checkin-workspace { display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:22px;align-items:start; }
+  .checkin-workspace > .checkin-panel { min-width:0; }
+  .checkin-summary { position:sticky;top:18px;padding:22px;display:flex;flex-direction:column;gap:18px; }
+  .checkin-summary-total { padding:16px 0;border-block:1px solid var(--color-line-2); }
+  .checkin-summary-total .value { font:700 34px/1 var(--font-heading);margin-top:6px; }
+  .checkin-summary-actions { display:grid;gap:9px; }
+  .checkin-summary-actions .btn { width:100%;white-space:normal; }
+  .checkin-summary .field { width:100% !important;margin:0 !important;padding:0 !important;border:0 !important; }
+  .checkin-flags { display:flex;gap:7px;flex-wrap:wrap; }
+  .outlook-stack { display:flex;flex-direction:column;gap:22px;margin-top:2px; }
+  .outlook-header { overflow:hidden;border-top-color:var(--color-plum);background:linear-gradient(135deg,var(--color-panel),color-mix(in srgb,var(--color-plum-soft) 60%,var(--color-panel))); }
+  .outlook-header-main { display:flex;align-items:center;gap:16px;padding:22px 24px;flex-wrap:wrap; }
+  .outlook-header-main .title { font:700 clamp(28px,3vw,38px)/1 var(--font-heading);letter-spacing:-.025em; }
+  .outlook-unitbar { display:flex;gap:14px;align-items:center;flex-wrap:wrap;padding:12px 18px;border-top:1px solid var(--color-line-2);background:color-mix(in srgb,var(--color-panel) 82%,transparent); }
+  .outlook-unitbar .unit-toggle { display:inline-flex;padding:3px;border:1px solid var(--color-divider);background:var(--color-panel);border-radius:var(--radius-pill);overflow:hidden;box-shadow:var(--shadow-sm); }
+  .outlook-unitbar .unit-toggle button { border-radius:var(--radius-pill); }
+  .outlook-primary { display:grid;grid-template-columns:minmax(0,1.45fr) minmax(310px,.55fr);gap:22px;align-items:start; }
+  .outlook-primary section { min-width:0; }
+  .outlook-primary .panel { height:100%; }
+  .outlook-primary svg { width:100%;height:auto; }
+  .college-kpis { display:grid;grid-template-columns:repeat(4,1fr);gap:1px;margin:14px 0 18px;background:var(--color-divider);border:1px solid var(--color-divider);border-radius:var(--radius-md);overflow:hidden; }
+  .college-kpi { padding:16px;background:var(--color-panel); }
+  .college-kpi strong { display:block;margin-top:5px;font:700 24px/1.1 var(--font-heading); }
+  .college-plan-card { border-top-color:var(--color-teal); }
+  .mobile-dock { display:none; }
+  .mobile-only { display:none !important; }
+
+  @media(max-width:900px) {
+    .dashboard-layout { grid-template-columns:1fr; }
+    .dashboard-layout .drift-panel { border-left:0;border-top:1px solid var(--color-line-2); }
+    .checkin-workspace { grid-template-columns:1fr; }
+    .checkin-summary { position:static; }
+    .outlook-primary { grid-template-columns:1fr; }
+    .college-kpis { grid-template-columns:repeat(2,1fr); }
+    .filebar .fmeta,.filebar .netpill { display:none; }
+  }
+  @media(max-width:600px) {
+    body { padding-bottom:76px; }
+    .app-body { padding:18px 14px 44px;gap:18px; }
+    .filebar { padding:9px 14px;min-height:58px; }
+    .filebar .brand { width:auto; }
+    .filebar .brand span { display:none; }
+    .filebar .file-chip { order:0;flex:1 1 130px;white-space:nowrap;overflow:hidden; }
+    .filebar .fname { text-overflow:ellipsis;overflow:hidden; }
+    .filebar .filebtn:not(.save-needed),.filebar [data-act="new-checkin"],.filebar [data-act="landing-open"] { display:none; }
+    .filebar .save-needed { margin-left:auto;min-height:42px; }
+    .tabbar,.subnav { display:none; }
+    .page-intro { align-items:flex-start; }
+    .page-intro h1 { font-size:34px; }
+    .toolbar { min-height:58px;padding:12px 14px; }
+    .toolbar .crumb { font-size:21px; }
+    .page-intro-actions { width:100%; }
+    .page-intro-actions .btn { flex:1; }
+    .grid-kpi { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    .kpi { min-height:118px;padding:18px 16px;border-bottom:1px solid var(--color-line-2); }
+    .kpi:nth-child(2n) { border-right:0; }
+    .kpi-val { font-size:27px; }
+    .allocation-chart-panel .legend { grid-template-columns:1fr; }
+    .ritual-steps { grid-template-columns:1fr; }
+    .ritual-step { border-right:0;border-bottom:1px solid var(--color-line-2);padding:11px 14px; }
+    .ritual-step:last-child { border-bottom:0; }
+    .ritual-step:not(.active) small { display:none; }
+    .checkin-summary { padding:18px; }
+    .checkin-summary-actions .btn-primary { position:sticky;bottom:74px;z-index:20;box-shadow:var(--shadow-accent); }
+    .panel:has(.table) { overflow-x:auto; }
+    .panel:has(.table) > .panel-hd { position:sticky;left:0; }
+    .outlook-header-main { padding:18px; }
+    .outlook-unitbar { align-items:flex-start; }
+    .outlook-unitbar .text-muted { flex-basis:100% !important;min-width:0 !important; }
+    .college-kpis { grid-template-columns:1fr 1fr; }
+    .mobile-dock { position:fixed;z-index:35;left:0;right:0;bottom:0;display:grid;grid-template-columns:repeat(5,1fr);padding:7px max(8px,env(safe-area-inset-right)) calc(7px + env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left));background:color-mix(in srgb,var(--color-panel) 94%,transparent);border-top:1px solid var(--color-divider);box-shadow:0 -12px 30px -24px rgba(21,24,35,.7);backdrop-filter:blur(14px); }
+    .mobile-dock button { min-height:54px;border:0;border-radius:10px;background:transparent;color:var(--color-ink-3);font:600 11px var(--font-heading);letter-spacing:.04em;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px; }
+    .mobile-dock button .dock-icon { font:700 19px/1 var(--font-heading); }
+    .mobile-dock button.active { color:var(--color-accent);background:var(--color-accent-100); }
+    .refdrawer { padding:12px 14px;gap:8px; }
+    .refdrawer .mobile-only { display:inline-flex !important; }
+    .refdrawer .rlabel.mobile-only { width:100%;margin-top:4px; }
+    .app-base-footer { margin-bottom:12px;padding-inline:4px; }
+  }
 </style>
 
 </head>
@@ -3385,11 +3520,19 @@ function navHTML() {
   const subBar = subtabs ? `<div class="subnav no-print">${subtabs.map(([v, label]) =>
       `<a data-act="nav" data-view="${v}" class="${ui.view === v ? 'subnav-active' : ''}">${label}</a>`).join('')}</div>` : '';
   const refOpen = !!ui.drawer; // drawer visibility is purely the toggle — the Settings button opens AND closes it
-  const drawer = refOpen ? `<div class="refdrawer no-print"><span class="rlabel">Settings</span>${
+  const mobileOutlook = outlookSubtabs().map(([v, l]) => `<a data-act="nav" data-view="${v}" class="mobile-only ${ui.view === v ? 'active' : ''}">${l}</a>`).join('');
+  const drawer = refOpen ? `<div class="refdrawer no-print"><span class="rlabel mobile-only">Outlook</span>${mobileOutlook}<span class="rlabel">Settings</span>${
     REFERENCE_LINKS.map(([v, l]) => `<a data-act="nav" data-view="${v}" class="${ui.view === v ? 'active' : ''}">${l}</a>`).join('')}
     <span style="margin-left:auto;"><a data-act="toggle-drawer">Close ✕</a></span></div>` : '';
   const dirtyNote = demoMode ? 'sample data' : dirty || checkinDraftDirty ? 'unsaved' : 'saved';
   const settingsActive = ui.drawer || SETTINGS_VIEWS.includes(ui.view);
+  const dockItems = [
+    ['dashboard', '⌂', 'Dash', 'dashboard'],
+    ['checkin', '✓', 'Check', 'checkin'],
+    ['review', '◎', 'Review', 'review'],
+    ['plan', '✎', 'Plan', 'plan'],
+  ];
+  const mobileDock = `<nav class="mobile-dock no-print" aria-label="Mobile navigation">${dockItems.map(([tab, icon, label, view]) => `<button class="${active === tab ? 'active' : ''}" data-act="nav" data-view="${view}"><span class="dock-icon" aria-hidden="true">${icon}</span><span>${label}</span></button>`).join('')}<button class="${settingsActive || active === 'outlook' ? 'active' : ''}" data-act="toggle-drawer"><span class="dock-icon" aria-hidden="true">•••</span><span>More</span></button></nav>`;
   return `<div class="filebar no-print">
       <span class="brand" data-act="nav" data-view="welcome" title="Quartermaster — home">${logoSVG(24)}<span style="font-family:var(--font-heading);font-weight:700;font-size:19px;letter-spacing:.06em;text-transform:uppercase;">Quartermaster</span></span>
       <span class="file-chip"><span class="dot" style="${dirty ? 'background:var(--color-warn);' : ''}"></span><span class="fname">${esc(fileName)}</span><span class="fmeta">· ${dirtyNote} · local disk</span></span>
@@ -3401,7 +3544,7 @@ function navHTML() {
       <button ${setupStep ? 'disabled' : ''} class="filebtn" data-act="toggle-drawer" style="${settingsActive ? 'border-color:var(--color-accent);color:var(--color-accent);' : ''}">Settings ${ui.drawer ? '▾' : '▸'}</button>
     </div>${setupStep ? '' : drawer}
     ${demoMode ? '<div class="demo-banner">Demo portfolio · read only. Simulation changes are temporary. <button class="btn btn-sm btn-primary" data-act="landing-open">Start your portfolio</button></div>' : ''}
-    ${setupStep ? '' : `<nav class="tabbar no-print ${ui.mobileNavOpen ? 'is-open' : ''}" aria-label="Main app navigation"><button class="mobile-nav-toggle" data-act="toggle-mobile-nav" aria-expanded="${!!ui.mobileNavOpen}">Navigate · ${esc(active.charAt(0).toUpperCase() + active.slice(1))} ${ui.mobileNavOpen ? '▴' : '▾'}</button>${tabs}${outlook}</nav>${subBar}`}`;
+    ${setupStep ? '' : `<nav class="tabbar no-print ${ui.mobileNavOpen ? 'is-open' : ''}" aria-label="Main app navigation"><button class="mobile-nav-toggle" data-act="toggle-mobile-nav" aria-expanded="${!!ui.mobileNavOpen}">Navigate · ${esc(active.charAt(0).toUpperCase() + active.slice(1))} ${ui.mobileNavOpen ? '▴' : '▾'}</button>${tabs}${outlook}</nav>${subBar}${mobileDock}`}`;
 }
 /* Theme: portfolio.meta.theme is 'system' | 'light' | 'dark'. applyTheme reflects it
    onto <html data-theme>; 'system' leaves it unset so prefers-color-scheme decides. */
@@ -3573,7 +3716,8 @@ function renderMarketingLanding() {
     <header class="marketing-header">
       <a class="marketing-brand" href="index.html">${logoSVG(30)}<span>QUARTERMASTER</span></a>
       <nav class="marketing-nav" aria-label="Main navigation">
-        <button class="marketing-link" data-act="lp-scroll" data-target="lp-features">Features</button>
+        <button class="marketing-link" data-act="lp-scroll" data-target="lp-location">Asset location</button>
+        <button class="marketing-link" data-act="lp-scroll" data-target="lp-simulations">Simulators</button>
         ${publicSiteLink('pricing.html', 'Pricing', 'marketing-link')}
         <button class="marketing-open" data-act="landing-open">Start here</button>
       </nav>
@@ -3582,15 +3726,15 @@ function renderMarketingLanding() {
     <div class="landing-hero" style="display:grid;grid-template-columns:1.05fr .95fr;gap:64px;padding:84px 56px 76px;align-items:center;background:linear-gradient(160deg,var(--color-accent-wash) 0%,var(--color-panel) 62%);">
       <div>
         ${eyebrow('var(--color-teal)', 'Allocation tracking for individual investors')}
-        <h1 style="${cond}font-size:60px;line-height:.97;letter-spacing:-.015em;margin:22px 0 0;">See your<br><span style="color:var(--color-accent);">real allocation.</span></h1>
+        <h1 style="${cond}font-size:60px;line-height:.97;letter-spacing:-.025em;margin:22px 0 0;">Every account.<br><span style="color:var(--color-accent);">One real allocation.</span></h1>
         <p style="font-size:17px;line-height:1.6;color:var(--color-ink-2);margin:24px 0 0;max-width:34em;">Every institution shows you a reported allocation — its own slice, in isolation. Quartermaster brings your accounts together to reveal your real allocation, guide your quarterly check-in, and help you compare possible moves against your target.</p>
         <div style="display:flex;gap:14px;margin-top:32px;flex-wrap:wrap;">
-          <span style="padding:14px 30px;background:var(--color-accent);color:#fff;font-weight:600;font-size:16px;cursor:pointer;" data-act="landing-open">Start here</span>
-          <span style="padding:14px 30px;border:1px solid var(--color-divider);background:var(--color-panel);font-weight:600;font-size:16px;cursor:pointer;" data-act="load-demo">Explore with demo data</span>
+          <span class="landing-action primary" style="padding:14px 30px;background:var(--color-accent);color:#fff;font-weight:600;font-size:16px;cursor:pointer;" data-act="landing-open">Start here</span>
+          <span class="landing-action" style="padding:14px 30px;border:1px solid var(--color-divider);background:var(--color-panel);font-weight:600;font-size:16px;cursor:pointer;" data-act="load-demo">Explore with demo data</span>
         </div>
         <p style="font-size:14px;color:var(--color-ink-3);margin:18px 0 0;">Free introductory release. No account or card required. Your portfolio stays in a file on your disk.<br><button class="btn btn-ghost btn-sm" data-act="open">Returning user? Start here</button></p>
       </div>
-      <div style="position:relative;background:var(--color-panel);border:1px solid var(--color-divider);border-top:3px solid var(--color-accent);padding:22px;box-shadow:var(--shadow-lg);">
+      <div class="landing-hero-card" style="position:relative;background:var(--color-panel);border:1px solid var(--color-divider);border-top:3px solid var(--color-accent);padding:22px;box-shadow:var(--shadow-lg);">
         <div style="display:flex;align-items:center;gap:9px;padding-bottom:16px;margin-bottom:4px;border-bottom:1px solid var(--color-line-2);">
           <span style="width:7px;height:7px;border-radius:50%;background:var(--color-ok);flex:none;"></span>
           <span style="font-family:var(--mono);font-size:12px;color:var(--color-ink-2);">retirement-2026.json</span>
@@ -3700,8 +3844,8 @@ function renderMarketingLanding() {
     <div style="display:flex;align-items:center;gap:36px;padding:56px 48px;background:linear-gradient(105deg,#0f6493 0%,#196d63 100%);color:#fff;flex-wrap:wrap;">
       <div><h2 style="${cond}font-size:38px;line-height:1.05;margin:0;max-width:13em;color:#fff;">Find your real allocation.</h2><p style="max-width:38em;margin:12px 0 0;color:rgba(255,255,255,.86);">Quartermaster is in its introductory release. Your feedback will help shape what we improve and build next.</p></div>
       <div style="margin-left:auto;display:flex;gap:14px;flex:none;flex-wrap:wrap;">
-        <span style="padding:15px 30px;background:#fff;color:var(--color-accent-700);font-weight:600;font-size:17px;cursor:pointer;" data-act="landing-open">Start here</span>
-        <span style="padding:15px 30px;border:1px solid rgba(255,255,255,.55);font-weight:600;font-size:17px;color:#fff;cursor:pointer;" data-act="load-demo">Explore with demo data</span>
+        <span class="landing-action" style="padding:15px 30px;background:#fff;color:var(--color-accent-700);font-weight:600;font-size:17px;cursor:pointer;" data-act="landing-open">Start here</span>
+        <span class="landing-action" style="padding:15px 30px;border:1px solid rgba(255,255,255,.55);font-weight:600;font-size:17px;color:#fff;cursor:pointer;" data-act="load-demo">Explore with demo data</span>
       </div>
     </div>
     <div style="padding:26px 48px;font-size:13px;color:var(--color-ink-3);display:flex;gap:28px;flex-wrap:wrap;">
@@ -3867,14 +4011,16 @@ function renderDashboard() {
   const drift = goalTargets ? computeDrift(driftRows, alloc.total, goalTargets, band) : [];
   const breaches = drift.filter(d => d.breach);
 
+  const allocationView = ui.view === 'allocation';
   return `
-    <div class="page-intro dashboard-intro"><h1>${ui.view === 'allocation' ? 'Allocation' : 'Dashboard'}</h1><p>Your portfolio at a glance. Explore the chart, then review what changed at your next check-in.</p>${!portfolio.goals.length ? '<button class="btn btn-secondary btn-sm" data-act="nav" data-view="goal">Set an allocation target when you’re ready</button>' : ''}</div>
+    <div class="page-intro dashboard-intro"><div class="page-intro-copy"><div class="kicker">${allocationView ? 'Review your mix' : 'Household command center'}</div><h1>${allocationView ? 'Your real allocation' : 'Good to see the whole picture.'}</h1><p>${allocationView ? 'See every account as one portfolio, compare the mix with your target, and identify the classes that deserve attention.' : 'A concise view of what you own, how it compares with the plan, and where to focus at your next review.'}</p></div><div class="page-intro-actions">${!portfolio.goals.length ? '<button class="btn btn-secondary" data-act="nav" data-view="goal">Set a target</button>' : ''}${allocationView ? '<button class="btn btn-secondary" data-act="nav" data-view="positions">View all holdings</button>' : ''}<button class="btn btn-primary" data-act="new-checkin">New check-in</button></div></div>
     ${dashToolbarHTML(snap)}
     ${dashKpiHTML(snap, alloc, goal, band, goalTargets ? breaches.length : null)}
-    <div class="panel" style="display:grid;grid-template-columns:1fr 1fr;">
+    <div class="panel dashboard-layout">
       ${dashDonutsHTML(actualRows, goalTargets, alloc, snap, scopeLabel, goalNote, level, glideInfo)}
       ${dashDriftHTML(drift, band, breaches, goalTargets)}
     </div>
+    <div class="dashboard-section-title"><h2>${drill.level === 'household' ? 'Accounts by purpose' : drill.level === 'category' ? 'Accounts in this category' : 'Account holdings'}</h2><span class="text-muted">Open a card to move from the household view into the details.</span></div>
     ${dashCategoriesHTML(snap)}
     ${drill.level === 'account' ? dashHoldingsHTML(drill.accountId, snap) : ''}
     ${drill.level === 'household' ? dashHistoryStripHTML() : ''}
@@ -4499,33 +4645,23 @@ function renderCheckin() {
   const _doneCount = _allAccts.filter(a => checkinAccountUpdated(a, ci, baseVals) || (ci.reviewed && ci.reviewed[a.id])).length;
   const doneTag = _allAccts.length ? `<span class="tag ${_doneCount === _allAccts.length ? 'tag-ok' : 'tag-neutral'}" title="An account counts as done once a value changed or you marked it reviewed">${_doneCount}/${_allAccts.length} accounts done</span>` : '';
 
-  return `<div class="panel checkin-panel">
+  const intro = setupStep ? '' : `<div class="page-intro"><div class="page-intro-copy"><div class="kicker">Quarterly ritual · refresh</div><h1>Update what changed.</h1><p>Your last check-in is already here. Refresh the balances, verify the accounts, and record a clean snapshot for review.</p></div></div>`;
+  const steps = `<div class="ritual-steps" aria-label="Check-in steps"><div class="ritual-step active"><span class="n">1</span><span><strong>Choose the date</strong><small>Anchor this snapshot in time.</small></span></div><div class="ritual-step active"><span class="n">2</span><span><strong>Refresh balances</strong><small>Update only what changed.</small></span></div><div class="ritual-step"><span class="n">3</span><span><strong>Record &amp; review</strong><small>Save the snapshot, then inspect drift.</small></span></div></div>`;
+  return `${intro}${steps}<div class="checkin-workspace"><div class="panel checkin-panel">
     <div style="display:flex;align-items:flex-end;gap:20px;padding:18px 20px;border-bottom:1px solid var(--color-divider);flex-wrap:wrap;">
-      <div>
-        <h3 style="margin:0 0 4px;">${setupStep ? 'Your first holdings' : 'New check-in'}</h3>
-        <span class="text-muted" style="font-size:13px;">${ci.baseDate ? `Prefilled from ${esc(ci.baseDate)} · overtype what changed. If you change a value, update or clear its cost basis.` : 'First snapshot — enter current values'}</span>
-      </div>
-      <div class="field" style="width:150px;margin-left:8px;"><label>Snapshot date</label><input class="input" type="date" value="${esc(ci.date)}" data-act="ci-date"></div>
-      <div style="margin-left:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-        ${doneTag}
-        <span id="ci-issue-badge">${issueCount ? `<span class="tag tag-warn">${issueCount} need cost basis</span>` : ''}</span>
-        ${setupStep ? '' : '<button class="btn btn-secondary" data-act="ci-discard">Discard check-in</button>'}
-        <button class="btn btn-secondary" data-act="add-account">Add account</button>
-        <button class="btn btn-secondary" data-act="open-import" title="Paste or upload a brokerage export to fill values">Import</button>
-        <button class="btn btn-primary" data-act="ci-save">${setupStep ? 'Finish setup · view dashboard' : 'Record check-in'}</button>
-      </div>
+      <div><h3 style="margin:0 0 4px;">${setupStep ? 'Your first holdings' : 'Accounts & holdings'}</h3><span class="text-muted" style="font-size:13px;">${ci.baseDate ? `Prefilled from ${esc(ci.baseDate)} · update or clear cost basis when a value changes.` : 'First snapshot — enter current values'}</span></div>
+      <div style="margin-left:auto;display:flex;gap:9px;flex-wrap:wrap;"><button class="btn btn-secondary" data-act="add-account">Add account</button><button class="btn btn-secondary" data-act="open-import" title="Paste or upload a brokerage export to fill values">Import holdings</button></div>
     </div>
     ${acctBlocks || '<div class="text-muted" style="padding:20px;">No accounts. Add one to start.</div>'}
-    <div style="display:flex;align-items:center;gap:20px;padding:18px 20px;flex-wrap:wrap;">
-      <div>
-        <div class="kicker">Snapshot total</div>
-        <div id="ci-total" style="font-family:var(--font-heading);font-size:30px;line-height:1.1;" class="tnum">${fmtMoney2(total)}</div>
-      </div>
-      <div class="field" style="width:190px;border-left:1px solid var(--color-divider);padding-left:20px;"><label>Net worth tracker says</label><input class="input tnum" inputmode="decimal" placeholder="optional" value="${esc(ui.checkinNetWorth)}" data-act="ci-nw"></div>
-      <div id="ci-sanity" style="align-self:flex-end;padding-bottom:6px;">${sanity}</div>
-      <div class="field" style="margin-left:auto;width:320px;"><label>Snapshot note (optional)</label><input class="input" value="${esc(ci.note)}" data-act="ci-note" placeholder="e.g. Bonds still light after top-up."></div>
-    </div>
-  </div>`;
+  </div><aside class="panel checkin-summary" aria-label="Check-in summary">
+    <div><div class="kicker">Snapshot details</div><h3 style="margin-top:6px;">Ready when the numbers are.</h3></div>
+    <div class="field"><label>Snapshot date</label><input class="input" type="date" value="${esc(ci.date)}" data-act="ci-date"></div>
+    <div class="checkin-summary-total"><div class="kicker">Snapshot total</div><div id="ci-total" class="value tnum">${fmtMoney2(total)}</div><div id="ci-sanity" style="margin-top:8px;">${sanity}</div></div>
+    <div class="checkin-flags">${doneTag}<span id="ci-issue-badge">${issueCount ? `<span class="tag tag-warn">${issueCount} need cost basis</span>` : ''}</span></div>
+    <div class="field"><label>Net worth tracker says</label><input class="input tnum" inputmode="decimal" placeholder="optional cross-check" value="${esc(ui.checkinNetWorth)}" data-act="ci-nw"></div>
+    <div class="field"><label>Snapshot note (optional)</label><textarea class="input" data-act="ci-note" placeholder="e.g. Bonds still light after top-up.">${esc(ci.note)}</textarea></div>
+    <div class="checkin-summary-actions"><button class="btn btn-primary" data-act="ci-save">${setupStep ? 'Finish setup · view dashboard' : 'Record check-in'}</button>${setupStep ? '' : '<button class="btn btn-secondary" data-act="ci-discard">Discard check-in</button>'}</div>
+  </aside></div>`;
 }
 
 function saveCheckin() {
@@ -5531,14 +5667,14 @@ function dollarModeIsFuture() { return ui.dollarMode === 'future'; }
 function outlookHeaderBlock(title, editView) {
   const future = dollarModeIsFuture();
   const seg = (mode, label, on, col) => `<button data-act="dollar-mode" data-mode="${mode}" style="border:0;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:600;font-family:var(--font-heading);letter-spacing:.02em;${on ? `background:${col};color:#fff;` : 'background:transparent;color:var(--color-ink-2);'}">${label}</button>`;
-  return `<div class="panel no-print" style="border-top-color:${future ? 'var(--color-warn)' : 'var(--color-accent)'};">
-    <div style="display:flex;align-items:center;gap:12px;padding:14px 18px;flex-wrap:wrap;">
-      <span style="font-family:var(--font-heading);font-size:17px;">${esc(title)}</span>
+  return `<div class="panel no-print outlook-header" style="border-top-color:${future ? 'var(--color-warn)' : 'var(--color-plum)'};">
+    <div class="outlook-header-main">
+      <div><div class="kicker" style="color:var(--color-plum);margin-bottom:7px;">Explore possible futures</div><span class="title">${esc(title)}</span></div>
       ${editView ? `<a data-act="nav" data-view="${editView}" style="margin-left:auto;cursor:pointer;color:var(--color-accent);white-space:nowrap;">Edit inputs →</a>` : ''}
     </div>
-    <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;padding:11px 18px;border-top:1px solid var(--color-line-2);background:${future ? 'var(--color-warn-soft)' : 'var(--color-teal-soft)'};">
+    <div class="outlook-unitbar" style="background:${future ? 'var(--color-warn-soft)' : 'var(--color-teal-soft)'};">
       <span style="font-size:13px;font-weight:600;">Show amounts in</span>
-      <div style="display:inline-flex;border:1px solid var(--color-divider);background:var(--color-panel);overflow:hidden;">${seg('today', "Today's dollars", !future, 'var(--color-teal)')}${seg('future', 'Future dollars', future, 'var(--color-warn)')}</div>
+      <div class="unit-toggle">${seg('today', "Today's dollars", !future, 'var(--color-teal)')}${seg('future', 'Future dollars', future, 'var(--color-warn)')}</div>
       <span class="text-muted" style="font-size:12px;flex:1;min-width:220px;line-height:1.5;">${future
         ? "Projected balances &amp; withdrawals are inflated to each future year's sticker price — bigger numbers, same buying power. Inputs stay in today's dollars."
         : "Everything is in today's buying power, inflation removed — the honest way to compare against what money buys now."}</span>
@@ -5883,7 +6019,7 @@ function renderRetire() {
     ${rmdRows ? `<div style="overflow-x:auto;"><table class="table"><thead><tr><th>Age</th><th style="text-align:right;">Pre-tax balance</th><th style="text-align:right;">IRS factor</th><th style="text-align:right;">Required withdrawal</th></tr></thead><tbody>${rmdRows}</tbody></table></div>` : `<div style="padding:0 20px 18px;"><span class="text-muted" style="font-size:13px;">No required withdrawals projected — little or no pre-tax balance remains by age ${det.rmdAge}.</span></div>`}
     </details></div>`;
 
-  return `<div style="display:flex;flex-direction:column;gap:26px;margin-top:4px;">${outlookHeaderBlock('Retirement planning', 'retirement')}${retireMappingPanel(true, scopeRow)}${fan}${success}${verdictCard}${marginalCard}${convCard}${rmdCard}${detTable}${retireAssumptionsPanel(model, retireStale)}</div>`;
+  return `<div class="outlook-stack">${outlookHeaderBlock('Retirement planning', 'retirement')}${retireMappingPanel(true, scopeRow)}<div class="outlook-primary">${fan}${success}</div>${verdictCard}${marginalCard}${convCard}${rmdCard}${detTable}${retireAssumptionsPanel(model, retireStale)}</div>`;
 }
 
 // Assumptions panel (§4, §6.1, §6.7) — editable μ/σ + declared simplifications.
@@ -6129,7 +6265,7 @@ function renderCollege() {
     }
     return `<section>
       <div class="kicker" style="margin-bottom:6px;">${esc(child.label)} · age ${age} · college in ${Math.max(0, cfg.startAge - age)} year${cfg.startAge - age === 1 ? '' : 's'}</div>
-      <div class="panel"><div class="panel-hd"><h4>${esc(child.label)}'s 529</h4>
+      <div class="panel college-plan-card"><div class="panel-hd"><h4>${esc(child.label)}'s 529</h4>
         <span class="text-muted" style="font-size:12px;margin-left:auto;">${noAcct ? 'no 529 account linked yet' : `${fmtMoney(startBal)} saved today`}</span></div>
       <div style="padding:20px;">
         ${noAcct ? `<p class="text-muted" style="font-size:13px;margin:0 0 14px;">No 529 account is linked to ${esc(child.label)}. Link one in <a data-act="nav" data-view="accounts" style="cursor:pointer;color:var(--color-accent);">Settings › Accounts</a> (edit the account, set category 529 and pick the child). The projection below assumes a $0 starting balance until then.</p>` : ''}
@@ -6140,14 +6276,15 @@ function renderCollege() {
           <div class="field"><label>Starting age</label><input class="input tnum" inputmode="numeric" data-act="cl-startage" data-child="${esc(cid)}" value="${cfg.startAge}" placeholder="18"><span class="text-muted" style="font-size:11px;">first tuition year</span></div>
           <div class="field"><label>You add each year</label><input class="input tnum" inputmode="decimal" data-act="cl-contrib" data-child="${esc(cid)}" value="${fmtEditNum(cfg.annualContrib)}" placeholder="0"><span class="text-muted" style="font-size:11px;">today's dollars</span></div>
         </div>
-        <div style="font-size:15px;line-height:1.5;margin-bottom:8px;">That's <b>${fmtMoney(totalCost)}</b> total over ${base.remainingYears} remaining years${future ? ` in future dollars` : ` in today's dollars`}. This 529 covers <b>all ${base.remainingYears} remaining years in <span style="color:var(--color-accent-700);">${successPct}</span></b> of outcomes${base.fullSuccess < 1 ? `, and on average funds <b>${yrsFunded}</b> of ${base.remainingYears} remaining years` : ''}.</div>
+        <div class="college-kpis"><div class="college-kpi"><span class="kicker">Saved now</span><strong>${fmtMoney(startBal)}</strong></div><div class="college-kpi"><span class="kicker">Projected cost</span><strong>${fmtMoney(totalCost)}</strong></div><div class="college-kpi"><span class="kicker">Fully funded</span><strong style="color:var(--color-accent-700);">${successPct}</strong></div><div class="college-kpi"><span class="kicker">Average years</span><strong>${yrsFunded} / ${base.remainingYears}</strong></div></div>
+        <div style="font-size:15px;line-height:1.5;margin-bottom:8px;">Across ${siteSimulationPaths().toLocaleString()} possible market paths, this 529 covers <b>all ${base.remainingYears} remaining years in <span style="color:var(--color-accent-700);">${successPct}</span></b> of outcomes${base.fullSuccess < 1 ? `, and on average funds <b>${yrsFunded}</b> of ${base.remainingYears} remaining years` : ''}.</div>
         <p class="text-muted" style="font-size:12px;line-height:1.6;margin:0 0 12px;">The 529 grows while you save, then is drawn down across the <b>${cfg.years} drawdown years (ages ${cfg.startAge}–${cfg.startAge + cfg.years - 1})</b>. The yellow band begins one year before the first withdrawal so it aligns with the chart segment that drops into the first tuition payment. Each drawdown-year balance is shown after that year’s tuition payment. If college has already started, this assumes the current year’s bill is still unpaid; earlier years are excluded from the funding result. ${startBand ? `After the first tuition payment at age ${cfg.startAge}, the median simulated balance is <b>${fmtCompactMoney(startBand.p50)}</b> (middle 80%: ${fmtCompactMoney(startBand.p10)}–${fmtCompactMoney(startBand.p90)}).` : ''} Hover the chart to read any age. All figures in ${unit}.</p>
         ${fanChartSVG(dispBands, { age: drawdownBandStart, label: 'Drawdown years' }, fanId, { tickEvery: (base.bands[base.bands.length - 1].age - base.bands[0].age) <= 18 ? 2 : 5, shadeFrom: drawdownBandStart, shadeTo: cfg.startAge + cfg.years - 1, shadeLabel: 'drawdown years' })}
       </div></div>
     </section>`;
   }).join('');
 
-  return `<div style="display:flex;flex-direction:column;gap:26px;margin-top:4px;">${outlookHeaderBlock('College planning', null)}${lead}${blocks}</div>`;
+  return `<div class="outlook-stack">${outlookHeaderBlock('College planning', null)}${lead}${blocks}</div>`;
 }
 
 /* College field commit (per child). */
