@@ -75,6 +75,11 @@ try {
     assert.ok(!html.includes('rel="stylesheet"'));
     assert.match(html, /index.html/);
   });
+  check('pricing keeps four clarity cards in one desktop row', () => {
+    const html = fs.readFileSync(path.join(__dirname, '..', 'pricing.html'), 'utf8');
+    assert.match(html, /\.features\{grid-template-columns:repeat\(4,minmax\(0,1fr\)\)\}/);
+    assert.match(html, /href="index\.html#lp-features">Asset allocation<\/a>/);
+  });
   check('Google tag appears once immediately after head on hosted pages only', () => {
     for (const name of ['index.html', 'allocation-tracker.html', ...pages]) {
       const html = fs.readFileSync(path.join(tmp, name), 'utf8');

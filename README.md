@@ -5,6 +5,9 @@ portfolio tracker at [realallocation.com](https://realallocation.com).
 It combines allocation charts, quarterly reviews, tax estimates, and retirement
 and 529 simulations. It does not connect to your bank or execute trades.
 
+See [product context](docs/product-context.md) for the durable product purpose,
+privacy commitments, planning direction, and desktop/mobile requirement.
+
 ## Two files, two jobs
 
 - **`index.html` is the app.** This is the canonical source and website entry
