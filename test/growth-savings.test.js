@@ -29,19 +29,29 @@ assert.equal(A.annualizedBalanceGrowth([holding], [snapshots[0], { date: '2026-0
 
 assert.equal(A.inferVehicle({ name: 'High-yield savings', category: 'Non-Retirement' }), 'savings');
 assert.equal(A.inferVehicle({ name: '12 month CD', category: 'Non-Retirement' }), 'savings');
+assert.equal(A.inferVehicle({ name: 'Emergency fund', category: 'Savings' }), 'savings');
 assert.equal(A.accountVehicle({ vehicle: 'savings' }), 'savings');
 
 const p = A.emptyPortfolio();
 p.accounts = [
-  { id: 'a1', name: 'Savings', category: 'Non-Retirement', vehicle: 'savings', taxTreatment: 'Taxable', status: 'active' },
+  { id: 'a1', name: 'Savings', category: 'Savings', vehicle: 'savings', taxTreatment: 'Taxable', status: 'active' },
   { id: 'a2', name: '401(k)', category: 'Retirement', vehicle: '401k', taxTreatment: 'Pre-tax', status: 'active' },
 ];
 p.holdings = [holding];
 p.snapshots = snapshots;
 p.retirementSettings.accountScope = 'retirement';
 A.portfolio = p;
+assert.doesNotThrow(() => A.migrate(p));
 assert.deepEqual(Array.from(A.retireAccounts(), a => a.id), ['a2']);
 p.retirementSettings.accountScope = 'all';
 assert.deepEqual(Array.from(A.retireAccounts(), a => a.id), ['a1', 'a2']);
 
-console.log('11 growth and savings checks passed');
+assert.equal(A.siteSimulationPaths(), 10000);
+A.setSiteSimulationPaths(7500);
+assert.equal(p.retirementSettings.paths, 7500);
+assert.equal(p.collegeSettings.paths, 7500);
+assert.equal(A.siteSimulationPaths(), 7500);
+assert.equal(A.buildRetireConfig().paths, 7500);
+assert.equal(A.buildCollegeConfig('missing-child').paths, 7500);
+
+console.log('19 growth, savings, and simulation checks passed');

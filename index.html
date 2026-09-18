@@ -323,6 +323,7 @@
   /* Breathing room at the bottom of every page so the last content clears the fold. */
   /* Body runs full-bleed to the shell edges, matching the bars; card interiors carry their own padding. */
   .app-body { display: flex; flex-direction: column; gap: var(--space-6); padding: var(--space-6) 0 96px; }
+  .app-base-footer { margin: var(--space-4) var(--shell-x) 0; padding: 18px 0 0; border-top: 1px solid var(--color-divider); color: var(--color-ink-3); font-size: 12px; line-height: 1.6; }
   .view { padding: var(--space-6) var(--shell-x) var(--space-8); display: flex; flex-direction: column; gap: var(--space-6); }
   /* White cards on the paper ground, with a fine accent top-edge and a soft lift. */
   .panel { background: var(--color-panel); border: 1px solid var(--color-divider); border-top: 3px solid var(--color-accent); box-shadow: var(--shadow-sm); }
@@ -668,7 +669,7 @@ function cssVarValue(name, fallback) {
 function detailColor(id) { return cssVarValue('--c-' + id, '#b7b7ba'); }
 function rollupOf(detailId) { return (DETAIL_BY_ID[detailId] || {}).group || 'blend_other'; }
 
-const ACCOUNT_CATEGORIES = ['Retirement', '529', 'Non-Retirement', 'Other'];
+const ACCOUNT_CATEGORIES = ['Retirement', '529', 'Non-Retirement', 'Other', 'Savings'];
 const TAX_TREATMENTS = ['Pre-tax', 'Roth', 'Taxable', 'Tax-free'];
 // Account "vehicle" drives contribution limits + shelter status (a 401k and an
 // IRA are both "Retirement" but have very different limits).
@@ -682,6 +683,7 @@ function inferVehicle(a) {
   if (/401|403|457|\btsp\b/.test(n)) return '401k';
   if (a.category === '529') return '529';
   if (a.category === 'Retirement') return '401k';
+  if (a.category === 'Savings') return 'savings';
   if (a.category === 'Non-Retirement') return 'taxable';
   return 'other';
 }
@@ -1479,7 +1481,7 @@ function buildRetireConfig(overrides) {
     // r_now = marginal on last contributed dollar (fed+state, NIIT excluded — contribution doesn't displace investment income)
     rNow: marginalRate(ref.federalBrackets[fs], income) + rates.r_state + rates.surtax,
     conversionFill: conversionFillTop(rs.conversionFillBracket, ref.federalBrackets[fs]),
-    paths: rs.paths || 10000, seed: (rs.seed >>> 0) || 12345,
+    paths: siteSimulationPaths(), seed: (rs.seed >>> 0) || 12345,
   };
 }
 
@@ -1597,7 +1599,7 @@ function buildCollegeConfig(childId, overrides) {
   return {
     startBal: collegeStartBalance(childId), currentAge: child ? childAge(child.birthYear) : 0,
     startAge, years, annualCost, annualContrib: oc.annualContribReal != null ? oc.annualContribReal : 0, contribGrowth: 0,
-    msByAge: collegeMsByAge(childId), paths: cs.paths || 10000, seed: (cs.seed >>> 0) || 24680,
+    msByAge: collegeMsByAge(childId), paths: siteSimulationPaths(), seed: (cs.seed >>> 0) || 24680,
   };
 }
 const COLLEGE_CACHE = new Map();
@@ -1626,6 +1628,19 @@ function collegeCacheIsCurrent(childId) {
   return cached.sig === collegeConfigSignature(cfg);
 }
 function invalidateCollegeCache(childId) { childId ? COLLEGE_CACHE.delete(childId) : COLLEGE_CACHE.clear(); }
+function siteSimulationPaths() {
+  const raw = Number(portfolio.retirementSettings && portfolio.retirementSettings.paths)
+    || Number(portfolio.collegeSettings && portfolio.collegeSettings.paths) || 10000;
+  return Math.max(100, Math.min(20000, Math.round(raw)));
+}
+function setSiteSimulationPaths(value) {
+  const paths = Math.max(100, Math.min(20000, parseInt(value, 10) || 10000));
+  portfolio.retirementSettings.paths = paths;
+  portfolio.collegeSettings.paths = paths;
+  invalidateRetireCache();
+  invalidateCollegeCache();
+  return paths;
+}
 
 /* ---------------------------------------------------------------
    SCHEMA + MIGRATION (spec §10)
@@ -2810,7 +2825,7 @@ function topTabOf(view) {
   return 'review';
 }
 
-const CATEGORY_ORDER = ['Retirement', '529', 'Non-Retirement', 'Other'];
+const CATEGORY_ORDER = ['Retirement', '529', 'Non-Retirement', 'Other', 'Savings'];
 /* Display labels for stored category values (value stays stable in the data). */
 const CATEGORY_LABELS = { 'Non-Retirement': 'Investments (non-retirement)' };
 function catLabel(cat) { return CATEGORY_LABELS[cat] || cat; }
@@ -2992,11 +3007,11 @@ function otherLabels() {
   }
   return set;
 }
-/* Ordered display groups for headers/cards: Retirement, 529, Non-Retirement,
+/* Ordered display groups for headers/cards: Retirement, 529, Non-Retirement, Savings,
    then one group per distinct custom Other label. */
 function accountGroups() {
   const out = [];
-  for (const cat of ['Retirement', '529', 'Non-Retirement']) {
+  for (const cat of ['Retirement', '529', 'Non-Retirement', 'Savings']) {
     const accts = accountsSorted(a => a.category === cat);
     if (accts.length) out.push({ key: cat, label: catLabel(cat), category: cat, accounts: accts });
   }
@@ -3282,12 +3297,16 @@ function render() {
   // The marketing landing is a standalone page with its own header — no app file-bar/tab-bar.
   const chrome = ui.view === 'welcome' ? '' : navHTML();
   const bodyPad = ui.view === 'welcome' ? 'padding:24px 24px 64px;' : '';
-  app.innerHTML = shellHTML(chrome + `<main id="main-content" tabindex="-1" class="app-body" style="${bodyPad}">${body}${reportHidden ? `<div class="report">${reportHidden}</div>` : ''}</main>`);
+  const baseFooter = ui.view === 'welcome' ? '' : appBaseFooter();
+  app.innerHTML = shellHTML(chrome + `<main id="main-content" tabindex="-1" class="app-body" style="${bodyPad}">${body}${reportHidden ? `<div class="report">${reportHidden}</div>` : ''}${baseFooter}</main>`);
   afterRender();
   try { window.quartermasterAnalytics?.view(ui.view, demoMode ? 'demo' : ui.view === 'welcome' ? 'visitor' : 'personal', setupStep); } catch (_) {}
 }
 
 function shellHTML(inner) { return `<div class="shell">${inner}</div>`; }
+function appBaseFooter() {
+  return `<footer class="app-base-footer no-print">Suggestions, not advice — nothing is executed here. Remember to <strong>Save</strong> to keep this plan. Confirm material decisions with a CPA.</footer>`;
+}
 
 /* Top-level nav (redesign): a file bar over a numbered tab bar. The quarterly ritual
    is the spine — 01 Check-In · 02 Review · 03 Plan · 04 Report — with Outlook detached
@@ -3349,7 +3368,6 @@ function navHTML() {
   const refOpen = !!ui.drawer; // drawer visibility is purely the toggle — the Settings button opens AND closes it
   const drawer = refOpen ? `<div class="refdrawer no-print"><span class="rlabel">Settings</span>${
     REFERENCE_LINKS.map(([v, l]) => `<a data-act="nav" data-view="${v}" class="${ui.view === v ? 'active' : ''}">${l}</a>`).join('')}
-    <a data-act="open-import">Import / paste</a>
     <span style="margin-left:auto;"><a data-act="toggle-drawer">Close ✕</a></span></div>` : '';
   const dirtyNote = demoMode ? 'sample data' : dirty || checkinDraftDirty ? 'unsaved' : 'saved';
   const settingsActive = ui.drawer || SETTINGS_VIEWS.includes(ui.view);
@@ -3461,7 +3479,7 @@ function renderReviewChanges() {
   const { previous, current, rows, delta } = comparison;
   return `${intro}<div class="panel" style="padding:24px;"><div class="kicker">${esc(previous.date)} → ${esc(current.date)}</div><h2 style="margin:12px 0;">${delta >= 0 ? '+' : '−'}${fmtMoney(Math.abs(delta))} in recorded balance</h2><p class="text-muted">Includes all accounts, including 529s. Balance changes combine market moves, contributions, withdrawals, and changes to recorded holdings. They are not investment returns. Unrecorded values count as zero in this comparison.</p><table class="table"><thead><tr><th>Account</th><th>Previous</th><th>Latest</th><th>Change</th></tr></thead><tbody>${rows.map(r => `<tr><td>${esc(r.name)}</td><td>${fmtMoney(r.prior)}</td><td>${fmtMoney(r.now)}</td><td>${r.delta >= 0 ? '+' : '−'}${fmtMoney(Math.abs(r.delta))}</td></tr>`).join('')}</tbody></table></div>`;
 }
-const DEMO_ACTIONS = new Set(['nav','about','landing-open','onboard-scratch','setup-save-new','setup-discard-new','close-dialog','backdrop','open','load-demo','new-checkin','lp-scroll','toggle-drawer','toggle-mobile-nav','ci-toggle','level','pick-snap','pick-goal','pos-snap','pos-category','pos-sort','pos-class','pos-class-clear','pos-expand','drill','htab','tax-sort','ov-toggle','dollar-mode','run-simulation','print','confirm-yes']);
+const DEMO_ACTIONS = new Set(['nav','about','landing-open','onboard-scratch','setup-save-new','setup-discard-new','close-dialog','backdrop','open','load-demo','new-checkin','lp-scroll','toggle-drawer','toggle-mobile-nav','ci-toggle','level','pick-snap','pick-goal','pos-snap','pos-category','pos-sort','pos-class','pos-class-clear','pos-expand','drill','htab','tax-sort','ov-toggle','dollar-mode','sim-paths','run-simulation','print','confirm-yes']);
 function demoActionAllowed(action) {
   // Model assumptions may change temporarily; account mapping may not.
   return DEMO_ACTIONS.has(action) || ((action.startsWith('rd-') && !['rd-map-vehicle','rd-map-treatment'].includes(action)) || action.startsWith('cl-'));
@@ -4063,6 +4081,7 @@ function dashCategoriesHTML(snap) {
     cards.push(catCardHTML(`529 · ${child ? child.label : ''}${age != null ? ` (${age})` : ''}`, acct.name, a.total, share, meta, { level: 'account', accountId: acct.id }));
   }
   plainCatCard('Non-Retirement');
+  plainCatCard('Savings');
   // Other — one card per custom category label
   for (const label of otherLabels()) {
     const accts = accountsSorted(a => a.category === 'Other' && (a.categoryLabel || 'Other') === label);
@@ -4240,7 +4259,7 @@ function renderPositions() {
 
   // category filter options
   const catArr = [['all', 'Everything (incl. 529)'], ['household', 'Household']];
-  for (const cat of ['Retirement', 'Non-Retirement', '529']) if (accountsSorted(a => a.category === cat).length) catArr.push([cat, catLabel(cat)]);
+  for (const cat of ['Retirement', 'Non-Retirement', 'Savings', '529']) if (accountsSorted(a => a.category === cat).length) catArr.push([cat, catLabel(cat)]);
   for (const l of otherLabels()) catArr.push(['Other:' + l, l]);
   const catSel = `<div class="field" style="width:210px;"><label>Category</label><select class="input" data-act="pos-category">${catArr.map(([v, l]) => `<option value="${esc(v)}" ${(ui.posCategory || 'all') === v ? 'selected' : ''}>${esc(l)}</option>`).join('')}</select></div>`;
 
@@ -4545,8 +4564,8 @@ function renderHistory() {
     chart = pctStackSVG(series, 'hist-pct');
     legend = TAXONOMY.groups.map(g => `<div class="legend-item"><span class="swatch" style="background:${groupColor(g.id)}"></span>${esc(g.label)}</div>`).join('');
   } else {
-    const cats = ['Retirement', '529', 'Non-Retirement', 'Other'];
-    const palette = ['--color-accent-900', '--color-accent-2-500', '--color-accent-500', '--color-neutral-500'];
+    const cats = ['Retirement', '529', 'Non-Retirement', 'Savings', 'Other'];
+    const palette = ['--color-accent-900', '--color-accent-2-500', '--color-accent-500', '--color-teal', '--color-neutral-500'];
     const lines = cats.map((cat, i) => ({
       label: catLabel(cat), color: cssVarValue(palette[i], '#888'),
       points: series.map(s => allocate(categoryHoldings(cat), snapshotByDate(s.date)).total),
@@ -4562,11 +4581,19 @@ function renderHistory() {
   </div>`;
   const portfolioGrowth = annualizedBalanceGrowth(activeHoldings());
   const accountGrowth = accountsSorted().map((a, i) => growthCard(a.name, annualizedBalanceGrowth(accountHoldings(a.id)), `var(--c${(i % 6) + 1})`)).join('');
-  const growthPanel = `<section style="margin-bottom:22px;">
-    <div class="panel-hd" style="background:var(--color-panel);border:1px solid var(--color-divider);"><h4>Annualized balance growth</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">includes deposits and withdrawals</span></div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:12px;">${growthCard('Entire portfolio', portfolioGrowth, 'var(--color-accent)')}${accountGrowth}</div>
-    <p class="text-muted" style="font-size:11px;line-height:1.55;margin:10px 2px 0;">This measures how quickly recorded balances changed, not investment performance. Contributions, withdrawals, transfers, and market movement all affect the result.</p>
-  </section>`;
+  const portfolioGrowthValue = portfolioGrowth
+    ? `<span class="tnum" style="font-family:var(--font-heading);font-size:22px;color:${portfolioGrowth.annualized >= 0 ? 'var(--color-ok)' : 'var(--color-crit)'};">${fmtPctSigned(portfolioGrowth.annualized * 100)}</span>`
+    : `<span style="font-family:var(--font-heading);font-size:16px;color:var(--color-ink-3);">Not enough history</span>`;
+  const growthPanel = `<details class="panel" style="margin-bottom:22px;">
+    <summary class="panel-hd" style="cursor:pointer;list-style-position:outside;">
+      <h4>Annualized balance growth</h4>
+      <span style="margin-left:auto;display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:flex-end;">${portfolioGrowthValue}<span class="text-muted" style="font-size:12px;">includes deposits and withdrawals · expand for accounts</span></span>
+    </summary>
+    <div style="padding:16px 20px 18px;">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;">${accountGrowth || '<span class="text-muted" style="font-size:13px;">No accounts to show.</span>'}</div>
+      <p class="text-muted" style="font-size:11px;line-height:1.55;margin:10px 2px 0;">This measures how quickly recorded balances changed, not investment performance. Contributions, withdrawals, transfers, and market movement all affect the result. It needs 3 positive check-ins spanning at least 90 days.</p>
+    </div>
+  </details>`;
   return `<div class="toolbar no-print"><div class="crumb"><span>History</span></div>
     <div class="seg" style="margin-left:auto;">${tabHTML}</div></div>
     ${growthPanel}
@@ -5314,6 +5341,9 @@ function reportHTML(snap) {
   const nonret = accountsSorted(a => a.category === 'Non-Retirement');
   if (nonret.length) out += reportSection(catLabel('Non-Retirement'), 'vs household goal', nonret.flatMap(a => accountHoldings(a.id)), snap, ggt, band, nonret, gdt);
 
+  const savings = accountsSorted(a => a.category === 'Savings');
+  if (savings.length) out += reportSection('Savings', 'vs household goal', savings.flatMap(a => accountHoldings(a.id)), snap, ggt, band, savings, gdt);
+
   const ret = accountsSorted(a => a.category === 'Retirement');
   if (ret.length) out += reportSection('Retirement', 'vs household goal', ret.flatMap(a => accountHoldings(a.id)), snap, ggt, band, ret, gdt);
 
@@ -5462,13 +5492,14 @@ function renderTaxProfile() {
     <div style="padding:12px 20px 18px;"><span class="text-muted" style="font-size:12px;">${esc(ref.verifyNote)}</span></div>
   </div>
   ${advPanel}
-  <div class="panel"><div class="panel-hd"><h4>Planning inputs</h4></div>
+  <div class="panel"><div class="panel-hd"><h4>Quarterly Plan inputs</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">used by Plan, not the retirement projection</span></div>
+    <div style="padding:14px 20px 0;"><p class="text-muted" style="font-size:12px;line-height:1.6;margin:0;">These guide near-term suggestions in the Plan tab. Retirement’s contribution fields are separate long-term annual assumptions used only by the retirement simulation.</p></div>
     <div style="padding:20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;">
-      <div class="field"><label>Annual realized-gain budget ($)</label><input class="input tnum" inputmode="decimal" data-act="ts-gainbudget" value="${ts.gainBudgetAnnual ? fmtEditNum(ts.gainBudgetAnnual) : ''}" placeholder="0"><span class="text-muted" style="font-size:11px;">Caps taxable long-term-gain sales the Plan proposes.</span></div>
-      <div class="field"><label>Household savings ($/month)</label><input class="input tnum" inputmode="decimal" data-act="ts-savings" value="${ts.householdMonthlySavings ? fmtEditNum(ts.householdMonthlySavings) : ''}" placeholder="0"><span class="text-muted" style="font-size:11px;">Drives the Plan’s savings directive.</span></div>
+      <div class="field"><label>Annual realized-gain budget ($)</label><input class="input tnum" inputmode="decimal" data-act="ts-gainbudget" value="${ts.gainBudgetAnnual ? fmtEditNum(ts.gainBudgetAnnual) : ''}" placeholder="0"><span class="text-muted" style="font-size:11px;">Caps the taxable long-term gains that a generated quarterly Plan may propose realizing.</span></div>
+      <div class="field"><label>New savings available ($/month)</label><input class="input tnum" inputmode="decimal" data-act="ts-savings" value="${ts.householdMonthlySavings ? fmtEditNum(ts.householdMonthlySavings) : ''}" placeholder="0"><span class="text-muted" style="font-size:11px;">Directs new monthly money toward available account headroom in the quarterly Plan; it does not set retirement contributions.</span></div>
       <div class="field"><label class="radio" style="align-items:center;"><input type="checkbox" data-act="ts-instatemuni" ${ts.inStateMuni ? 'checked' : ''}><span class="dot"></span>In-state muni fund available</label><span class="text-muted" style="font-size:11px;">A muni fund for your state is exempt from <b>both</b> federal and state tax — improves the muni comparison.</span></div>
     </div>
-    <div class="panel-hd" style="border-top:1px solid var(--color-divider);"><h4 style="font-size:13px;">YTD contributions (for headroom)</h4></div>
+    <div class="panel-hd" style="border-top:1px solid var(--color-divider);"><h4 style="font-size:13px;">Year-to-date contributions (remaining account headroom)</h4></div>
     <div style="padding:16px 20px 20px;display:flex;flex-direction:column;gap:8px;max-width:520px;">${ytdRows}</div>
   </div>
   <div style="padding:0 2px;"><span class="text-muted" style="font-size:12px;">Estimates only — confirm material decisions with a CPA.</span></div>`;
@@ -5623,7 +5654,7 @@ function simulationRunPanel(kind, count, detail) {
     ${running ? '<div class="sim-spinner" aria-hidden="true"></div>' : ''}
     <div style="font-family:var(--font-heading);font-size:22px;">${running ? 'Simulating possible futures…' : 'Ready when you are'}</div>
     <p class="text-muted" style="max-width:560px;margin:8px auto 18px;line-height:1.6;">${running ? `Running ${Number(count).toLocaleString()} market paths. This may take a moment.` : detail}</p>
-    ${running ? '' : `<button class="btn btn-primary" data-act="run-simulation" data-kind="${kind}">Run ${Number(count).toLocaleString()} simulations</button>`}
+    ${running ? '' : `<div style="display:flex;align-items:end;justify-content:center;gap:12px;flex-wrap:wrap;"><div class="field" style="width:190px;text-align:left;margin:0;"><label>Simulation paths</label><input class="input tnum" type="number" min="100" max="20000" step="100" data-act="sim-paths" value="${Number(count)}"><span class="text-muted" style="font-size:11px;">Used for retirement and college</span></div><button class="btn btn-primary" data-act="run-simulation" data-kind="${kind}">Run ${Number(count).toLocaleString()} simulations</button></div>`}
   </div>`;
 }
 
@@ -5685,7 +5716,7 @@ function renderRetire() {
   }
 
   if (!retireCacheIsCurrent()) {
-    return header + `<div style="display:flex;flex-direction:column;gap:22px;margin-top:16px;">${simulationRunPanel('retire', rs.paths || 10000, 'Run the model after you finish changing assumptions. Results stay put until you choose to run it again.')}</div>`;
+    return header + `<div style="display:flex;flex-direction:column;gap:22px;margin-top:16px;">${simulationRunPanel('retire', siteSimulationPaths(), 'Run the model after you finish changing assumptions. Results stay put until you choose to run it again.')}</div>`;
   }
 
   const model = RETIRE_CACHE.model;
@@ -6001,7 +6032,7 @@ function renderRetireSettings() {
         <select class="input" data-act="rd-conversion">${convOpt('off')}${convOpt('22%')}${convOpt('24%')}</select>
         <span class="text-muted" style="font-size:11px;">Move pre-tax → Roth up to the top of this bracket in the low-income years before required withdrawals.</span>
       </div>
-      <div class="field"><label>Simulations per run</label><div class="input tnum" style="display:flex;align-items:center;background:var(--color-surface);">${Number(rs.paths || 10000).toLocaleString()}</div><span class="text-muted" style="font-size:11px;">Runs only when you press the simulation button.</span></div>
+      <div class="field"><label>Simulation paths (retirement &amp; college)</label><input class="input tnum" type="number" min="100" max="20000" step="100" data-act="sim-paths" value="${siteSimulationPaths()}"><span class="text-muted" style="font-size:11px;">Default 10,000. Runs only when you press a simulation button.</span></div>
       ${num('Random seed', 'rd-seed', rs.seed, '12345', 'Same seed reproduces the same result')}
     </div>
   </div>
@@ -6027,11 +6058,11 @@ function renderCollege() {
   const cs = portfolio.collegeSettings || defaultCollegeSettings();
   const collegeReady = portfolio.children.every(child => collegeCacheIsCurrent(child.id));
   if (!collegeReady) {
-    return `<div style="display:flex;flex-direction:column;gap:26px;margin-top:4px;">${outlookHeaderBlock('College planning', null)}${simulationRunPanel('college', cs.paths || 10000, 'Run all college scenarios after updating costs, contributions, or glide paths. Results are recalculated only when you ask.')}</div>`;
+    return `<div style="display:flex;flex-direction:column;gap:26px;margin-top:4px;">${outlookHeaderBlock('College planning', null)}${simulationRunPanel('college', siteSimulationPaths(), 'Run all college scenarios after updating costs, contributions, or glide paths. Results are recalculated only when you ask.')}</div>`;
   }
   const lead = `<div class="panel" style="background:var(--color-accent-100);border-color:var(--color-accent);"><div style="padding:18px 20px;">
     <div style="font-family:var(--font-heading);font-size:16px;margin-bottom:4px;">Will each 529 cover college?</div>
-    <p style="font-size:13px;line-height:1.6;margin:0;" class="text-muted">For every child we grow their 529 to college age using its glide path, then draw the yearly cost across ${cs.paths.toLocaleString()} simulated market paths to show whether the money lasts all the way through. Set the age-based glide in <a data-act="nav" data-view="goal" style="cursor:pointer;color:var(--color-accent);">Review › Goals</a>. Toggle below to read the numbers in today's or future dollars.</p>
+    <p style="font-size:13px;line-height:1.6;margin:0;" class="text-muted">For every child we grow their 529 to college age using its glide path, then draw the yearly cost across ${siteSimulationPaths().toLocaleString()} simulated market paths to show whether the money lasts all the way through. Set the age-based glide in <a data-act="nav" data-view="goal" style="cursor:pointer;color:var(--color-accent);">Review › Goals</a>. Toggle below to read the numbers in today's or future dollars.</p>
   </div></div>`;
 
   const blocks = portfolio.children.map(child => {
@@ -6078,8 +6109,8 @@ function renderCollege() {
           <div class="field"><label>You add each year</label><input class="input tnum" inputmode="decimal" data-act="cl-contrib" data-child="${esc(cid)}" value="${fmtEditNum(cfg.annualContrib)}" placeholder="0"><span class="text-muted" style="font-size:11px;">today's dollars</span></div>
         </div>
         <div style="font-size:15px;line-height:1.5;margin-bottom:8px;">That's <b>${fmtMoney(totalCost)}</b> total over ${base.remainingYears} remaining years${future ? ` in future dollars` : ` in today's dollars`}. This 529 covers <b>all ${base.remainingYears} remaining years in <span style="color:var(--color-accent-700);">${successPct}</span></b> of outcomes${base.fullSuccess < 1 ? `, and on average funds <b>${yrsFunded}</b> of ${base.remainingYears} remaining years` : ''}.</div>
-        <p class="text-muted" style="font-size:12px;line-height:1.6;margin:0 0 12px;">The 529 grows while you save, then is drawn down across the <b>${cfg.years} college years (ages ${cfg.startAge}–${cfg.startAge + cfg.years - 1})</b> — the shaded band on the chart. Each college-age balance is shown after that year’s tuition payment. If college has already started, this assumes the current year’s bill is still unpaid; earlier years are excluded from the funding result. ${startBand ? `After the first tuition payment at age ${cfg.startAge}, the median simulated balance is <b>${fmtCompactMoney(startBand.p50)}</b> (middle 80%: ${fmtCompactMoney(startBand.p10)}–${fmtCompactMoney(startBand.p90)}).` : ''} Hover the chart to read any age. All figures in ${unit}.</p>
-        ${fanChartSVG(dispBands, { age: cfg.startAge, label: 'College at' }, fanId, { tickEvery: (base.bands[base.bands.length - 1].age - base.bands[0].age) <= 18 ? 2 : 5, shadeFrom: cfg.startAge, shadeTo: cfg.startAge + cfg.years - 1, shadeLabel: 'college years' })}
+        <p class="text-muted" style="font-size:12px;line-height:1.6;margin:0 0 12px;">The 529 grows while you save, then is drawn down across the <b>${cfg.years} drawdown years (ages ${cfg.startAge}–${cfg.startAge + cfg.years - 1})</b> — the yellow shaded band begins with the first tuition withdrawal. Each drawdown-year balance is shown after that year’s tuition payment. If college has already started, this assumes the current year’s bill is still unpaid; earlier years are excluded from the funding result. ${startBand ? `After the first tuition payment at age ${cfg.startAge}, the median simulated balance is <b>${fmtCompactMoney(startBand.p50)}</b> (middle 80%: ${fmtCompactMoney(startBand.p10)}–${fmtCompactMoney(startBand.p90)}).` : ''} Hover the chart to read any age. All figures in ${unit}.</p>
+        ${fanChartSVG(dispBands, { age: cfg.startAge, label: 'Drawdown starts' }, fanId, { tickEvery: (base.bands[base.bands.length - 1].age - base.bands[0].age) <= 18 ? 2 : 5, shadeFrom: Math.max(cfg.currentAge, cfg.startAge), shadeTo: cfg.startAge + cfg.years - 1, shadeLabel: 'drawdown years' })}
       </div></div>
     </section>`;
   }).join('');
@@ -6625,10 +6656,8 @@ function onClick(e) {
       setTimeout(() => {
         try {
           if (kind === 'retire') {
-            portfolio.retirementSettings.paths = 10000;
             invalidateRetireCache(); retireModel();
           } else {
-            portfolio.collegeSettings.paths = 10000;
             invalidateCollegeCache();
             portfolio.children.forEach(child => collegeModel(child.id));
           }
@@ -6676,6 +6705,13 @@ function onChange(e) {
   else if (a === 'ts-savings') { portfolio.taxSettings.householdMonthlySavings = parseNum(t.value) || 0; markDirty(); render(); }
   else if (a === 'ts-instatemuni') { portfolio.taxSettings.inStateMuni = t.checked; markDirty(); render(); }
   else if (a === 'ts-ytd') { const y = portfolio.taxSettings.ytdContributions = portfolio.taxSettings.ytdContributions || {}; const n = parseNum(t.value); if (n == null) delete y[ds.account]; else y[ds.account] = n; markDirty(); }
+  else if (a === 'sim-paths') {
+    const paths = setSiteSimulationPaths(t.value);
+    t.value = paths;
+    const runButton = t.closest('.sim-run') && t.closest('.sim-run').querySelector('[data-act="run-simulation"]');
+    if (runButton) runButton.textContent = `Run ${paths.toLocaleString()} simulations`;
+    markDirty();
+  }
   else if (a === 'ov-ord' || a === 'ov-ltcg' || a === 'ov-state' || a === 'ov-niit' || a === 'ov-surtax') { applyOverride(a, t); render(); }
   // Plan (F8) — field edits fire on blur/change so mid-typing keeps focus.
   else if (a === 'plan-account' || a === 'plan-done' || a === 'plan-sell' || a === 'plan-buy' || a === 'plan-amount') { applyPlanEdit(a, ds, t); }
@@ -6689,12 +6725,17 @@ function onChange(e) {
   }
   else if (a === 'acct-cat') {
     const other = document.getElementById('f-other-wrap'), child = document.getElementById('f-child-wrap');
+    const vehicle = document.getElementById('f-vehicle'), tax = document.getElementById('f-tax');
     if (other) other.style.display = t.value === 'Other' ? 'block' : 'none';
     if (child) child.style.display = t.value === '529' ? 'block' : 'none';
+    if (t.value === 'Savings') {
+      if (vehicle) vehicle.value = 'savings';
+      if (tax && !tax.value) tax.value = 'Taxable';
+    }
   }
   else if (a === 'acct-vehicle' && t.value === 'savings') {
     const cat = document.getElementById('f-cat'), tax = document.getElementById('f-tax');
-    if (cat) cat.value = 'Non-Retirement';
+    if (cat) cat.value = 'Savings';
     if (tax && !tax.value) tax.value = 'Taxable';
     const other = document.getElementById('f-other-wrap'), child = document.getElementById('f-child-wrap');
     if (other) other.style.display = 'none';
@@ -6735,7 +6776,7 @@ function applyRetireSetting(a, ds, el) {
     case 'rd-contrib-taxable': setContrib('taxable'); break;
     case 'rd-contrib-taxfree': setContrib('taxfree'); break;
     case 'rd-contrib-growth': rs.contribGrowthReal = parseNum(el.value) || 0; break;
-    case 'rd-paths': rs.paths = clamp(parseInt(el.value, 10) || 10000, 100, 20000); break;
+    case 'rd-paths': setSiteSimulationPaths(clamp(parseInt(el.value, 10) || 10000, 100, 20000)); break;
     case 'rd-seed': rs.seed = (parseInt(el.value, 10) >>> 0) || 12345; break;
     case 'rd-conversion': rs.conversionFillBracket = el.value; break;
     case 'rd-alloc-mode': rs.retirementAllocation = ['goal', 'balanced', 'conservative'].includes(el.value) ? el.value : 'current'; break;
@@ -6953,8 +6994,9 @@ function saveAccountFromDialog(acctId) {
   if (category === 'Other' && !categoryLabel) { toast('Other needs a category label.'); return; }
   if (category === '529' && !childId) { toast('Pick a child for the 529 (add one in Accounts first).'); return; }
   if (!vehicle) vehicle = inferVehicle({ name, category }); // "— auto —" → infer from name/category
-  if (vehicle === 'savings') {
-    category = 'Non-Retirement';
+  if (category === 'Savings' || vehicle === 'savings') {
+    category = 'Savings';
+    vehicle = 'savings';
     if (!taxTreatment) taxTreatment = 'Taxable';
   }
   if (acctId) {
@@ -7046,7 +7088,7 @@ document.addEventListener('DOMContentLoaded', boot);
 window.__AAT__ = {
   TAXONOMY, SEED_MAP, SEED_MAP_EXT, classifyTicker, migrate, emptyPortfolio, uid,
   allocate, toRows, computeDrift, activeGoal, glideTargets, historySeries,
-  annualizedBalanceGrowth, accountVehicle, inferVehicle, retireAccounts, buildRetireConfig,
+  annualizedBalanceGrowth, accountVehicle, inferVehicle, retireAccounts, buildRetireConfig, buildCollegeConfig, siteSimulationPaths, setSiteSimulationPaths,
   householdHoldings, categoryHoldings, accountHoldings, latestSnapshot,
   snapshotCSV, loadDemoData, saveFile, openFile,
   goalGroupTargets, goalDetailTargets, compositionOf, splitValue,
