@@ -323,7 +323,10 @@
   /* Breathing room at the bottom of every page so the last content clears the fold. */
   /* Body runs full-bleed to the shell edges, matching the bars; card interiors carry their own padding. */
   .app-body { display: flex; flex-direction: column; gap: var(--space-6); padding: var(--space-6) 0 96px; }
-  .app-base-footer { margin: var(--space-4) var(--shell-x) 0; padding: 18px 0 0; border-top: 1px solid var(--color-divider); color: var(--color-ink-3); font-size: 12px; line-height: 1.6; }
+  .app-base-footer { width: 100%; box-sizing: border-box; margin: var(--space-4) 0 0; padding: 18px var(--shell-x) 0; border-top: 1px solid var(--color-divider); color: var(--color-ink-3); font-size: 12px; line-height: 1.6; }
+  .retire-stale-card { box-shadow: inset 0 0 0 2px var(--color-warn), var(--shadow-sm); }
+  .retire-stale-notice { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; margin-top: 16px; padding: 12px 14px; border-left: 3px solid var(--color-warn); background: var(--color-warn-soft); color: var(--color-text); font-size: 12px; line-height: 1.5; }
+  .retire-stale-notice[hidden] { display: none; }
   .view { padding: var(--space-6) var(--shell-x) var(--space-8); display: flex; flex-direction: column; gap: var(--space-6); }
   /* White cards on the paper ground, with a fine accent top-edge and a soft lift. */
   .panel { background: var(--color-panel); border: 1px solid var(--color-divider); border-top: 3px solid var(--color-accent); box-shadow: var(--shadow-sm); }
@@ -401,7 +404,6 @@
     .report .table { font-size: 11.5px; }
     .report .table th, .report .table td { padding: 4px 7px; }
     .report .rep-tables { gap: 18px !important; }
-    .report footer { break-inside: avoid; }
     .report header { break-after: avoid; }
     .blueprint > .corner { display: none; }
     a { color: var(--color-text); text-decoration: none; }
@@ -3456,7 +3458,7 @@ function renderSetup() {
   } else {
     content = `<h2>Enter your holdings</h2><p>Add the investments in each account and their current values from your statements. Check the asset class. Cost basis is optional; missing basis stays unknown.</p><p>When you’re ready, choose <strong>Finish setup · view dashboard</strong>. This records the first check-in in this session. Save your portfolio file when you finish using the app.</p>${renderCheckin()}`;
   }
-  return `<section class="setup-shell"><div class="page-intro"><div class="kicker">Build your portfolio</div><h1>Three steps to a clearer picture.</h1></div>${progress}<div class="setup-content">${content}</div><div class="setup-actions">${setupStep > 1 ? '<button class="btn btn-secondary" data-act="setup-back">Back</button>' : ''}${setupStep < 3 ? '<button class="btn btn-primary" data-act="setup-next">Continue</button>' : ''}</div><p class="save-warning">⚠ Save your file before leaving. Nothing is automatically uploaded or saved.</p></section>`;
+  return `<section class="setup-shell"><div class="page-intro"><div class="kicker">Build your portfolio</div><h1>Three steps to a clearer picture.</h1></div>${progress}<div class="setup-content">${content}</div><div class="setup-actions">${setupStep > 1 ? '<button class="btn btn-secondary" data-act="setup-back">Back</button>' : ''}${setupStep < 3 ? '<button class="btn btn-primary" data-act="setup-next">Continue</button>' : ''}</div></section>`;
 }
 function reviewChanges() {
   const snapshots = sortedSnapshots();
@@ -4908,8 +4910,7 @@ function renderTax() {
     <div class="panel"><div class="panel-hd"><h4>Recommendations</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">allocation-neutral · not advice</span>
       <button class="btn btn-sm btn-secondary" data-act="nav" data-view="plan" style="margin-left:12px;">${planMoveCount ? `View Plan (${planMoveCount}) →` : 'Open Plan →'}</button></div>
       <div style="padding:16px 20px;display:flex;flex-direction:column;gap:12px;">${recsHTML}</div></div>
-    ${rothHTML}
-    <div style="padding:0 2px;"><span class="text-muted" style="font-size:12px;">Estimates only, from your data and simplified rules — not tax advice. Confirm material decisions with a CPA.</span></div>`;
+    ${rothHTML}`;
 }
 
 /* ===============================================================
@@ -5171,8 +5172,7 @@ function renderPlan() {
       </div></div>
     ${washHTML}
     ${dirHTML}
-    ${simHTML}
-    <div style="padding:0 2px;"><span class="text-muted" style="font-size:12px;">Suggestions, not advice — nothing is executed here. Remember to <b>Save</b> to keep this plan. Confirm material decisions with a CPA.</span></div>`;
+    ${simHTML}`;
 }
 
 /* ===============================================================
@@ -5333,6 +5333,8 @@ function reportHTML(snap) {
   let out = `<header style="border-bottom:2px solid var(--color-text);padding-bottom:10px;margin-bottom:20px;">
     <div class="kicker">Quartermaster · your real allocation${demoMode ? ' · DEMO — SAMPLE DATA' : ''}</div>
     <h1 style="margin:2px 0 0;font-size:34px;">As of ${esc(snap.date)}</h1>
+    <div class="text-muted" style="font-size:12px;margin-top:5px;">Goal effective ${goal ? esc(goal.effectiveDate) : '—'} · Drift band ±${band}% absolute · Tax figures TY ${REFERENCE_DATA.taxYear} (estimates, not advice).</div>
+    ${goal && goal.rationale ? `<div class="text-muted" style="font-size:12px;margin-top:2px;">Latest rationale: ${esc(goal.rationale)}</div>` : ''}
   </header>`;
 
   // Order: Household → Investments (non-retirement) → Retirement → 529 → Others
@@ -5366,10 +5368,6 @@ function reportHTML(snap) {
   out += reportRetireSection(snap);
   out += reportCollegeSection(snap);
 
-  out += `<footer style="border-top:1px solid var(--color-divider);margin-top:20px;padding-top:12px;font-size:12px;" class="text-muted">
-    Snapshot ${esc(snap.date)} · Goal effective ${goal ? esc(goal.effectiveDate) : '—'} · Drift band ±${band}% absolute · Tax figures TY ${REFERENCE_DATA.taxYear} (estimates, not advice).
-    ${goal && goal.rationale ? '<br>Latest rationale: ' + esc(goal.rationale) : ''}
-  </footer>`;
   return out;
 }
 
@@ -5501,8 +5499,7 @@ function renderTaxProfile() {
     </div>
     <div class="panel-hd" style="border-top:1px solid var(--color-divider);"><h4 style="font-size:13px;">Year-to-date contributions (remaining account headroom)</h4></div>
     <div style="padding:16px 20px 20px;display:flex;flex-direction:column;gap:8px;max-width:520px;">${ytdRows}</div>
-  </div>
-  <div style="padding:0 2px;"><span class="text-muted" style="font-size:12px;">Estimates only — confirm material decisions with a CPA.</span></div>`;
+  </div>`;
 }
 
 /* ===============================================================
@@ -5654,8 +5651,23 @@ function simulationRunPanel(kind, count, detail) {
     ${running ? '<div class="sim-spinner" aria-hidden="true"></div>' : ''}
     <div style="font-family:var(--font-heading);font-size:22px;">${running ? 'Simulating possible futures…' : 'Ready when you are'}</div>
     <p class="text-muted" style="max-width:560px;margin:8px auto 18px;line-height:1.6;">${running ? `Running ${Number(count).toLocaleString()} market paths. This may take a moment.` : detail}</p>
-    ${running ? '' : `<div style="display:flex;align-items:end;justify-content:center;gap:12px;flex-wrap:wrap;"><div class="field" style="width:190px;text-align:left;margin:0;"><label>Simulation paths</label><input class="input tnum" type="number" min="100" max="20000" step="100" data-act="sim-paths" value="${Number(count)}"><span class="text-muted" style="font-size:11px;">Used for retirement and college</span></div><button class="btn btn-primary" data-act="run-simulation" data-kind="${kind}">Run ${Number(count).toLocaleString()} simulations</button></div>`}
+    ${running ? '' : `<button class="btn btn-primary" data-act="run-simulation" data-kind="${kind}">Run ${Number(count).toLocaleString()} simulations</button>`}
   </div>`;
+}
+
+function retireStaleNotice() {
+  const stale = !retireCacheIsCurrent();
+  const running = ui.simRunning === 'retire';
+  return `<div class="retire-stale-notice" data-retire-stale ${stale ? '' : 'hidden'} aria-live="polite">
+    <span>${running ? '<b>Updating your results…</b> Running the simulation with your revised inputs.' : '<b>Results need an update.</b> Your changes are saved, but the numbers above still show the last completed run.'}</span>
+    ${running ? '<span class="sim-spinner" aria-hidden="true" style="width:22px;height:22px;margin:0;"></span>' : '<button class="btn btn-sm btn-primary" data-act="run-simulation" data-kind="retire">Re-run simulation</button>'}
+  </div>`;
+}
+
+function showRetireStaleIndicators() {
+  const stale = !retireCacheIsCurrent();
+  document.querySelectorAll('[data-retire-stale]').forEach(el => { el.hidden = !stale; });
+  document.querySelectorAll('[data-retire-stale-card]').forEach(el => el.classList.toggle('retire-stale-card', stale));
 }
 
 // Validation gate (§2): show the account→bucket mapping, editable inline, flag likely-mistagged accounts.
@@ -5715,10 +5727,11 @@ function renderRetire() {
     return header + `<div style="display:flex;flex-direction:column;gap:22px;margin-top:16px;">${lead}${retireMappingPanel(false)}</div>`;
   }
 
-  if (!retireCacheIsCurrent()) {
+  if (!RETIRE_CACHE) {
     return header + `<div style="display:flex;flex-direction:column;gap:22px;margin-top:16px;">${simulationRunPanel('retire', siteSimulationPaths(), 'Run the model after you finish changing assumptions. Results stay put until you choose to run it again.')}</div>`;
   }
 
+  const retireStale = !retireCacheIsCurrent();
   const model = RETIRE_CACHE.model;
   const { cfg, base, det, verdict, conv, verdictWithConv } = model;
   const endBand = base.bands[base.bands.length - 1];
@@ -5761,13 +5774,14 @@ function renderRetire() {
   const sliderMin = 20000, sliderMax = Math.max(200000, Math.round(spend * 1.5 / 5000) * 5000);
   const success = `<section>
     <div class="kicker" style="margin-bottom:6px;">Can you afford your spending?</div>
-    <div class="panel"><div class="panel-hd"><h4>Spending confidence</h4></div>
+    <div class="panel ${retireStale ? 'retire-stale-card' : ''}" data-retire-stale-card><div class="panel-hd"><h4>Spending confidence</h4></div>
     <div style="padding:20px;">
       <div style="font-size:15px;line-height:1.5;margin-bottom:10px;">Out of ${cfg.paths.toLocaleString()} simulated futures, your savings cover <b id="retire-spend-label">${fmtMoney(spend)}</b>/yr of spending (in today's dollars) all the way to age ${RETIRE_DATA.endAge} in <b id="retire-success" style="color:var(--color-accent-700);font-size:22px;">${fmtPct(base.success * 100, 0)}</b> of them.</div>
       <p class="text-muted" style="font-size:12px;line-height:1.6;margin:0 0 14px;">This is the share of simulated paths that fund the spending target under your assumptions, not a guarantee or a calibrated probability of real-world success. The chart shows the median and percentile bands; 10% of simulated ending balances are at or below the 10th percentile. Lower spending, higher savings, or later retirement can improve the modeled results.</p>
       <label style="font-size:12px;font-weight:600;">Try a different spending level</label>
       <input type="range" min="${sliderMin}" max="${sliderMax}" step="2500" value="${spend}" data-act="rd-spend" style="width:100%;margin-top:6px;">
-      <div style="display:flex;justify-content:space-between;font-size:11px;" class="text-muted"><span>${fmtCompactMoney(sliderMin)}/yr</span><span>drag to see how confidence changes</span><span>${fmtCompactMoney(sliderMax)}/yr</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;gap:12px;" class="text-muted"><span>${fmtCompactMoney(sliderMin)}/yr</span><span>Selected: <b id="retire-spend-draft">${fmtMoney(rs.spendingTargetRealAnnual || spend)}/yr</b></span><span>${fmtCompactMoney(sliderMax)}/yr</span></div>
+      ${retireStaleNotice()}
     </div></div></section>`;
 
   // Section 3 — Roth/Traditional verdict
@@ -5852,11 +5866,11 @@ function renderRetire() {
     ${rmdRows ? `<div style="overflow-x:auto;"><table class="table"><thead><tr><th>Age</th><th style="text-align:right;">Pre-tax balance</th><th style="text-align:right;">IRS factor</th><th style="text-align:right;">Required withdrawal</th></tr></thead><tbody>${rmdRows}</tbody></table></div>` : `<div style="padding:0 20px 18px;"><span class="text-muted" style="font-size:13px;">No required withdrawals projected — little or no pre-tax balance remains by age ${det.rmdAge}.</span></div>`}
     </details></div>`;
 
-  return `<div style="display:flex;flex-direction:column;gap:26px;margin-top:4px;">${outlookHeaderBlock('Retirement planning', 'retirement')}${retireMappingPanel(true, scopeRow)}${fan}${success}${verdictCard}${marginalCard}${convCard}${rmdCard}${detTable}${retireAssumptionsPanel(model)}</div>`;
+  return `<div style="display:flex;flex-direction:column;gap:26px;margin-top:4px;">${outlookHeaderBlock('Retirement planning', 'retirement')}${retireMappingPanel(true, scopeRow)}${fan}${success}${verdictCard}${marginalCard}${convCard}${rmdCard}${detTable}${retireAssumptionsPanel(model, retireStale)}</div>`;
 }
 
 // Assumptions panel (§4, §6.1, §6.7) — editable μ/σ + declared simplifications.
-function retireAssumptionsPanel(model) {
+function retireAssumptionsPanel(model, retireStale) {
   const rs = portfolio.retirementSettings;
   const eff = rs.muSigma ? Object.assign({}, RETIRE_DATA.muSigma, rs.muSigma) : RETIRE_DATA.muSigma;
   const inflPct = rs.inflationPct != null ? rs.inflationPct : 2.5;
@@ -5894,8 +5908,9 @@ function retireAssumptionsPanel(model) {
     ['One blended portfolio, not per-fund', 'We roll your whole mix into a single return each year rather than simulating each fund and rebalancing — simpler and robust at this altitude.'],
     ['Both spouses\' Social Security start at your claim age', 'A simplification; if your spouse claims at a very different age the timing will be slightly off.'],
   ];
-  return `<div class="panel"><details><summary style="padding:14px 20px;cursor:pointer;font-family:var(--font-heading);">Assumptions — returns, volatility, inflation &amp; simplifications</summary>
+  return `<div class="panel ${retireStale ? 'retire-stale-card' : ''}" data-retire-stale-card><details data-retire-assumptions><summary style="padding:14px 20px;cursor:pointer;font-family:var(--font-heading);">Assumptions — returns, volatility, inflation &amp; simplifications</summary>
     <div style="padding:8px 20px 18px;">
+      ${retireStaleNotice()}
       <div class="kicker" style="margin:6px 0 4px;">Expected return &amp; volatility by asset class — editable, saved to your file</div>
       <p class="text-muted" style="font-size:12px;line-height:1.6;margin:0 0 12px;">These are <b>nominal geometric returns</b>, before inflation. The real return is (1 + nominal return) / (1 + inflation) − 1. For example, an 8% nominal return with ${fmtPct(inflPct, 1)} inflation gives ${fmtPct(((1.08 / (1 + inflPct / 100)) - 1) * 100, 1)} real growth. Volatility controls the spread of annual log returns in the simulation. These editable defaults are assumptions, not forecasts.</p>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0 28px;">
@@ -6036,7 +6051,6 @@ function renderRetireSettings() {
       ${num('Random seed', 'rd-seed', rs.seed, '12345', 'Same seed reproduces the same result')}
     </div>
   </div>
-  <div style="padding:0 2px;"><span class="text-muted" style="font-size:12px;">All values are in today's dollars. Estimates only — confirm material decisions with a CPA.</span></div>
   </div>`;
 }
 
@@ -6109,8 +6123,8 @@ function renderCollege() {
           <div class="field"><label>You add each year</label><input class="input tnum" inputmode="decimal" data-act="cl-contrib" data-child="${esc(cid)}" value="${fmtEditNum(cfg.annualContrib)}" placeholder="0"><span class="text-muted" style="font-size:11px;">today's dollars</span></div>
         </div>
         <div style="font-size:15px;line-height:1.5;margin-bottom:8px;">That's <b>${fmtMoney(totalCost)}</b> total over ${base.remainingYears} remaining years${future ? ` in future dollars` : ` in today's dollars`}. This 529 covers <b>all ${base.remainingYears} remaining years in <span style="color:var(--color-accent-700);">${successPct}</span></b> of outcomes${base.fullSuccess < 1 ? `, and on average funds <b>${yrsFunded}</b> of ${base.remainingYears} remaining years` : ''}.</div>
-        <p class="text-muted" style="font-size:12px;line-height:1.6;margin:0 0 12px;">The 529 grows while you save, then is drawn down across the <b>${cfg.years} drawdown years (ages ${cfg.startAge}–${cfg.startAge + cfg.years - 1})</b> — the yellow shaded band begins with the first tuition withdrawal. Each drawdown-year balance is shown after that year’s tuition payment. If college has already started, this assumes the current year’s bill is still unpaid; earlier years are excluded from the funding result. ${startBand ? `After the first tuition payment at age ${cfg.startAge}, the median simulated balance is <b>${fmtCompactMoney(startBand.p50)}</b> (middle 80%: ${fmtCompactMoney(startBand.p10)}–${fmtCompactMoney(startBand.p90)}).` : ''} Hover the chart to read any age. All figures in ${unit}.</p>
-        ${fanChartSVG(dispBands, { age: cfg.startAge, label: 'Drawdown starts' }, fanId, { tickEvery: (base.bands[base.bands.length - 1].age - base.bands[0].age) <= 18 ? 2 : 5, shadeFrom: Math.max(cfg.currentAge, cfg.startAge), shadeTo: cfg.startAge + cfg.years - 1, shadeLabel: 'drawdown years' })}
+        <p class="text-muted" style="font-size:12px;line-height:1.6;margin:0 0 12px;">The 529 grows while you save, then is drawn down across the <b>${cfg.years} drawdown years (ages ${cfg.startAge}–${cfg.startAge + cfg.years - 1})</b>. The yellow band begins one year before the first withdrawal so it aligns with the chart segment that drops into the first tuition payment. Each drawdown-year balance is shown after that year’s tuition payment. If college has already started, this assumes the current year’s bill is still unpaid; earlier years are excluded from the funding result. ${startBand ? `After the first tuition payment at age ${cfg.startAge}, the median simulated balance is <b>${fmtCompactMoney(startBand.p50)}</b> (middle 80%: ${fmtCompactMoney(startBand.p10)}–${fmtCompactMoney(startBand.p90)}).` : ''} Hover the chart to read any age. All figures in ${unit}.</p>
+        ${fanChartSVG(dispBands, { age: cfg.startAge, label: 'Drawdown starts' }, fanId, { tickEvery: (base.bands[base.bands.length - 1].age - base.bands[0].age) <= 18 ? 2 : 5, shadeFrom: Math.max(cfg.currentAge, cfg.startAge - 1), shadeTo: cfg.startAge + cfg.years - 1, shadeLabel: 'drawdown years' })}
       </div></div>
     </section>`;
   }).join('');
@@ -6633,7 +6647,18 @@ function onClick(e) {
     case 'dollar-mode': ui.dollarMode = ds.mode === 'future' ? 'future' : 'today'; render(); break; // display-only; no re-sim
     case 'rd-confirm-mapping': portfolio.retirementSettings.mappingConfirmed = true; invalidateRetireCache(); markDirty(); render(); break;
     case 'rd-unconfirm': portfolio.retirementSettings.mappingConfirmed = false; markDirty(); render(); break;
-    case 'rd-reset-musigma': portfolio.retirementSettings.muSigma = null; invalidateRetireCache(); markDirty(); render(); break;
+    case 'rd-reset-musigma': {
+      const retainResults = ui.view === 'retire' && !!RETIRE_CACHE;
+      portfolio.retirementSettings.muSigma = null;
+      if (!retainResults) invalidateRetireCache();
+      markDirty(); render();
+      if (retainResults) {
+        const assumptions = document.querySelector('[data-retire-assumptions]');
+        if (assumptions) assumptions.open = true;
+        showRetireStaleIndicators();
+      }
+      break;
+    }
     case 'rd-contrib-reset': portfolio.retirementSettings.contribOverride = null; invalidateRetireCache(); markDirty(); render(); break;
     case 'rd-pension-add': {
       const rs = portfolio.retirementSettings; rs.pensions = rs.pensions || [];
@@ -6708,8 +6733,6 @@ function onChange(e) {
   else if (a === 'sim-paths') {
     const paths = setSiteSimulationPaths(t.value);
     t.value = paths;
-    const runButton = t.closest('.sim-run') && t.closest('.sim-run').querySelector('[data-act="run-simulation"]');
-    if (runButton) runButton.textContent = `Run ${paths.toLocaleString()} simulations`;
     markDirty();
   }
   else if (a === 'ov-ord' || a === 'ov-ltcg' || a === 'ov-state' || a === 'ov-niit' || a === 'ov-surtax') { applyOverride(a, t); render(); }
@@ -6743,16 +6766,21 @@ function onChange(e) {
   }
   // Retirement modeler settings (commit on change → re-render to refresh derived values)
   else if (a === 'rd-ss-mode') { const rs = portfolio.retirementSettings; rs.ssPIA = ds.mode === 'estimate' ? 'estimate' : (Array.isArray(rs.ssPIA) ? rs.ssPIA : [0, 0]); invalidateRetireCache(); markDirty(); render(); }
-  else if (a === 'rd-spend') { portfolio.retirementSettings.spendingTargetRealAnnual = Number(t.value) || 0; invalidateRetireCache(); markDirty(); render(); }
+  else if (a === 'rd-spend') { portfolio.retirementSettings.spendingTargetRealAnnual = Number(t.value) || 0; markDirty(); showRetireStaleIndicators(); }
   else if (a === 'rd-scope') { portfolio.retirementSettings.accountScope = ds.mode; invalidateRetireCache(); markDirty(); render(); }
   else if (a === 'rd-map-vehicle') { const acc = accountById(ds.account); if (acc) { acc.vehicle = t.value; invalidateRetireCache(); markDirty(); render(); } }
   else if (a === 'rd-map-treatment') { const acc = accountById(ds.account); if (acc) { acc.taxTreatment = t.value || undefined; invalidateRetireCache(); markDirty(); render(); } }
-  else if (a && a.indexOf('rd-') === 0) { applyRetireSetting(a, ds, t); render(); }
+  else if (a && a.indexOf('rd-') === 0) {
+    const inlineAssumption = ui.view === 'retire' && ['rd-mu', 'rd-sigma', 'rd-inflation'].includes(a) && !!RETIRE_CACHE;
+    applyRetireSetting(a, ds, t, inlineAssumption);
+    if (inlineAssumption) showRetireStaleIndicators(); else render();
+  }
   else if (a && a.indexOf('cl-') === 0) { applyCollegeSetting(a, ds, t); render(); }
 }
 
-/* Retirement modeler field commit. Mutates retirementSettings, invalidates cache. */
-function applyRetireSetting(a, ds, el) {
+/* Retirement modeler field commit. Mutates settings and usually clears cached results;
+   inline projection assumptions can retain the last run so it can be marked stale. */
+function applyRetireSetting(a, ds, el, preserveCache) {
   const rs = portfolio.retirementSettings;
   const clamp = (n, lo, hi) => Math.max(lo, Math.min(hi, n));
   const ensureManualPIA = () => { if (!Array.isArray(rs.ssPIA)) rs.ssPIA = [0, 0]; };
@@ -6792,7 +6820,8 @@ function applyRetireSetting(a, ds, el) {
       break;
     }
   }
-  invalidateRetireCache(); markDirty();
+  if (!preserveCache) invalidateRetireCache();
+  markDirty();
 }
 
 function onInput(e) {
@@ -6822,25 +6851,10 @@ function onInput(e) {
   else if (a === 'set-band') { const n = parseNum(t.value); if (n != null) { portfolio.meta.driftBandPct = Math.max(1, Math.min(50, n)); markDirty(); } }
   else if (a === 'glide-rationale') { const gp = ensureGlide(ds.child); gp.rationale = t.value; markDirty(); }
   else if (a === 'rd-spend') {
-    const lab = document.getElementById('retire-spend-label');
-    if (lab) lab.textContent = fmtMoney(Number(t.value) || 0);
+    const lab = document.getElementById('retire-spend-draft');
+    if (lab) lab.textContent = `${fmtMoney(Number(t.value) || 0)}/yr`;
   }
 }
-let _retireSpendPending = 0, _retireSpendRAF = 0;
-
-/* Spending-slider live recompute — reruns the MC at the dragged spend without a full re-render. */
-function updateRetireLive(spend) {
-  const model = retireModel(spend);
-  const lab = document.getElementById('retire-spend-label'); if (lab) lab.textContent = fmtMoney(spend);
-  const suc = document.getElementById('retire-success'); if (suc) suc.textContent = fmtPct(model.base.success * 100, 0);
-  const inflation = (portfolio.retirementSettings.inflationPct ?? 2.5) / 100;
-  const bands = dollarModeIsFuture() ? model.base.bands.map(b => {
-    const factor = Math.pow(1 + inflation, Math.max(0, b.age - model.cfg.currentAge));
-    return { age: b.age, p10: b.p10 * factor, p25: b.p25 * factor, p50: b.p50 * factor, p75: b.p75 * factor, p90: b.p90 * factor };
-  }) : model.base.bands;
-  const fan = document.getElementById('retire-fan'); if (fan) fan.innerHTML = fanChartSVG(bands, { age: model.cfg.retireAge, label: 'Retire at' }, 'retirefan');
-}
-
 /* Tax Profile expert override (§13.1) — blank clears a field. */
 function applyOverride(act, el) {
   const ov = portfolio.taxSettings.override = portfolio.taxSettings.override || {};

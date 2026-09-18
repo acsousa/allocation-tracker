@@ -1,31 +1,59 @@
-/* Regression: dragging retirement spending must retain the selected dollar units. */
+/* Regression: simulations rerun only on demand and stale retirement results stay visible. */
 const fs = require('node:fs');
-const vm = require('node:vm');
 const assert = require('node:assert/strict');
 const path = require('node:path');
+
 const html = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
-const script = html.match(/\n<script>\n([\s\S]*)\n<\/script>/)[1];
-const nodes = Object.fromEntries(['retire-spend-label', 'retire-success', 'retire-fan'].map(id => [id, {}]));
-const sandbox = {
-  window: { addEventListener() {}, matchMedia() { return { matches: false }; } },
-  document: { addEventListener() {}, getElementById(id) { return nodes[id] || null; } },
-  console
-};
-vm.createContext(sandbox);
-vm.runInContext(script + `
-portfolio = { retirementSettings: { inflationPct: 10 } };
-retireModel = () => ({cfg: {currentAge: 60, retireAge: 65}, base: {success: .75, bands: [{age: 61, p10: 100, p25: 200, p50: 300, p75: 400, p90: 500}]}});
-fanChartSVG = bands => JSON.stringify(bands);
-dollarModeIsFuture = () => true;
-updateRetireLive(90000);
-`, sandbox);
-let band = JSON.parse(nodes['retire-fan'].innerHTML)[0];
-assert.ok(Math.abs(band.p50 - 330) < 1e-8, 'Future-dollar median must remain inflated during slider updates');
-assert.ok(Math.abs(band.p10 - 110) < 1e-8, 'Future-dollar percentile must retain inflation');
-assert.match(nodes['retire-spend-label'].textContent, /90,000/);
-assert.match(nodes['retire-success'].textContent, /75/);
-vm.runInContext('dollarModeIsFuture = () => false; updateRetireLive(90000);', sandbox);
-assert.equal(JSON.parse(nodes['retire-fan'].innerHTML)[0].p50, 300, 'Real-dollar display must remain uninflated');
-assert.ok(!html.includes('even in the worst 10%, you'), 'Do not describe P10 as a guaranteed floor');
-assert.ok(!html.includes('Most likely (median)'), 'Median is not the mode');
-console.log('7 projection display checks passed');
+let checks = 0;
+function check(message, fn) { fn(); checks++; console.log('✓ ' + message); }
+
+const runPanel = html.match(/function simulationRunPanel[\s\S]*?\n}\n\nfunction retireStaleNotice/)[0];
+const retireView = html.match(/function renderRetire\(\)[\s\S]*?\n}\n\n\/\/ Assumptions panel/)[0];
+const assumptions = html.match(/function retireAssumptionsPanel[\s\S]*?\n}\n\n\/\* =+/)[0];
+
+check('run panel keeps the simple button-only layout', () => {
+  assert.match(runPanel, /Run \$\{Number\(count\)\.toLocaleString\(\)\} simulations/);
+  assert.ok(!runPanel.includes('data-act="sim-paths"'));
+});
+
+check('simulation path count is configured in settings', () => {
+  assert.match(html, /Simulation paths \(retirement &amp; college\)[\s\S]*data-act="sim-paths"/);
+  assert.match(html, /Default 10,000\. Runs only when you press a simulation button\./);
+});
+
+check('retirement keeps the last completed model when inputs become stale', () => {
+  assert.match(retireView, /if \(!RETIRE_CACHE\)/);
+  assert.match(retireView, /const retireStale = !retireCacheIsCurrent\(\)/);
+  assert.match(retireView, /data-retire-stale-card/);
+  assert.match(retireView, /retireStaleNotice\(\)/);
+});
+
+check('spending changes show a selected draft without recomputing results', () => {
+  assert.match(html, /id="retire-spend-draft"/);
+  assert.ok(!html.includes('function updateRetireLive'));
+  assert.match(html, /portfolio\.retirementSettings\.spendingTargetRealAnnual = Number\(t\.value\) \|\| 0; markDirty\(\); showRetireStaleIndicators\(\);/);
+});
+
+check('assumption edits retain cached results and expose a rerun notice', () => {
+  assert.match(assumptions, /data-retire-assumptions/);
+  assert.match(assumptions, /retireStaleNotice\(\)/);
+  assert.match(html, /applyRetireSetting\(a, ds, t, inlineAssumption\)/);
+  assert.match(html, /if \(!preserveCache\) invalidateRetireCache\(\)/);
+});
+
+check('college drawdown shading begins one year before withdrawal', () => {
+  assert.match(html, /shadeFrom: Math\.max\(cfg\.currentAge, cfg\.startAge - 1\)/);
+  assert.match(html, /yellow band begins one year before the first withdrawal/);
+});
+
+check('shared app footer is the only app-page disclaimer footer', () => {
+  assert.equal((html.match(/<footer class="app-base-footer/g) || []).length, 1);
+  assert.equal((html.match(/Suggestions, not advice — nothing is executed here/g) || []).length, 1);
+});
+
+check('projection language does not overstate percentile outcomes', () => {
+  assert.ok(!html.includes('even in the worst 10%, you'));
+  assert.ok(!html.includes('Most likely (median)'));
+});
+
+console.log(`${checks} projection display checks passed`);
