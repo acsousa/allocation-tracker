@@ -91,8 +91,10 @@ shared assets, the app, and compatibility URLs must be deployed together.
 | Production branch | `main` |
 
 Workers Builds runs the build command first, then Wrangler uploads only the
-generated `dist` assets. Use a feature branch for preview deployments before
-merging; production deploys from `main`.
+generated `dist` assets. The checked-in `wrangler.jsonc` identifies the existing
+Worker and gives both production and preview commands the same asset and routing
+configuration. Use a feature branch for preview deployments before merging;
+production deploys from `main`.
 
 ### Manual / Direct Upload
 
