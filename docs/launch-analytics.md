@@ -28,7 +28,7 @@ Cloudflare can count visits to `/pricing.html`. It cannot directly count these e
 
 If publishing the generated download, exclude `/downloads/*` and preview hosts from Cloudflare injection rules. The generated download has no analytics code, uses `Cache-Control: no-transform` and attachment disposition, and includes a policy blocking external scripts and network connections. Verify edge behavior after deployment.
 
-For Cloudflare Pages, the optional build command is `node scripts/build-site.js`, with output directory `dist`. Other static hosts must apply equivalent download headers when using that build. Hosting settings were not changed here.
+For the Git-connected Cloudflare Worker, use `node scripts/build-site.js` as the build command, `npx wrangler deploy --assets ./dist` as the production deploy command, and `npx wrangler versions upload --assets ./dist` for non-production versions. Wrangler uploads the generated `dist` directory, including its `_headers` rules. Other static hosts must apply equivalent download headers when using that build.
 
 Only if auto-injection is disabled later, `CF_ANALYTICS_MODE=manual` and the public `CF_WEB_ANALYTICS_TOKEN` can add a production-host-only beacon. Do not combine manual and automatic installation. `CF_ANALYTICS_MODE=disabled` omits manual code but does not turn off Cloudflare's edge injection.
 

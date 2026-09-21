@@ -73,24 +73,28 @@ enter setup with empty data. Printed demo reports are labeled as sample data.
 The mobile **Navigate** menu selects the main view. **Help** explains the app and
 local-file model. The logo returns to the public landing page.
 
-## Cloudflare Pages deployment
+## Cloudflare Workers deployment
 
 The main deployed page is the lightweight **`index.html`** landing page; the app
 is emitted at **`/app/`**. Do not upload individual files: pricing, privacy,
 shared assets, the app, and compatibility URLs must be deployed together.
 
-### Git-connected Pages project
+### Git-connected Worker
 
 | Setting | Value |
 | --- | --- |
-| Framework preset | None |
-| Root directory | Repository root |
+| Git repository | `acsousa/allocation-tracker` |
+| Root directory | `/` |
 | Build command | `node scripts/build-site.js` |
-| Build output directory | `dist` |
+| Deploy command | `npx wrangler deploy --assets ./dist` |
+| Version command | `npx wrangler versions upload --assets ./dist` |
 | Production branch | `main` |
 
-Use a feature branch for preview deployments before merging. Production deploys
-from `main`.
+Workers Builds runs the build command first, then Wrangler uploads only the
+generated `dist` assets. The checked-in `wrangler.jsonc` identifies the existing
+Worker and gives both production and preview commands the same asset and routing
+configuration. Use a feature branch for preview deployments before merging;
+production deploys from `main`.
 
 ### Manual / Direct Upload
 
@@ -120,9 +124,10 @@ Keep Cloudflare's existing automatic analytics injection enabled; the default
 build does not add a duplicate beacon. Exclude `/downloads/*` from injection.
 See [analytics configuration](docs/launch-analytics.md) for manual/disabled modes.
 
-Cloudflare Pages may normalize `/index.html` to `/` and `/pricing.html` to
-`/pricing`. The links and fragment routes support this behavior. See
-[Cloudflare's serving-pages documentation](https://developers.cloudflare.com/pages/configuration/serving-pages/).
+Cloudflare Workers static assets may normalize `/index.html` to `/` and
+`/pricing.html` to `/pricing`. The links and fragment routes support the default
+`auto-trailing-slash` behavior. See
+[Cloudflare's HTML handling documentation](https://developers.cloudflare.com/workers/static-assets/routing/advanced/html-handling/).
 
 ### Blank-page fix and deployment checks
 
