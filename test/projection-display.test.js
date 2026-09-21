@@ -3,7 +3,7 @@ const fs = require('node:fs');
 const assert = require('node:assert/strict');
 const path = require('node:path');
 
-const html = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
+const html = fs.readFileSync(path.join(__dirname, '..', 'app.html'), 'utf8');
 let checks = 0;
 function check(message, fn) { fn(); checks++; console.log('✓ ' + message); }
 

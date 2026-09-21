@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
 const path = require('node:path');
-const source = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8').match(/\n<script>\n([\s\S]*)\n<\/script>/)[1];
+const source = fs.readFileSync(path.join(__dirname, '..', 'app.html'), 'utf8').match(/\n<script>\n([\s\S]*)\n<\/script>/)[1];
 let input, picker, pickerOptions, writeHook, downloads = 0;
 const window = { addEventListener() {}, showSaveFilePicker: async options => { pickerOptions = options; return picker; }, showOpenFilePicker: async () => [picker] };
 const sandbox = { window, self: {}, console, setTimeout() {}, Blob,

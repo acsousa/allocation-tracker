@@ -8,11 +8,17 @@ and 529 simulations. It does not connect to your bank or execute trades.
 See [product context](docs/product-context.md) for the durable product purpose,
 privacy commitments, planning direction, and desktop/mobile requirement.
 
-## Two files, two jobs
+## Separate public site and local app
 
-- **`index.html` is the app.** This is the canonical source and website entry
-  point. Its JavaScript, styles, and charts are inline; no framework or runtime
-  dependencies are needed. Open it directly in a browser to use it offline.
+- **`index.html` is the public landing page.** It stays lightweight and links to
+  the dedicated app at `/app/`.
+- **`app.html` is the application source.** Its JavaScript, styles, and charts
+  are inline; no framework or runtime dependencies are needed. The build emits
+  it at `dist/app/index.html` and as the self-contained offline download.
+- **`scripts/marketing-shell.js`, `assets/marketing.css`, and
+  `assets/marketing.js` are the shared public
+  shell.** The build uses them to keep the landing, pricing, and privacy headers,
+  footers, width, navigation, and interaction patterns synchronized.
 - **Your portfolio `.json` file is your data.** Open it locally at the beginning
   of a session and save it when you finish. Your holdings and balances are never
   uploaded by this release. Keep a backup somewhere you trust.
@@ -37,8 +43,9 @@ upload data.
    current session. This does **not** write a file to disk.
 4. Explore your allocation, then choose **Save file** before leaving. An amber
    **⚠ Save needed** button means there is unsaved work.
-5. Next time, choose **Returning? Open portfolio file** and select your JSON file.
-   This reads the file locally; it is not an upload.
+5. Next time, choose **Open an existing portfolio file** in the landing guide and
+   select your JSON file. The app opens it directly without a second picker. This
+   reads the file locally; it is not an upload.
 
 Finish an in-progress check-in with **Record check-in** before saving the file.
 Chrome/Edge can support saving back to a selected file; browsers without that
@@ -68,8 +75,9 @@ local-file model. The logo returns to the public landing page.
 
 ## Cloudflare Pages deployment
 
-The main deployed page is **`index.html`**. Do not rename files by hand or upload
-only that file: pricing, privacy, and compatibility URLs need to be deployed too.
+The main deployed page is the lightweight **`index.html`** landing page; the app
+is emitted at **`/app/`**. Do not upload individual files: pricing, privacy,
+shared assets, the app, and compatibility URLs must be deployed together.
 
 ### Git-connected Pages project
 
@@ -81,8 +89,8 @@ only that file: pricing, privacy, and compatibility URLs need to be deployed too
 | Build output directory | `dist` |
 | Production branch | `main` |
 
-Use the feature branch for a preview deployment before merging. This branch is
-`codex/new-user-experience`; local changes are not automatically published.
+Use a feature branch for preview deployments before merging. Production deploys
+from `main`.
 
 ### Manual / Direct Upload
 
@@ -96,10 +104,12 @@ Upload the **contents of `dist/`** as one deployment. Its root should contain:
 
 ```text
 dist/
-  index.html                  # main entry at /
-  allocation-tracker.html     # full compatibility copy for old bookmarks
+  index.html                   # lightweight public landing at /
+  app/index.html               # portfolio application at /app/
+  allocation-tracker.html      # compatibility redirect for old bookmarks
   pricing.html
   privacy.html
+  assets/marketing.css         # shared public-page layout and interactions
   favicon.svg                 # browser tab icon
   404.html                     # visible error page, with a home link
   _headers
@@ -121,14 +131,16 @@ During the September 2026 investigation, production `/` served the app, while
 logo links still pointed to that missing URL. The in-page Open the app button
 worked in the browser test; the missing destination was the reproduced failure.
 
-Public links now use `index.html`, and the build retains the legacy app URL.
-The repository's small `allocation-tracker.html` compatibility page redirects to
-`index.html`, preserving query parameters and section anchors. **Edit
-`index.html`, not this compatibility file.**
+The public Start Here guide sends a chosen action to `/app/`; a bare hosted
+`/app/` visit returns to that guide. The standalone download opens the same
+guide in place. The repository's small
+`allocation-tracker.html` compatibility page redirects there while preserving
+query parameters and app anchors.
 
 After deploying, verify:
 
-- `/` displays the landing page, and **Start here** opens the guide.
+- `/` displays the landing page, and **Start here** opens the guide without leaving it.
+- **Build my portfolio** enters `/app/#setup` directly; demo links enter their requested app view.
 - `/pricing` → **Start here** opens the same guide.
 - Pricing's section links land on the intended main-page sections.
 - `/allocation-tracker.html` still opens the app.
@@ -160,12 +172,17 @@ for testing; use the demo or a throwaway copy.
 
 ### Where to edit copy
 
-- `index.html`: landing page (`renderMarketingLanding`), starter dialog
-  (`dialogHTML`, `onboard` case), setup (`renderSetup`), and app text.
+- `index.html`: public landing content.
+- `app.html`: starter dialog (`dialogHTML`, `onboard` case), setup
+  (`renderSetup`), and application text.
 - `pricing.html`: introductory offer and planned paid capabilities.
 - `privacy.html`: privacy disclosures.
+- `scripts/marketing-shell.js`: shared public navigation and footer markup.
+- `assets/marketing.css`: shared public layout, width, and interaction styles.
+- `assets/marketing.js`: landing-page Start Here dialog behavior.
 
-All three pages are self-contained. `dist/` is generated and ignored by Git.
+`dist/` is generated and ignored by Git. Use the built output when reviewing
+public-page chrome because the shared shell is applied at build time.
 
 ## Roadmap and limitations
 

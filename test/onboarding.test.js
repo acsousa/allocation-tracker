@@ -2,15 +2,17 @@
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
-const html = fs.readFileSync(require('node:path').join(__dirname, '..', 'index.html'), 'utf8');
+const html = fs.readFileSync(require('node:path').join(__dirname, '..', 'app.html'), 'utf8');
 const source = html.match(/\n<script>\n([\s\S]*)\n<\/script>/)[1];
-const window = {addEventListener(){}, scrollTo(){}, location:{hash:'',protocol:'https:',href:'https://realallocation.com/index.html'}};
+const handoffStore = new Map();
+const sessionStorage = {getItem:key=>handoffStore.has(key)?handoffStore.get(key):null,setItem:(key,value)=>handoffStore.set(key,String(value)),removeItem:key=>handoffStore.delete(key)};
+const window = {addEventListener(){}, scrollTo(){}, sessionStorage, location:{hash:'',protocol:'https:',origin:'https://realallocation.com',href:'https://realallocation.com/app/'}};
 const sandbox = {window, self:{}, console, URL, Blob, setTimeout(){}, requestAnimationFrame(fn){fn();}, document:{addEventListener(){},querySelectorAll(){return [];},getElementById(){return null;}}};
 vm.createContext(sandbox);
 vm.runInContext(source + `
 render = () => {}; toast = () => {}; openDialog = d => { ui.dialog = d; };
-window.test = {reviewSubtabs, dashToolbarHTML, driftControlsHTML, checkinAccountBlock, chooseSetupGoal, applySetupGoal, setupGoalTotal, taxProfileNeedsReview, beginSetup, reviewChanges, renderReviewChanges, renderSetup, topTabOf, demoActionAllowed, onClick, onInput, onChange, saveCheckin, saveFile, handlePublicRoute,
-state:()=>({demoMode,setupStep,dirty,checkinDraftDirty}),
+window.test = {reviewSubtabs, dashToolbarHTML, driftControlsHTML, checkinAccountBlock, chooseSetupGoal, applySetupGoal, setupGoalTotal, taxProfileNeedsReview, beginSetup, reviewChanges, renderReviewChanges, renderSetup, renderOpenFile, dialogHTML, topTabOf, demoActionAllowed, onClick, onInput, onChange, saveCheckin, saveFile, handlePublicRoute, consumeLandingPortfolio, handoffKey:LANDING_FILE_HANDOFF_KEY,
+state:()=>({demoMode,setupStep,dirty,checkinDraftDirty,fileName}),
 setDraft: d => { ui.checkin=d; checkinDraftDirty=true; },
 setMode: (step, demo=false) => {setupStep=step;demoMode=demo;}
 };`,sandbox);
@@ -19,7 +21,7 @@ const event=(act,rest={})=>({target:{closest:()=>({dataset:{act,...rest},value:'
 let checks=0;
 function check(name,fn){fn();checks++;console.log('✓ '+name);}
 check('Dashboard is separate from Review',()=>{assert.equal(T.topTabOf('dashboard'),'dashboard');assert.equal(T.topTabOf('review'),'review');});
-check('new setup clears demo and old holdings without saving',()=>{A.loadDemoData();T.beginSetup();assert.equal(T.state().setupStep,1);assert.equal(T.state().demoMode,false);assert.equal(A.portfolio.holdings.length,0);assert.equal(A.portfolio.goals.length,0);});
+check('new setup clears demo and keeps child creation inside the 529 account dialog',()=>{A.loadDemoData();T.beginSetup();assert.equal(T.state().setupStep,1);assert.equal(T.state().demoMode,false);assert.equal(A.portfolio.holdings.length,0);assert.equal(A.portfolio.goals.length,0);assert.ok(!T.renderSetup().includes('Add a child for a 529'));A.ui.dialog={type:'account'};const dialog=T.dialogHTML();assert.match(dialog,/data-act="account-add-child"/);assert.match(dialog,/id="f-child-inline" hidden/);A.ui.dialog=null;});
 check('setup needs an account, then advances through basics and holdings',()=>{T.onClick(event('setup-next'));assert.equal(T.state().setupStep,1);A.portfolio.accounts.push({id:'a',name:'Account',category:'Retirement',status:'active'});T.onClick(event('setup-next'));assert.equal(T.state().setupStep,2);T.onClick(event('setup-next'));assert.equal(T.state().setupStep,3);assert.ok(A.ui.checkin);});
 check('setup goals validate totals, apply selected mix, and reset to no target',()=>{
   T.chooseSetupGoal('60');assert.equal(T.setupGoalTotal(),100);assert.equal(T.applySetupGoal(),true);assert.equal(A.portfolio.goals[0].targets.us_bond,40);
@@ -49,5 +51,6 @@ check('review includes archived holdings and distinguishes balance changes',()=>
 check('demo blocks account, holding, goal, snapshot and mapping mutations',()=>{A.loadDemoData();const before=JSON.stringify(A.portfolio);for(const a of ['save-account','archive-account','archive-holding','goal-save','ci-save','plan-generate']){assert.equal(T.demoActionAllowed(a),false);T.onClick(event(a));}T.onChange(event('rd-map-vehicle',{account:A.portfolio.accounts[0].id}));assert.equal(JSON.stringify(A.portfolio),before);assert.equal(T.state().dirty,false);});
 check('demo allows exploration and temporary modeling',()=>{for(const a of ['nav','pick-snap','drill','rd-retire-age','cl-cost','dollar-mode']) assert.equal(T.demoActionAllowed(a),true);});
 check('Start here always opens the guide, including with data present',()=>{T.onClick(event('landing-open'));assert.equal(A.ui.dialog.type,'onboard');});
-check('pricing start route opens the guide and section route is handled',()=>{window.location.hash='#start';assert.equal(T.handlePublicRoute(),true);assert.equal(A.ui.dialog.type,'onboard');window.location.hash='#lp-trust';assert.equal(T.handlePublicRoute(),true);});
+check('app deep links enter setup, file selection, onboarding, and demo without chained dialogs',()=>{window.location.hash='#setup';assert.equal(T.handlePublicRoute(),true);assert.equal(A.ui.view,'setup');assert.equal(T.state().setupStep,1);assert.equal(A.ui.dialog,null);window.location.hash='#open';assert.equal(T.handlePublicRoute(),true);assert.equal(A.ui.view,'openfile');assert.equal(A.ui.dialog,null);assert.match(T.renderOpenFile(),/Choose portfolio file/);window.location.hash='#start';assert.equal(T.handlePublicRoute(),true);assert.equal(A.ui.dialog.type,'onboard');window.location.hash='#lp-trust';assert.equal(T.handlePublicRoute(),false);window.location.hash='#demo-college';assert.equal(T.handlePublicRoute(),true);assert.equal(A.ui.view,'college');assert.equal(A.ui.dialog,null);assert.equal(T.state().demoMode,true);});
+check('landing file selection hands the portfolio to the app once and skips the second picker',()=>{const imported=A.emptyPortfolio();imported.accounts.push({id:'a-imported',name:'Imported account',category:'Retirement',status:'active'});window.sessionStorage.setItem(T.handoffKey,JSON.stringify({name:'Existing portfolio.json',text:JSON.stringify(imported)}));window.location.hash='#open';assert.equal(T.handlePublicRoute(),true);assert.equal(A.ui.view,'dashboard');assert.equal(A.portfolio.accounts[0].name,'Imported account');assert.equal(T.state().fileName,'Existing portfolio.json');assert.equal(window.sessionStorage.getItem(T.handoffKey),null);A.loadDemoData();});
 (async()=>{const r=await T.saveFile();assert.equal(r.ok,false);console.log('✓ demo file saving blocked');checks++;console.log(checks+' onboarding regression groups passed');})().catch(e=>{console.error(e);process.exitCode=1;});

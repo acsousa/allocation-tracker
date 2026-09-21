@@ -1,11 +1,11 @@
-/* Node sandbox harness for index.html — tax engine, migration,
+/* Node sandbox harness for app.html — tax engine, migration,
    and recommendation logic. No dependencies. Run: node test/tax-engine.test.js
    It loads the real <script> in a vm with minimal browser stubs and asserts. */
 const fs = require('fs');
 const vm = require('vm');
 const path = require('path');
 
-const HTML = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
+const HTML = fs.readFileSync(path.join(__dirname, '..', 'app.html'), 'utf8');
 const m = HTML.match(/\n<script>\n([\s\S]*)\n<\/script>/);
 if (!m) { console.error('could not extract <script>'); process.exit(1); }
 

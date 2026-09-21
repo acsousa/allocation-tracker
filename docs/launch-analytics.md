@@ -2,15 +2,17 @@
 
 ## Simple deployment
 
-The source app and public pages are ordinary, self-contained HTML files:
+The source app and public pages are ordinary static files:
 
-- `index.html` — the canonical app and landing page, including retirement/529 simulation introduction.
+- `index.html` — the lightweight public landing page.
+- `app.html` — the canonical application source, emitted at `/app/`.
 - `pricing.html` — plans and upcoming features; all **Get more information** buttons open feature-specific email drafts to hello@realallocation.com.
 - `privacy.html` — local portfolio processing and hosted analytics explained.
+- `scripts/marketing-shell.js` and `assets/marketing.css` — the shared public header, footer, width, and interaction styling.
 
-Keep these files alongside one another. They work directly from the local server without a build: `/` (or `/index.html`), `/pricing.html`, `/privacy.html`. Pricing uses the same Quartermaster brand, navigation style, colors and header treatment as the landing page. Pricing links navigate in the same tab. The app's existing unsaved-change warning remains active when leaving a modified portfolio.
+Review the generated `dist/` output because the shared public shell is applied at build time. The app's existing unsaved-change warning remains active when leaving a modified portfolio.
 
-For the existing generated deployment workflow, run `node scripts/build-site.js` and publish `dist/`. It copies those pages, provides both `index.html` and `allocation-tracker.html`, and creates an isolated standalone app download. No runtime dependencies or application server are required. Previous generated interest-page routes are removed on rebuilding.
+Run `node scripts/build-site.js` and publish `dist/`. It emits the public pages, the app at `app/index.html`, a compatibility redirect, and an isolated standalone app download. No runtime dependencies or application server are required. Previous generated interest-page routes are removed on rebuilding.
 
 ## What is available
 
@@ -42,10 +44,9 @@ Keep portable portfolio JSON export available independently of report pricing. F
 
 ### Entry-point compatibility
 
-Edit `index.html`; do not manually rename it for deployment. Public navigation uses
-`index.html` and `index.html#start`. The root `allocation-tracker.html` is only a
-compatibility redirect for local/older links. The build emits a full app at the
-legacy URL too, preserving old bookmarks without depending on a redirect.
+Edit `index.html` for landing content and `app.html` for the application. Public
+start links use `/#start`. The root `allocation-tracker.html` is only a
+compatibility redirect for older links and preserves their query and app anchor.
 Deploy the whole `dist/` folder, including the public pages and `404.html`.
 
 

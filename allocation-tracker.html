@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Quartermaster — opening app</title></head>
-<body><p>Quartermaster has moved to <a href="index.html">the main page</a>.</p>
+<body><p>Quartermaster has moved to <a href="app/">the app</a>.</p>
 <script>
-const destination = new URL('index.html', location.href);
+const destination = new URL('app/', location.href);
 destination.search = location.search;
 destination.hash = location.hash;
 location.replace(destination.href);

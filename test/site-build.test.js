@@ -4,7 +4,7 @@ const os = require('node:os');
 const path = require('node:path');
 const vm = require('node:vm');
 const { buildSite, analyticsMarkup } = require('../scripts/build-site');
-const pages = ['pricing.html', 'privacy.html'];
+const pages = ['index.html', 'pricing.html', 'privacy.html'];
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'quartermaster-site-'));
 let checks = 0;
 function check(name, fn) { fn(); checks++; console.log('✓ ' + name); }
@@ -17,25 +17,30 @@ try {
     assert.ok(!headers.split('/downloads/*')[0].includes('no-transform'));
     assert.ok(headers.split('/downloads/*')[1].includes('no-transform'));
   });
-  check('index is canonical and the legacy deployment URL serves the same app', () => {
+  check('landing and app are separate, with a stable legacy redirect', () => {
     const index = fs.readFileSync(path.join(tmp, 'index.html'), 'utf8');
-    assert.equal(fs.readFileSync(path.join(tmp, 'allocation-tracker.html'), 'utf8'), index);
+    const app = fs.readFileSync(path.join(tmp, 'app', 'index.html'), 'utf8');
+    assert.match(index, /class="landing-hero"/);
+    assert.ok(!index.includes('window.__AAT__'));
+    assert.match(app, /window\.__AAT__/);
+    assert.ok(index.length < app.length / 3, 'the public landing should be substantially lighter than the app');
+    assert.match(fs.readFileSync(path.join(tmp, 'allocation-tracker.html'), 'utf8'), /new URL\('app\/'/);
     for (const page of pages) assert.ok(!fs.readFileSync(path.join(tmp, page), 'utf8').includes('href="allocation-tracker.html'));
     assert.match(fs.readFileSync(path.join(tmp, '404.html'), 'utf8'), /href="\/"/);
   });
   check('source compatibility redirect preserves section and query', () => {
     const alias = fs.readFileSync(path.join(__dirname, '..', 'allocation-tracker.html'), 'utf8');
     let destination;
-    const location = {href:'https://example.com/allocation-tracker.html?preview=1#lp-trust',search:'?preview=1',hash:'#lp-trust',replace(url){destination=url;}};
+    const location = {href:'https://example.com/allocation-tracker.html?preview=1#start',search:'?preview=1',hash:'#start',replace(url){destination=url;}};
     vm.runInNewContext(alias.match(/<script>([\s\S]*?)<\/script>/)[1], {URL, location});
-    assert.equal(destination, 'https://example.com/index.html?preview=1#lp-trust');
+    assert.equal(destination, 'https://example.com/app/?preview=1#start');
   });
   check('hosted pages include the deployable favicon and offline copy embeds its icon', () => {
     assert.match(fs.readFileSync(path.join(tmp, 'favicon.svg'), 'utf8'), /<svg/);
-    for (const name of ['index.html', 'allocation-tracker.html', ...pages]) {
+    for (const name of ['index.html', 'app/index.html', 'pricing.html', 'privacy.html']) {
       const html = fs.readFileSync(path.join(tmp, name), 'utf8');
       assert.equal((html.match(/rel="icon"/g) || []).length, 1);
-      assert.match(html, /href="favicon.svg"/);
+      assert.match(html, /href="\/?favicon.svg"/);
     }
     assert.match(fs.readFileSync(path.join(tmp, 'downloads/quartermaster.html'), 'utf8'), /href="data:image\/svg\+xml,/);
   });
@@ -51,15 +56,74 @@ try {
       }
     }
   });
-  check('public section links resolve and launch actions enter onboarding', () => {
+  check('public section links resolve and launch actions open the landing guide', () => {
     const source = fs.readFileSync(path.join(tmp, 'index.html'), 'utf8');
     for (const page of ['pricing.html', 'privacy.html']) {
       const html = fs.readFileSync(path.join(tmp, page), 'utf8');
-      for (const [, id] of html.matchAll(/href="index.html#(lp-[a-z-]+)"/g)) {
+      for (const [, id] of html.matchAll(/href="\/#(lp-[a-z-]+)"/g)) {
         assert.ok(source.includes('id="' + id + '"'), page + ' section ' + id);
       }
-      assert.match(html, /href="index.html#start">Start here/);
+      assert.match(html, /href="\/#start">Start here/);
     }
+    assert.match(fs.readFileSync(path.join(tmp, 'pricing.html'), 'utf8'), /href="\/#start"/);
+  });
+  check('public pages share one header and footer source', () => {
+    const built = pages.map(name => fs.readFileSync(path.join(tmp, name), 'utf8'));
+    const header = html => html.match(/<header class="marketing-header">[\s\S]*?<\/header>/)[0].replace(/ aria-current="page"/g, '');
+    const footer = html => html.match(/<footer class="marketing-footer">[\s\S]*?<\/footer>/)[0].replace(/ aria-current="page"/g, '');
+    assert.equal(new Set(built.map(header)).size, 1);
+    assert.equal(new Set(built.map(footer)).size, 1);
+    for (const html of built) {
+      assert.ok(!footer(html).includes('Pricing'));
+      assert.match(html, /href="assets\/marketing.css"/);
+    }
+  });
+  check('landing has a local start dialog, reduced-motion support, and concise trust cards', () => {
+    const html = fs.readFileSync(path.join(tmp, 'index.html'), 'utf8');
+    const css = fs.readFileSync(path.join(tmp, 'assets', 'marketing.css'), 'utf8');
+    const interactions = fs.readFileSync(path.join(tmp, 'assets', 'marketing.js'), 'utf8');
+    assert.match(css, /@keyframes qm-grid-pass/);
+    assert.match(css, /prefers-reduced-motion:reduce/);
+    assert.match(css, /\.qm-motion \[data-reveal\]/);
+    assert.match(css, /\.marketing-open:hover\s*\{[^}]*translateY\(-2px\)/);
+    assert.match(html, /src="assets\/marketing.js"/);
+    assert.match(html, /class="hero-field"/);
+    assert.match(html, /data-shot="desktop"/);
+    assert.match(html, /data-parallax="-58"/);
+    assert.match(html, /id="start-dialog" hidden/);
+    assert.match(html, /href="\/app\/#setup">Build my portfolio/);
+    assert.match(html, /href="\/app\/#open" data-open-portfolio/);
+    assert.match(html, /<ol class="start-dialog-steps">/);
+    assert.match(html, /Save your work before leaving the app/);
+    assert.match(interactions, /const openDialog = \(\) =>/);
+    assert.match(interactions, /new IntersectionObserver/);
+    assert.match(interactions, /requestAnimationFrame/);
+    assert.match(interactions, /stage\.getBoundingClientRect\(\)/);
+    assert.match(interactions, /sessionStorage\.setItem\(portfolioHandoffKey/);
+    assert.match(interactions, /input\.accept = '\.json,application\/json'/);
+    assert.ok(!interactions.includes('--phone-shift'));
+    for (const label of ['No affiliate compensation', 'No financial products to sell', 'No sale of personal or portfolio data', 'No custody or trading']) {
+      assert.match(html, new RegExp('class="trust-item"[^>]*>' + label + '<\\/div>'));
+    }
+    assert.ok(!html.includes('Recommendations are not influenced by referral payments'));
+  });
+  check('dedicated app entry stays simple with one graphic and three actions', () => {
+    const app = fs.readFileSync(path.join(tmp, 'app', 'index.html'), 'utf8');
+    assert.match(app, /class="view app-entry"/);
+    assert.match(app, /class="app-entry-orbit"/);
+    assert.match(app, /<h1>Quartermaster<\/h1>/);
+    assert.match(app, />Start here<\/button>/);
+    assert.match(app, />Explore demo<\/button>/);
+    assert.match(app, />Return to landing page<\/a>/);
+    assert.ok(!app.includes('app-entry-signal app-entry-signal-one'));
+    assert.match(app, /@keyframes app-entry-float/);
+    assert.match(app, /@keyframes app-entry-orbit-spin/);
+    assert.match(app, /logoSVG\(132\)/);
+    assert.match(app, /\.filebar \.brand,[^}]*color:var\(--color-text\);text-decoration:none/);
+    assert.match(app, /isHostedAppEntry\(\) && !window\.location\.hash/);
+    assert.match(app, /case 'openfile':\s+body = renderOpenFile\(\)/);
+    assert.match(app, /function consumeLandingPortfolio\(\)/);
+    assert.match(app, /storage\.removeItem\(LANDING_FILE_HANDOFF_KEY\)/);
   });
   check('pricing uses direct email drafts and no interest routes', () => {
     const html = fs.readFileSync(path.join(tmp, 'pricing.html'), 'utf8');
@@ -69,19 +133,19 @@ try {
     assert.ok(!html.includes('<form'));
     assert.ok(!fs.existsSync(path.join(tmp, 'interest')));
   });
-  check('root pricing is self-contained and available without a build', () => {
-    const html = fs.readFileSync(path.join(__dirname, '..', 'pricing.html'), 'utf8');
+  check('built pricing includes shared styles and launches the shared guide', () => {
+    const html = fs.readFileSync(path.join(tmp, 'pricing.html'), 'utf8');
     assert.match(html, /<style>/);
-    assert.ok(!html.includes('rel="stylesheet"'));
-    assert.match(html, /index.html/);
+    assert.match(html, /href="assets\/marketing.css"/);
+    assert.match(html, /href="\/#start"/);
   });
   check('pricing keeps four clarity cards in one desktop row', () => {
-    const html = fs.readFileSync(path.join(__dirname, '..', 'pricing.html'), 'utf8');
+    const html = fs.readFileSync(path.join(tmp, 'pricing.html'), 'utf8');
     assert.match(html, /\.features\{grid-template-columns:repeat\(4,minmax\(0,1fr\)\)\}/);
-    assert.match(html, /href="index\.html#lp-features">Asset allocation<\/a>/);
+    assert.match(html, /href="\/#lp-features">Asset allocation<\/a>/);
   });
   check('Google tag appears once immediately after head on hosted pages only', () => {
-    for (const name of ['index.html', 'allocation-tracker.html', ...pages]) {
+    for (const name of ['index.html', 'app/index.html', 'pricing.html', 'privacy.html']) {
       const html = fs.readFileSync(path.join(tmp, name), 'utf8');
       assert.match(html, /<head>\n<!-- Google tag \(gtag\.js\) -->/);
       assert.equal(html.split('https://www.googletagmanager.com/gtag/js?id=G-MM26T8RTHV').length - 1, 1);
@@ -125,7 +189,7 @@ try {
   });
   check('manual build adds one loader to hosted pages and none to download', () => {
     buildSite(tmp, token, 'manual');
-    for (const name of ['index.html', 'pricing.html', 'privacy.html']) {
+    for (const name of ['index.html', 'app/index.html', 'pricing.html', 'privacy.html']) {
       const html = fs.readFileSync(path.join(tmp, name), 'utf8');
       assert.equal(html.split('<!-- Hosted build only;').length - 1, 1);
     }

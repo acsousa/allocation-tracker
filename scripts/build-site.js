@@ -2,7 +2,12 @@
    CF_WEB_ANALYTICS_TOKEN is a public site identifier, never an API credential. */
 const fs = require('node:fs');
 const path = require('node:path');
-const publicPages = ['pricing.html', 'privacy.html'];
+const { applyMarketingShell } = require('./marketing-shell');
+const publicPages = [
+  ['index.html', ''],
+  ['pricing.html', 'pricing'],
+  ['privacy.html', 'privacy'],
+];
 const root = path.join(__dirname, '..');
 
 function analyticsMarkup(token) {
@@ -34,19 +39,22 @@ function buildSite(output = path.join(root, 'dist'), token = process.env.CF_WEB_
   };
   write('site-analytics.js', fs.readFileSync(path.join(root, 'site-analytics.js'), 'utf8'));
   write('favicon.svg', fs.readFileSync(path.join(root, 'favicon.svg'), 'utf8'));
+  write('assets/marketing.css', fs.readFileSync(path.join(root, 'assets', 'marketing.css'), 'utf8'));
+  write('assets/marketing.js', fs.readFileSync(path.join(root, 'assets', 'marketing.js'), 'utf8'));
   const productImages = ['quartermaster-review.png', 'quartermaster-history.png'];
   for (const name of productImages) write('assets/' + name, fs.readFileSync(path.join(root, 'assets', name)));
-  const hostedIcons = html => html.replace(/<link rel="icon"[^>]*>/g, '<link rel="icon" type="image/svg+xml" href="favicon.svg">');
-  const app = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
-  write('index.html', hostedIcons(app).replace('</body>', analytics + '</body>'));
-  // Stable legacy URL, plus a downloadable copy with no injected analytics.
-  write('allocation-tracker.html', hostedIcons(app).replace('</body>', analytics + '</body>'));
-  const offlineApp = productImages.reduce((html, name) => html.replaceAll(`assets/${name}`, `data:image/png;base64,${fs.readFileSync(path.join(root, 'assets', name)).toString('base64')}`), app);
-  write('downloads/quartermaster.html', offlineApp.replace(/<!-- Google tag \(gtag\.js\) -->[\s\S]*?<!-- End Google tag -->\n?/, '').replace('<head>', `<head>\n<meta http-equiv="Content-Security-Policy" content="connect-src 'none'; script-src 'unsafe-inline'; object-src 'none'; base-uri 'none'">`));
-  for (const name of publicPages) {
-    const html = fs.readFileSync(path.join(root, name), 'utf8');
+  const hostedIcons = (html, prefix = '') => html.replace(/<link rel="icon"[^>]*>/g, `<link rel="icon" type="image/svg+xml" href="${prefix}favicon.svg">`);
+  for (const [name, current] of publicPages) {
+    const html = applyMarketingShell(fs.readFileSync(path.join(root, name), 'utf8'), current);
     write(name, hostedIcons(html).replace('</body>', analytics + '</body>'));
   }
+  const app = fs.readFileSync(path.join(root, 'app.html'), 'utf8');
+  const hostedApp = hostedIcons(app, '/').replace('src="site-analytics.js"', 'src="/site-analytics.js"');
+  write('app/index.html', hostedApp.replace('</body>', analytics + '</body>'));
+  // Stable legacy URL, plus a downloadable copy with no injected analytics.
+  write('allocation-tracker.html', fs.readFileSync(path.join(root, 'allocation-tracker.html'), 'utf8'));
+  const offlineApp = productImages.reduce((html, name) => html.replaceAll(`assets/${name}`, `data:image/png;base64,${fs.readFileSync(path.join(root, 'assets', name)).toString('base64')}`), app);
+  write('downloads/quartermaster.html', offlineApp.replace(/<!-- Google tag \(gtag\.js\) -->[\s\S]*?<!-- End Google tag -->\n?/, '').replace('<head>', `<head>\n<meta http-equiv="Content-Security-Policy" content="connect-src 'none'; script-src 'unsafe-inline'; object-src 'none'; base-uri 'none'">`));
   write('404.html', '<!doctype html><html lang="en"><meta charset="utf-8"><title>Page not found — Quartermaster</title><h1>Page not found</h1><a href="/">Return to Quartermaster</a></html>');
   // Retire only the generated directories from the previous launch build.
   for (const name of ['pricing', 'privacy', 'interest']) fs.rmSync(path.join(output, name), { recursive: true, force: true });
