@@ -3,7 +3,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 
-const html = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
+const html = fs.readFileSync(path.join(__dirname, '..', 'app.html'), 'utf8');
 const script = html.match(/\n<script>\n([\s\S]*)\n<\/script>/)[1];
 const sandbox = {
   window: { addEventListener() {}, matchMedia() { return { matches: false }; } },
