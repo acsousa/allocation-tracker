@@ -96,6 +96,20 @@ Worker and gives both production and preview commands the same asset and routing
 configuration. Use a feature branch for preview deployments before merging;
 production deploys from `main`.
 
+This setup uses Cloudflare's free static-asset hosting and GitHub Actions' free
+allowance for public repositories; it does not require a database, server-side
+function, paid API, or paid market-data feed. Wrangler is pinned in
+`package-lock.json` so Cloudflare and local builds use the same deploy tooling.
+
+In Cloudflare, enable **SSL/TLS → Edge Certificates → Always Use HTTPS**. The
+site also sends an HSTS header after a browser reaches HTTPS, but the dashboard
+toggle is what redirects an initial plain-HTTP request. Keep automatic analytics
+enabled and exclude `/downloads/*` so the standalone file remains tracker-free.
+
+In GitHub, protect `main` and require the **Verify static site / verify** status
+check before merge. Keep the existing feature-branch → pull request → squash
+merge workflow; Cloudflare should deploy production only from `main`.
+
 ### Manual / Direct Upload
 
 Run:
@@ -163,12 +177,9 @@ node scripts/build-site.js
 python3 -m http.server 8747 --directory dist
 # Open http://127.0.0.1:8747/
 
-# Regression suites (no package installation required).
-node test/tax-engine.test.js
-node test/persistence.test.js
-node test/projection-display.test.js
-node test/site-build.test.js
-node test/onboarding.test.js
+# Exact regression and build check used by GitHub Actions.
+npm ci
+npm run check
 ```
 
 For direct source development, serve the repository root instead of `dist`.
