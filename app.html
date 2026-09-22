@@ -232,6 +232,9 @@
   }
   .input:hover { border-color: color-mix(in srgb, var(--color-text) 45%, transparent); }
   .input:focus-visible { border-color: var(--color-accent); outline-offset: 0; }
+  .input:disabled { color:var(--color-ink-3);background:var(--color-panel-2);border-color:var(--color-divider);cursor:not-allowed;opacity:.78; }
+  .classification-field.is-required .input { border-color:var(--color-crit);box-shadow:0 0 0 2px color-mix(in srgb,var(--color-crit) 14%,transparent);background:color-mix(in srgb,var(--color-crit) 5%,var(--color-surface)); }
+  .classification-field.is-required > label,.classification-field.is-required .classification-help { color:var(--color-crit);font-weight:600; }
   .input.basis-flag { border-color: var(--color-warn); background: color-mix(in srgb, var(--color-warn) 12%, var(--color-surface)); }
   select.input { min-height: 34px; }
   textarea.input { min-height: 80px; resize: vertical; line-height: 1.5; }
@@ -930,16 +933,21 @@ const TAX_TREATMENTS = ['Pre-tax', 'Roth', 'Taxable', 'Tax-free'];
 const ACCOUNT_VEHICLES = ['taxable', '401k', 'ira', 'hsa', '529', 'other', 'savings'];
 const VEHICLE_LABELS = { taxable: 'Taxable / brokerage', '401k': '401(k) / 403(b) / TSP', ira: 'IRA (Roth or Traditional)', hsa: 'HSA', '529': '529 plan', other: 'Other', savings: 'Savings account' };
 function inferVehicle(a) {
+  return inferVehicleChoice(a) || (a.category === 'Retirement' ? '401k' : 'other');
+}
+// A confident choice can stay out of the user's way. Generic retirement and
+// custom categories remain unresolved until the user supplies a clearer name
+// or explicitly chooses a type.
+function inferVehicleChoice(a) {
   const n = (a.name || '').toLowerCase();
   if (/\bsavings?\b|\bhigh[- ]yield\b|\bcd\b|certificate of deposit/.test(n)) return 'savings';
   if (/\bhsa\b/.test(n)) return 'hsa';
   if (/\bira\b|roth ira|traditional ira|\bsep\b|\bsimple\b/.test(n)) return 'ira';
   if (/401|403|457|\btsp\b/.test(n)) return '401k';
   if (a.category === '529') return '529';
-  if (a.category === 'Retirement') return '401k';
   if (a.category === 'Savings') return 'savings';
   if (a.category === 'Non-Retirement') return 'taxable';
-  return 'other';
+  return null;
 }
 function accountVehicle(a) { return (a && a.vehicle) || (a ? inferVehicle(a) : 'taxable'); }
 
@@ -3739,7 +3747,7 @@ function applySetupGoal() {
 }
 function renderSetup() {
   const labels = ['Accounts', 'Goals', 'Holdings'];
-  const progress = `<ol class="setup-progress" aria-label="Setup progress">${labels.map((label, i) => `<li ${setupStep === i + 1 ? 'aria-current="step"' : ''}><span>${i + 1}</span>${label}</li>`).join('')}</ol>`;
+  const progress = setupStep === 3 ? '' : `<ol class="setup-progress" aria-label="Setup progress">${labels.map((label, i) => `<li ${setupStep === i + 1 ? 'aria-current="step"' : ''}><span>${i + 1}</span>${label}</li>`).join('')}</ol>`;
   let content;
   if (setupStep === 1) {
     const accounts = portfolio.accounts.filter(a => a.status !== 'archived');
@@ -3754,7 +3762,7 @@ function renderSetup() {
       <button class="btn btn-secondary" data-act="setup-goal-reset">Reset to default</button>
       <p class="text-muted">You can adjust targets later in Review → Targets. The review band stays at its default of ±5 percentage points.</p>`;
   } else {
-    content = `<h2>Enter your holdings</h2><p>Add the investments in each account and their current values from your statements. Check the asset class. Cost basis is optional; missing basis stays unknown.</p><p>When you’re ready, choose <strong>Finish setup · view dashboard</strong>. This records the first check-in in this session. Save your portfolio file when you finish using the app.</p>${renderCheckin()}`;
+    content = `<h2>Enter your holdings</h2><p>Add the investments in each account and their current values from your statements.</p><p>When you’re ready, choose <strong>Finish setup · view dashboard</strong>. This records the first check-in in this session. Save your portfolio file when you finish using the app.</p>${renderCheckin()}`;
   }
   return `<section class="setup-shell"><div class="page-intro"><div class="kicker">Build your portfolio</div><h1>Three steps to a clearer picture.</h1></div>${progress}<div class="setup-content">${content}</div><div class="setup-actions">${setupStep > 1 ? '<button class="btn btn-secondary" data-act="setup-back">Back</button>' : ''}${setupStep < 3 ? '<button class="btn btn-primary" data-act="setup-next">Continue</button>' : ''}</div></section>`;
 }
@@ -4799,7 +4807,7 @@ function renderCheckin() {
   const doneTag = _allAccts.length ? `<span class="tag ${_doneCount === _allAccts.length ? 'tag-ok' : 'tag-neutral'}" title="An account counts as done once a value changed or you marked it reviewed">${_doneCount}/${_allAccts.length} accounts done</span>` : '';
 
   const intro = setupStep ? '' : `<div class="page-intro"><div class="page-intro-copy"><div class="kicker">Quarterly ritual · refresh</div><h1>Update what changed.</h1><p>Your last check-in is already here. Refresh the balances, verify the accounts, and record a clean snapshot for review.</p></div></div>`;
-  const steps = `<div class="ritual-steps" aria-label="Check-in steps"><div class="ritual-step active"><span class="n">1</span><span><strong>Choose the date</strong><small>Anchor this snapshot in time.</small></span></div><div class="ritual-step active"><span class="n">2</span><span><strong>Refresh balances</strong><small>Update only what changed.</small></span></div><div class="ritual-step"><span class="n">3</span><span><strong>Record &amp; review</strong><small>Save the snapshot, then inspect drift.</small></span></div></div>`;
+  const steps = setupStep ? '' : `<div class="ritual-steps" aria-label="Check-in steps"><div class="ritual-step active"><span class="n">1</span><span><strong>Choose the date</strong><small>Anchor this snapshot in time.</small></span></div><div class="ritual-step active"><span class="n">2</span><span><strong>Refresh balances</strong><small>Update only what changed.</small></span></div><div class="ritual-step"><span class="n">3</span><span><strong>Record &amp; review</strong><small>Save the snapshot, then inspect drift.</small></span></div></div>`;
   return `${intro}${steps}<div class="checkin-workspace"><div class="panel checkin-panel">
     <div style="display:flex;align-items:flex-end;gap:20px;padding:18px 20px;border-bottom:1px solid var(--color-divider);flex-wrap:wrap;">
       <div><h3 style="margin:0 0 4px;">${setupStep ? 'Your first holdings' : 'Accounts & holdings'}</h3><span class="text-muted" style="font-size:13px;">${ci.baseDate ? `Prefilled from ${esc(ci.baseDate)} · update or clear cost basis when a value changes.` : 'First snapshot — enter current values'}</span></div>
@@ -6548,18 +6556,23 @@ function dialogHTML() {
     const catOpts = CATEGORY_ORDER.map(c => `<option value="${esc(c)}" ${a && a.category === c ? 'selected' : ''}>${esc(catLabel(c))}</option>`).join('');
     const childOpts = ['<option value="">— none —</option>'].concat(portfolio.children.map(c => `<option value="${esc(c.id)}" ${a && a.childId === c.id ? 'selected' : ''}>${esc(c.label)}</option>`)).join('');
     const taxOpts = ['<option value="">— optional —</option>'].concat(TAX_TREATMENTS.map(t => `<option ${a && a.taxTreatment === t ? 'selected' : ''}>${t}</option>`)).join('');
-    const vehOpts = ['<option value="">— auto from name —</option>'].concat(ACCOUNT_VEHICLES.map(veh => `<option value="${veh}" ${a && accountVehicle(a) === veh ? 'selected' : ''}>${esc(VEHICLE_LABELS[veh])}</option>`)).join('');
+    const inferredVehicle = inferVehicleChoice({ name: a ? a.name : '', category: a ? a.category : CATEGORY_ORDER[0] });
+    const savedVehicle = a && a.vehicle ? a.vehicle : '';
+    const vehicleValue = savedVehicle || inferredVehicle || (a ? accountVehicle(a) : '');
+    const vehicleNeedsInput = !inferredVehicle || !!(savedVehicle && savedVehicle !== inferredVehicle);
+    const vehOpts = ['<option value="">— choose account type —</option>'].concat(ACCOUNT_VEHICLES.map(veh => `<option value="${veh}" ${vehicleValue === veh ? 'selected' : ''}>${esc(VEHICLE_LABELS[veh])}</option>`)).join('');
     const lim401 = REFERENCE_DATA.contribLimits.k401_elective.toLocaleString('en-US');
     const limIra = REFERENCE_DATA.contribLimits.ira.toLocaleString('en-US');
     inner = `<div class="dialog-title">${a ? 'Edit account' : 'Add account'}</div>
-      <div class="field"><label>Account name</label><input class="input" id="f-name" value="${esc(a ? a.name : '')}" placeholder="e.g. Fidelity 401(k)"></div>
+      <div class="field"><label>Account name</label><input class="input" id="f-name" data-act="acct-name" value="${esc(a ? a.name : '')}" placeholder="e.g. Fidelity 401(k)"></div>
       <div class="field"><label>Institution (optional)</label><input class="input" id="f-inst" value="${esc(a ? a.institution || '' : '')}" placeholder="e.g. Fidelity"></div>
       <div style="display:flex;gap:12px;">
         <div class="field" style="flex:1;"><label>Category</label><select class="input" id="f-cat" data-act="acct-cat">${catOpts}</select></div>
         <div class="field" style="flex:1;"><label>Tax treatment</label><select class="input" id="f-tax">${taxOpts}</select>
           <span class="text-muted" style="font-size:11px;">How it's taxed: <b>Pre-tax</b> (traditional 401(k)/IRA — taxed on withdrawal) · <b>Roth</b> (after-tax in, tax-free out) · <b>Taxable</b> (brokerage — taxed on gains &amp; dividends) · <b>Tax-free</b> (HSA / muni).</span></div>
       </div>
-      <div class="field"><label>Account type</label><select class="input" id="f-vehicle" data-act="acct-vehicle">${vehOpts}</select>
+      <div id="f-vehicle-auto" class="text-muted" style="display:${!vehicleNeedsInput && inferredVehicle ? 'block' : 'none'};font-size:12px;">Account type detected automatically: <strong>${inferredVehicle ? esc(VEHICLE_LABELS[inferredVehicle]) : ''}</strong></div>
+      <div class="field" id="f-vehicle-wrap" style="display:${vehicleNeedsInput ? 'block' : 'none'};"><label>Account type</label><select class="input" id="f-vehicle" data-act="acct-vehicle">${vehOpts}</select>
         <span class="text-muted" style="font-size:11px;">Sets contribution limits &amp; shelter status — distinguishes a 401(k) ($${lim401} limit) from an IRA ($${limIra}); pick HSA for a health savings account.</span></div>
       <div class="field" id="f-other-wrap" style="display:${a && a.category === 'Other' ? 'block' : 'none'};"><label>Custom category name (required for Other)</label>
         <input class="input" id="f-catlabel" list="other-cats" value="${esc(a ? a.categoryLabel || '' : '')}" placeholder="e.g. Family Trust, HSA, UTMA">
@@ -6587,14 +6600,15 @@ function dialogHTML() {
     inner = `<div class="dialog-title">Add holding</div>
       <div class="dialog-body">Type a ticker and value. We'll classify common tickers automatically; pick a class only if asked.</div>
       <div style="display:flex;gap:12px;">
-        <div class="field" style="flex:1;"><label>Ticker</label><input class="input" id="f-ticker" placeholder="e.g. VOO, BTC, CASH"></div>
+        <div class="field" style="flex:1;"><label>Ticker</label><input class="input" id="f-ticker" data-act="holding-ticker" autocomplete="off" autocapitalize="characters" placeholder="e.g. VOO, BTC, CASH"></div>
         <div class="field" style="flex:1;"><label>Name (optional)</label><input class="input" id="f-hname" placeholder="e.g. Vanguard S&amp;P 500"></div>
       </div>
-      <div class="field"><label>Asset class</label><select class="input" id="f-cls">${clsOpts}</select></div>
       <div style="display:flex;gap:12px;">
         <div class="field" style="flex:1;"><label>Current value</label><input class="input tnum" id="f-val" inputmode="decimal" placeholder="0"></div>
         <div class="field" style="flex:1;"><label>Cost basis (optional)</label><input class="input tnum" id="f-basis" inputmode="decimal" placeholder="—"></div>
       </div>
+      <div class="field classification-field" id="holding-class-field"><label>Asset class</label><select class="input" id="f-cls" data-act="holding-class" aria-describedby="f-cls-help" disabled>${clsOpts}</select>
+        <span class="text-muted classification-help" id="f-cls-help" style="font-size:11px;">Enter a ticker and Quartermaster will classify it when possible.</span></div>
       <div class="dialog-actions"><button class="btn btn-secondary" data-act="close-dialog">Cancel</button><button class="btn btn-primary" data-act="save-holding" data-account="${esc(d.acctId)}">Add holding</button></div>`;
   } else if (d.type === 'band') {
     const gp = portfolio.glidePaths.find(g => g.childId === d.child);
@@ -6730,6 +6744,59 @@ function enhanceAccessibility(root) {
     wrap.setAttribute('role', 'region'); wrap.setAttribute('aria-label', 'Data table; scroll horizontally for more columns');
     table.replaceWith(wrap); wrap.appendChild(table);
   });
+}
+
+function syncAccountVehicleField() {
+  const name = document.getElementById('f-name');
+  const category = document.getElementById('f-cat');
+  const vehicle = document.getElementById('f-vehicle');
+  const wrap = document.getElementById('f-vehicle-wrap');
+  const auto = document.getElementById('f-vehicle-auto');
+  if (!name || !category || !vehicle || !wrap || !auto) return;
+  const inferred = inferVehicleChoice({ name: name.value, category: category.value });
+  const wasHidden = wrap.style.display === 'none';
+  if (inferred) {
+    vehicle.value = inferred;
+    wrap.style.display = 'none';
+    auto.style.display = 'block';
+    auto.innerHTML = `Account type detected automatically: <strong>${esc(VEHICLE_LABELS[inferred])}</strong>`;
+  } else {
+    if (wasHidden) vehicle.value = '';
+    wrap.style.display = 'block';
+    auto.style.display = 'none';
+    auto.textContent = '';
+  }
+}
+
+function syncHoldingClassField() {
+  const ticker = document.getElementById('f-ticker');
+  const select = document.getElementById('f-cls');
+  const field = document.getElementById('holding-class-field');
+  const help = document.getElementById('f-cls-help');
+  if (!ticker || !select || !field || !help) return;
+  const key = ticker.value.trim().toUpperCase();
+  const inferred = key ? classifyTicker(key, portfolio.tickerMap) : null;
+  if (!key) {
+    select.value = '';
+    select.disabled = true;
+    select.removeAttribute('aria-invalid');
+    field.classList.remove('is-required');
+    help.textContent = 'Enter a ticker and Quartermaster will classify it when possible.';
+  } else if (inferred) {
+    select.value = inferred;
+    select.disabled = true;
+    select.removeAttribute('aria-invalid');
+    field.classList.remove('is-required');
+    help.textContent = `Automatically classified as ${detailLabel(inferred)}.`;
+  } else {
+    const wasAutomaticallySet = select.disabled;
+    select.disabled = false;
+    if (wasAutomaticallySet) select.value = '';
+    const needsChoice = !select.value;
+    select.setAttribute('aria-invalid', String(needsChoice));
+    field.classList.toggle('is-required', needsChoice);
+    help.textContent = needsChoice ? 'Ticker not recognized. Choose an asset class to continue.' : `Selected manually as ${detailLabel(select.value)}.`;
+  }
 }
 
 /* ===============================================================
@@ -7104,6 +7171,7 @@ function onChange(e) {
       if (vehicle) vehicle.value = 'savings';
       if (tax && !tax.value) tax.value = 'Taxable';
     }
+    syncAccountVehicleField();
   }
   else if (a === 'acct-vehicle' && t.value === 'savings') {
     const cat = document.getElementById('f-cat'), tax = document.getElementById('f-tax');
@@ -7113,6 +7181,7 @@ function onChange(e) {
     if (other) other.style.display = 'none';
     if (child) child.style.display = 'none';
   }
+  else if (a === 'holding-class') { syncHoldingClassField(); }
   // Retirement modeler settings (commit on change → re-render to refresh derived values)
   else if (a === 'rd-ss-mode') { const rs = portfolio.retirementSettings; rs.ssPIA = ds.mode === 'estimate' ? 'estimate' : (Array.isArray(rs.ssPIA) ? rs.ssPIA : [0, 0]); invalidateRetireCache(); markDirty(); render(); }
   else if (a === 'rd-spend') { portfolio.retirementSettings.spendingTargetRealAnnual = Number(t.value) || 0; markDirty(); showRetireStaleIndicators(); }
@@ -7181,6 +7250,8 @@ function onInput(e) {
   if (a.startsWith('ci-') && a !== 'ci-nw' && !demoMode) { checkinDraftDirty = true; updateDirtyIndicator(); }
   if (a === 'setup-name') { portfolio.meta.name = t.value; markDirty(); return; }
   if (a === 'setup-goal-value') { ui.setupGoal.targets[ds.class] = t.value === '' ? 0 : Number(t.value); markDirty(); const total = document.getElementById('setup-goal-total'); if (total) total.textContent = `Total: ${setupGoalTotal()}% · targets must add up to 100%.`; return; }
+  if (a === 'acct-name') { syncAccountVehicleField(); return; }
+  if (a === 'holding-ticker') { syncHoldingClassField(); return; }
   // check-in fields — mutate draft WITHOUT re-render (preserve focus); recompute totals lazily
   if (a === 'ci-val')   { ui.checkin.values[ds.hid] = ui.checkin.values[ds.hid] || {}; ui.checkin.values[ds.hid].marketValue = t.value; updateCheckinTotals(); updateBasisFlag(ds.hid); }
   else if (a === 'ci-basis') { ui.checkin.values[ds.hid] = ui.checkin.values[ds.hid] || {}; ui.checkin.values[ds.hid].costBasis = t.value; (ui.checkin.basisSet = ui.checkin.basisSet || {})[ds.hid] = true; updateBasisFlag(ds.hid); }
@@ -7353,10 +7424,11 @@ function saveAccountFromDialog(acctId) {
   let taxTreatment = document.getElementById('f-tax').value || undefined;
   const categoryLabel = category === 'Other' ? document.getElementById('f-catlabel').value.trim() : undefined;
   const childId = category === '529' ? (document.getElementById('f-child').value || undefined) : undefined;
-  let vehicle = document.getElementById('f-vehicle').value;
+  const vehicleField = document.getElementById('f-vehicle');
+  let vehicle = inferVehicleChoice({ name, category }) || vehicleField.value;
   if (category === 'Other' && !categoryLabel) { toast('Other needs a category label.'); return; }
   if (category === '529' && !childId) { toast('Pick a child for the 529, or add one here.'); return; }
-  if (!vehicle) vehicle = inferVehicle({ name, category }); // "— auto —" → infer from name/category
+  if (!vehicle) { toast('Choose an account type so contribution limits and tax treatment are modeled correctly.'); vehicleField.focus(); return; }
   if (category === 'Savings' || vehicle === 'savings') {
     category = 'Savings';
     vehicle = 'savings';
@@ -7406,13 +7478,14 @@ function saveHoldingFromDialog(acctId) {
   const ticker = document.getElementById('f-ticker').value.trim();
   if (!ticker) { toast('Ticker is required.'); return; }
   const name = document.getElementById('f-hname').value.trim() || undefined;
-  let cls = document.getElementById('f-cls').value;
+  const classField = document.getElementById('f-cls');
+  let cls = classField.value;
   const val = parseNum(document.getElementById('f-val').value);
   const basis = parseNum(document.getElementById('f-basis').value);
   if ((document.getElementById('f-val').value.trim() && (val == null || val < 0)) || (document.getElementById('f-basis').value.trim() && (basis == null || basis < 0))) { toast('Use a non-negative number for value and cost basis, or leave optional fields blank.'); return; }
   if (!cls) cls = classifyTicker(ticker, portfolio.tickerMap);
-  if (!cls) { toast('Unknown ticker — pick an asset class from the dropdown.'); return; }
-  if (document.getElementById('f-cls').value) portfolio.tickerMap[ticker.toUpperCase()] = cls; // remember explicit pick
+  if (!cls) { syncHoldingClassField(); toast('Unknown ticker — choose the highlighted asset class.'); classField.focus(); return; }
+  if (!classField.disabled && classField.value) portfolio.tickerMap[ticker.toUpperCase()] = cls; // remember explicit pick
   const h = { id: uid('hold'), accountId: acctId, ticker, name, assetClass: cls, status: 'active' };
   if (basis != null) h.costBasis = basis;
   portfolio.holdings.push(h);
@@ -7475,7 +7548,7 @@ document.addEventListener('DOMContentLoaded', boot);
 window.__AAT__ = {
   TAXONOMY, SEED_MAP, SEED_MAP_EXT, classifyTicker, migrate, emptyPortfolio, uid,
   allocate, toRows, computeDrift, activeGoal, glideTargets, historySeries,
-  annualizedBalanceGrowth, accountVehicle, inferVehicle, retireAccounts, buildRetireConfig, buildCollegeConfig, siteSimulationPaths, setSiteSimulationPaths,
+  annualizedBalanceGrowth, accountVehicle, inferVehicle, inferVehicleChoice, retireAccounts, buildRetireConfig, buildCollegeConfig, siteSimulationPaths, setSiteSimulationPaths,
   householdHoldings, categoryHoldings, accountHoldings, latestSnapshot,
   snapshotCSV, loadDemoData, saveFile, openFile,
   goalGroupTargets, goalDetailTargets, compositionOf, splitValue,
