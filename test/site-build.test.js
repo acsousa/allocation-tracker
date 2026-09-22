@@ -10,12 +10,19 @@ let checks = 0;
 function check(name, fn) { fn(); checks++; console.log('✓ ' + name); }
 try {
   check('automatic mode leaves beacon injection to Cloudflare', () => {
+    fs.writeFileSync(path.join(tmp, 'retired-file.txt'), 'must not survive');
     const result = buildSite(tmp, '', 'automatic');
     assert.equal(result.analyticsMode, 'automatic');
     assert.ok(!fs.readFileSync(path.join(tmp, 'index.html'), 'utf8').includes('beacon.min.js'));
     const headers = fs.readFileSync(path.join(tmp, '_headers'), 'utf8');
     assert.ok(!headers.split('/downloads/*')[0].includes('no-transform'));
     assert.ok(headers.split('/downloads/*')[1].includes('no-transform'));
+    assert.ok(!fs.existsSync(path.join(tmp, 'retired-file.txt')));
+    assert.match(headers, /Strict-Transport-Security: max-age=86400/);
+    assert.match(headers, /X-Frame-Options: DENY/);
+    assert.match(headers, /Permissions-Policy:/);
+    assert.match(headers, /worker-src blob:/);
+    assert.match(headers, /frame-ancestors 'none'/);
   });
   check('landing and app are separate, with a stable legacy redirect', () => {
     const index = fs.readFileSync(path.join(tmp, 'index.html'), 'utf8');
@@ -96,6 +103,7 @@ try {
     assert.match(html, /<ol class="start-dialog-steps">/);
     assert.match(html, /Save your work before leaving the app/);
     assert.match(interactions, /const openDialog = \(\) =>/);
+    assert.match(interactions, /document\.body\.appendChild\(backdrop\)/);
     assert.match(interactions, /new IntersectionObserver/);
     assert.match(interactions, /requestAnimationFrame/);
     assert.match(interactions, /stage\.getBoundingClientRect\(\)/);
@@ -160,7 +168,10 @@ try {
     const html = fs.readFileSync(path.join(tmp, 'downloads/quartermaster.html'), 'utf8');
     assert.ok(!html.includes('beacon.min.js'));
     assert.match(html, /http-equiv="Content-Security-Policy"/);
-    assert.match(html, /connect-src 'none'; script-src 'unsafe-inline'/);
+    assert.match(html, /default-src 'none'/);
+    assert.match(html, /connect-src 'none'/);
+    assert.match(html, /worker-src blob:/);
+    assert.match(html, /frame-ancestors 'none'/);
   });
   check('manual mode validates its public token and refuses missing config', () => {
     assert.throws(() => buildSite(tmp, '', 'manual'), /requires/);

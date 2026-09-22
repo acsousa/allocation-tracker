@@ -1,0 +1,17 @@
+{
+  "name": "quartermaster",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Local-file portfolio allocation and planning application",
+  "scripts": {
+    "build": "node scripts/build-site.js",
+    "test": "node test/analytics.test.js && node test/tax-engine.test.js && node test/persistence.test.js && node test/projection-display.test.js && node test/site-build.test.js && node test/onboarding.test.js && node test/growth-savings.test.js",
+    "check": "npm test && npm run build"
+  },
+  "devDependencies": {
+    "wrangler": "4.136.1"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -181,7 +181,7 @@
   .mono { font-family: var(--mono); }
   .tnum { font-variant-numeric: tabular-nums; }
   .text-muted { color: var(--color-ink-2); }
-  .kicker { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--color-ink-3); }
+  .kicker { display:block;min-height:18px;font-size: 11px; line-height:18px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--color-ink-3); }
   :focus { outline: none; }
   :focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
   ::selection { background: color-mix(in srgb, var(--color-accent) 30%, transparent); }
@@ -235,6 +235,7 @@
   .input:disabled { color:var(--color-ink-3);background:var(--color-panel-2);border-color:var(--color-divider);cursor:not-allowed;opacity:.78; }
   .classification-field.is-required .input { border-color:var(--color-crit);box-shadow:0 0 0 2px color-mix(in srgb,var(--color-crit) 14%,transparent);background:color-mix(in srgb,var(--color-crit) 5%,var(--color-surface)); }
   .classification-field.is-required > label,.classification-field.is-required .classification-help { color:var(--color-crit);font-weight:600; }
+  .field-error { display:block;margin-top:5px;color:var(--color-crit);font-size:11px;line-height:1.4; }
   .input.basis-flag { border-color: var(--color-warn); background: color-mix(in srgb, var(--color-warn) 12%, var(--color-surface)); }
   select.input { min-height: 34px; }
   textarea.input { min-height: 80px; resize: vertical; line-height: 1.5; }
@@ -325,6 +326,9 @@
   .table td { padding: 12px var(--space-2); border-bottom: 1px solid var(--color-line-2); }
   .table tbody tr:hover { background: color-mix(in srgb, var(--color-text) 4%, transparent); }
   .table tbody tr.pos-class-active { background: var(--color-accent-100); }
+  .table-sort,.table-row-action { appearance:none;border:0;background:none;color:inherit;font:inherit;padding:0;cursor:pointer;text-align:inherit; }
+  .table-sort { text-transform:inherit;letter-spacing:inherit;font-weight:inherit; }
+  .table-sort:focus-visible,.table-row-action:focus-visible { outline:2px solid var(--color-accent);outline-offset:3px;border-radius:3px; }
 
   /* — dialog — */
   .dialog-backdrop { position: fixed; inset: 0; z-index: 40; display: grid; place-items: center; padding: var(--space-6); background: color-mix(in srgb, var(--color-neutral-900) 50%, transparent); }
@@ -634,6 +638,8 @@
   background:var(--color-accent-100) !important; border-left:4px solid var(--color-accent);
 }
 .checkin-account-header:hover { box-shadow:inset 0 0 0 1px var(--color-accent-300); }
+.checkin-disclosure { display:inline-flex;align-items:center;gap:10px;border:0;background:transparent;color:inherit;padding:4px 0;cursor:pointer;text-align:left;min-width:0; }
+.checkin-disclosure:focus-visible { outline:3px solid var(--color-accent-300);outline-offset:3px;border-radius:var(--radius-sm); }
 .checkin-account-header .checkin-account-name { font-size:21px !important; font-weight:700; color:var(--color-text); overflow-wrap:anywhere; }
 .checkin-account-header .checkin-account-institution { color:var(--color-ink-2); font-size:13px !important; }
 .checkin-account-header .tag-outline { border-color:var(--color-accent-300); color:var(--color-accent-800); font-size:11px; }
@@ -751,16 +757,25 @@
   .outlook-unitbar { display:flex;gap:14px;align-items:center;flex-wrap:wrap;padding:12px 18px;border-top:1px solid var(--color-line-2);background:color-mix(in srgb,var(--color-panel) 82%,transparent); }
   .outlook-unitbar .unit-toggle { display:inline-flex;padding:3px;border:1px solid var(--color-divider);background:var(--color-panel);border-radius:var(--radius-pill);overflow:hidden;box-shadow:var(--shadow-sm); }
   .outlook-unitbar .unit-toggle button { border-radius:var(--radius-pill); }
-  .outlook-primary { display:grid;grid-template-columns:minmax(0,1.75fr) minmax(280px,.5fr);gap:22px;align-items:start; }
+  .outlook-primary { display:grid;grid-template-columns:minmax(0,1.75fr) minmax(300px,.65fr);gap:22px;align-items:stretch; }
   .outlook-primary section { min-width:0; }
   .outlook-primary .panel { height:100%; }
+  .outlook-primary .panel-hd { min-height:59px;box-sizing:border-box; }
   .outlook-primary svg { width:100%;height:auto; }
-  .retire-projection .panel-hd h4 { font-size:24px;line-height:1.15; }
-  .retire-projection > .kicker { font-size:12px; }
-  .retire-confidence .panel-hd h4 { font-size:17px; }
-  .retire-confidence .panel-hd { padding-top:13px;padding-bottom:13px; }
-  .retire-confidence .retire-confidence-body { padding:16px 18px !important; }
+  .retire-projection .panel-hd h4,.retire-confidence .panel-hd h4 { font-size:24px;line-height:1.15; }
+  .retire-projection > .kicker,.retire-confidence > .kicker { font-size:12px; }
+  .retire-confidence .retire-confidence-body { padding:18px 20px !important; }
+  .retire-confidence .panel { display:flex;flex-direction:column; }
+  .retire-confidence .retire-confidence-body { flex:1;display:flex;flex-direction:column; }
+  .withdrawal-kpis { display:grid;gap:1px;background:var(--color-divider);border:1px solid var(--color-divider);border-radius:var(--radius-md);overflow:hidden;margin-bottom:14px; }
+  .withdrawal-kpi { background:var(--color-panel);padding:13px 14px;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px; }
+  .withdrawal-kpi strong { font:700 20px/1.1 var(--font-heading);text-align:right; }
+  .withdrawal-kpi-copy { min-width:0; }
+  .withdrawal-kpi-copy .kicker { white-space:nowrap;font-size:10px;letter-spacing:.12em; }
+  .withdrawal-kpi-copy .text-muted { display:block;font-size:10px;line-height:1.35;margin-top:3px; }
+  .retire-tax-section { margin-top:24px; }
   .projection-how { margin:0 0 10px;border:1px solid var(--color-line-2);border-radius:var(--radius-sm);background:var(--color-panel-2); }
+  .retire-confidence .projection-how { margin-bottom:18px; }
   .projection-how summary { padding:9px 12px;cursor:pointer;font:600 12px var(--font-heading);color:var(--color-accent-700); }
   .projection-how p { padding:0 12px 11px; }
   .tax-rate-compare { display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1.25fr);gap:18px;align-items:center;padding:16px 18px;margin-bottom:14px;background:var(--color-panel-2);border:1px solid var(--color-line-2);border-radius:var(--radius-sm); }
@@ -949,6 +964,16 @@ function inferVehicleChoice(a) {
   if (a.category === 'Non-Retirement') return 'taxable';
   return null;
 }
+function inferTaxTreatmentChoice(a) {
+  const n = (a.name || '').toLowerCase();
+  const v = a.vehicle || inferVehicleChoice(a);
+  if (/\broth\b/.test(n)) return 'Roth';
+  if (/\btraditional\b|\bpre[- ]?tax\b/.test(n)) return 'Pre-tax';
+  if (v === 'hsa' || v === '529') return 'Tax-free';
+  if (v === 'savings' || v === 'taxable' || a.category === 'Savings' || a.category === 'Non-Retirement') return 'Taxable';
+  if (v === '401k') return 'Pre-tax';
+  return null;
+}
 function accountVehicle(a) { return (a && a.vehicle) || (a ? inferVehicle(a) : 'taxable'); }
 
 /* ---------------------------------------------------------------
@@ -1065,6 +1090,7 @@ const SEED_MAP_EXT = {"A":"us_large","AA":"us_mid","AAAU":"commod","AAL":"us_mid
    data, NOT part of the user's saved JSON.
    =============================================================== */
 const REFERENCE_DATA = {
+  version: '2026.1',
   taxYear: 2026,
   source: 'IRS Rev. Proc. 2025-32 (TY2026)',
   verifyNote: 'Estimates for Tax Year 2026 — verify against IRS.gov. Every value is editable in Settings › Tax Profile.',
@@ -1119,7 +1145,7 @@ const REFERENCE_DATA = {
   ],
 };
 
-const FILING_STATUS_LABELS = { single: 'Single', mfj: 'Married filing jointly', hoh: 'Head of total portfolio', mfs: 'Married filing separately' };
+const FILING_STATUS_LABELS = { single: 'Single', mfj: 'Married filing jointly', hoh: 'Head of household', mfs: 'Married filing separately' };
 
 /* Asset-class DEFAULT tax profiles (§13.2). Used when a ticker has no
    entry in taxData/seed. Values are PERCENT; rows using these are
@@ -1283,6 +1309,14 @@ function holdingDrag(mv, profile, rates) {
   if (profile.collectible && rates.r_collectible_eff != null) rCg = rates.r_collectible_eff;
   else if (profile.sixtyForty) rCg = 0.6 * rates.r_ltcg_eff + 0.4 * rates.r_ord_eff;
   else rCg = rates.r_ltcg_eff;
+  // Municipal-bond interest is exempt from federal income tax and NIIT. A
+  // national muni remains subject to the user's state rate; capital-gain
+  // distributions remain taxable. In-state treatment is modeled only when a
+  // profile explicitly identifies it, rather than assuming every muni qualifies.
+  if (profile.muni) {
+    const interestRate = profile.inStateMuni ? 0 : rates.r_state;
+    return Math.max(0, mv * (dy * interestRate + cg * rCg));
+  }
   const ftc = profile.ftcEligible ? FTC_RECOVERY * dy * mv : 0; // recovered foreign tax (taxable placement only)
   return Math.max(0, mv * (dy * q * rates.r_qdi_eff + dy * (1 - q) * rOrd + cg * rCg) - ftc);
 }
@@ -1325,12 +1359,12 @@ const RETIRE_DATA = {
   // IRS Pub 590-B Uniform Lifetime Table divisors (RMD).
   uniformLifetime: { 73:26.5,74:25.5,75:24.6,76:23.7,77:22.9,78:22.0,79:21.1,80:20.2,81:19.4,82:18.5,83:17.7,84:16.8,85:16.0,86:15.2,87:14.4,88:13.7,89:12.9,90:12.2,91:11.5,92:10.8,93:10.1,94:9.5,95:8.9,96:8.4,97:7.8,98:7.3,99:6.8,100:6.4,101:6.0,102:5.6,103:5.2,104:4.9,105:4.6 },
   ssTaxablePct: 0.85,   // state-tax approximation only; federal benefits use Pub. 915
-  ssTaxingStates: ['CO','CT','MN','MT','NM','RI','UT','VT','WV'], // states that tax SS; all others (incl. MA) exempt
+  ssTaxingStates: ['CO','CT','MN','MT','NM','RI','UT','VT'], // simplified current-state list; WV exempt beginning 2026
   ssFRA: 67, endAge: 95, penaltyAge: 59.5, penaltyRate: 0.10,
 };
 
 // Correlation family of an asset class (§6.1 correlation rule).
-const retireCatOf = c => c==='cash'?'cash':c==='crypto'?'crypto':c==='commod'?'commod':(c==='us_bond'||c==='intl_bond')?'bond':c==='reit'?'reit':'equity';
+function retireCatOf(c) { return c==='cash'?'cash':c==='crypto'?'crypto':c==='commod'?'commod':(c==='us_bond'||c==='intl_bond')?'bond':c==='reit'?'reit':'equity'; }
 function retireCorr(a, b) {
   if (a === b) return 1;
   const ca = retireCatOf(a), cb = retireCatOf(b);
@@ -1530,7 +1564,9 @@ function runProjection(cfg) {
         const survivor = age >= cfg.survivorAtAge;
         const forcedRMD = age >= rmdAge ? rmdAmount(prevPretax, age) : 0;
         if (cfg.deterministic && age === rmdAge) detFirstRmdPretax = prevPretax;
-        const ssGross = age >= cfg.ssClaimAge ? cfg.ssGross : 0;
+        const modeledSocialSecurity = cfg.ssPeople || (cfg.ssGross ? [{ claimAge: cfg.ssClaimAge || 67, annualBenefit: cfg.ssGross }] : []);
+        const activeSocialSecurity = modeledSocialSecurity.filter(person => age >= person.claimAge).map(person => person.annualBenefit);
+        const ssGross = survivor ? Math.max(0, ...activeSocialSecurity) : activeSocialSecurity.reduce((sum, amount) => sum + amount, 0);
         let pensionGross = 0;
         for (const pen of (cfg.pensions || [])) {
           if (age < pen.startAge) continue;
@@ -1552,7 +1588,8 @@ function runProjection(cfg) {
           const grossOrd = out.pretaxOut + out.ssTaxable + pensionGross;
           rThenJoint    = Math.max(rThenJoint,    retireBracketMarginal(cfg.fedBrackets, Math.max(0, grossOrd - cfg.stdDed)) + cfg.stateRate);
           rThenSurvivor = Math.max(rThenSurvivor, retireBracketMarginal(cfg.survivorFedBrackets, Math.max(0, grossOrd - cfg.survivorStdDed)) + cfg.survivorStateRate);
-          if (cfg.conversionFill > 0 && age < rmdAge && age < cfg.ssClaimAge && !survivor) {
+          const firstSsClaimAge = modeledSocialSecurity.length ? Math.min(...modeledSocialSecurity.map(person => person.claimAge)) : 999;
+          if (cfg.conversionFill > 0 && age < rmdAge && age < firstSsClaimAge && !survivor) {
             const convAmt = Math.min(Math.max(0, cfg.conversionFill - out.ordinaryTI), B.pretax);
             if (convAmt > 0) {
               const t = retireBracketTax(cfg.fedBrackets, out.ordinaryTI + convAmt) - retireBracketTax(cfg.fedBrackets, out.ordinaryTI) + cfg.stateRate * convAmt;
@@ -1586,7 +1623,7 @@ function switchPointVerdict(rNow, jointMarginal, survivorMarginal) {
   let verdict, why;
   if (rNow > rThen + 0.02) { verdict = 'Traditional'; why = 'Your rate this year is above your projected retirement rate — take the deduction now at the higher rate.'; }
   else if (rNow < rThen - 0.02) { verdict = 'Roth'; why = 'Your projected retirement rate is higher than today — pay the tax now at the lower rate.'; }
-  else { verdict = 'Roth'; why = 'The two rates are close, so Roth wins the tiebreakers: no forced withdrawals later, and it shelters more after-tax wealth per dollar of limit.'; }
+  else { verdict = 'Split'; why = 'The modeled rates are close. A mix of Roth and traditional contributions preserves tax flexibility instead of treating a near-tie as a one-sided decision.'; }
   if (survivorHigher && verdict === 'Traditional') why += ' A surviving spouse filing alone would face an even higher rate, which argues the other way — consider splitting toward Roth.';
   else if (survivorHigher && verdict !== 'Roth') why += ' It also hedges the higher rate a surviving spouse would pay alone.';
   return { verdict, rNow, rThen, rThenJoint: jointMarginal, rThenSurvivor: survivorMarginal, why };
@@ -1693,14 +1730,19 @@ function buildRetireConfig(overrides) {
   const birthSpouse = rs.birthYears && rs.birthYears[1] ? Number(rs.birthYears[1]) : null;
   const currentAge = nowYear - birthYou;
   const claim = (rs.ssClaimAge && rs.ssClaimAge[0]) || 67;
-  // SS gross (real): user PIA, else estimate from income. Both spouses summed, started at your claim age (declared).
-  let ssGross;
-  if (rs.ssPIA === 'estimate' || !rs.ssPIA) {
-    ssGross = estimatePIAmonthly(income) * 12 * ssFactor(claim);
-    if (birthSpouse) ssGross += estimatePIAmonthly(income) * 0.5 * 12 * ssFactor((rs.ssClaimAge && rs.ssClaimAge[1]) || claim);
-  } else {
-    ssGross = (Number(rs.ssPIA[0]) || 0) * 12 * ssFactor(claim);
-    if (rs.ssPIA[1]) ssGross += (Number(rs.ssPIA[1]) || 0) * 12 * ssFactor((rs.ssClaimAge && rs.ssClaimAge[1]) || claim);
+  const spouseClaim = (rs.ssClaimAge && rs.ssClaimAge[1]) || claim;
+  // Social Security is optional. Estimate mode supports users who have not
+  // claimed yet; manual mode accepts statement benefit amounts. During
+  // survivor years only the larger active benefit continues.
+  let ssPeople = [];
+  if (rs.ssPIA !== 'exclude') {
+    if (rs.ssPIA === 'estimate' || !rs.ssPIA) {
+      ssPeople.push({ claimAge: claim, annualBenefit: estimatePIAmonthly(income) * 12 * ssFactor(claim) });
+      if (birthSpouse) ssPeople.push({ claimAge: spouseClaim, annualBenefit: estimatePIAmonthly(income) * 0.5 * 12 * ssFactor(spouseClaim) });
+    } else {
+      ssPeople.push({ claimAge: claim, annualBenefit: (Number(rs.ssPIA[0]) || 0) * 12 * ssFactor(claim) });
+      if (birthSpouse && rs.ssPIA[1]) ssPeople.push({ claimAge: spouseClaim, annualBenefit: (Number(rs.ssPIA[1]) || 0) * 12 * ssFactor(spouseClaim) });
+    }
   }
   const weightsNow = retireCurrentWeights();
   let weightsTarget = null;
@@ -1717,10 +1759,10 @@ function buildRetireConfig(overrides) {
     const t = allocationTarget, sum = Object.values(t).reduce((s, v) => s + Number(v), 0) || 1;
     weightsTarget = {}; for (const [c, v] of Object.entries(t)) weightsTarget[c] = Number(v) / sum;
   }
-  const inferred = retireInferContributions();
-  const contrib = Object.assign({ pretax: 0, taxable: 0, roth: 0, taxfree: 0 },
-    inferred ? { pretax: inferred.pretax, taxable: inferred.taxable, roth: inferred.roth, taxfree: inferred.taxfree } : {},
-    rs.contribOverride || {});
+  // Contributions are deliberate model inputs. Historical balance changes mix
+  // deposits, withdrawals, and market movement, so an observed run-rate is a
+  // suggestion for the user—not an amount the model silently assumes.
+  const contrib = Object.assign({ pretax: 0, taxable: 0, roth: 0, taxfree: 0 }, rs.contribOverride || {});
   const muSigma = rs.muSigma ? Object.assign({}, RETIRE_DATA.muSigma, rs.muSigma) : RETIRE_DATA.muSigma;
   const spend = overrides && overrides.spend != null ? overrides.spend : (rs.spendingTargetRealAnnual || 80000);
   const inflation = (rs.inflationPct != null ? rs.inflationPct : 2.5) / 100;
@@ -1737,7 +1779,7 @@ function buildRetireConfig(overrides) {
     weightsNow, weightsTarget, muSigma,
     filing: fs, fedBrackets: ref.federalBrackets[fs], ltcgBrackets: ref.ltcgBrackets[fs],
     stdDed: RETIRE_DATA.standardDeduction[fs], stateRate: rates.r_state, niitRate: ref.niitRate, niitThreshold: ref.niitThreshold[fs] || 200000,
-    taxesSSstate: RETIRE_DATA.ssTaxingStates.includes(ts.state), ssGross, ssClaimAge: claim, birthYearPrimary: birthYou,
+    taxesSSstate: RETIRE_DATA.ssTaxingStates.includes(ts.state), ssPeople, ssClaimAge: claim, birthYearPrimary: birthYou,
     survivorAtAge: rs.survivorAge || 90, survivorStdDed: RETIRE_DATA.standardDeduction.single,
     survivorFedBrackets: ref.federalBrackets.single, survivorLtcgBrackets: ref.ltcgBrackets.single, survivorStateRate: rates.r_state,
     // r_now = marginal on last contributed dollar (fed+state, NIIT excluded — contribution doesn't displace investment income)
@@ -1749,12 +1791,29 @@ function buildRetireConfig(overrides) {
 
 // Cached model runner — base MC + deterministic median + (optional) conversion pass. Invalidated by signature.
 let RETIRE_CACHE = null;
+const WITHDRAWAL_CONFIDENCE_TARGET = 0.85;
+function estimateAnnualSavingsGap(cfg, currentSuccess) {
+  if (currentSuccess >= WITHDRAWAL_CONFIDENCE_TARGET) return { amount: 0, target: WITHDRAWAL_CONFIDENCE_TARGET, reached: true };
+  const testPaths = Math.min(cfg.paths, 2500);
+  const successWith = extra => {
+    const contrib = Object.assign({}, cfg.contrib, { taxable: (cfg.contrib.taxable || 0) + extra });
+    return runProjection(Object.assign({}, cfg, { contrib, paths: testPaths, deterministic: false, conversionFill: 0 })).success;
+  };
+  let lo = 0, hi = Math.max(250000, cfg.spend * 2);
+  if (successWith(hi) < WITHDRAWAL_CONFIDENCE_TARGET) return { amount: null, cap: hi, target: WITHDRAWAL_CONFIDENCE_TARGET, reached: false };
+  for (let i = 0; i < 9; i++) {
+    const mid = (lo + hi) / 2;
+    if (successWith(mid) >= WITHDRAWAL_CONFIDENCE_TARGET) hi = mid; else lo = mid;
+  }
+  return { amount: Math.max(500, Math.ceil(hi / 500) * 500), target: WITHDRAWAL_CONFIDENCE_TARGET, reached: true, paths: testPaths };
+}
 function retireModel(spendOverride) {
   const cfg = buildRetireConfig(spendOverride != null ? { spend: spendOverride } : null);
   const sig = JSON.stringify(cfg);
   if (RETIRE_CACHE && RETIRE_CACHE.sig === sig) return RETIRE_CACHE.model;
   // Base fan/table/verdict use the plan AS-IS (no conversions, §6.5 step 2).
   const base = runProjection(Object.assign({}, cfg, { deterministic: false, conversionFill: 0 }));
+  const savingsGap = estimateAnnualSavingsGap(cfg, base.success);
   const det  = runProjection(Object.assign({}, cfg, { deterministic: true, paths: 1, conversionFill: 0 }));
   const verdict = switchPointVerdict(cfg.rNow, det.rThenJoint, det.rThenSurvivor);
   // §6.6 conversion card: a separate deterministic pass WITH the fill bracket, and the recomputed verdict.
@@ -1765,7 +1824,22 @@ function retireModel(spendOverride) {
              rThenJointWith: withConv.rThenJoint, rThenSurvivorWith: withConv.rThenSurvivor };
     verdictWithConv = switchPointVerdict(cfg.rNow, withConv.rThenJoint, withConv.rThenSurvivor);
   }
-  const model = { cfg, base, det, verdict, conv, verdictWithConv };
+  const model = { cfg, base, det, verdict, conv, verdictWithConv, savingsGap };
+  RETIRE_CACHE = { sig, model };
+  return model;
+}
+async function retireModelAsync(onProgress) {
+  const cfg = buildRetireConfig();
+  const sig = JSON.stringify(cfg);
+  const runs = await runProjectionWorker('retire', cfg, onProgress);
+  const verdict = switchPointVerdict(cfg.rNow, runs.det.rThenJoint, runs.det.rThenSurvivor);
+  let conv = null, verdictWithConv = null;
+  if (runs.withConv) {
+    conv = { converted: runs.withConv.converted, convTax: runs.withConv.convTax, firstRmdWith: runs.withConv.firstRmd, firstRmdWithout: runs.det.firstRmd,
+      rThenJointWith: runs.withConv.rThenJoint, rThenSurvivorWith: runs.withConv.rThenSurvivor };
+    verdictWithConv = switchPointVerdict(cfg.rNow, runs.withConv.rThenJoint, runs.withConv.rThenSurvivor);
+  }
+  const model = { cfg, base: runs.base, det: runs.det, verdict, conv, verdictWithConv, savingsGap: runs.savingsGap };
   RETIRE_CACHE = { sig, model };
   return model;
 }
@@ -1851,6 +1925,75 @@ function runCollegeProjection(cfg) {
   const bands = totalsByYear.map((arr, k) => ({ age: cfg.currentAge + k, p10: pct(arr, .1), p25: pct(arr, .25), p50: pct(arr, .5), p75: pct(arr, .75), p90: pct(arr, .9) }));
   return { bands, fullSuccess: nPaths ? fullSuccess / nPaths : 0, avgYearsFunded: nPaths ? fundedYearsSum / nPaths : 0, remainingYears, detTable, endAge };
 }
+
+/* Run Monte Carlo work in a local Blob worker. The source is assembled from
+   the same pure engine functions used by tests, so the hosted and downloadable
+   apps stay static and self-contained while the UI remains responsive. */
+let ACTIVE_PROJECTION_WORKER = null;
+let ACTIVE_PROJECTION_REJECT = null;
+function projectionWorkerSource() {
+  const fns = [retireCatOf, retireCorr, blendMuSigma, retireBracketTax, retireBracketMarginal, ltcgStackTax, rmdStartAge, rmdDivisor, rmdAmount,
+    mulberry32, gaussFrom, drawReturnFrom, doWithdraw, taxableSocialSecurity,
+    decumulateYear, runProjection, runCollegeProjection, estimateAnnualSavingsGap];
+  return `const RETIRE_DATA=${JSON.stringify(RETIRE_DATA)};\nconst REFERENCE_DATA=${JSON.stringify({ niitThreshold: REFERENCE_DATA.niitThreshold })};\nconst WITHDRAWAL_CONFIDENCE_TARGET=${WITHDRAWAL_CONFIDENCE_TARGET};\n${fns.map(fn => fn.toString()).join('\n')}\n
+self.onmessage = event => {
+  const { kind, cfg } = event.data;
+  try {
+    if (kind === 'retire') {
+      self.postMessage({ progress: 10 });
+      const base = runProjection(Object.assign({}, cfg, { deterministic:false, conversionFill:0 }));
+      self.postMessage({ progress: 40 });
+      const det = runProjection(Object.assign({}, cfg, { deterministic:true, paths:1, conversionFill:0 }));
+      const withConv = cfg.conversionFill > 0 ? runProjection(Object.assign({}, cfg, { deterministic:true, paths:1 })) : null;
+      self.postMessage({ progress: 55 });
+      const savingsGap = estimateAnnualSavingsGap(cfg, base.success);
+      self.postMessage({ progress: 100, result: { base, det, withConv, savingsGap } });
+    } else {
+      const allocation = cfg.allocationByAge || {};
+      cfg.msByAge = age => allocation[age] || allocation[String(age)] || { mu:0, sigma:0 };
+      self.postMessage({ progress: 20 });
+      const base = runCollegeProjection(Object.assign({}, cfg, { deterministic:false }));
+      self.postMessage({ progress: 100, result: { base } });
+    }
+  } catch (error) { self.postMessage({ error: error && error.message ? error.message : String(error) }); }
+};`;
+}
+function runProjectionWorker(kind, cfg, onProgress) {
+  if (typeof Worker === 'undefined' || typeof Blob === 'undefined' || typeof URL === 'undefined') {
+    if (kind === 'retire') {
+      const base = runProjection(Object.assign({}, cfg, { deterministic:false, conversionFill:0 }));
+      const det = runProjection(Object.assign({}, cfg, { deterministic:true, paths:1, conversionFill:0 }));
+      const withConv = cfg.conversionFill > 0 ? runProjection(Object.assign({}, cfg, { deterministic:true, paths:1 })) : null;
+      return Promise.resolve({ base, det, withConv, savingsGap: estimateAnnualSavingsGap(cfg, base.success) });
+    }
+    const hydrated = Object.assign({}, cfg, { msByAge: age => cfg.allocationByAge[age] || cfg.allocationByAge[String(age)] || { mu:0, sigma:0 } });
+    return Promise.resolve({ base: runCollegeProjection(Object.assign({}, hydrated, { deterministic:false })) });
+  }
+  cancelProjectionWorker(false);
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(new Blob([projectionWorkerSource()], { type:'text/javascript' }));
+    const worker = new Worker(url);
+    ACTIVE_PROJECTION_WORKER = worker;
+    ACTIVE_PROJECTION_REJECT = reject;
+    const finish = () => { worker.terminate(); URL.revokeObjectURL(url); if (ACTIVE_PROJECTION_WORKER === worker) { ACTIVE_PROJECTION_WORKER = null; ACTIVE_PROJECTION_REJECT = null; } };
+    worker.onmessage = event => {
+      const message = event.data || {};
+      if (message.progress != null && onProgress) onProgress(message.progress);
+      if (message.error) { finish(); reject(new Error(message.error)); }
+      else if (message.result) { finish(); resolve(message.result); }
+    };
+    worker.onerror = event => { finish(); reject(new Error(event.message || 'Simulation worker failed.')); };
+    worker.postMessage({ kind, cfg });
+  });
+}
+function cancelProjectionWorker(notify = true) {
+  if (!ACTIVE_PROJECTION_WORKER) return false;
+  const reject = ACTIVE_PROJECTION_REJECT;
+  ACTIVE_PROJECTION_WORKER.terminate(); ACTIVE_PROJECTION_WORKER = null; ACTIVE_PROJECTION_REJECT = null;
+  if (reject) reject(new Error('Simulation cancelled.'));
+  if (notify) toast('Simulation cancelled.');
+  return true;
+}
 // Assemble a child's college cfg from collegeSettings (with optional cost override for the live slider).
 function buildCollegeConfig(childId, overrides) {
   const cs = portfolio.collegeSettings || defaultCollegeSettings();
@@ -1881,6 +2024,18 @@ function collegeModel(childId, overrides) {
   }
   const model = { cfg, base: runCollegeProjection(Object.assign({}, cfg, { deterministic: false })) };
   if (!overrides) COLLEGE_CACHE.set(childId, { sig, model });
+  return model;
+}
+async function collegeModelAsync(childId, onProgress) {
+  const cfg = buildCollegeConfig(childId);
+  const sig = collegeConfigSignature(cfg);
+  const allocationByAge = {};
+  for (let age = cfg.currentAge; age <= cfg.startAge + cfg.years; age++) allocationByAge[age] = cfg.msByAge(age);
+  const plain = Object.assign({}, cfg, { allocationByAge });
+  delete plain.msByAge;
+  const runs = await runProjectionWorker('college', plain, onProgress);
+  const model = { cfg, base: runs.base };
+  COLLEGE_CACHE.set(childId, { sig, model });
   return model;
 }
 function collegeCacheIsCurrent(childId) {
@@ -1916,7 +2071,7 @@ function defaultRetirementSettings() {
     birthYears: [nowYear - 40, null],   // [you, spouse|null]
     retirementAge: 65,
     spendingTargetRealAnnual: 80000,
-    ssPIA: 'estimate',                  // 'estimate' | [youMonthly, spouseMonthly]
+    ssPIA: 'estimate',                  // 'estimate' | 'exclude' | [youMonthly, spouseMonthly]
     ssClaimAge: [67, 67],
     contribGrowthReal: 0,               // % real annual growth of contributions
     retirementAllocation: 'current',    // current | goal | balanced | conservative | legacy { class: pct }
@@ -1924,7 +2079,7 @@ function defaultRetirementSettings() {
     survivorAge: 90,                    // older spouse's age at first death (survivor files single after)
     accountScope: 'retirement',         // 'retirement' (exclude taxable brokerage) | 'all'
     inflationPct: 2.5,                   // used ONLY to translate real → actual future dollars for display
-    contribOverride: null,              // { pretax, taxable, roth, taxfree } user overrides of inferred run-rate
+    contribOverride: { pretax: 0, taxable: 0, roth: 0, taxfree: 0 }, // explicit annual inputs; never inferred silently
     muSigma: null,                      // per-class [μ%,σ%] overrides of RETIRE_DATA.muSigma
     mappingConfirmed: false,            // validation gate: user confirmed account→bucket mapping
     pensions: [],                       // [{ label, amountReal, startAge, cola, survivorPct }] — guaranteed income streams
@@ -1999,6 +2154,9 @@ function validatePortfolio(data) {
   }
   const id = (v, path) => { if (typeof v !== 'string' || !/^[A-Za-z0-9_-]+$/.test(v) || ['__proto__', 'constructor', 'prototype'].includes(v)) fail(path, 'must be a safe nonempty identifier'); };
   const number = (v, path) => { if (typeof v !== 'number' || !Number.isFinite(v) || v < 0) fail(path, 'must be a nonnegative finite number'); };
+  const ranged = (v, path, lo, hi) => { if (typeof v !== 'number' || !Number.isFinite(v) || v < lo || v > hi) fail(path, `must be between ${lo} and ${hi}`); };
+  const integer = (v, path, lo, hi) => { if (!Number.isInteger(v) || v < lo || v > hi) fail(path, `must be an integer from ${lo} to ${hi}`); };
+  const member = (v, path, allowed) => { if (!allowed.includes(v)) fail(path, `must be one of ${allowed.join(', ')}`); };
   const date = (v, path) => { if (typeof v !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(v) || !Number.isFinite(Date.parse(v)) || new Date(v).toISOString().slice(0, 10) !== v) fail(path, 'must be a valid YYYY-MM-DD date'); };
   const ids = { accounts: new Set(), holdings: new Set() };
   for (const key of ['accounts', 'holdings', 'children', 'snapshots', 'goals', 'glidePaths', 'plans']) {
@@ -2017,10 +2175,20 @@ function validatePortfolio(data) {
   for (const h of data.holdings || []) {
     if (!ids.accounts.has(h.accountId)) fail('holding ' + h.id + '.accountId', 'references a missing account');
     if (h.costBasis != null) number(h.costBasis, 'holding ' + h.id + '.costBasis');
+    if (h.acquiredDate != null) date(h.acquiredDate, 'holding ' + h.id + '.acquiredDate');
+    if (h.assetClass != null && !DETAIL_BY_ID[h.assetClass]) fail('holding ' + h.id + '.assetClass', 'is not a recognized asset class');
+  }
+  for (const a of data.accounts || []) {
+    if (a.category != null) member(a.category, 'account ' + a.id + '.category', ACCOUNT_CATEGORIES);
+    if (a.vehicle != null) member(a.vehicle, 'account ' + a.id + '.vehicle', ACCOUNT_VEHICLES);
+    if (a.taxTreatment != null) member(a.taxTreatment, 'account ' + a.id + '.taxTreatment', TAX_TREATMENTS);
+    if (a.childId != null && !ids.children.has(a.childId)) fail('account ' + a.id + '.childId', 'references a missing child');
   }
   const targetMap = (value, path) => {
     object(value, path);
-    for (const [key, pct] of Object.entries(value)) number(pct, path + '.' + key);
+    let sum = 0;
+    for (const [key, pct] of Object.entries(value)) { ranged(pct, path + '.' + key, 0, 100); sum += pct; }
+    if (Object.keys(value).length && Math.abs(sum - 100) > 0.5) fail(path, 'must add up to 100%');
   };
   for (const goal of data.goals || []) { date(goal.effectiveDate, 'goal.effectiveDate'); targetMap(goal.targets, 'goal.targets'); }
   for (const glide of data.glidePaths || []) {
@@ -2035,10 +2203,31 @@ function validatePortfolio(data) {
   if (rs) {
     for (const key of ['birthYears', 'ssClaimAge', 'pensions']) if (rs[key] !== undefined && !Array.isArray(rs[key])) fail('retirementSettings.' + key, 'must be an array');
     for (const pension of rs.pensions || []) object(pension, 'retirementSettings.pension');
+    const currentYear = new Date().getFullYear();
+    for (const [i, year] of (rs.birthYears || []).entries()) if (year != null) integer(year, `retirementSettings.birthYears[${i}]`, currentYear - 100, currentYear - 18);
+    for (const [i, age] of (rs.ssClaimAge || []).entries()) if (age != null) integer(age, `retirementSettings.ssClaimAge[${i}]`, 62, 70);
+    if (rs.retirementAge != null) integer(rs.retirementAge, 'retirementSettings.retirementAge', 40, 80);
+    if (rs.survivorAge != null) integer(rs.survivorAge, 'retirementSettings.survivorAge', 60, 110);
+    if (rs.spendingTargetRealAnnual != null) ranged(rs.spendingTargetRealAnnual, 'retirementSettings.spendingTargetRealAnnual', 0, 10000000);
+    if (rs.inflationPct != null) ranged(rs.inflationPct, 'retirementSettings.inflationPct', 0, 10);
+    if (rs.ssPIA !== undefined && rs.ssPIA !== 'estimate' && rs.ssPIA !== 'exclude' && !Array.isArray(rs.ssPIA)) fail('retirementSettings.ssPIA', 'must be estimate, exclude, or monthly benefit values');
+    for (const [cls, pair] of Object.entries(rs.muSigma || {})) {
+      if (!DETAIL_BY_ID[cls]) fail('retirementSettings.muSigma.' + cls, 'is not a recognized asset class');
+      if (!Array.isArray(pair) || pair.length !== 2) fail('retirementSettings.muSigma.' + cls, 'must contain return and volatility');
+      ranged(pair[0], 'retirementSettings.muSigma.' + cls + '[0]', -99, 100);
+      ranged(pair[1], 'retirementSettings.muSigma.' + cls + '[1]', 0, 200);
+    }
   }
   if (data.collegeSettings && data.collegeSettings.byChild !== undefined) {
     object(data.collegeSettings.byChild, 'collegeSettings.byChild');
-    for (const value of Object.values(data.collegeSettings.byChild)) object(value, 'collegeSettings.byChild entry');
+    for (const [childId, value] of Object.entries(data.collegeSettings.byChild)) {
+      if (!ids.children.has(childId)) fail('collegeSettings.byChild.' + childId, 'references a missing child');
+      object(value, 'collegeSettings.byChild entry');
+      if (value.startAge != null) integer(value.startAge, 'collegeSettings.byChild.' + childId + '.startAge', 0, 40);
+      if (value.years != null) integer(value.years, 'collegeSettings.byChild.' + childId + '.years', 1, 12);
+      if (value.annualCostReal != null) ranged(value.annualCostReal, 'collegeSettings.byChild.' + childId + '.annualCostReal', 0, 1000000);
+      if (value.annualContribReal != null) ranged(value.annualContribReal, 'collegeSettings.byChild.' + childId + '.annualContribReal', 0, 1000000);
+    }
   }
   const dates = new Set();
   for (const snap of data.snapshots || []) {
@@ -2088,7 +2277,10 @@ function migrate(data) {
   }
   // v3 → v4: account "vehicle" (401k/IRA/HSA/529/taxable) for correct
   // contribution limits + shelter status. Infer from name/category if absent.
-  for (const a of merged.accounts || []) { if (!a.vehicle) a.vehicle = inferVehicle(a); }
+  for (const a of merged.accounts || []) {
+    if (!a.vehicle) a.vehicle = inferVehicle(a);
+    if (!a.taxTreatment) a.taxTreatment = inferTaxTreatmentChoice(a) || undefined;
+  }
   // v4 → v5: retirement modeler settings. Additive; merge so new fields fill in.
   merged.retirementSettings = Object.assign(defaultRetirementSettings(), data.retirementSettings || {});
   merged.collegeSettings = Object.assign(defaultCollegeSettings(), data.collegeSettings || {});
@@ -2154,17 +2346,27 @@ let setupStep = 0;
 let checkinDraftDirty = false;
 let fileHandle = null;      // File System Access API handle when available
 let fileName = 'my-portfolio.json';
+let persistenceStatus = 'not-saved'; // not-saved | saved | download-pending
+let pendingDownloadSave = null;
 
 function markDirty() { if (demoMode) return; dirty = true; updateDirtyIndicator(); }
+function hasUnsavedWork() { return !demoMode && (dirty || checkinDraftDirty || persistenceStatus === 'download-pending'); }
+function persistenceLabel() {
+  if (demoMode) return 'sample data';
+  if (checkinDraftDirty) return 'finish check-in before saving';
+  if (dirty) return 'unsaved changes';
+  if (persistenceStatus === 'download-pending') return 'confirm downloaded file';
+  return persistenceStatus === 'saved' ? 'saved' : 'not saved yet';
+}
 function updateDirtyIndicator() {
   if (!document.querySelectorAll) return;
   document.querySelectorAll('[data-act="save"]').forEach(btn => {
-    const unsaved = !demoMode && (dirty || checkinDraftDirty);
+    const unsaved = hasUnsavedWork();
     btn.classList.toggle('save-needed', unsaved);
-    btn.textContent = unsaved ? '⚠ Save needed' : 'Save file';
+    btn.textContent = persistenceStatus === 'download-pending' && !dirty && !checkinDraftDirty ? 'Confirm download' : (unsaved ? '⚠ Save needed' : 'Save file');
     btn.title = checkinDraftDirty ? 'Finish your check-in before saving the file' : 'Save your portfolio file before leaving';
   });
-  document.querySelectorAll('.file-chip .fmeta').forEach(el => { el.textContent = demoMode ? '· sample data' : (dirty || checkinDraftDirty ? '· unsaved · local file' : '· saved · local file'); });
+  document.querySelectorAll('.file-chip .fmeta').forEach(el => { el.textContent = `· ${persistenceLabel()} · local file`; });
 }
 
 /* ===============================================================
@@ -2205,6 +2407,22 @@ function activeHoldings(accountId) {
 function holdingsWhereAccount(pred) {
   const ok = new Set(portfolio.accounts.filter(pred).map(a => a.id));
   return portfolio.holdings.filter(h => ok.has(h.accountId));
+}
+
+/* Historical screens resolve the holdings recorded in that snapshot, even if
+   an account or holding was archived later. Archiving affects current entry
+   workflows only; it must never rewrite the user's recorded history. */
+function holdingsForSnapshot(snapshot, scope) {
+  const referenced = new Set((snapshot && snapshot.values || []).map(v => v.holdingId));
+  const include529 = !!portfolio.meta.include529InHousehold;
+  return portfolio.holdings.filter(h => {
+    if (!referenced.has(h.id)) return false;
+    const account = accountById(h.accountId);
+    if (!account) return false;
+    if (scope === 'household') return include529 || account.category !== '529';
+    if (scope && scope !== 'all') return account.category === scope;
+    return true;
+  });
 }
 
 /*
@@ -2401,12 +2619,8 @@ function glideTargets(childId, asOfDate) {
 /* ---- History: per-snapshot rollup series for the stacked area (F4) ---- */
 function historySeries(scope /* 'household'|category|null=all */) {
   const snaps = sortedSnapshots();
-  const pickHoldings = scope == null || scope === 'all'
-    ? () => portfolio.holdings.filter(h => h.status !== 'archived')
-    : scope === 'household' ? householdHoldings
-    : () => categoryHoldings(scope);
   return snaps.map(s => {
-    const a = allocate(pickHoldings(), s);
+    const a = allocate(holdingsForSnapshot(s, scope == null ? 'all' : scope), s);
     return { date: s.date, total: a.total, group: a.group, detail: a.detail };
   });
 }
@@ -2452,7 +2666,7 @@ function holdingDragRows(snapshot, rates) {
     rows.push({
       holdingId: h.id, ticker: h.ticker || '', name: h.name || '',
       accountId: h.accountId, accountName: acct.name || '(account)',
-      assetClass: h.assetClass, mv, costBasis: cb == null ? null : Number(cb),
+      assetClass: h.assetClass, mv, costBasis: cb == null ? null : Number(cb), acquiredDate: h.acquiredDate || null,
       sheltered: shelter.sheltered, reason: shelter.reason,
       profile, estimated, source, drag, wouldBeDrag,
       avoided: shelter.sheltered ? wouldBeDrag : 0, // tax shielded by good placement
@@ -2484,12 +2698,23 @@ function taxScorecard(snapshot) {
 
 const EFFICIENT_FOR_TAXABLE = ['us_large', 'us_total', 'intl_dev', 'us_mid', 'us_small'];
 
+// Taxable-sale suggestions are shown only when the app can evaluate both the
+// gain and long-term holding period. Missing tax-lot facts never become $0.
+function taxableSaleInfo(row, asOfDate) {
+  const account = accountById(row.accountId);
+  if (!account || accountShelter(account).sheltered) return { eligible: true, sheltered: true, gain: 0 };
+  if (row.costBasis == null || !row.acquiredDate) return { eligible: false, reason: 'basis or purchase date missing' };
+  const heldDays = (Date.parse(asOfDate) - Date.parse(row.acquiredDate)) / 864e5;
+  if (!Number.isFinite(heldDays) || heldDays <= 365) return { eligible: false, reason: 'not confirmed long-term' };
+  return { eligible: true, sheltered: false, gain: Math.max(0, row.mv - row.costBasis), heldDays };
+}
+
 // §13.5 location-swap recommendations (allocation-neutral pairs).
 function locationSwapRecs(snapshot) {
   const rates = taxRates();
   const rows = holdingDragRows(snapshot, rates);
   const inefTaxable = rows
-    .filter(r => !r.sheltered && INEFFICIENT_CLASSES.includes(r.assetClass) && r.mv > 0)
+    .filter(r => !r.sheltered && INEFFICIENT_CLASSES.includes(r.assetClass) && r.mv > 0 && taxableSaleInfo(r, snapshot.date).eligible)
     .sort((a, b) => b.drag - a.drag);
   const effSheltered = rows
     .filter(r => r.sheltered && EFFICIENT_FOR_TAXABLE.includes(r.assetClass) && r.mv > 0)
@@ -2517,12 +2742,11 @@ function locationSwapRecs(snapshot) {
     const savings = X * (dA - best.dragPerDollarTaxable);
     if (savings <= 0) continue;
     // One-time realization cost on the A portion sold in taxable (§13.5).
-    let oneTime = 0, realizedGain = 0, basisKnown = a.costBasis != null;
-    if (basisKnown) {
-      const gainFull = a.mv - a.costBasis;
-      realizedGain = Math.max(0, (X / a.mv) * gainFull);
-      oneTime = realizedGain * rates.r_ltcg_eff;
-    }
+    let oneTime = 0;
+    const basisKnown = true;
+    const gainFull = a.mv - a.costBasis;
+    const realizedGain = Math.max(0, (X / a.mv) * gainFull);
+    oneTime = realizedGain * rates.r_ltcg_eff;
     // Recommend only when one-time cost is $0 or < 2 years of savings (§13.5).
     const worthIt = oneTime === 0 || oneTime < 2 * savings;
     if (!worthIt) continue;
@@ -2549,6 +2773,7 @@ function muniRecs(snapshot) {
   for (const r of rows) {
     if (r.sheltered || r.assetClass !== 'us_bond') continue;
     if (r.profile && r.profile.muni) continue; // already a muni fund
+    if (!taxableSaleInfo(r, snapshot.date).eligible) continue;
     const y_t = (r.profile.divYield || 0);
     const inState = !!(portfolio.taxSettings && portfolio.taxSettings.inStateMuni);
     const y_m = DEFAULT_MUNI_YIELD;
@@ -2560,8 +2785,9 @@ function muniRecs(snapshot) {
     const muniAT = inState ? y_m : y_m * (1 - rates.r_state);
     if (muniAT <= taxableAT) continue;
     const savings = r.mv * (muniAT - taxableAT) / 100;
-    let oneTime = 0, realizedGain = 0, basisKnown = r.costBasis != null;
-    if (basisKnown) { realizedGain = Math.max(0, r.mv - r.costBasis); oneTime = realizedGain * rates.r_ltcg_eff; }
+    const basisKnown = true;
+    const realizedGain = Math.max(0, r.mv - r.costBasis);
+    const oneTime = realizedGain * rates.r_ltcg_eff;
     recs.push({
       kind: 'muni', amount: r.mv, savingsPerYr: savings, oneTimeCost: oneTime, realizedGain, basisKnown,
       aTicker: r.ticker, aAccountId: r.accountId, aAccountName: r.accountName,
@@ -2814,7 +3040,7 @@ async function tryAutoload() {
         if (perm === 'granted') {
           const file = await handle.getFile();
           portfolio = migrate(JSON.parse(await file.text())); demoMode = false; setupStep = 0; checkinDraftDirty = false;
-          fileHandle = handle; fileName = handle.name || fileName; dirty = false;
+          fileHandle = handle; fileName = handle.name || fileName; dirty = false; persistenceStatus = 'saved';
           trackUsage('portfolio_open_success');
           return { loaded: true };
         }
@@ -2832,7 +3058,7 @@ async function reopenPending() {
     if (perm !== 'granted') { toast('Permission not granted'); return; }
     const file = await pendingHandle.getFile();
     portfolio = migrate(JSON.parse(await file.text())); demoMode = false; setupStep = 0; checkinDraftDirty = false;
-    fileHandle = pendingHandle; fileName = pendingHandle.name || fileName; dirty = false;
+    fileHandle = pendingHandle; fileName = pendingHandle.name || fileName; dirty = false; persistenceStatus = 'saved';
     pendingHandle = null; ui.pendingReopen = null;
     trackUsage('portfolio_open_success');
     resetViewState(); render(); toast('Loaded · ' + fileName);
@@ -2846,6 +3072,7 @@ function trackUsage(name, props = {}) {
 function requestPortfolioSave() {
   if (demoMode) { toast('Demo is read only. Start your portfolio to save your own file.'); return; }
   if (checkinDraftDirty) { toast('Finish your check-in with “Record check-in” before saving your file.'); return; }
+  if (persistenceStatus === 'download-pending' && pendingDownloadSave) { openDialog({ type: 'download-confirm' }); return; }
   trackUsage('portfolio_save_click');
   openDialog({ type: 'save-file' });
 }
@@ -2884,7 +3111,7 @@ async function saveFile(forceNew, requestedName = fileName) {
       await w.write(text); await w.close();
       if (portfolio === savedPortfolio) {
         fileHandle = targetHandle; fileName = targetHandle.name || saveName;
-        dirty = serialize() !== text; updateDirtyIndicator();
+        dirty = serialize() !== text; persistenceStatus = 'saved'; pendingDownloadSave = null; updateDirtyIndicator();
         rememberHandle(fileHandle);
       }
       trackUsage('portfolio_save_success', { save_method: 'file_write' });
@@ -2897,10 +3124,15 @@ async function saveFile(forceNew, requestedName = fileName) {
   triggerDownload(text, saveName, 'application/json');
   if (portfolio === savedPortfolio) {
     if (saveName !== fileName) fileHandle = null;
-    fileName = saveName; dirty = serialize() !== text; updateDirtyIndicator();
+    fileName = saveName;
+    pendingDownloadSave = { text, name: saveName };
+    persistenceStatus = 'download-pending';
+    dirty = serialize() !== text;
+    updateDirtyIndicator();
+    if (document && typeof document.getElementById === 'function') openDialog({ type: 'download-confirm' });
   }
   trackUsage('portfolio_save_success', { save_method: 'download_initiated' });
-  return { ok: true, via: 'download' };
+  return { ok: true, via: 'download', pending: true };
 }
 
 // Classic hidden <input type=file> loader — works everywhere, including sandboxed webviews
@@ -2917,7 +3149,7 @@ function openFileViaInput() {
       try {
         const data = JSON.parse(await file.text());
         portfolio = migrate(data); demoMode = false; setupStep = 0; checkinDraftDirty = false;
-        fileHandle = null; fileName = file.name || fileName; dirty = false;
+        fileHandle = null; fileName = file.name || fileName; dirty = false; persistenceStatus = 'saved'; pendingDownloadSave = null;
         trackUsage('portfolio_open_success');
         finish({ ok: true });
       } catch (e) { finish({ ok: false, error: e.message }); }
@@ -2940,7 +3172,7 @@ async function openFile() {
       const data = JSON.parse(await file.text());
       portfolio = migrate(data); demoMode = false; setupStep = 0; checkinDraftDirty = false;
       fileHandle = handle; fileName = handle.name || fileName;
-      dirty = false;
+      dirty = false; persistenceStatus = 'saved'; pendingDownloadSave = null;
       rememberHandle(handle);
       trackUsage('portfolio_open_success');
       return { ok: true };
@@ -2976,7 +3208,7 @@ function consumeLandingPortfolio() {
     fileHandle = null;
     const incomingName = typeof pending.name === 'string' && pending.name.trim() ? pending.name.trim() : 'my-portfolio.json';
     fileName = incomingName.replace(/[\\/:*?"<>|\x00-\x1f]/g, '_').slice(0, 200) || 'my-portfolio.json';
-    dirty = false;
+    dirty = false; persistenceStatus = 'saved'; pendingDownloadSave = null;
     trackUsage('portfolio_open_success');
     return { found: true, ok: true };
   } catch (e) {
@@ -2986,7 +3218,7 @@ function consumeLandingPortfolio() {
 
 /* Autosave reminder if there are unsaved changes (spec §10). */
 window.addEventListener('beforeunload', (e) => {
-  if (!demoMode && (dirty || checkinDraftDirty)) { e.preventDefault(); e.returnValue = ''; return ''; }
+  if (hasUnsavedWork()) { e.preventDefault(); e.returnValue = ''; return ''; }
 });
 
 /* ===============================================================
@@ -3078,7 +3310,7 @@ function loadDemoData() {
 
   portfolio = p;
   demoMode = true; setupStep = 0; checkinDraftDirty = false; fileHandle = null; fileName = "demo-portfolio.json";
-  dirty = false;
+  dirty = false; persistenceStatus = 'saved'; pendingDownloadSave = null;
   trackUsage('demo_start');
 }
 
@@ -3101,6 +3333,7 @@ const ui = {
   dialog: null,            // active modal descriptor
   dollarMode: 'today',     // Outlook display unit: 'today' (real) | 'future' (nominal, inflation-adjusted)
   simRunning: null,        // retire | college while an explicit 10k-path run is in progress
+  simProgress: 0,
 };
 
 // §14 IA: which internal views sit under each top-level nav tab.
@@ -3424,7 +3657,8 @@ function chartHits(id, xs, H) {
   return xs.map((x, i) => {
     const left = i === 0 ? 0 : (xs[i - 1] + x) / 2;
     const right = i === xs.length - 1 ? 320 : (x + xs[i + 1]) / 2;
-    return `<rect class="snaphit" data-chart="${id}" data-snap="${i}" x="${left.toFixed(1)}" y="0" width="${(right - left).toFixed(1)}" height="${H}"></rect>`;
+    const point = CHART_DATA[id] && CHART_DATA[id].series[i];
+    return `<rect class="snaphit" role="button" tabindex="0" aria-label="${esc(point ? 'Show ' + point.date + ' chart values' : 'Show chart values')}" data-chart="${id}" data-snap="${i}" x="${left.toFixed(1)}" y="0" width="${(right - left).toFixed(1)}" height="${H}"></rect>`;
   }).join('');
 }
 function chartXAxis(series, xs) {
@@ -3434,7 +3668,18 @@ function chartXAxis(series, xs) {
   return `${ticks}<g style="font-size:9px;fill:var(--color-text);opacity:0.6;font-family:var(--font-body);">${first}${last}</g>`;
 }
 function chartFrame(id, svg) {
-  return `<div class="chart-wrap">${svg}<div class="chart-readout" id="chart-ro-${id}"><span class="ro-hint text-muted">Hover the timeline</span></div></div>`;
+  return `<div class="chart-wrap">${svg}<div class="chart-readout" id="chart-ro-${id}" aria-live="polite"><span class="ro-hint text-muted">Hover, tap, or focus a date</span></div>${chartAccessibleTable(id)}</div>`;
+}
+function chartAccessibleTable(id) {
+  const d = CHART_DATA[id]; if (!d) return '';
+  const heads = d.kind === 'growth' ? d.lines.map(line => `<th style="text-align:right;">${esc(line.label)}</th>`).join('') : TAXONOMY.groups.map(group => `<th style="text-align:right;">${esc(group.label)}</th>`).join('');
+  const rows = d.series.map((point, i) => {
+    const cells = d.kind === 'growth'
+      ? d.lines.map(line => `<td class="tnum" style="text-align:right;">${fmtMoney(line.points[i])}</td>`).join('')
+      : TAXONOMY.groups.map(group => { const value = point.group[group.id] || 0; return `<td class="tnum" style="text-align:right;">${d.kind === 'pct' ? fmtPct(point.total ? value / point.total * 100 : 0, 1) : fmtMoney(value)}</td>`; }).join('');
+    return `<tr><td class="tnum">${esc(point.date)}</td>${cells}</tr>`;
+  }).join('');
+  return `<details class="chart-data"><summary>View chart data</summary><div class="table-scroll" role="region" aria-label="Chart data"><table class="table"><thead><tr><th>Date</th>${heads}</tr></thead><tbody>${rows}</tbody></table></div></details>`;
 }
 
 function stackedAreaSVG(series, id) {
@@ -3668,10 +3913,12 @@ function navHTML() {
       `<a data-act="nav" data-view="${v}" class="${ui.view === v ? 'subnav-active' : ''}">${label}</a>`).join('')}</div>` : '';
   const refOpen = !!ui.drawer; // drawer visibility is purely the toggle — the Settings button opens AND closes it
   const mobileOutlook = outlookSubtabs().map(([v, l]) => `<a data-act="nav" data-view="${v}" class="mobile-only ${ui.view === v ? 'active' : ''}">${l}</a>`).join('');
-  const drawer = refOpen ? `<div class="refdrawer no-print"><span class="rlabel mobile-only">Outlook</span>${mobileOutlook}<span class="rlabel">Settings</span>${
+  const mobileActions = `<span class="rlabel mobile-only">Workflow &amp; file</span><a data-act="nav" data-view="report" class="mobile-only ${ui.view === 'report' ? 'active' : ''}">Report</a><a data-act="about" class="mobile-only">Help</a><a data-act="open" class="mobile-only">Open file</a>${demoMode ? '' : '<a data-act="save" class="mobile-only">Save file</a>'}`;
+  const drawer = refOpen ? `<div class="refdrawer no-print"><span class="rlabel mobile-only">Outlook</span>${mobileOutlook}${mobileActions}<span class="rlabel">Settings</span>${
     REFERENCE_LINKS.map(([v, l]) => `<a data-act="nav" data-view="${v}" class="${ui.view === v ? 'active' : ''}">${l}</a>`).join('')}
     <span style="margin-left:auto;"><a data-act="toggle-drawer">Close ✕</a></span></div>` : '';
-  const dirtyNote = demoMode ? 'sample data' : dirty || checkinDraftDirty ? 'unsaved' : 'saved';
+  const dirtyNote = persistenceLabel();
+  const needsSave = hasUnsavedWork();
   const settingsActive = ui.drawer || SETTINGS_VIEWS.includes(ui.view);
   const dockItems = [
     ['dashboard', '⌂', 'Dash', 'dashboard'],
@@ -3682,8 +3929,8 @@ function navHTML() {
   const mobileDock = `<nav class="mobile-dock no-print" aria-label="Mobile navigation">${dockItems.map(([tab, icon, label, view]) => `<button class="${active === tab ? 'active' : ''}" data-act="nav" data-view="${view}"><span class="dock-icon" aria-hidden="true">${icon}</span><span>${label}</span></button>`).join('')}<button class="${settingsActive || active === 'outlook' ? 'active' : ''}" data-act="toggle-drawer"><span class="dock-icon" aria-hidden="true">•••</span><span>More</span></button></nav>`;
   return `<div class="filebar no-print">
       <a class="brand" href="${esc(publicSiteURL(''))}" title="Quartermaster — home">${logoSVG(24)}<span style="font-family:var(--font-heading);font-weight:700;font-size:19px;letter-spacing:.06em;text-transform:uppercase;">Quartermaster</span></a>
-      <span class="file-chip"><span class="dot" style="${dirty ? 'background:var(--color-warn);' : ''}"></span><span class="fname">${esc(fileName)}</span><span class="fmeta">· ${dirtyNote} · local disk</span></span>
-      <button class="filebtn ${dirty || checkinDraftDirty ? 'save-needed' : ''}" data-act="save" ${demoMode ? 'disabled' : ''} title="Save your portfolio file before leaving">${dirty || checkinDraftDirty ? '⚠ Save needed' : 'Save file'}</button>
+      <span class="file-chip"><span class="dot" style="${needsSave ? 'background:var(--color-warn);' : ''}"></span><span class="fname">${esc(fileName)}</span><span class="fmeta">· ${dirtyNote} · local disk</span></span>
+      <button class="filebtn ${needsSave ? 'save-needed' : ''}" data-act="save" ${demoMode ? 'disabled' : ''} title="Save your portfolio file before leaving">${persistenceStatus === 'download-pending' && !dirty && !checkinDraftDirty ? 'Confirm download' : (needsSave ? '⚠ Save needed' : 'Save file')}</button>
       <button class="filebtn" data-act="open">Open</button>
       <button class="filebtn" data-act="about">Help</button>
       <span class="netpill" style="margin-left:auto;" tabindex="0" aria-describedby="local-mode-tip"><span aria-hidden="true">ⓘ</span>Local mode only<span class="local-tip" id="local-mode-tip" role="tooltip">Your portfolio data and calculations stay in your browser. We don’t receive your holdings or balances. Save your portfolio file before leaving, then open it when you return.</span></span>
@@ -3723,7 +3970,7 @@ function toggleTheme() {
 /* New-user setup is session state; only the portfolio itself is saved. */
 function beginSetup() {
   portfolio = emptyPortfolio(); demoMode = false; setupStep = 1; checkinDraftDirty = false;
-  fileHandle = null; fileName = 'my-portfolio.json'; dirty = false;
+  fileHandle = null; fileName = 'my-portfolio.json'; dirty = false; persistenceStatus = 'not-saved'; pendingDownloadSave = null;
   resetViewState(); ui.setupGoal = {mode:'none',targets:{}}; ui.mobileNavOpen = false; ui.dialog = null; ui.view = 'setup'; ui.drawer = false;
   render(); window.scrollTo(0, 0);
 }
@@ -3787,7 +4034,7 @@ function renderReviewChanges() {
   const { previous, current, rows, delta } = comparison;
   return `${intro}<div class="panel" style="padding:24px;"><div class="kicker">${esc(previous.date)} → ${esc(current.date)}</div><h2 style="margin:12px 0;">${delta >= 0 ? '+' : '−'}${fmtMoney(Math.abs(delta))} in recorded balance</h2><p class="text-muted">Includes all accounts, including 529s. Balance changes combine market moves, contributions, withdrawals, and changes to recorded holdings. They are not investment returns. Unrecorded values count as zero in this comparison.</p><table class="table"><thead><tr><th>Account</th><th>Previous</th><th>Latest</th><th>Change</th></tr></thead><tbody>${rows.map(r => `<tr><td>${esc(r.name)}</td><td>${fmtMoney(r.prior)}</td><td>${fmtMoney(r.now)}</td><td>${r.delta >= 0 ? '+' : '−'}${fmtMoney(Math.abs(r.delta))}</td></tr>`).join('')}</tbody></table></div>`;
 }
-const DEMO_ACTIONS = new Set(['nav','about','landing-open','onboard-scratch','setup-save-new','setup-discard-new','close-dialog','backdrop','open','load-demo','new-checkin','lp-scroll','toggle-drawer','toggle-mobile-nav','ci-toggle','level','pick-snap','pick-goal','pos-snap','pos-category','pos-sort','pos-class','pos-class-clear','pos-expand','drill','htab','tax-sort','ov-toggle','dollar-mode','sim-paths','run-simulation','print','confirm-yes']);
+const DEMO_ACTIONS = new Set(['nav','about','landing-open','onboard-scratch','setup-save-new','setup-discard-new','close-dialog','backdrop','open','load-demo','new-checkin','lp-scroll','toggle-drawer','toggle-mobile-nav','ci-toggle','level','pick-snap','pick-goal','pos-snap','pos-category','pos-sort','pos-class','pos-class-clear','pos-expand','drill','htab','tax-sort','ov-toggle','dollar-mode','sim-paths','run-simulation','cancel-simulation','print','confirm-yes']);
 function demoActionAllowed(action) {
   // Model assumptions may change temporarily; account mapping may not.
   return DEMO_ACTIONS.has(action) || ((action.startsWith('rd-') && !['rd-map-vehicle','rd-map-treatment'].includes(action)) || action.startsWith('cl-'));
@@ -4515,8 +4762,8 @@ function renderPositions() {
 
   // per-asset-class summary of the scope; click a row to filter holdings by class
   const classRows = toRows(alloc.detail, gt, 'detail').slice().sort((a, b) => b.value - a.value);
-  const classTable = classRows.map(r => `<tr class="${ui.posClass === r.id ? 'pos-class-active' : ''}" style="cursor:pointer;" data-act="pos-class" data-class="${r.id}">
-      <td><span class="swatch" style="background:${r.color};margin-right:6px;"></span>${esc(r.label)}</td>
+  const classTable = classRows.map(r => `<tr class="${ui.posClass === r.id ? 'pos-class-active' : ''}">
+      <td><button type="button" class="table-row-action" data-act="pos-class" data-class="${r.id}"><span class="swatch" style="background:${r.color};margin-right:6px;"></span>${esc(r.label)}</button></td>
       <td class="tnum" style="text-align:right;">${fmtMoney(r.value)}</td>
       <td class="tnum" style="text-align:right;">${r.pct.toFixed(1)}%</td>
     </tr>`).join('');
@@ -4552,7 +4799,7 @@ function renderPositions() {
 
   const arrow = k => sort.key === k ? (sort.dir > 0 ? ' ▲' : ' ▼') : '';
   const th = (k, label, align) => k
-    ? `<th style="text-align:${align || 'left'};cursor:pointer;white-space:nowrap;" data-act="pos-sort" data-key="${k}">${label}${arrow(k)}</th>`
+    ? `<th style="text-align:${align || 'left'};white-space:nowrap;" aria-sort="${sort.key === k ? (sort.dir > 0 ? 'ascending' : 'descending') : 'none'}"><button type="button" class="table-sort" data-act="pos-sort" data-key="${k}">${label}${arrow(k)}</button></th>`
     : `<th style="text-align:${align || 'left'};">${label}</th>`;
   const gcolor = g => g < 0 ? 'var(--color-crit)' : 'var(--color-accent-700)';
   const body = groups.map(g => {
@@ -4561,8 +4808,9 @@ function renderPositions() {
     const acctCell = g.multi
       ? `<span class="tag tag-neutral">${g.children.length} accounts</span> ${esc(g.children.map(c => c.account).slice(0, 2).join(', '))}${g.children.length > 2 ? ' …' : ''}`
       : esc(g.children[0].account);
-    const main = `<tr ${g.multi ? `style="cursor:pointer;" data-act="pos-expand" data-ticker="${esc(g.ticker.toUpperCase())}"` : ''}>
-      <td style="font-family:var(--font-heading);font-size:15px;">${caret}${esc(g.ticker)}${g.name ? ` <span class="text-muted" style="font-family:var(--font-body);font-size:11px;">${esc(g.name)}</span>` : ''}</td>
+    const tickerContent = `${caret}${esc(g.ticker)}${g.name ? ` <span class="text-muted" style="font-family:var(--font-body);font-size:11px;">${esc(g.name)}</span>` : ''}`;
+    const main = `<tr>
+      <td style="font-family:var(--font-heading);font-size:15px;">${g.multi ? `<button type="button" class="table-row-action" data-act="pos-expand" data-ticker="${esc(g.ticker.toUpperCase())}" aria-expanded="${exp}">${tickerContent}</button>` : tickerContent}</td>
       <td class="text-muted" style="font-size:13px;">${acctCell}</td>
       <td><span class="tag ${g.composed ? 'tag-accent-2' : 'tag-accent'}">${g.composed && g.classId ? 'Split · ' : ''}${esc(g.className)}</span></td>
       <td class="tnum" style="text-align:right;">${fmtMoney(g.value)}</td>
@@ -4724,9 +4972,12 @@ function checkinAccountBlock(acct, ci, baseVals) {
     const bv = baseVals[h.id] ? Number(baseVals[h.id].marketValue) : 0; baseTotal += bv;
   }
   const delta = acctTotal - baseTotal;
-  const head = `<div class="checkin-account-header" style="display:flex;align-items:center;gap:12px;padding:12px 20px;${open ? 'background:color-mix(in srgb, var(--color-text) 4%, transparent);' : ''}cursor:pointer;" data-act="ci-toggle" data-account="${esc(acct.id)}">
-      <span class="text-muted" style="font-size:14px;width:12px;">${open ? '–' : '+'}</span>
-      <span class="checkin-account-name" style="font-family:var(--font-heading);font-size:18px;">${esc(acct.name)}</span>
+  const panelId = `ci-panel-${acct.id}`;
+  const head = `<div class="checkin-account-header" style="display:flex;align-items:center;gap:12px;padding:12px 20px;${open ? 'background:color-mix(in srgb, var(--color-text) 4%, transparent);' : ''}">
+      <button class="checkin-disclosure" type="button" data-act="ci-toggle" data-account="${esc(acct.id)}" aria-expanded="${open}" aria-controls="${esc(panelId)}">
+        <span class="text-muted" aria-hidden="true" style="font-size:14px;width:12px;">${open ? '–' : '+'}</span>
+        <span class="checkin-account-name" style="font-family:var(--font-heading);font-size:18px;">${esc(acct.name)}</span>
+      </button>
       ${acct.institution ? `<span class="text-muted checkin-account-institution" style="font-size:13px;">${esc(acct.institution)}</span>` : ''}
       ${acct.taxTreatment ? `<span class="tag tag-outline">${esc(acct.taxTreatment)}</span>` : ''}
       <button class="btn btn-ghost btn-sm" title="Edit account" data-act="edit-account" data-account="${esc(acct.id)}">edit</button>
@@ -4740,7 +4991,7 @@ function checkinAccountBlock(acct, ci, baseVals) {
     </div>`;
   const addHolding = `<div class="checkin-add-holding ${holds.length ? '' : 'is-empty'}" style="padding:10px 20px;"><button class="btn ${holds.length ? 'btn-secondary' : 'btn-primary'} btn-sm" data-act="add-holding" data-account="${esc(acct.id)}">+ Add holding</button></div>`;
   if (!holds.length) return `<div class="checkin-account">${head}${addHolding}</div>`;
-  if (!open) return `<div class="checkin-account" style="border-bottom:1px solid var(--color-divider);">${head}</div>`;
+  if (!open) return `<div class="checkin-account" style="border-bottom:1px solid var(--color-divider);">${head}<div id="${esc(panelId)}" hidden></div></div>`;
 
   const rows = holds.map(h => {
     const v = ci.values[h.id] || {};
@@ -4764,7 +5015,7 @@ function checkinAccountBlock(acct, ci, baseVals) {
 
   return `<div class="checkin-account" style="border-bottom:1px solid var(--color-divider);">
       ${head}
-      <table class="table checkin-holdings">
+      <div id="${esc(panelId)}"><table class="table checkin-holdings">
         <thead><tr>
           <th style="width:96px;padding-left:20px;">Ticker</th>
           <th>Asset class <span class="text-muted" style="text-transform:none;letter-spacing:0;">auto</span></th>
@@ -4775,7 +5026,7 @@ function checkinAccountBlock(acct, ci, baseVals) {
           <th></th>
         </tr></thead>
         <tbody>${rows}</tbody>
-      </table>
+      </table></div>
       ${addHolding}
     </div>`;
 }
@@ -4852,8 +5103,8 @@ function saveCheckin() {
   }
   if (!values.length) { toast('Enter at least one value before saving.'); return; }
   const existing = snapshotByDate(ci.date);
-  if (existing) { existing.values = values; existing.note = ci.note; }
-  else portfolio.snapshots.push({ date: ci.date, values, note: ci.note });
+  if (existing) { existing.values = values; existing.note = ci.note; existing.referenceDataVersion = REFERENCE_DATA.version; }
+  else portfolio.snapshots.push({ date: ci.date, values, note: ci.note, referenceDataVersion: REFERENCE_DATA.version });
   markDirty();
   const completedSetup = setupStep > 0;
   trackUsage(completedSetup ? 'setup_complete' : 'checkin_complete');
@@ -4884,7 +5135,7 @@ function renderHistory() {
     const palette = ['--color-accent-900', '--color-accent-2-500', '--color-accent-500', '--color-teal', '--color-neutral-500'];
     const lines = cats.map((cat, i) => ({
       label: catLabel(cat), color: cssVarValue(palette[i], '#888'),
-      points: series.map(s => allocate(categoryHoldings(cat), snapshotByDate(s.date)).total),
+      points: series.map(s => { const snap = snapshotByDate(s.date); return allocate(holdingsForSnapshot(snap, cat), snap).total; }),
     })).filter(l => l.points.some(v => v > 0));
     chart = multiLineSVG(series, lines, 'hist-growth');
     legend = lines.map(l => `<div class="legend-item"><span class="swatch" style="background:${l.color}"></span>${esc(l.label)}</div>`).join('');
@@ -4895,8 +5146,10 @@ function renderHistory() {
       <div class="text-muted" style="font-size:11px;margin-top:5px;">annualized · ${esc(result.first)} to ${esc(result.last)} · ${result.checkins} check-ins</div>`
       : `<div style="font-family:var(--font-heading);font-size:24px;margin-top:8px;color:var(--color-ink-3);">Not enough history</div><div class="text-muted" style="font-size:11px;margin-top:5px;">Needs 3 positive check-ins spanning at least 90 days</div>`}
   </div>`;
-  const portfolioGrowth = annualizedBalanceGrowth(activeHoldings());
-  const accountGrowth = accountsSorted().map((a, i) => growthCard(a.name, annualizedBalanceGrowth(accountHoldings(a.id)), `var(--c${(i % 6) + 1})`)).join('');
+  const portfolioGrowth = annualizedBalanceGrowth(portfolio.holdings.filter(h => {
+    const a = accountById(h.accountId); return a && (portfolio.meta.include529InHousehold || a.category !== '529');
+  }));
+  const accountGrowth = portfolio.accounts.slice().sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0)).map((a, i) => growthCard(a.name, annualizedBalanceGrowth(portfolio.holdings.filter(h => h.accountId === a.id)), `var(--c${(i % 6) + 1})`)).join('');
   const portfolioGrowthValue = portfolioGrowth
     ? `<span class="tnum" style="font-family:var(--font-heading);font-size:22px;color:${portfolioGrowth.annualized >= 0 ? 'var(--color-ok)' : 'var(--color-crit)'};">${fmtPctSigned(portfolioGrowth.annualized * 100)}</span>`
     : `<span style="font-family:var(--font-heading);font-size:16px;color:var(--color-ink-3);">Not enough history</span>`;
@@ -4910,13 +5163,20 @@ function renderHistory() {
       <p class="text-muted" style="font-size:11px;line-height:1.55;margin:10px 2px 0;">This measures how quickly recorded balances changed, not investment performance. Contributions, withdrawals, transfers, and market movement all affect the result. It needs 3 positive check-ins spanning at least 90 days.</p>
     </div>
   </details>`;
-  return `<div class="toolbar no-print"><div class="crumb"><span>History</span></div>
-    <div class="seg" style="margin-left:auto;">${tabHTML}</div></div>
-    ${growthPanel}
-    <div class="panel"><div class="panel-hd"><h4>${esc(tabs.find(t => t[0] === ui.historyTab)[1])}</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">${series.length} snapshot${series.length !== 1 ? 's' : ''}</span></div>
+  const checkinRows = sortedSnapshots().slice().reverse().map(s => {
+    const a = allocate(holdingsForSnapshot(s, 'all'), s);
+    return `<tr><td class="tnum">${esc(s.date)}</td><td class="tnum" style="text-align:right;"><b>${fmtMoney(a.total)}</b></td><td class="tnum" style="text-align:right;">${s.values.length}</td><td>${s.note ? esc(s.note) : '<span class="text-muted">—</span>'}</td></tr>`;
+  }).join('');
+  const checkinsPanel = `<details class="panel" style="margin-bottom:22px;"><summary class="panel-hd" style="cursor:pointer;list-style-position:outside;"><h4>Previous check-ins</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">${series.length} saved in this portfolio file</span></summary>
+    <div class="table-scroll" role="region" aria-label="Previous check-ins"><table class="table"><thead><tr><th>Date</th><th style="text-align:right;">Recorded balance</th><th style="text-align:right;">Holdings</th><th>Note</th></tr></thead><tbody>${checkinRows || '<tr><td colspan="4" class="text-muted">No check-ins recorded.</td></tr>'}</tbody></table></div>
+    <p class="text-muted" style="font-size:11px;line-height:1.55;margin:10px 20px 18px;">These are the check-ins stored in your current portfolio file. Archiving an account or holding does not change them.</p></details>`;
+  const chartPanel = `<div class="panel" style="margin-bottom:22px;"><div class="panel-hd"><h4>${esc(tabs.find(t => t[0] === ui.historyTab)[1])}</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">${series.length} snapshot${series.length !== 1 ? 's' : ''}</span></div>
       <figure class="blueprint" style="margin:20px;padding:16px;">${corners()}${chart}</figure>
       <div class="legend" style="padding:0 20px 20px;">${legend}</div>
     </div>`;
+  return `<div class="toolbar no-print"><div class="crumb"><span>History</span></div>
+    <div class="seg" style="margin-left:auto;">${tabHTML}</div></div>
+    ${growthPanel}${chartPanel}${checkinsPanel}`;
 }
 
 /* ===============================================================
@@ -5265,7 +5525,11 @@ function driftMoves(snap) {
     // Prefer a sheltered account holding a ticker of the overweight class.
     const cands = activeHoldings().filter(h => {
       const cls = detail ? h.assetClass : rollupOf(h.assetClass);
-      return cls === o.id && (idx[h.id] && Number(idx[h.id].marketValue) > 0);
+      const value = idx[h.id];
+      if (cls !== o.id || !value || !(Number(value.marketValue) > 0)) return false;
+      const acct = accountById(h.accountId);
+      if (acct && accountShelter(acct).sheltered) return true;
+      return taxableSaleInfo({ accountId: h.accountId, mv: Number(value.marketValue), costBasis: value.costBasis != null ? Number(value.costBasis) : (h.costBasis != null ? Number(h.costBasis) : null), acquiredDate: h.acquiredDate || null }, snap.date).eligible;
     });
     cands.sort((h1, h2) => {
       const s1 = accountShelter(accountById(h1.accountId)).sheltered ? 0 : 1;
@@ -5283,7 +5547,8 @@ function driftMoves(snap) {
   return moves;
 }
 // Taxable long-term gain a move would realize (§13.4/13.5). Sheltered-account
-// sales realize $0; unknown basis counts as $0 (can't gate on it).
+// sales realize $0. Unknown basis or holding period returns null so an automated
+// plan can never mistake missing tax facts for a zero-cost sale.
 function moveRealizedGain(m, snap) {
   const acct = accountById(m.accountId);
   if (!acct || accountShelter(acct).sheltered) return 0;
@@ -5291,16 +5556,17 @@ function moveRealizedGain(m, snap) {
   if (!(X > 0) || !m.sellTicker) return 0;
   const idx = valueIndex(snap);
   const h = activeHoldings(m.accountId).find(x => (x.ticker || '').toUpperCase() === m.sellTicker.toUpperCase());
-  if (!h) return 0;
-  const v = idx[h.id]; if (!v) return 0;
+  if (!h) return null;
+  const v = idx[h.id]; if (!v) return null;
   const mv = Number(v.marketValue) || 0;
   const cb = v.costBasis != null ? Number(v.costBasis) : (h.costBasis != null ? Number(h.costBasis) : null);
-  if (cb == null || mv <= 0) return 0;
+  const sale = taxableSaleInfo({ accountId: h.accountId, mv, costBasis: cb, acquiredDate: h.acquiredDate || null }, snap.date);
+  if (!sale.eligible || mv <= 0) return null;
   return Math.max(0, (mv - cb) * (Math.min(X, mv) / mv));
 }
 // Total realized gain across a plan's moves (for the gain-budget tracker).
 function planRealizedGain(plan, snap) {
-  return (plan && plan.moves || []).reduce((s, m) => s + moveRealizedGain(m, snap), 0);
+  return (plan && plan.moves || []).reduce((s, m) => { const gain = moveRealizedGain(m, snap); return s + (gain == null ? 0 : gain); }, 0);
 }
 // Full auto-generation from tax + drift + savings (§13.4–13.8); user then edits.
 // Gain-realizing proposals stop once the annual gain budget is spent (§13.4.4).
@@ -5328,6 +5594,7 @@ function generatePlanProposals(snap) {
   // 2. Drift moves (sheltered-first; only taxable sells realize gain).
   for (const m of driftMoves(snap)) {
     const gain = moveRealizedGain(m, snap);
+    if (gain == null) continue;
     if (!affords(gain)) continue;
     gainUsed += gain;
     p.moves.push(Object.assign({ source: 'drift', taxNote: '', done: false }, m));
@@ -5647,7 +5914,7 @@ function reportHTML(snap) {
   let out = `<header style="border-bottom:2px solid var(--color-text);padding-bottom:10px;margin-bottom:20px;">
     <div class="kicker">Quartermaster · your real allocation${demoMode ? ' · DEMO — SAMPLE DATA' : ''}</div>
     <h1 style="margin:2px 0 0;font-size:34px;">As of ${esc(snap.date)}</h1>
-    <div class="text-muted" style="font-size:12px;margin-top:5px;">Goal effective ${goal ? esc(goal.effectiveDate) : '—'} · Drift band ±${band}% absolute · Tax figures TY ${REFERENCE_DATA.taxYear} (estimates, not advice).</div>
+    <div class="text-muted" style="font-size:12px;margin-top:5px;">Goal effective ${goal ? esc(goal.effectiveDate) : '—'} · Drift band ±${band}% absolute · Tax figures TY ${REFERENCE_DATA.taxYear}, reference data ${REFERENCE_DATA.version} (estimates, not advice). Historical balances are preserved as entered; tax and projection results use the currently bundled assumptions.</div>
     ${goal && goal.rationale ? `<div class="text-muted" style="font-size:12px;margin-top:2px;">Latest rationale: ${esc(goal.rationale)}</div>` : ''}
   </header>`;
 
@@ -5890,13 +6157,15 @@ function fanChartSVG(bands, marker, id, opts) {
       const cx = x(b.age);
       const left = i === 0 ? padL : (x(bands[i - 1].age) + cx) / 2;
       const right = i === bands.length - 1 ? padL + plotW : (cx + x(bands[i + 1].age)) / 2;
-      return `<rect class="fanhit" data-fanid="${id}" data-age="${b.age}" data-cx="${cx.toFixed(1)}" x="${left.toFixed(1)}" y="${padT}" width="${(right - left).toFixed(1)}" height="${plotH}" fill="transparent"></rect>`;
+      return `<rect class="fanhit" role="button" tabindex="0" aria-label="Show projected balances at age ${b.age}" data-fanid="${id}" data-age="${b.age}" data-cx="${cx.toFixed(1)}" x="${left.toFixed(1)}" y="${padT}" width="${(right - left).toFixed(1)}" height="${plotH}" fill="transparent"></rect>`;
     }).join('');
     cursor = `<line id="${id}-cursor" x1="0" y1="${padT}" x2="0" y2="${(padT + plotH).toFixed(1)}" stroke="var(--color-accent-900)" stroke-width="1" style="display:none;"></line>
       <circle id="${id}-cdot" r="3.8" fill="var(--color-accent-900)" style="display:none;"></circle>
       <text id="${id}-cval" text-anchor="middle" style="font-size:12px;font-weight:700;fill:var(--color-accent-900);paint-order:stroke;stroke:var(--color-panel);stroke-width:3.5px;display:none;"></text>`;
-    readout = `<div class="fan-readout" id="${id}-readout" style="min-height:18px;font-size:12px;margin-bottom:4px;color:var(--color-text);">Hover the chart to see the balance at any age.</div>`;
+    readout = `<div class="fan-readout" id="${id}-readout" aria-live="polite" style="min-height:18px;font-size:12px;margin-bottom:4px;color:var(--color-text);">Hover, tap, or focus an age to see the projected balance.</div>`;
   }
+  const showData = !isStatic && opts.showData !== false;
+  const dataRows = showData ? bands.map(b => `<tr><td class="tnum">${b.age}</td><td class="tnum" style="text-align:right;">${fmtMoney(b.p10)}</td><td class="tnum" style="text-align:right;">${fmtMoney(b.p25)}</td><td class="tnum" style="text-align:right;"><b>${fmtMoney(b.p50)}</b></td><td class="tnum" style="text-align:right;">${fmtMoney(b.p75)}</td><td class="tnum" style="text-align:right;">${fmtMoney(b.p90)}</td></tr>`).join('') : '';
   return `<div data-fanwrap="${id}">
     ${readout}
     <svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;" role="img" aria-label="Projected balance by age, with a range of outcomes">
@@ -5911,6 +6180,7 @@ function fanChartSVG(bands, marker, id, opts) {
       <span><span class="swatch" style="background:var(--color-accent-300);"></span> Middle half of outcomes</span>
       <span><span class="swatch" style="background:var(--color-accent-100);"></span> 10th–90th percentile range</span>
     </div>
+    ${showData ? `<details class="chart-data"><summary>View projection data</summary><div class="table-scroll" role="region" aria-label="Projection data by age"><table class="table"><thead><tr><th>Age</th><th style="text-align:right;">10th</th><th style="text-align:right;">25th</th><th style="text-align:right;">Median</th><th style="text-align:right;">75th</th><th style="text-align:right;">90th</th></tr></thead><tbody>${dataRows}</tbody></table></div></details>` : ''}
   </div>`;
 }
 // Fan-chart hover → show the balance at the hovered age in plain language.
@@ -5964,8 +6234,8 @@ function simulationRunPanel(kind, count, detail) {
   return `<div class="panel sim-run" aria-live="polite">
     ${running ? '<div class="sim-spinner" aria-hidden="true"></div>' : ''}
     <div style="font-family:var(--font-heading);font-size:22px;">${running ? 'Simulating possible futures…' : 'Ready when you are'}</div>
-    <p class="text-muted" style="max-width:560px;margin:8px auto 18px;line-height:1.6;">${running ? `Running ${Number(count).toLocaleString()} market paths. This may take a moment.` : detail}</p>
-    ${running ? '' : `<button class="btn btn-primary" data-act="run-simulation" data-kind="${kind}">Run ${Number(count).toLocaleString()} simulations</button>`}
+    <p class="text-muted" data-sim-status style="max-width:560px;margin:8px auto 18px;line-height:1.6;">${running ? `Running locally · ${ui.simProgress || 0}% complete. You can cancel without changing the last completed result.` : detail}</p>
+    ${running ? `<button class="btn btn-secondary" data-act="cancel-simulation">Cancel</button>` : `<button class="btn btn-primary" data-act="run-simulation" data-kind="${kind}">Run Simulation</button>`}
   </div>`;
 }
 
@@ -6054,7 +6324,7 @@ function renderRetire() {
 
   const retireStale = !retireCacheIsCurrent();
   const model = RETIRE_CACHE.model;
-  const { cfg, base, det, verdict, conv, verdictWithConv } = model;
+  const { cfg, base, det, verdict, conv, verdictWithConv, savingsGap } = model;
   const endBand = base.bands[base.bands.length - 1];
   const spend = cfg.spend;
   const retBand = base.bands.find(b => b.age === cfg.retireAge);
@@ -6089,30 +6359,43 @@ function renderRetire() {
         ? `Every figure here is in <b>future (actual) dollars</b> — inflated to each year's sticker price at ${fmtPct(inflPct, 1)} inflation. The numbers look big, but their buying power matches the today's-dollars view.`
         : `Every figure here is in <b>today's dollars</b> (inflation already removed), so you can compare it to what money buys now.`} The dark line is the median at each age; it is not one simulated path. Shaded bands show the middle 50% and 80% of simulated balances. Outcomes can fall outside these bands. ${retBand ? `At your retirement age ${cfg.retireAge} the median simulated balance is <b>${fmtCompactMoney(dispRetBand ? dispRetBand.p50 : retBand.p50)}</b>${future ? ` in actual dollars of that year — <b>${fmtCompactMoney(retBand.p50)}</b> in today's buying power` : ` in today's dollars — about <b>${fmtCompactMoney(nominalAt(retBand.p50, cfg.retireAge))}</b> in actual dollars of that year (at ${fmtPct(inflPct, 1)} inflation)`}.` : ''} Hover any age to read the numbers.</p></details>
       <p class="text-muted" style="font-size:11px;margin:0 0 12px;">Investment mix: ${cfg.weightsTarget ? `glides from your current allocation to a more conservative target by age ${cfg.retireAge} (auto de-risking).` : `held at your <b>current allocation</b> for the whole projection — it does not automatically de-risk with age.`} Change this under Edit inputs → Strategy. Based on the return, volatility, and inflation assumptions in the <b>Assumptions</b> section below — all editable.</p>
-      <div id="retire-fan">${fanChartSVG(dispBands, { age: cfg.retireAge, label: 'Retire at' }, 'retirefan')}</div>
+      <div id="retire-fan">${fanChartSVG(dispBands, { age: cfg.retireAge, label: 'Retire at' }, 'retirefan', { showData: false })}</div>
     </div></div></section>`;
 
-  // Section 2 — Spending success (walk the user through it)
+  // Section 2 — Withdrawal confidence: the few numbers needed to act, with
+  // methodology collapsed so the result stays scannable.
   const sliderMin = 20000, sliderMax = Math.max(200000, Math.round(spend * 1.5 / 5000) * 5000);
+  const confidenceColor = base.success >= 0.85 ? 'var(--color-ok)' : base.success >= 0.70 ? 'var(--color-warn)' : 'var(--color-crit)';
+  const gapText = !savingsGap || savingsGap.amount == null
+    ? `More than ${fmtMoney(savingsGap ? savingsGap.cap : Math.max(250000, spend * 2))}/yr`
+    : savingsGap.amount === 0 ? 'No gap' : `${fmtMoney(savingsGap.amount)}/yr`;
+  const firstDrawRow = det.detTable.find(row => row.phase === 'decum');
+  const firstDraw = firstDrawRow ? M(firstDrawRow.net || 0, firstDrawRow.age) : spend;
   const success = `<section class="retire-confidence">
-    <div class="kicker" style="margin-bottom:6px;">Can you afford your spending?</div>
-    <div class="panel ${retireStale ? 'retire-stale-card' : ''}" data-retire-stale-card><div class="panel-hd"><h4>Spending confidence</h4></div>
+    <div class="kicker" style="margin-bottom:6px;">Withdrawal confidence</div>
+    <div class="panel ${retireStale ? 'retire-stale-card' : ''}" data-retire-stale-card><div class="panel-hd"><h4>Plan at a glance</h4></div>
     <div class="retire-confidence-body" style="padding:20px;">
-      <div style="font-size:14px;line-height:1.5;margin-bottom:10px;">Out of ${cfg.paths.toLocaleString()} simulated futures, your savings + retirement income cover <b id="retire-spend-label">${fmtMoney(spend)}</b>/yr of spending (in today's dollars) all the way to age ${RETIRE_DATA.endAge} in <b id="retire-success" style="color:var(--color-accent-700);font-size:21px;">${fmtPct(base.success * 100, 0)}</b> of them.</div>
-      <p class="text-muted" style="font-size:12px;line-height:1.6;margin:0 0 14px;">This is the share of simulated paths that fund the spending target under your assumptions, not a guarantee. Lower spending, higher savings, or later retirement can improve the modeled results.</p>
-      <label style="font-size:12px;font-weight:600;">Try a different spending level</label>
-      <input type="range" min="${sliderMin}" max="${sliderMax}" step="2500" value="${spend}" data-act="rd-spend" style="width:100%;margin-top:6px;">
-      <div style="display:flex;justify-content:space-between;font-size:11px;gap:12px;" class="text-muted"><span>${fmtCompactMoney(sliderMin)}/yr</span><span>Selected: <b id="retire-spend-draft">${fmtMoney(rs.spendingTargetRealAnnual || spend)}/yr</b></span><span>${fmtCompactMoney(sliderMax)}/yr</span></div>
+      <details class="projection-how"><summary>How this projection works</summary><p class="text-muted" style="font-size:12px;line-height:1.6;margin:0;">Withdrawal confidence is the share of simulated market paths in which your savings plus modeled retirement income fund the selected annual spending through age ${RETIRE_DATA.endAge}. The savings gap estimates how much additional annual saving, directed to taxable savings before retirement, would raise the model to an 85% planning target. The gap uses a smaller repeatable sample of the same assumptions and is an estimate, not a guarantee or savings instruction.</p></details>
+      <div class="withdrawal-kpis">
+        <div class="withdrawal-kpi"><div class="withdrawal-kpi-copy"><span class="kicker">Modeled withdrawal</span><span class="text-muted">After-tax amount available to spend in the first retirement year.</span></div><strong id="retire-spend-label">${fmtMoney(firstDraw)}/yr</strong></div>
+        <div class="withdrawal-kpi"><div class="withdrawal-kpi-copy"><span class="kicker">Confidence</span><span class="text-muted">Share of ${cfg.paths.toLocaleString()} simulated futures that fund the selected spending through age ${RETIRE_DATA.endAge}.</span></div><strong id="retire-success" style="color:${confidenceColor};">${fmtPct(base.success * 100, 0)}</strong></div>
+        <div class="withdrawal-kpi"><div class="withdrawal-kpi-copy"><span class="kicker">Additional savings</span><span class="text-muted">Estimated annual savings needed to reach at least 85% withdrawal confidence.</span></div><strong>${gapText}</strong></div>
+      </div>
+      <div style="margin-top:auto;padding-top:8px;">
+        <label style="font-size:12px;font-weight:600;">Try a different annual spending target</label>
+        <input type="range" min="${sliderMin}" max="${sliderMax}" step="2500" value="${spend}" data-act="rd-spend" aria-label="Modeled annual spending target" style="width:100%;margin-top:6px;">
+        <div style="display:flex;justify-content:space-between;font-size:11px;gap:12px;" class="text-muted"><span>${fmtCompactMoney(sliderMin)}/yr</span><span>Selected: <b id="retire-spend-draft">${fmtMoney(rs.spendingTargetRealAnnual || spend)}/yr</b></span><span>${fmtCompactMoney(sliderMax)}/yr</span></div>
+      </div>
       ${retireStaleNotice()}
     </div></div></section>`;
 
   // Section 3 — Roth/Traditional verdict
-  const vcol = verdict.verdict === 'Roth' ? 'var(--color-accent-700)' : 'var(--color-accent-900)';
+  const vcol = verdict.verdict === 'Roth' ? 'var(--color-accent-700)' : verdict.verdict === 'Traditional' ? 'var(--color-accent-900)' : 'var(--color-warn)';
   const hasSpouse = !!(rs.birthYears && rs.birthYears[1]);
   const thenFootnote = hasSpouse
     ? `you and your spouse as a couple. A surviving spouse filing alone would face about ${fmtPct(verdict.rThenSurvivor * 100, 0)}.`
     : `on your projected retirement income.`;
-  const verdictCard = `<section>
+  const verdictCard = `<section class="retire-tax-section">
     <div class="kicker" style="margin-bottom:6px;">Tax considerations</div>
     <div class="panel" style="border-color:${vcol};"><div class="panel-hd" style="border-color:${vcol};"><h4>Roth or traditional for this year's savings?</h4></div>
     <div style="padding:20px;">
@@ -6126,8 +6409,9 @@ function renderRetire() {
       <div style="margin:0 0 16px;">${marginalCompareSVG(verdict.rNow, verdict.rThenJoint, verdict.rThenSurvivor)}
         <p class="text-muted" style="font-size:11px;margin:12px 0 0;line-height:1.6;">Your retirement rate is driven by the income you'll draw — pre-tax withdrawals, required minimum withdrawals after ${det.rmdAge}, and the taxable part of Social Security. A surviving spouse files single, which uses a smaller standard deduction and tighter brackets, so that rate is usually higher.</p>
       </div>
-      <div class="tax-recommendation"><div style="font-family:var(--font-heading);font-size:19px;margin-bottom:5px;">Recommendation: save as <span style="color:${vcol};">${verdict.verdict}</span> this year</div>
+      <div class="tax-recommendation"><div style="font-family:var(--font-heading);font-size:19px;margin-bottom:5px;">Illustrative comparison: <span style="color:${vcol};">${verdict.verdict === 'Split' ? 'consider a split' : verdict.verdict + '-leaning'}</span></div>
         <p style="font-size:13px;line-height:1.6;margin:0;">${esc(verdict.why)}</p>
+        <p class="text-muted" style="font-size:11px;line-height:1.55;margin:8px 0 0;">This rate comparison is a scenario, not a contribution instruction. Eligibility, employer-plan rules, how taxes are funded, Medicare and health-insurance effects, estate goals, and the value of tax diversification can change the decision.</p>
         ${verdictWithConv && verdictWithConv.verdict !== verdict.verdict ? `<p class="text-muted" style="font-size:12px;margin:8px 0 0;">With Roth conversions turned on (below), your future rate falls and this flips to <b>${verdictWithConv.verdict}</b>.</p>` : ''}
       </div>
     </div></div></section>`;
@@ -6172,20 +6456,20 @@ function renderRetire() {
       <td class="tnum" style="text-align:right;vertical-align:top;">${r.phase === 'decum' ? fmtMoney(M(r.rmd || 0, r.age)) : '—'}</td>
       <td class="tnum" style="text-align:right;vertical-align:top;">${fmtMoney(M(r.tax || 0, r.age))}</td>
       <td class="tnum" style="text-align:right;vertical-align:top;">${fmtMoney(M(r.total || 0, r.age))}</td></tr>`).join('');
-  const detTable = `<div class="panel"><details><summary style="padding:14px 20px;cursor:pointer;font-family:var(--font-heading);">Show the year-by-year constant-return projection — check the math</summary>
+  const detTable = `<section><div class="kicker" style="margin-bottom:6px;">Detail projection</div><div class="panel"><details><summary style="padding:14px 20px;cursor:pointer;font-family:var(--font-heading);">Show year-by-year projection</summary>
     <div style="padding:6px 20px 2px;"><p class="text-muted" style="font-size:12px;line-height:1.6;margin:0;"><b>Flows</b> is money moving in or out of your accounts that year: in <b>saving</b> years the contributions you add; in <b>drawing</b> years the total pulled out (shown negative) to cover spending plus taxes. The “from …” line splits that withdrawal into its sources — RMD, then taxable, pre-tax, Roth, HSA in the order the model spends them — and those parts add up to the Flows figure. Any Social Security or pension is separate outside income that covers the rest, so it's noted apart, not added into Flows. All amounts in ${unitTag.toLowerCase()}.</p></div>
-    <div style="overflow-x:auto;"><table class="table"><thead><tr><th>Age</th><th>Phase</th><th style="text-align:right;">Return</th><th style="text-align:right;">${abbr('Flows', 'Contributions in (saving years) or total withdrawals out (drawing years); out is shown negative')}</th><th style="text-align:right;">${abbr('RMD', 'Required Minimum Distribution')}</th><th style="text-align:right;">Tax</th><th style="text-align:right;">Balance</th></tr></thead><tbody>${detRows}</tbody></table></div>
-    </details></div>`;
+    <div style="padding:6px 20px 18px;"><div style="overflow-x:auto;"><table class="table"><thead><tr><th>Age</th><th>Phase</th><th style="text-align:right;">Return</th><th style="text-align:right;">${abbr('Flows', 'Contributions in (saving years) or total withdrawals out (drawing years); out is shown negative')}</th><th style="text-align:right;">${abbr('RMD', 'Required Minimum Distribution')}</th><th style="text-align:right;">Tax</th><th style="text-align:right;">Balance</th></tr></thead><tbody>${detRows}</tbody></table></div></div>
+    </details></div></section>`;
 
   // RMD schedule (collapsed) — required withdrawals by age from the median pre-tax path.
   const rmdRows = det.detTable.filter(r => r.phase === 'decum' && r.age >= det.rmdAge && (r.rmd || 0) > 0).map(r => {
     const div = rmdDivisor(r.age), base = (r.rmd || 0) * div; // balance the RMD is figured on
     return `<tr><td class="tnum">${r.age}</td><td class="tnum" style="text-align:right;">${fmtMoney(M(base, r.age))}</td><td class="tnum" style="text-align:right;">${div.toFixed(1)}</td><td class="tnum" style="text-align:right;"><b>${fmtMoney(M(r.rmd, r.age))}</b></td></tr>`;
   }).join('');
-  const rmdCard = `<div class="panel"><details><summary style="padding:14px 20px;cursor:pointer;font-family:var(--font-heading);">Your required withdrawal (${abbr('RMD', 'Required Minimum Distribution')}) schedule — starts at age ${det.rmdAge}</summary>
+  const rmdCard = `<section><div class="kicker" style="margin-bottom:6px;">RMD schedule</div><div class="panel"><details><summary style="padding:14px 20px;cursor:pointer;font-family:var(--font-heading);">Required withdrawals begin at age ${det.rmdAge}</summary>
     <div style="padding:8px 20px 4px;"><p class="text-muted" style="font-size:12px;line-height:1.6;margin:0;">Starting at age ${det.rmdAge}, the IRS makes you withdraw a minimum from pre-tax accounts each year (your pre-tax balance ÷ an IRS life-expectancy factor). These are the amounts on your <b>median</b> projected path, in ${unitTag.toLowerCase()} — bigger pre-tax balances mean bigger forced withdrawals and more tax, which is what the Roth conversion window can soften.</p></div>
-    ${rmdRows ? `<div style="overflow-x:auto;"><table class="table"><thead><tr><th>Age</th><th style="text-align:right;">Pre-tax balance</th><th style="text-align:right;">IRS factor</th><th style="text-align:right;">Required withdrawal</th></tr></thead><tbody>${rmdRows}</tbody></table></div>` : `<div style="padding:0 20px 18px;"><span class="text-muted" style="font-size:13px;">No required withdrawals projected — little or no pre-tax balance remains by age ${det.rmdAge}.</span></div>`}
-    </details></div>`;
+    ${rmdRows ? `<div style="padding:6px 20px 18px;"><div style="overflow-x:auto;"><table class="table"><thead><tr><th>Age</th><th style="text-align:right;">Pre-tax balance</th><th style="text-align:right;">IRS factor</th><th style="text-align:right;">Required withdrawal</th></tr></thead><tbody>${rmdRows}</tbody></table></div></div>` : `<div style="padding:0 20px 18px;"><span class="text-muted" style="font-size:13px;">No required withdrawals projected — little or no pre-tax balance remains by age ${det.rmdAge}.</span></div>`}
+    </details></div></section>`;
 
   return `<div class="outlook-stack">${outlookHeaderBlock('Retirement planning', 'retirement')}${retireMappingPanel(true, scopeRow)}<div class="outlook-primary">${fan}${success}</div>${verdictCard}${convCard}${rmdCard}${detTable}${retireAssumptionsPanel(model, retireStale)}</div>`;
 }
@@ -6229,7 +6513,7 @@ function retireAssumptionsPanel(model, retireStale) {
     ['One blended portfolio, not per-fund', 'We roll your whole mix into a single return each year rather than simulating each fund and rebalancing — simpler and robust at this altitude.'],
     ['Both spouses\' Social Security start at your claim age', 'A simplification; if your spouse claims at a very different age the timing will be slightly off.'],
   ];
-  return `<div class="panel ${retireStale ? 'retire-stale-card' : ''}" data-retire-stale-card><details data-retire-assumptions><summary style="padding:14px 20px;cursor:pointer;font-family:var(--font-heading);">Assumptions — returns, volatility, inflation &amp; simplifications</summary>
+  return `<section><div class="kicker" style="margin-bottom:6px;">Assumptions</div><div class="panel ${retireStale ? 'retire-stale-card' : ''}" data-retire-stale-card><details data-retire-assumptions><summary style="padding:14px 20px;cursor:pointer;font-family:var(--font-heading);">Returns, volatility, inflation &amp; simplifications</summary>
     <div style="padding:8px 20px 18px;">
       ${retireStaleNotice()}
       <div class="kicker" style="margin:6px 0 4px;">Expected return &amp; volatility by asset class — editable, saved to your file</div>
@@ -6248,7 +6532,7 @@ function retireAssumptionsPanel(model, retireStale) {
 
       <div class="kicker" style="margin:20px 0 6px;">Simplifications — what this model leaves out</div>
       <div style="display:flex;flex-direction:column;gap:9px;">${sims.map(([t, d]) => `<div style="font-size:12px;line-height:1.55;"><b>${esc(t)}.</b> <span class="text-muted">${esc(d)}</span></div>`).join('')}</div>
-    </div></details></div>`;
+    </div></details></div></section>`;
 }
 
 /* ===============================================================
@@ -6268,7 +6552,9 @@ function renderRetireSettings() {
   const num = (label, act, val, ph, hint) => `<div class="field"><label>${label}</label><input class="input tnum" inputmode="decimal" data-act="${act}" value="${val === '' || val == null ? '' : val}" placeholder="${ph || ''}">${hint ? `<span class="text-muted" style="font-size:11px;">${hint}</span>` : ''}</div>`;
   const radio = (name, act, mode, on, label) => `<label style="display:inline-flex;align-items:center;gap:7px;cursor:pointer;font-size:13px;"><input type="radio" name="${name}" data-act="${act}" data-mode="${mode}" ${on ? 'checked' : ''} style="margin:0;">${esc(label)}</label>`;
   const ssEstimate = rs.ssPIA === 'estimate' || !rs.ssPIA;
-  const contrib = Object.assign({ pretax: 0, taxable: 0, roth: 0, taxfree: 0 }, inferred || {}, rs.contribOverride || {});
+  const ssExcluded = rs.ssPIA === 'exclude';
+  const ssManual = Array.isArray(rs.ssPIA);
+  const contrib = Object.assign({ pretax: 0, taxable: 0, roth: 0, taxfree: 0 }, rs.contribOverride || {});
   const allocMode = typeof rs.retirementAllocation === 'string'
     ? rs.retirementAllocation
     : (rs.retirementAllocation && rs.retirementAllocation !== 'current' ? 'conservative' : 'current');
@@ -6319,23 +6605,26 @@ function renderRetireSettings() {
     <div style="padding:20px;">
       <div style="display:flex;gap:22px;margin-bottom:16px;flex-wrap:wrap;">
         ${radio('sspia', 'rd-ss-mode', 'estimate', ssEstimate, 'Estimate from my income')}
-        ${radio('sspia', 'rd-ss-mode', 'manual', !ssEstimate, 'Enter my benefit amount')}
+        ${radio('sspia', 'rd-ss-mode', 'manual', ssManual, 'Enter my benefit amount')}
+        ${radio('sspia', 'rd-ss-mode', 'exclude', ssExcluded, 'Do not include Social Security')}
       </div>
+      <p class="text-muted" style="font-size:11px;line-height:1.55;margin:-4px 0 14px;">The income-based estimate is a planning assumption, not an SSA benefit quote. Use your Social Security statement when available, or exclude benefits to test a more conservative scenario.</p>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:16px;">
-        ${ssEstimate ? '' : num('Your benefit ($/mo)', 'rd-ss-you', Array.isArray(rs.ssPIA) && rs.ssPIA[0] ? fmtEditNum(rs.ssPIA[0]) : '', '2,800')}
-        ${ssEstimate ? '' : num('Spouse benefit ($/mo)', 'rd-ss-spouse', Array.isArray(rs.ssPIA) && rs.ssPIA[1] ? fmtEditNum(rs.ssPIA[1]) : '', '1,400')}
-        ${num('Your claim age (62–70)', 'rd-claim-you', rs.ssClaimAge[0], '67', 'Later = bigger monthly check')}
-        ${num('Spouse claim age (62–70)', 'rd-claim-spouse', rs.ssClaimAge[1], '67')}
+        ${ssManual ? num('Your benefit ($/mo)', 'rd-ss-you', rs.ssPIA[0] ? fmtEditNum(rs.ssPIA[0]) : '', '2,800') : ''}
+        ${ssManual ? num('Spouse benefit ($/mo)', 'rd-ss-spouse', rs.ssPIA[1] ? fmtEditNum(rs.ssPIA[1]) : '', '1,400') : ''}
+        ${ssExcluded ? '' : num('Your claim age (62–70)', 'rd-claim-you', rs.ssClaimAge[0], '67', 'Later = bigger monthly check')}
+        ${ssExcluded ? '' : num('Spouse claim age (62–70)', 'rd-claim-spouse', rs.ssClaimAge[1], '67')}
       </div>
     </div>
   </div>
 
   ${pensionPanel}
 
-  <div class="panel"><div class="panel-hd"><h4>Contributions</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">${inferred ? `inferred from ${inferred._years} yr of check-ins` : 'no history yet (need ≥3 check-ins) — enter below'}</span></div>
+  <div class="panel"><div class="panel-hd"><h4>Contributions</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">enter the annual amounts to model</span></div>
     <div style="padding:20px;">
       <div style="display:flex;gap:24px;flex-wrap:wrap;margin-bottom:16px;">${bkt('Pre-tax now', 'pretax')}${bkt('Roth now', 'roth')}${bkt('Taxable now', 'taxable')}${bkt('Tax-free now', 'taxfree')}</div>
       <div class="kicker" style="margin-bottom:4px;">How much you add each year (${contribScope}, today's dollars)</div>
+      ${inferred ? `<p class="text-muted" style="font-size:12px;margin:0 0 8px;">Your check-in history suggests roughly ${fmtMoney(inferred.pretax + inferred.roth + inferred.taxable + inferred.taxfree)} per year across modeled accounts. Balance changes also include market movement and withdrawals, so Quartermaster does not apply that estimate automatically.</p>` : '<p class="text-muted" style="font-size:12px;margin:0 0 8px;">Enter only contributions you reasonably expect to continue. Quartermaster does not invent a contribution amount when history is unavailable.</p>'}
       <p class="text-muted" style="font-size:12px;margin:0 0 8px;">IRS ${REFERENCE_DATA.contribLimitsYear} limits per person: 401(k) ${fmtMoney(lim.k401_elective)} · IRA ${fmtMoney(lim.ira)} · HSA family ${fmtMoney(lim.hsa_family)}${hasSpouse ? ' — roughly double if you and your spouse each have your own accounts.' : '.'}</p>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;">
         ${contribField('Pre-tax — traditional 401(k)/IRA', 'rd-contrib-pretax', 'pretax')}
@@ -6346,10 +6635,10 @@ function renderRetireSettings() {
       </div>
       <p class="text-muted" style="font-size:11px;margin:8px 0 0;line-height:1.6;"><b>Roth 401(k) vs. traditional?</b> A 401(k) can be either, and you can split it. Put the traditional (pre-tax) part in the <b>Pre-tax</b> row and the Roth part in the <b>Roth</b> row — the combined 401(k) piece just can't exceed the ${fmtMoney(lim.k401_elective)} limit${hasSpouse ? ' each' : ''}.</p>
       <div style="margin-top:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
-        <button class="btn btn-sm btn-primary" data-act="rd-maxout">Max out every year</button>
-        ${rs.contribOverride ? `<button class="btn btn-sm btn-secondary" data-act="rd-contrib-reset">Reset to inferred</button>` : ''}
+        <button class="btn btn-sm btn-primary" data-act="rd-maxout">Use illustrative statutory ceilings</button>
+        <button class="btn btn-sm btn-secondary" data-act="rd-contrib-reset">Clear entered amounts</button>
       </div>
-      <p class="text-muted" style="font-size:11px;margin:8px 0 0;line-height:1.6;">“Max out” fills the 401(k), IRA, and HSA to this year's limits${hasSpouse ? ' for both of you' : ''}. IRS limits typically rise about 2–3% a year with inflation; because this tool works in today's dollars, we hold them flat in real terms — so maxing out today keeps maxing out every future year.</p>
+      <p class="text-muted" style="font-size:11px;margin:8px 0 0;line-height:1.6;">The ceiling shortcut fills the modeled 401(k), IRA, and HSA amounts using this year's general limits${hasSpouse ? ' for both of you' : ''}. Actual eligibility and limits depend on earned income, age, plan access, filing status, coverage, and employer contributions. Confirm your situation before relying on these values.</p>
     </div>
   </div>
 
@@ -6449,7 +6738,7 @@ function renderCollege() {
         <div class="college-kpis"><div class="college-kpi"><span class="kicker">Saved now</span><strong>${fmtMoney(startBal)}</strong></div><div class="college-kpi"><span class="kicker">Projected cost</span><strong>${fmtMoney(totalCost)}</strong></div><div class="college-kpi"><span class="kicker">Fully funded</span><strong style="color:var(--color-accent-700);">${successPct}</strong></div><div class="college-kpi"><span class="kicker">Average years</span><strong>${yrsFunded} / ${base.remainingYears}</strong></div></div>
         <div style="font-size:15px;line-height:1.5;margin-bottom:8px;">Across ${siteSimulationPaths().toLocaleString()} possible market paths, this 529 covers <b>all ${base.remainingYears} remaining years in <span style="color:var(--color-accent-700);">${successPct}</span></b> of outcomes${base.fullSuccess < 1 ? `, and on average funds <b>${yrsFunded}</b> of ${base.remainingYears} remaining years` : ''}.</div>
         <p class="text-muted" style="font-size:12px;line-height:1.6;margin:0 0 12px;">The 529 grows while you save, then is drawn down across the <b>${cfg.years} drawdown years (ages ${cfg.startAge}–${cfg.startAge + cfg.years - 1})</b>. The yellow band begins one year before the first withdrawal so it aligns with the chart segment that drops into the first tuition payment. Each drawdown-year balance is shown after that year’s tuition payment. If college has already started, this assumes the current year’s bill is still unpaid; earlier years are excluded from the funding result. ${startBand ? `After the first tuition payment at age ${cfg.startAge}, the median simulated balance is <b>${fmtCompactMoney(startBand.p50)}</b> (middle 80%: ${fmtCompactMoney(startBand.p10)}–${fmtCompactMoney(startBand.p90)}).` : ''} Hover the chart to read any age. All figures in ${unit}.</p>
-        ${fanChartSVG(dispBands, { age: drawdownBandStart, label: 'Drawdown years' }, fanId, { tickEvery: (base.bands[base.bands.length - 1].age - base.bands[0].age) <= 18 ? 2 : 5, shadeFrom: drawdownBandStart, shadeTo: cfg.startAge + cfg.years - 1, shadeLabel: 'drawdown years' })}
+        ${fanChartSVG(dispBands, { age: drawdownBandStart, label: 'Drawdown years' }, fanId, { tickEvery: (base.bands[base.bands.length - 1].age - base.bands[0].age) <= 18 ? 2 : 5, shadeFrom: drawdownBandStart, shadeTo: cfg.startAge + cfg.years - 1, shadeLabel: 'drawdown years', showData: false })}
       </div></div>
     </section>`;
   }).join('');
@@ -6475,13 +6764,14 @@ function applyCollegeSetting(a, ds, el) {
    =============================================================== */
 function renderDataPrivacy() {
   const snap = latestSnapshot();
+  const needsSave = hasUnsavedWork();
   return `<div class="toolbar no-print"><div class="crumb"><span>Data &amp; Privacy</span></div></div>
   <div class="panel"><div class="panel-hd"><h4>Your data file</h4></div>
     <div style="padding:20px;display:flex;gap:12px;flex-wrap:wrap;align-items:center;">
-      <button class="btn ${dirty ? 'save-dirty' : 'btn-primary'}" data-act="save">Save file</button>
+      <button class="btn ${needsSave ? 'save-dirty' : 'btn-primary'}" data-act="save">${persistenceStatus === 'download-pending' && !dirty && !checkinDraftDirty ? 'Confirm download' : 'Save file'}</button>
       <button class="btn btn-secondary" data-act="open">Open file</button>
       <button class="btn btn-secondary" data-act="export-csv" ${snap ? '' : 'disabled'}>Export snapshot CSV</button>
-      <span class="text-muted" style="font-size:12px;margin-left:auto;">${esc(fileName)} · ${dirty ? 'unsaved changes' : 'saved'}</span>
+      <span class="text-muted" style="font-size:12px;margin-left:auto;">${esc(fileName)} · ${esc(persistenceLabel())}</span>
     </div>
     <div style="padding:0 20px 20px;"><span class="text-muted" style="font-size:12px;">Your numbers live only in the JSON file you save. Store it in an iCloud/Dropbox folder for automatic version history.</span></div>
   </div>
@@ -6555,7 +6845,8 @@ function dialogHTML() {
     const a = d.acctId ? accountById(d.acctId) : null;
     const catOpts = CATEGORY_ORDER.map(c => `<option value="${esc(c)}" ${a && a.category === c ? 'selected' : ''}>${esc(catLabel(c))}</option>`).join('');
     const childOpts = ['<option value="">— none —</option>'].concat(portfolio.children.map(c => `<option value="${esc(c.id)}" ${a && a.childId === c.id ? 'selected' : ''}>${esc(c.label)}</option>`)).join('');
-    const taxOpts = ['<option value="">— optional —</option>'].concat(TAX_TREATMENTS.map(t => `<option ${a && a.taxTreatment === t ? 'selected' : ''}>${t}</option>`)).join('');
+    const initialTax = a && a.taxTreatment ? a.taxTreatment : inferTaxTreatmentChoice({ name: a ? a.name : '', category: a ? a.category : CATEGORY_ORDER[0], vehicle: a && a.vehicle });
+    const taxOpts = ['<option value="">— choose when needed —</option>'].concat(TAX_TREATMENTS.map(t => `<option ${initialTax === t ? 'selected' : ''}>${t}</option>`)).join('');
     const inferredVehicle = inferVehicleChoice({ name: a ? a.name : '', category: a ? a.category : CATEGORY_ORDER[0] });
     const savedVehicle = a && a.vehicle ? a.vehicle : '';
     const vehicleValue = savedVehicle || inferredVehicle || (a ? accountVehicle(a) : '');
@@ -6566,14 +6857,14 @@ function dialogHTML() {
     inner = `<div class="dialog-title">${a ? 'Edit account' : 'Add account'}</div>
       <div class="field"><label>Account name</label><input class="input" id="f-name" data-act="acct-name" value="${esc(a ? a.name : '')}" placeholder="e.g. Fidelity 401(k)"></div>
       <div class="field"><label>Institution (optional)</label><input class="input" id="f-inst" value="${esc(a ? a.institution || '' : '')}" placeholder="e.g. Fidelity"></div>
-      <div style="display:flex;gap:12px;">
-        <div class="field" style="flex:1;"><label>Category</label><select class="input" id="f-cat" data-act="acct-cat">${catOpts}</select></div>
-        <div class="field" style="flex:1;"><label>Tax treatment</label><select class="input" id="f-tax">${taxOpts}</select>
-          <span class="text-muted" style="font-size:11px;">How it's taxed: <b>Pre-tax</b> (traditional 401(k)/IRA — taxed on withdrawal) · <b>Roth</b> (after-tax in, tax-free out) · <b>Taxable</b> (brokerage — taxed on gains &amp; dividends) · <b>Tax-free</b> (HSA / muni).</span></div>
-      </div>
+      <div class="field"><label>What kind of account is this?</label><select class="input" id="f-cat" data-act="acct-cat">${catOpts}</select><span class="text-muted" style="font-size:11px;">Choose its purpose. Quartermaster uses the name and purpose to detect the underlying account and usual tax treatment.</span></div>
       <div id="f-vehicle-auto" class="text-muted" style="display:${!vehicleNeedsInput && inferredVehicle ? 'block' : 'none'};font-size:12px;">Account type detected automatically: <strong>${inferredVehicle ? esc(VEHICLE_LABELS[inferredVehicle]) : ''}</strong></div>
-      <div class="field" id="f-vehicle-wrap" style="display:${vehicleNeedsInput ? 'block' : 'none'};"><label>Account type</label><select class="input" id="f-vehicle" data-act="acct-vehicle">${vehOpts}</select>
-        <span class="text-muted" style="font-size:11px;">Sets contribution limits &amp; shelter status — distinguishes a 401(k) ($${lim401} limit) from an IRA ($${limIra}); pick HSA for a health savings account.</span></div>
+      <details class="projection-how" ${vehicleNeedsInput ? 'open' : ''} style="margin-top:12px;"><summary>${vehicleNeedsInput ? 'Complete account details' : 'Review account details'}</summary><div style="padding:0 12px 12px;display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;">
+        <div class="field" id="f-vehicle-wrap" style="display:${vehicleNeedsInput ? 'block' : 'none'};"><label>Account type</label><select class="input" id="f-vehicle" data-act="acct-vehicle">${vehOpts}</select>
+          <span class="text-muted" style="font-size:11px;">Distinguishes a 401(k) ($${lim401} limit) from an IRA ($${limIra}); pick HSA for a health savings account.</span></div>
+        <div class="field"><label>Tax treatment</label><select class="input" id="f-tax" data-act="acct-tax">${taxOpts}</select>
+          <span class="text-muted" style="font-size:11px;">Review this when an account can be Roth or pre-tax. Savings, CDs, and brokerage default to taxable.</span></div>
+      </div></details>
       <div class="field" id="f-other-wrap" style="display:${a && a.category === 'Other' ? 'block' : 'none'};"><label>Custom category name (required for Other)</label>
         <input class="input" id="f-catlabel" list="other-cats" value="${esc(a ? a.categoryLabel || '' : '')}" placeholder="e.g. Family Trust, HSA, UTMA">
         <datalist id="other-cats">${otherLabels().map(l => `<option value="${esc(l)}"></option>`).join('')}</datalist>
@@ -6607,6 +6898,7 @@ function dialogHTML() {
         <div class="field" style="flex:1;"><label>Current value</label><input class="input tnum" id="f-val" inputmode="decimal" placeholder="0"></div>
         <div class="field" style="flex:1;"><label>Cost basis (optional)</label><input class="input tnum" id="f-basis" inputmode="decimal" placeholder="—"></div>
       </div>
+      <div class="field"><label>Purchase date (optional)</label><input class="input" id="f-acquired" type="date"><span class="text-muted" style="font-size:11px;">Used with cost basis only to evaluate whether an automated taxable-sale scenario is long-term. Leave either field blank and Quartermaster will not suggest selling this holding in taxable.</span></div>
       <div class="field classification-field" id="holding-class-field"><label>Asset class</label><select class="input" id="f-cls" data-act="holding-class" aria-describedby="f-cls-help" disabled>${clsOpts}</select>
         <span class="text-muted classification-help" id="f-cls-help" style="font-size:11px;">Enter a ticker and Quartermaster will classify it when possible.</span></div>
       <div class="dialog-actions"><button class="btn btn-secondary" data-act="close-dialog">Cancel</button><button class="btn btn-primary" data-act="save-holding" data-account="${esc(d.acctId)}">Add holding</button></div>`;
@@ -6658,6 +6950,10 @@ function dialogHTML() {
       <input class="input" id="save-file-name" value="${esc(fileName)}" maxlength="200" autocomplete="off" spellcheck="false" aria-describedby="save-file-name-help" style="width:100%;margin-top:8px;">
       <p id="save-file-name-help" class="text-muted" style="font-size:12px;">We’ll add .json if you leave it off.</p>
       <div class="dialog-actions"><button class="btn btn-secondary" data-act="close-dialog">Cancel</button><button class="btn btn-primary" data-act="save-file-confirm">Continue to save</button></div>`;
+  } else if (d.type === 'download-confirm') {
+    inner = `<div class="dialog-title">Confirm your portfolio file</div>
+      <div class="dialog-body"><p>Your browser started downloading <strong>${esc(pendingDownloadSave?.name || fileName)}</strong>.</p><p>Check your Downloads folder. Only mark it saved after you can see the file there; Quartermaster cannot verify browser downloads automatically.</p></div>
+      <div class="dialog-actions"><button class="btn btn-secondary" data-act="download-again">Download again</button><button class="btn btn-primary" data-act="download-confirmed">I found the file</button></div>`;
   } else if (d.type === 'confirm') {
     inner = `<div class="dialog-title">${esc(d.title)}</div><div class="dialog-body">${esc(d.body)}</div>
       <div class="dialog-actions"><button class="btn btn-secondary" data-act="close-dialog">Cancel</button><button class="btn ${d.danger ? 'btn-danger' : 'btn-primary'}" data-act="confirm-yes">${esc(d.ok || 'Confirm')}</button></div>`;
@@ -6676,6 +6972,7 @@ function dialogHTML() {
   } else if (d.type === 'about') {
     inner = aboutDialogHTML();
   }
+  inner = inner.replace('class="dialog-title"', 'id="dialog-title" class="dialog-title"');
   return `<div class="dialog-backdrop no-print" data-act="backdrop"><div class="dialog ${d.type === 'onboard' ? 'start-dialog' : ''}" role="dialog" aria-modal="true" aria-labelledby="dialog-title" tabindex="-1" data-stop="1">${inner}</div></div>`;
 }
 
@@ -6683,6 +6980,21 @@ function dialogHTML() {
    TOAST + afterRender (dialog/toast mounting)
    =============================================================== */
 let _toastTimer = null;
+function showFieldError(id, message) {
+  const field = document.getElementById(id); if (!field) { toast(message); return false; }
+  field.setAttribute('aria-invalid', 'true');
+  let error = document.getElementById(id + '-error');
+  if (!error) { error = document.createElement('span'); error.id = id + '-error'; error.className = 'field-error'; field.insertAdjacentElement('afterend', error); }
+  error.textContent = message;
+  const described = new Set((field.getAttribute('aria-describedby') || '').split(/\s+/).filter(Boolean)); described.add(error.id);
+  field.setAttribute('aria-describedby', Array.from(described).join(' ')); field.focus();
+  return false;
+}
+function clearFieldError(field) {
+  if (!field || !field.id) return;
+  field.removeAttribute('aria-invalid');
+  const error = document.getElementById(field.id + '-error'); if (error) error.remove();
+}
 function toast(msg) {
   ui._toast = msg;
   const app = document.getElementById('app');
@@ -6752,8 +7064,11 @@ function syncAccountVehicleField() {
   const vehicle = document.getElementById('f-vehicle');
   const wrap = document.getElementById('f-vehicle-wrap');
   const auto = document.getElementById('f-vehicle-auto');
+  const tax = document.getElementById('f-tax');
   if (!name || !category || !vehicle || !wrap || !auto) return;
   const inferred = inferVehicleChoice({ name: name.value, category: category.value });
+  const inferredTax = inferTaxTreatmentChoice({ name: name.value, category: category.value, vehicle: inferred || vehicle.value });
+  if (tax && !tax.dataset.userSet && inferredTax) tax.value = inferredTax;
   const wasHidden = wrap.style.display === 'none';
   if (inferred) {
     vehicle.value = inferred;
@@ -6811,6 +7126,8 @@ function boot() {
   document.addEventListener('focusin', e => {
     const t = e.target.closest && e.target.closest('input[data-act="ci-val"],input[data-act="ci-basis"],input[data-act="ci-nw"]');
     if (t) { const n = parseNum(t.value); t.value = n == null ? '' : String(n); }
+    if (e.target.matches && e.target.matches('.snaphit')) onChartHover(e);
+    if (e.target.matches && e.target.matches('.fanhit')) onFanHover(e);
   });
   document.addEventListener('focusout', e => {
     const t = e.target.closest && e.target.closest('input[data-act="ci-val"],input[data-act="ci-basis"],input[data-act="ci-nw"]');
@@ -6836,6 +7153,12 @@ function boot() {
     if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('[role="button"]')) {
       e.preventDefault(); e.target.click(); return;
     }
+    if ((e.key === 'ArrowLeft' || e.key === 'ArrowRight') && e.target.matches('.snaphit,.fanhit')) {
+      const selector = e.target.matches('.snaphit') ? '.snaphit' : '.fanhit';
+      const siblings = Array.from(e.target.closest('svg').querySelectorAll(selector));
+      const at = siblings.indexOf(e.target), next = Math.max(0, Math.min(siblings.length - 1, at + (e.key === 'ArrowRight' ? 1 : -1)));
+      if (siblings[next]) { e.preventDefault(); siblings[next].focus(); }
+    }
     // Cmd/Ctrl+S → save the file (fast save before leaving).
     if ((e.metaKey || e.ctrlKey) && (e.key === 's' || e.key === 'S')) {
       e.preventDefault();
@@ -6845,6 +7168,9 @@ function boot() {
   document.addEventListener('pointermove', onDonutHover);
   document.addEventListener('pointermove', onChartHover);
   document.addEventListener('pointermove', onFanHover);
+  document.addEventListener('pointerdown', onChartHover);
+  document.addEventListener('pointerdown', onFanHover);
+  document.addEventListener('click', e => { if (e.target.closest && e.target.closest('.snaphit')) onChartHover(e); if (e.target.closest && e.target.closest('.fanhit')) onFanHover(e); });
   // The public landing owns the hosted entry experience. The self-contained
   // download has no public landing, so it opens the same guide in place.
   if (isHostedAppEntry() && !window.location.hash) {
@@ -6932,12 +7258,23 @@ function onClick(e) {
       }
       if (!/\.json$/i.test(name)) name += '.json';
       closeDialog();
-      saveFile(false, name).then(r => { if (r && r.ok) toast('Saved · ' + fileName); render(); });
+      saveFile(false, name).then(r => { if (r && r.ok && !r.pending) toast('Saved · ' + fileName); render(); });
       break;
     }
+    case 'download-again':
+      if (pendingDownloadSave) { triggerDownload(pendingDownloadSave.text, pendingDownloadSave.name, 'application/json'); toast('Download started again'); }
+      break;
+    case 'download-confirmed':
+      if (pendingDownloadSave) {
+        dirty = serialize() !== pendingDownloadSave.text;
+        persistenceStatus = 'saved';
+        pendingDownloadSave = null;
+        closeDialog(); render(); toast(dirty ? 'File found · newer changes still need saving' : 'File found · portfolio marked saved');
+      }
+      break;
     case 'open': trackUsage('portfolio_open_click'); doOpen(); break;
     case 'new-checkin': if (demoMode) openDialog({ type: 'onboard' }); else startCheckin(); break;
-    case 'load-demo': if (!demoMode && (dirty || checkinDraftDirty)) { openDialog({ type: 'confirm', title: 'Explore demo instead?', body: 'This replaces your unsaved session with sample data. Cancel and save your work first to keep it.', ok: 'Discard and explore', danger: true, action: 'load-demo', view: ds.view }); break; } loadDemoData(); resetViewState(); ui.dialog = null; ui.view = ['retire', 'college'].includes(ds.view) ? ds.view : 'dashboard'; ui.drawer = false; render(); window.scrollTo(0, 0); toast('Demo data loaded'); break;
+    case 'load-demo': if (hasUnsavedWork()) { openDialog({ type: 'confirm', title: 'Explore demo instead?', body: 'This replaces your unsaved session with sample data. Cancel and save your work first to keep it.', ok: 'Discard and explore', danger: true, action: 'load-demo', view: ds.view }); break; } loadDemoData(); resetViewState(); ui.dialog = null; ui.view = ['retire', 'college'].includes(ds.view) ? ds.view : 'dashboard'; ui.drawer = false; render(); window.scrollTo(0, 0); toast('Demo data loaded'); break;
     case 'onboard-start': openDialog({ type: 'account' }); break;
     case 'account-add-child': {
       const form = document.getElementById('f-child-inline');
@@ -7069,7 +7406,7 @@ function onClick(e) {
       }
       break;
     }
-    case 'rd-contrib-reset': portfolio.retirementSettings.contribOverride = null; invalidateRetireCache(); markDirty(); render(); break;
+    case 'rd-contrib-reset': portfolio.retirementSettings.contribOverride = { pretax: 0, taxable: 0, roth: 0, taxfree: 0 }; invalidateRetireCache(); markDirty(); render(); break;
     case 'rd-pension-add': {
       const rs = portfolio.retirementSettings; rs.pensions = rs.pensions || [];
       rs.pensions.push({ label: '', amountReal: 0, startAge: rs.retirementAge || 65, cola: true, survivorPct: 100 });
@@ -7087,21 +7424,32 @@ function onClick(e) {
     }
     case 'run-simulation': {
       const kind = ds.kind === 'college' ? 'college' : 'retire';
-      ui.simRunning = kind; render();
-      setTimeout(() => {
+      ui.simRunning = kind; ui.simProgress = 0; render();
+      const progress = value => {
+        ui.simProgress = Math.max(0, Math.min(100, Math.round(value)));
+        const status = document.querySelector('[data-sim-status]');
+        if (status) status.textContent = `Running locally · ${ui.simProgress}% complete. You can cancel without changing the last completed result.`;
+      };
+      setTimeout(async () => {
         try {
           if (kind === 'retire') {
-            invalidateRetireCache(); retireModel();
+            invalidateRetireCache(); await retireModelAsync(progress);
           } else {
             invalidateCollegeCache();
-            portfolio.children.forEach(child => collegeModel(child.id));
+            const total = Math.max(1, portfolio.children.length);
+            for (let i = 0; i < portfolio.children.length; i++) {
+              await collegeModelAsync(portfolio.children[i].id, childProgress => progress(((i + childProgress / 100) / total) * 100));
+            }
           }
+        } catch (error) {
+          if (!/cancelled/i.test(error && error.message || '')) toast('Could not run simulation: ' + (error.message || error));
         } finally {
-          ui.simRunning = null; render();
+          if (ui.simRunning === kind) { ui.simRunning = null; ui.simProgress = 0; render(); }
         }
       }, 40);
       break;
     }
+    case 'cancel-simulation': cancelProjectionWorker(); ui.simRunning = null; ui.simProgress = 0; render(); break;
     case 'confirm-yes': handleConfirm(); break;
     case 'close-dialog': closeDialog(); break;
     case 'backdrop': if (!e.target.closest('[data-stop]')) closeDialog(); break;
@@ -7181,9 +7529,14 @@ function onChange(e) {
     if (other) other.style.display = 'none';
     if (child) child.style.display = 'none';
   }
+  else if (a === 'acct-tax') { t.dataset.userSet = 'true'; }
   else if (a === 'holding-class') { syncHoldingClassField(); }
   // Retirement modeler settings (commit on change → re-render to refresh derived values)
-  else if (a === 'rd-ss-mode') { const rs = portfolio.retirementSettings; rs.ssPIA = ds.mode === 'estimate' ? 'estimate' : (Array.isArray(rs.ssPIA) ? rs.ssPIA : [0, 0]); invalidateRetireCache(); markDirty(); render(); }
+  else if (a === 'rd-ss-mode') {
+    const rs = portfolio.retirementSettings;
+    rs.ssPIA = ds.mode === 'estimate' ? 'estimate' : ds.mode === 'exclude' ? 'exclude' : (Array.isArray(rs.ssPIA) ? rs.ssPIA : [0, 0]);
+    invalidateRetireCache(); markDirty(); render();
+  }
   else if (a === 'rd-spend') { portfolio.retirementSettings.spendingTargetRealAnnual = Number(t.value) || 0; markDirty(); showRetireStaleIndicators(); }
   else if (a === 'rd-scope') { portfolio.retirementSettings.accountScope = ds.mode; invalidateRetireCache(); markDirty(); render(); }
   else if (a === 'rd-map-vehicle') { const acc = accountById(ds.account); if (acc) { acc.vehicle = t.value; invalidateRetireCache(); markDirty(); render(); } }
@@ -7243,6 +7596,7 @@ function applyRetireSetting(a, ds, el, preserveCache) {
 }
 
 function onInput(e) {
+  clearFieldError(e.target);
   const t = e.target.closest('[data-act]');
   if (!t) return;
   const a = t.dataset.act, ds = t.dataset;
@@ -7330,7 +7684,7 @@ function toggleGoalSave() {
 async function doOpen() {
   // Guard unsaved work with the app's own modal — the native confirm() is suppressed in some
   // webviews (returns false), which silently blocked Open whenever data was already loaded.
-  if (!demoMode && (dirty || checkinDraftDirty)) { openDialog({ type: 'confirm', title: 'Discard unsaved changes?', body: 'You have unsaved changes in memory. Open another file and discard them? Your saved file on disk is not touched.', ok: 'Discard & open', danger: true, action: 'discard-open' }); return; }
+  if (hasUnsavedWork()) { openDialog({ type: 'confirm', title: 'Discard unsaved changes?', body: 'You have unsaved changes in memory. Open another file and discard them? Your saved file on disk is not touched.', ok: 'Discard & open', danger: true, action: 'discard-open' }); return; }
   openFileNow();
 }
 async function openFileNow() {
@@ -7418,17 +7772,19 @@ function deleteChild(id) {
 
 function saveAccountFromDialog(acctId) {
   const name = document.getElementById('f-name').value.trim();
-  if (!name) { toast('Account name is required.'); return; }
+  if (!name) return showFieldError('f-name', 'Enter an account name.');
   let category = document.getElementById('f-cat').value;
   const institution = document.getElementById('f-inst').value.trim();
   let taxTreatment = document.getElementById('f-tax').value || undefined;
   const categoryLabel = category === 'Other' ? document.getElementById('f-catlabel').value.trim() : undefined;
   const childId = category === '529' ? (document.getElementById('f-child').value || undefined) : undefined;
   const vehicleField = document.getElementById('f-vehicle');
-  let vehicle = inferVehicleChoice({ name, category }) || vehicleField.value;
-  if (category === 'Other' && !categoryLabel) { toast('Other needs a category label.'); return; }
-  if (category === '529' && !childId) { toast('Pick a child for the 529, or add one here.'); return; }
-  if (!vehicle) { toast('Choose an account type so contribution limits and tax treatment are modeled correctly.'); vehicleField.focus(); return; }
+  let vehicle = vehicleField.value || inferVehicleChoice({ name, category });
+  if (category === 'Other' && !categoryLabel) return showFieldError('f-catlabel', 'Enter a name for this custom category.');
+  if (category === '529' && !childId) return showFieldError('f-child', 'Choose a child for this 529, or add one here.');
+  if (!vehicle) return showFieldError('f-vehicle', 'Choose an account type so contribution limits and tax treatment are modeled correctly.');
+  if (!taxTreatment) taxTreatment = inferTaxTreatmentChoice({ name, category, vehicle }) || undefined;
+  if (vehicle === 'ira' && !taxTreatment) return showFieldError('f-tax', 'Choose Roth or Pre-tax for this IRA so retirement taxes are modeled correctly.');
   if (category === 'Savings' || vehicle === 'savings') {
     category = 'Savings';
     vehicle = 'savings';
@@ -7446,7 +7802,9 @@ function saveAccountFromDialog(acctId) {
 function saveChildFromDialog() {
   const label = document.getElementById('f-clabel').value.trim();
   const year = parseNum(document.getElementById('f-cyear').value);
-  if (!label || !year) { toast('Name and birth year are required.'); return; }
+  const maxYear = new Date().getFullYear() + 1;
+  if (!label) return showFieldError('f-clabel', 'Enter a name or label.');
+  if (!Number.isInteger(year) || year < 1900 || year > maxYear) return showFieldError('f-cyear', `Enter a birth year from 1900 to ${maxYear}.`);
   portfolio.children.push({ id: uid('child'), label, birthYear: year });
   markDirty(); closeDialog();
 }
@@ -7457,7 +7815,9 @@ function saveInlineChildFromAccountDialog() {
   if (!labelField || !yearField || !select) return;
   const label = labelField.value.trim();
   const year = parseNum(yearField.value);
-  if (!label || !year) { toast('Name and birth year are required.'); return; }
+  const maxYear = new Date().getFullYear() + 1;
+  if (!label) return showFieldError('f-child-label', 'Enter a name or label.');
+  if (!Number.isInteger(year) || year < 1900 || year > maxYear) return showFieldError('f-child-year', `Enter a birth year from 1900 to ${maxYear}.`);
   const child = { id: uid('child'), label, birthYear: year };
   portfolio.children.push(child);
   const option = document.createElement('option');
@@ -7476,18 +7836,21 @@ function saveInlineChildFromAccountDialog() {
 }
 function saveHoldingFromDialog(acctId) {
   const ticker = document.getElementById('f-ticker').value.trim();
-  if (!ticker) { toast('Ticker is required.'); return; }
+  if (!ticker) return showFieldError('f-ticker', 'Enter a ticker or cash label.');
   const name = document.getElementById('f-hname').value.trim() || undefined;
   const classField = document.getElementById('f-cls');
   let cls = classField.value;
   const val = parseNum(document.getElementById('f-val').value);
   const basis = parseNum(document.getElementById('f-basis').value);
-  if ((document.getElementById('f-val').value.trim() && (val == null || val < 0)) || (document.getElementById('f-basis').value.trim() && (basis == null || basis < 0))) { toast('Use a non-negative number for value and cost basis, or leave optional fields blank.'); return; }
+  const acquiredDate = document.getElementById('f-acquired').value || undefined;
+  if (document.getElementById('f-val').value.trim() && (val == null || val < 0)) return showFieldError('f-val', 'Enter a non-negative value or leave it blank.');
+  if (document.getElementById('f-basis').value.trim() && (basis == null || basis < 0)) return showFieldError('f-basis', 'Enter a non-negative cost basis or leave it blank.');
   if (!cls) cls = classifyTicker(ticker, portfolio.tickerMap);
-  if (!cls) { syncHoldingClassField(); toast('Unknown ticker — choose the highlighted asset class.'); classField.focus(); return; }
+  if (!cls) { syncHoldingClassField(); return showFieldError('f-cls', 'Ticker not recognized. Choose an asset class to continue.'); }
   if (!classField.disabled && classField.value) portfolio.tickerMap[ticker.toUpperCase()] = cls; // remember explicit pick
   const h = { id: uid('hold'), accountId: acctId, ticker, name, assetClass: cls, status: 'active' };
   if (basis != null) h.costBasis = basis;
+  if (acquiredDate) h.acquiredDate = acquiredDate;
   portfolio.holdings.push(h);
   if (ui.checkin) { ui.checkin.values[h.id] = { marketValue: val != null ? String(val) : '', costBasis: basis != null ? String(basis) : '' }; checkinDraftDirty = true; }
   markDirty(); closeDialog();
@@ -7535,7 +7898,7 @@ function handleConfirm() {
   const d = ui.dialog;
   if (!d) return;
   if (d.action === 'load-demo') { loadDemoData(); resetViewState(); ui.view = ['retire', 'college'].includes(d.view) ? d.view : 'dashboard'; ui.dialog = null; render(); }
-  else if (d.action === 'start-fresh') { portfolio = emptyPortfolio(); demoMode = false; setupStep = 0; checkinDraftDirty = false; fileHandle = null; dirty = false; resetViewState(); closeDialog(); toast('Started fresh'); }
+  else if (d.action === 'start-fresh') { portfolio = emptyPortfolio(); demoMode = false; setupStep = 0; checkinDraftDirty = false; fileHandle = null; dirty = false; persistenceStatus = 'not-saved'; pendingDownloadSave = null; resetViewState(); closeDialog(); toast('Started fresh'); }
   else if (d.action === 'archive-account') { const a = accountById(d.id); if (a) { a.status = 'archived'; activeHoldings(d.id).forEach(h => h.status = 'archived'); } markDirty(); closeDialog(); }
   else if (d.action === 'load-glide') { const child = d.child, track = d.track; ui.dialog = null; applyGlidePreset(child, track); }
   else if (d.action === 'discard-open') { openFileNow(); }   // openFileNow clears ui.dialog + renders after the picker

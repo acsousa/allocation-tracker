@@ -52,9 +52,9 @@ const v2 = {
     { id: 'a_pre', name: '401k', category: 'Retirement', taxTreatment: 'Pre-tax', status: 'active', sortOrder: 2 },
   ],
   holdings: [
-    { id: 'h_bnd', accountId: 'a_tax', ticker: 'BND', assetClass: 'us_bond', status: 'active' },
+    { id: 'h_bnd', accountId: 'a_tax', ticker: 'BND', assetClass: 'us_bond', acquiredDate: '2024-01-01', status: 'active' },
     { id: 'h_voo', accountId: 'a_roth', ticker: 'VOO', assetClass: 'us_large', status: 'active' },
-    { id: 'h_vnq', accountId: 'a_tax', ticker: 'VNQ', assetClass: 'reit', status: 'active' },
+    { id: 'h_vnq', accountId: 'a_tax', ticker: 'VNQ', assetClass: 'reit', acquiredDate: '2024-01-01', status: 'active' },
   ],
   snapshots: [{ date: '2026-01-01', values: [
     { holdingId: 'h_bnd', marketValue: 100000, costBasis: 100000 },
@@ -136,6 +136,8 @@ const treas = { divYield: 4, qualifiedPct: 0, capGainDistPct: 0, usGovtPct: 100 
 const corp = { divYield: 4, qualifiedPct: 0, capGainDistPct: 0, usGovtPct: 0 };
 ok('Treasury drag < corporate in CA', A.holdingDrag(10000, treas, rCA) < A.holdingDrag(10000, corp, rCA));
 near('100% Treasury pays no state on interest', A.ordinaryInterestRate(treas, rCA), rCA.r_ord + rCA.niit, 1e-9);
+const muniProfile = { divYield: 3.3, qualifiedPct: 0, capGainDistPct: 0, muni: true };
+near('national muni interest pays state tax only', A.holdingDrag(100000, muniProfile, rCA), 100000 * 0.033 * rCA.r_state, 0.5);
 
 /* ---------- M2: foreign tax credit ---------- */
 const intlFtc = { divYield: 3.0, qualifiedPct: 70, capGainDistPct: 0.1, ftcEligible: true };
@@ -160,6 +162,10 @@ ok('location score 0 (all inefficient taxable)', sc.locScore === 0);
 const swaps = A.locationSwapRecs(snap);
 ok('swap rec proposed', swaps.length >= 1 && swaps[0].aTicker === 'BND');
 ok('swap carries realizedGain field', typeof swaps[0].realizedGain === 'number');
+const savedAcquired = p.holdings.find(h => h.id === 'h_bnd').acquiredDate;
+delete p.holdings.find(h => h.id === 'h_bnd').acquiredDate;
+ok('taxable sale suppressed without purchase date', !A.locationSwapRecs(snap).some(r => r.aTicker === 'BND'));
+p.holdings.find(h => h.id === 'h_bnd').acquiredDate = savedAcquired;
 
 /* ---------- M4: muni in-state ---------- */
 p.taxSettings.state = 'CA'; p.taxSettings.incomeBand = '200_400'; // r_ord 35% >= 32%

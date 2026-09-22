@@ -5,3 +5,4 @@ CLAUDE.md
 
 # Generated public deployment output
 dist/
+node_modules/

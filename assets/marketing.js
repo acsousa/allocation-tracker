@@ -11,7 +11,15 @@
   const backdrop = document.getElementById('start-dialog');
   const dialog = backdrop?.querySelector('[role="dialog"]');
   if (backdrop && dialog) {
+    // The source keeps the modal inside .marketing-page for readable markup,
+    // but an inert ancestor also disables every control inside the dialog.
+    // Promote it to a direct body child before making the page behind it inert.
+    if (backdrop.parentElement !== document.body) document.body.appendChild(backdrop);
     let returnFocus = null;
+    let inerted = [];
+
+    const focusStops = () => Array.from(dialog.querySelectorAll('a[href],button:not(:disabled),input:not(:disabled),select:not(:disabled),textarea:not(:disabled),[tabindex="0"]'))
+      .filter(element => element.getClientRects().length && element.getAttribute('aria-hidden') !== 'true');
 
     const choosePortfolioFile = link => {
       const input = document.createElement('input');
@@ -53,12 +61,17 @@
       returnFocus = document.activeElement;
       backdrop.hidden = false;
       document.body.classList.add('dialog-open');
-      dialog.focus();
+      inerted = Array.from(document.body.children).filter(element => element !== backdrop && !element.inert);
+      inerted.forEach(element => { element.inert = true; });
+      const first = focusStops()[0];
+      (first || dialog).focus();
     };
 
     const closeDialog = () => {
       backdrop.hidden = true;
       document.body.classList.remove('dialog-open');
+      inerted.forEach(element => { element.inert = false; });
+      inerted = [];
       if (location.hash === '#start') history.replaceState(null, '', location.pathname + location.search);
       returnFocus?.focus?.();
     };
@@ -80,7 +93,15 @@
       if (event.target.closest('[data-close-start]') || event.target === backdrop) closeDialog();
     });
     document.addEventListener('keydown', event => {
-      if (event.key === 'Escape' && !backdrop.hidden) closeDialog();
+      if (backdrop.hidden) return;
+      if (event.key === 'Escape') { event.preventDefault(); closeDialog(); return; }
+      if (event.key === 'Tab') {
+        const stops = focusStops();
+        if (!stops.length) { event.preventDefault(); dialog.focus(); return; }
+        const first = stops[0], last = stops[stops.length - 1];
+        if (event.shiftKey && (document.activeElement === first || document.activeElement === dialog)) { event.preventDefault(); last.focus(); }
+        else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+      }
     });
     if (location.hash === '#start') openDialog();
   }

@@ -12,8 +12,8 @@ const sandbox = { window, self: {}, console, setTimeout() {}, Blob,
 };
 vm.createContext(sandbox);
 vm.runInContext(source + `\nwindow.test = { csvEscape, tryAutoload, openFileViaInput,
-  setState(p, h) { portfolio = p; fileHandle = h; demoMode = false; checkinDraftDirty = false; dirty = true; },
-  state() { return { portfolio, fileHandle, fileName, dirty }; }
+  setState(p, h) { portfolio = p; fileHandle = h; demoMode = false; checkinDraftDirty = false; dirty = true; persistenceStatus = h ? 'saved' : 'not-saved'; pendingDownloadSave = null; },
+  state() { return { portfolio, fileHandle, fileName, dirty, persistenceStatus, pendingDownloadSave }; }
 };`, sandbox);
 const A = window.__AAT__, T = window.test;
 const fresh = () => JSON.parse(JSON.stringify(A.emptyPortfolio()));
@@ -69,7 +69,8 @@ async function main() {
   window.showSaveFilePicker=async()=>{throw new Error('Unsupported');};
   await A.saveFile(false,'Downloaded.json');
   assert.equal(input.download,'Downloaded.json');assert.equal(T.state().fileName,'Downloaded.json');
-  assert.equal(T.state().fileHandle,null);checks++;
+  assert.equal(T.state().fileHandle,null);assert.equal(T.state().persistenceStatus,'download-pending');
+  assert.equal(T.state().pendingDownloadSave.name,'Downloaded.json');checks++;
   console.log(`${checks} persistence regression groups passed`);
 }
 main().catch(e=>{console.error(e);process.exitCode=1;});
