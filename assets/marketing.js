@@ -118,6 +118,7 @@
     if (!sections.length || !('IntersectionObserver' in window)) return;
 
     let active = null;
+    let ticking = false;
     const setActive = section => {
       if (active === section) return;
       sections.forEach(item => item.classList.toggle('is-story-active', item === section));
@@ -129,12 +130,27 @@
       active = section;
     };
 
-    const observer = new IntersectionObserver(entries => {
-      const entered = entries.find(entry => entry.isIntersecting);
-      if (entered) setActive(entered.target);
-      else if (entries.some(entry => entry.target === active && !entry.isIntersecting)) setActive(null);
-    }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+    const updateActive = () => {
+      ticking = false;
+      const focusY = (window.innerHeight || 800) * .475;
+      const section = sections.find(item => {
+        const rect = item.getBoundingClientRect();
+        return rect.top <= focusY && rect.bottom > focusY;
+      }) || null;
+      setActive(section);
+    };
+
+    const queueUpdate = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(updateActive);
+    };
+
+    const observer = new IntersectionObserver(queueUpdate, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
     sections.forEach(section => observer.observe(section));
+    window.addEventListener('scroll', queueUpdate, { passive: true });
+    window.addEventListener('resize', queueUpdate, { passive: true });
+    updateActive();
   }
 
   /* ---------- Whole-portfolio focus rings ---------- */
@@ -174,6 +190,13 @@
 
     const targets = document.querySelectorAll('[data-reveal]');
     if (!targets.length) return;
+
+    // The four outcome signposts are part of the page-load sequence, even on
+    // shorter screens where their bottom edge begins just below the fold.
+    const loadValues = document.querySelectorAll('.value-strip > [data-reveal]');
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      loadValues.forEach(value => value.classList.add('is-in'));
+    }));
 
     const observer = new IntersectionObserver((entries, obs) => {
       entries.forEach(entry => {

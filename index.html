@@ -44,11 +44,11 @@
       </div>
       <p class="landing-local"><span aria-hidden="true"></span>No account linking. Your portfolio data stays in a file you control. <a href="/privacy.html">Privacy</a></p>
     </div>
-    <nav class="value-strip" aria-label="What Quartermaster helps you do">
-      <a href="#lp-whole" class="value-signpost signpost-blue"><span class="value-number">01</span><strong>See the whole picture</strong><small>Every brokerage, 401(k), IRA, Roth, and 529 in one allocation.</small></a>
-      <a href="#lp-tax" class="value-signpost signpost-teal"><span class="value-number">02</span><strong>Find potential tax drag</strong><small>See when an investment may sit in a less tax-efficient account.</small></a>
-      <a href="#lp-goals" class="value-signpost signpost-plum"><span class="value-number">03</span><strong>Model your goals</strong><small>Explore retirement and college using your complete portfolio.</small></a>
-      <a href="#lp-decisions" class="value-signpost signpost-gold"><span class="value-number">04</span><strong>Make better decisions</strong><small>Review regularly and record why you made each change.</small></a>
+    <nav class="value-strip" aria-label="What Quartermaster helps you do" data-reveal-group>
+      <a href="#lp-whole" class="value-signpost signpost-blue" data-reveal><span class="value-signpost-title"><span class="value-number">01</span><strong>See the whole picture</strong></span><small>Every brokerage, 401(k), IRA, Roth, and 529 in one allocation.</small></a>
+      <a href="#lp-tax" class="value-signpost signpost-teal" data-reveal><span class="value-signpost-title"><span class="value-number">02</span><strong>Find potential tax drag</strong></span><small>See when an investment may sit in a less tax-efficient account.</small></a>
+      <a href="#lp-goals" class="value-signpost signpost-plum" data-reveal><span class="value-signpost-title"><span class="value-number">03</span><strong>Model your goals</strong></span><small>Explore retirement and college using your complete portfolio.</small></a>
+      <a href="#lp-decisions" class="value-signpost signpost-gold" data-reveal><span class="value-signpost-title"><span class="value-number">04</span><strong>Make better decisions</strong></span><small>Review regularly and record why you made each change.</small></a>
     </nav>
   </section>
 
@@ -68,8 +68,8 @@
         </div>
       </div>
       <div class="whole-callouts" data-reveal-group>
-        <article class="metric-callout" data-reveal data-focus-target="1"><span>1</span><small>Total portfolio value</small><strong>$265,000</strong><p>Tracked investments across the household, excluding the 529 goal.</p></article>
-        <article class="metric-callout drift-callout" data-reveal data-focus-target="2"><span>2</span><small>Drift from target</small><div class="drift-values"><strong>Stocks: +16.1 pts</strong><strong>Bonds: −10.5 pts</strong></div><p>Both are outside the household’s ±5-point review band.</p></article>
+        <article class="metric-callout" data-reveal data-focus-target="1"><div class="metric-kicker"><span>1</span><small>Total portfolio value</small></div><strong>$265,000</strong><p>Tracked investments across the household, excluding the 529 goal.</p></article>
+        <article class="metric-callout drift-callout" data-reveal data-focus-target="2"><div class="metric-kicker"><span>2</span><small>Drift from target</small></div><div class="drift-values"><strong><span>Stocks</span> +16.1 pts</strong><strong><span>Bonds</span> −10.5 pts</strong></div><p>Both are outside the household’s ±5-point review band.</p></article>
         <a class="text-link" href="/app/#demo/dashboard">Explore this dashboard <span aria-hidden="true">→</span></a>
       </div>
     </div>
@@ -126,18 +126,18 @@
       <p>Return monthly, quarterly, or annually to update values, review drift, document decisions, and preserve a record of your plan.</p>
     </header>
     <div class="cadence-steps" data-reveal-group>
-      <div data-reveal><b>01</b><strong>Refresh</strong></div><i aria-hidden="true">→</i>
-      <div data-reveal><b>02</b><strong>Review</strong></div><i aria-hidden="true">→</i>
-      <div data-reveal><b>03</b><strong>Plan changes</strong></div><i aria-hidden="true">→</i>
-      <div data-reveal><b>04</b><strong>Report</strong></div>
+      <div data-reveal><b>1</b><strong>Refresh</strong><i aria-hidden="true">→</i></div>
+      <div data-reveal><b>2</b><strong>Review</strong><i aria-hidden="true">→</i></div>
+      <div data-reveal><b>3</b><strong>Plan changes</strong><i aria-hidden="true">→</i></div>
+      <div data-reveal><b>4</b><strong>Report</strong></div>
     </div>
     <article class="decision-record" data-reveal>
       <div class="decision-record-head"><span>Q2 record · May 15, 2026</span><small>Next check-in · August 2026</small></div>
-      <div class="decision-columns"><div><small>Decided</small><p>Direct the next contribution toward underweight bonds.</p></div><div><small>To reconsider</small><p>An allocation-neutral FXNAX/FXAIX location swap after confirming plan availability and tax details.</p></div><div><small>Why</small><p>Stocks are +16.1 percentage points over target and bonds −10.5 points under.</p></div></div>
+      <div class="decision-columns"><div><small>Decided</small><p><strong>Redirect new contributions</strong> toward underweight bonds.</p></div><div><small>To reconsider</small><p><strong>FXNAX location.</strong> Consider an allocation-neutral FXNAX/FXAIX swap after confirming plan availability and tax details.</p></div><div><small>Why</small><p>Stocks are +16.1 percentage points over target and bonds −10.5 points under.</p></div></div>
     </article>
   </section>
 
-  <section id="lp-privacy" class="privacy-section">
+  <section id="lp-privacy" class="privacy-section" data-story="privacy">
     <div class="privacy-inner">
       <div class="privacy-copy" data-reveal>
         <div class="eyebrow">Private by design</div>

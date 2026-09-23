@@ -47,6 +47,10 @@ try {
       const asset = fs.readFileSync(path.join(tmp, 'assets', name));
       assert.equal(asset.subarray(1, 4).toString(), 'PNG');
     }
+    const lockup = fs.readFileSync(path.join(tmp, 'assets', 'quartermaster-lockup.png'));
+    const mark = fs.readFileSync(path.join(tmp, 'assets', 'quartermaster-mark.png'));
+    assert.deepEqual([lockup.readUInt32BE(16), lockup.readUInt32BE(20)], [1273, 240]);
+    assert.deepEqual([mark.readUInt32BE(16), mark.readUInt32BE(20)], [900, 900]);
     for (const name of ['index.html', 'app/index.html', 'pricing.html', 'privacy.html']) {
       const html = fs.readFileSync(path.join(tmp, name), 'utf8');
       assert.equal((html.match(/rel="icon"/g) || []).length, 1);
@@ -108,6 +112,7 @@ try {
     assert.match(html, /class="hero-field"/);
     assert.match(html, /Built for US investors with multiple accounts/);
     for (const id of ['lp-whole', 'lp-tax', 'lp-goals', 'lp-decisions', 'lp-privacy']) assert.match(html, new RegExp(`id="${id}"`));
+    assert.match(html, /id="lp-privacy" class="privacy-section" data-story="privacy"/);
     assert.ok(!html.includes('story-rail'));
     assert.match(html, /data-focus-ring="1"/);
     assert.match(html, /href="\/app\/#demo\/dashboard"/);
@@ -128,9 +133,12 @@ try {
     assert.match(interactions, /document\.body\.appendChild\(backdrop\)/);
     assert.match(interactions, /new IntersectionObserver/);
     assert.match(interactions, /rootMargin: '-45% 0px -50% 0px'/);
+    assert.match(interactions, /const focusY = \(window\.innerHeight \|\| 800\) \* \.475/);
+    assert.match(interactions, /\.value-strip > \[data-reveal\]/);
+    assert.match(interactions, /loadValues\.forEach\(value => value\.classList\.add\('is-in'\)\)/);
     assert.match(interactions, /lockedUntil = Date\.now\(\) \+ 4000/);
-    assert.match(css, /@keyframes value-signpost-in/);
-    assert.match(css, /animation:value-signpost-in 440ms/);
+    assert.match(html, /class="value-strip"[^>]*data-reveal-group/);
+    assert.equal((html.match(/class="value-signpost[^\"]*" data-reveal/g) || []).length, 4);
     assert.match(interactions, /sessionStorage\.setItem\(portfolioHandoffKey/);
     assert.match(interactions, /input\.accept = '\.json,application\/json'/);
     assert.match(html, /No affiliate commissions · no products to sell · no custody or trading/);
@@ -139,6 +147,11 @@ try {
     assert.match(css, /\.history-detail \{[^}]*z-index:1/);
     assert.match(css, /\.phone-detail \{[^}]*z-index:2/);
     assert.ok(!html.includes('<span>Unsaved</span>'));
+    assert.match(css, /\.marketing-page \{[^}]*overflow:visible/);
+    assert.match(css, /\.marketing-header \{ position:sticky;top:0;z-index:60/);
+    assert.match(css, /\.marketing-link\[aria-current="location"\][^{]*\{[^}]*background:var\(--nav-tint\)/);
+    assert.match(css, /\.tax-flow \{[^}]*align-items:stretch/);
+    assert.match(css, /\.cadence-steps \{ display:grid;grid-template-columns:repeat\(4/);
   });
   check('dedicated app entry stays simple with one graphic and three actions', () => {
     const app = fs.readFileSync(path.join(tmp, 'app', 'index.html'), 'utf8');
