@@ -16,7 +16,7 @@ const shim = `
   marginalRate, ltcgRateFor, deriveRates, tickerProfile, holdingDrag, ordinaryInterestRate,
   accountShelter, accountVehicle, inferVehicle, washCloneSet, taxRates, holdingDragRows,
   taxScorecard, locationSwapRecs, muniRecs, rothPlacementRecs, washWarnings, savingsDirective,
-  moveRealizedGain, simulateAfter, classForTicker, underweightClasses, parseImportRows,
+  taxableSaleInfo, moveRealizedGain, simulateAfter, classForTicker, underweightClasses, parseImportRows,
   RETIRE_DATA, defaultRetirementSettings, retireCorr, blendMuSigma, retireBracketTax, retireBracketMarginal,
   ltcgStackTax, rmdStartAge, rmdDivisor, rmdAmount, mulberry32, gaussFrom, drawReturnFrom, ssFactor,
   estimatePIAmonthly, taxableSocialSecurity, doWithdraw, decumulateYear, runProjection, switchPointVerdict, conversionFillTop,
@@ -64,9 +64,9 @@ const v2 = {
   goals: [], glidePaths: [], tickerMap: {}, children: [],
 };
 
-/* ---------- migration (v2 -> v6) ---------- */
+/* ---------- migration (v2 -> v7) ---------- */
 const p = A.migrate(JSON.parse(JSON.stringify(v2)));
-ok('migrate: schemaVersion -> 6', p.meta.schemaVersion === 6);
+ok('migrate: schemaVersion -> 7', p.meta.schemaVersion === 7);
 ok('migrate: plans[] added', Array.isArray(p.plans));
 ok('migrate: taxSettings added', p.taxSettings && p.taxSettings.networkEnabled === false);
 ok('migrate: taxSettings.inStateMuni default false', p.taxSettings.inStateMuni === false);
@@ -78,14 +78,14 @@ const vById = Object.fromEntries(p.accounts.map(a => [a.id, a.vehicle]));
 ok('migrate infers vehicle: Roth IRA -> ira', vById.a_roth === 'ira');
 ok('migrate infers vehicle: 401k -> 401k', vById.a_pre === '401k');
 ok('migrate infers vehicle: Brokerage -> taxable', vById.a_tax === 'taxable');
-ok('migrate idempotent', (() => { const q = A.migrate(JSON.parse(JSON.stringify(p))); return q.plans.length === 0 && q.accounts.length === 3 && q.meta.schemaVersion === 6; })());
+ok('migrate idempotent', (() => { const q = A.migrate(JSON.parse(JSON.stringify(p))); return q.plans.length === 0 && q.accounts.length === 3 && q.meta.schemaVersion === 7; })());
 
 /* v4 -> v5 specifically: a v4 file (no retirementSettings) gains them without losing data */
 const v4 = JSON.parse(JSON.stringify(p));
 v4.meta.schemaVersion = 4;
 delete v4.retirementSettings;
 const p5 = A.migrate(v4);
-ok('v4->v6: bumps to 6', p5.meta.schemaVersion === 6);
+ok('v4->v7: bumps to 7', p5.meta.schemaVersion === 7);
 ok('v4->v6: adds retirementSettings', p5.retirementSettings && p5.retirementSettings.paths === 10000 && p5.retirementSettings.accountScope === 'retirement');
 ok('v4->v5: adds collegeSettings', p5.collegeSettings && p5.collegeSettings.years === 4);
 ok('v4->v5: preserves holdings + accounts', p5.holdings.length === 3 && p5.accounts.length === 3);
@@ -95,11 +95,11 @@ v3.meta.schemaVersion = 3;
 v3.accounts.forEach(a => { delete a.vehicle; });
 delete v3.taxSettings.inStateMuni; delete v3.retirementSettings;
 const p35 = A.migrate(v3);
-ok('v3->v6: bumps to 6', p35.meta.schemaVersion === 6);
+ok('v3->v7: bumps to 7', p35.meta.schemaVersion === 7);
 ok('v3->v5: back-fills vehicle', p35.accounts.every(a => !!a.vehicle));
 ok('v3->v5: adds inStateMuni', p35.taxSettings.inStateMuni === false);
 ok('v3->v5: adds retirementSettings', !!p35.retirementSettings);
-ok('emptyPortfolio is v6 with tax + retirement fields', (() => { const e = A.migrate({ meta: { schemaVersion: 6 } }); return e.meta.schemaVersion === 6 && Array.isArray(e.plans) && e.taxSettings.inStateMuni === false && !!e.retirementSettings; })());
+ok('emptyPortfolio is v7 with tax + retirement fields', (() => { const e = A.migrate({ meta: { schemaVersion: 7 } }); return e.meta.schemaVersion === 7 && Array.isArray(e.plans) && e.taxSettings.inStateMuni === false && !!e.retirementSettings; })());
 
 /* ---------- brackets + rates ---------- */
 ok('marginalRate single 150k = 24%', A.marginalRate(R.federalBrackets.single, 150000) === 0.24);
@@ -164,7 +164,10 @@ ok('swap rec proposed', swaps.length >= 1 && swaps[0].aTicker === 'BND');
 ok('swap carries realizedGain field', typeof swaps[0].realizedGain === 'number');
 const savedAcquired = p.holdings.find(h => h.id === 'h_bnd').acquiredDate;
 delete p.holdings.find(h => h.id === 'h_bnd').acquiredDate;
-ok('taxable sale suppressed without purchase date', !A.locationSwapRecs(snap).some(r => r.aTicker === 'BND'));
+ok('taxable sale suppressed without long-term confirmation', !A.locationSwapRecs(snap).some(r => r.aTicker === 'BND'));
+p.holdings.find(h => h.id === 'h_bnd').longTermHolding = true;
+ok('explicit long-term confirmation enables basis-aware sale scenario', A.locationSwapRecs(snap).some(r => r.aTicker === 'BND'));
+delete p.holdings.find(h => h.id === 'h_bnd').longTermHolding;
 p.holdings.find(h => h.id === 'h_bnd').acquiredDate = savedAcquired;
 
 /* ---------- M4: muni in-state ---------- */

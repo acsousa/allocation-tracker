@@ -12,7 +12,7 @@
 </script>
 <script defer src="site-analytics.js"></script>
 <!-- End Google tag -->
-<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%20width%3D%2232%22%20height%3D%2232%22%20aria-hidden%3D%22true%22%20style%3D%22flex%3Anone%3Bdisplay%3Ablock%3B%22%3E%3Cg%20fill%3D%22none%22%20stroke-width%3D%225%22%3E%3Cpath%20d%3D%22M%2024.17%208.64%20A%2011%2011%200%200%201%2024.17%2023.36%22%20stroke%3D%22%230f6493%22%2F%3E%3Cpath%20d%3D%22M%2023.36%2024.17%20A%2011%2011%200%200%201%208.64%2024.17%22%20stroke%3D%22%230f6493%22%2F%3E%3Cpath%20d%3D%22M%207.83%2023.36%20A%2011%2011%200%200%201%207.83%208.64%22%20stroke%3D%22%230f6493%22%2F%3E%3Cpath%20d%3D%22M%208.64%207.83%20A%2011%2011%200%200%201%2023.36%207.83%22%20stroke%3D%22%230f6493%22%2F%3E%3Cpath%20d%3D%22M%2022.4%2022.4%20L%2027.4%2027.4%22%20stroke%3D%22%230f6493%22%20stroke-width%3D%224.5%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E">
+<link rel="icon" type="image/png" href="assets/quartermaster-mark.png">
 
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -233,6 +233,7 @@
   .input:hover { border-color: color-mix(in srgb, var(--color-text) 45%, transparent); }
   .input:focus-visible { border-color: var(--color-accent); outline-offset: 0; }
   .input:disabled { color:var(--color-ink-3);background:var(--color-panel-2);border-color:var(--color-divider);cursor:not-allowed;opacity:.78; }
+  .input[aria-invalid="true"] { border-color:var(--color-crit);box-shadow:0 0 0 2px color-mix(in srgb,var(--color-crit) 14%,transparent);background:color-mix(in srgb,var(--color-crit) 5%,var(--color-surface)); }
   .classification-field.is-required .input { border-color:var(--color-crit);box-shadow:0 0 0 2px color-mix(in srgb,var(--color-crit) 14%,transparent);background:color-mix(in srgb,var(--color-crit) 5%,var(--color-surface)); }
   .classification-field.is-required > label,.classification-field.is-required .classification-help { color:var(--color-crit);font-weight:600; }
   .field-error { display:block;margin-top:5px;color:var(--color-crit);font-size:11px;line-height:1.4; }
@@ -279,6 +280,15 @@
        and the body cards run full-bleed too, so every left/right edge lines up with no floating borders. — */
   .filebar { display: flex; align-items: center; gap: 14px; padding: 9px var(--shell-x); background: var(--color-surface); border-bottom: 1px solid var(--color-divider); flex-wrap: wrap; }
   .filebar .brand { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+  .qm-logo { --qm-logo-size:26px;display:inline-grid;align-items:center;justify-items:center;flex:none;height:var(--qm-logo-size); }
+  .qm-logo-mark { width:var(--qm-logo-size); }
+  .qm-logo-lockup { width:calc(var(--qm-logo-size) * 3.978125); }
+  .qm-logo > img { grid-area:1 / 1;display:block;width:100%;height:100%;object-fit:contain; }
+  .qm-logo-dark { display:none !important; }
+  :root[data-theme="dark"] .qm-logo-light { display:none; }
+  :root[data-theme="dark"] .qm-logo-dark { display:block !important; }
+  .filebar-lockup { display:inline-flex; }
+  .filebar-mark { display:none; }
   .file-chip { display: flex; align-items: center; gap: 9px; padding: 6px 14px; background: var(--color-panel); border: 1px solid var(--color-divider); border-radius: var(--radius-pill); font-size: 12.5px; }
   .file-chip .dot { width: 7px; height: 7px; border-radius: 50%; flex: none; background: var(--color-ok); }
   .file-chip .fname { font-family: var(--mono); font-size: 12px; }
@@ -368,7 +378,7 @@
   .app-entry-orbit { position:relative;display:grid;place-items:center;width:min(260px,62vw);aspect-ratio:1;animation:app-entry-float 11s ease-in-out infinite; }
   .app-entry-orbit::before { content:"";position:absolute;inset:12%;border-radius:50%;background:radial-gradient(circle at 50% 44%,rgba(255,255,255,.98) 0%,rgba(255,255,255,.5) 48%,rgba(255,255,255,0) 72%); }
   .app-entry-orbit::after { content:"";position:absolute;inset:0;border-radius:50%;border:1px solid rgba(15,100,147,.09);border-top-color:rgba(30,129,117,.34);border-right-color:rgba(108,90,168,.22);animation:app-entry-orbit-spin 48s linear infinite; }
-  .app-entry-orbit > svg { position:relative;z-index:2;left:auto;top:auto;width:min(132px,32vw);height:auto;transform:none;filter:drop-shadow(0 12px 22px rgba(15,100,147,.16)); }
+  .app-entry-orbit > .qm-logo { position:relative;z-index:2;max-width:32vw;max-height:32vw;filter:drop-shadow(0 12px 22px rgba(15,100,147,.16)); }
   @keyframes app-entry-orbit-spin { to { transform:rotate(360deg); } }
   @keyframes app-entry-float { 50% { transform:translateY(-10px); } }
   @media(prefers-reduced-motion:reduce) {
@@ -555,14 +565,16 @@
 
 /* Shared public-page header: same geometry, order, and neutral navigation. */
 .marketing-header { position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:14px 56px;border-bottom:1px solid #e8ece9;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);flex-wrap:wrap; }
-.marketing-brand { display:flex;align-items:center;gap:12px;color:#151823;text-decoration:none;font-family:"Barlow Condensed",system-ui,sans-serif;font-size:22px;font-weight:700;letter-spacing:.08em; }
+.marketing-brand { display:flex;align-items:center;color:#151823;text-decoration:none; }
+.marketing-brand-lockup { display:inline-flex;align-items:center; }
+.marketing-brand-mark { display:none;align-items:center; }
 .marketing-nav { display:flex;align-items:center;gap:28px;flex-wrap:wrap; }
 .marketing-nav .marketing-link { font:inherit;font-size:15px;font-weight:400;color:#48525c;text-decoration:none;background:none;border:0;padding:10px 0;cursor:pointer;min-height:44px; }
 .marketing-nav .marketing-link:visited { color:#48525c; }
 .marketing-nav .marketing-open { padding:10px 24px;background:#0f6493;color:#fff;text-decoration:none;font:inherit;font-size:15px;font-weight:600;border:0;border-radius:var(--radius-pill);box-shadow:var(--shadow-accent);cursor:pointer;min-height:44px; }
 .marketing-nav a:focus-visible,.marketing-nav button:focus-visible { outline:3px solid #1e8175;outline-offset:4px; }
 @media(max-width:1000px) { .marketing-header { padding:14px 24px;gap:18px; } .marketing-nav { gap:12px 24px; } }
-@media(max-width:600px) { .marketing-header { padding:10px 18px;flex-wrap:nowrap; } .marketing-brand span { display:none; } .marketing-nav { margin-left:auto;display:flex;gap:8px;flex-wrap:nowrap; } .marketing-nav .marketing-link { display:none; } .marketing-nav .marketing-open { white-space:nowrap; } }
+@media(max-width:600px) { .marketing-header { padding:10px 18px;flex-wrap:nowrap; } .marketing-brand-lockup { display:none; } .marketing-brand-mark { display:inline-flex; } .marketing-nav { margin-left:auto;display:flex;gap:8px;flex-wrap:nowrap; } .marketing-nav .marketing-link { display:none; } .marketing-nav .marketing-open { white-space:nowrap; } }
 
 .pricing-link,.pricing-link:visited { color:inherit;text-decoration:none; }
 #lp-ritual > div:last-child > div { background:var(--color-panel);border-color:var(--color-divider); }
@@ -588,7 +600,7 @@
   .page-intro p { margin:0;color:var(--color-ink-2);font-size:14px; }
   .page-intro .btn { margin-top:12px; }
   .demo-banner { display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;background:#f0eafa;color:#483970;padding:12px 24px;border:1px solid color-mix(in srgb,var(--color-plum) 55%,transparent);border-radius:var(--radius-md);font-size:13px; }
-  .setup-shell { width:100%;min-width:0;max-width:1000px;margin:0 auto; }
+  .setup-shell { width:100%;min-width:0;margin:0; }
   .setup-progress { list-style:none;display:flex;gap:16px;padding:0;margin:12px 0 28px; }
   .setup-progress li { flex:1;display:flex;gap:10px;align-items:center;border-bottom:3px solid var(--color-divider);padding:12px 0; }
   .setup-progress li[aria-current] { border-color:var(--color-accent);font-weight:700;color:var(--color-accent); }
@@ -697,7 +709,6 @@
   .shell { max-width:1440px; }
   .filebar { min-height:64px;padding:10px clamp(18px,3vw,40px);gap:10px;box-shadow:0 1px 0 var(--color-divider); }
   .filebar .brand { margin-right:8px; }
-  .filebar .brand svg { width:28px;height:28px; }
   .filebar .filebtn,.filebar .btn { min-height:38px;display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box; }
   .file-chip { background:var(--color-panel-2);box-shadow:inset 0 0 0 1px rgba(255,255,255,.5); }
   .tabbar { padding:10px clamp(18px,3vw,40px);gap:8px;border-bottom:1px solid var(--color-divider);box-shadow:0 10px 28px -30px rgba(21,24,35,.8); }
@@ -834,7 +845,8 @@
     .app-body { padding:18px 14px 44px;gap:18px; }
     .filebar { padding:9px 14px;min-height:58px; }
     .filebar .brand { width:auto; }
-    .filebar .brand span { display:none; }
+    .filebar-lockup { display:none; }
+    .filebar-mark { display:inline-flex; }
     .filebar .file-chip { order:0;flex:1 1 130px;white-space:nowrap;overflow:hidden; }
     .filebar .fname { text-overflow:ellipsis;overflow:hidden; }
     .filebar .filebtn:not(.save-needed),.filebar [data-act="new-checkin"],.filebar [data-act="landing-open"] { display:none; }
@@ -941,11 +953,11 @@ function cssVarValue(name, fallback) {
 function detailColor(id) { return cssVarValue('--c-' + id, '#b7b7ba'); }
 function rollupOf(detailId) { return (DETAIL_BY_ID[detailId] || {}).group || 'blend_other'; }
 
-const ACCOUNT_CATEGORIES = ['Retirement', '529', 'Non-Retirement', 'Other', 'Savings'];
+const ACCOUNT_CATEGORIES = ['Retirement', '529', 'Non-Retirement', 'Savings', 'Other'];
 const TAX_TREATMENTS = ['Pre-tax', 'Roth', 'Taxable', 'Tax-free'];
 // Account "vehicle" drives contribution limits + shelter status (a 401k and an
 // IRA are both "Retirement" but have very different limits).
-const ACCOUNT_VEHICLES = ['taxable', '401k', 'ira', 'hsa', '529', 'other', 'savings'];
+const ACCOUNT_VEHICLES = ['taxable', '401k', 'ira', 'hsa', '529', 'savings', 'other'];
 const VEHICLE_LABELS = { taxable: 'Taxable / brokerage', '401k': '401(k) / 403(b) / TSP', ira: 'IRA (Roth or Traditional)', hsa: 'HSA', '529': '529 plan', other: 'Other', savings: 'Savings account' };
 function inferVehicle(a) {
   return inferVehicleChoice(a) || (a.category === 'Retirement' ? '401k' : 'other');
@@ -2062,7 +2074,7 @@ function setSiteSimulationPaths(value) {
 /* ---------------------------------------------------------------
    SCHEMA + MIGRATION (spec §10)
    --------------------------------------------------------------- */
-const SCHEMA_VERSION = 6;
+const SCHEMA_VERSION = 7;
 
 // Retirement modeler settings (spec §3). All real (today's dollars).
 function defaultRetirementSettings() {
@@ -2175,6 +2187,8 @@ function validatePortfolio(data) {
   for (const h of data.holdings || []) {
     if (!ids.accounts.has(h.accountId)) fail('holding ' + h.id + '.accountId', 'references a missing account');
     if (h.costBasis != null) number(h.costBasis, 'holding ' + h.id + '.costBasis');
+    if (h.longTermHolding != null && typeof h.longTermHolding !== 'boolean') fail('holding ' + h.id + '.longTermHolding', 'must be true or false');
+    // Retained for portfolios created before v7; new entries use longTermHolding.
     if (h.acquiredDate != null) date(h.acquiredDate, 'holding ' + h.id + '.acquiredDate');
     if (h.assetClass != null && !DETAIL_BY_ID[h.assetClass]) fail('holding ' + h.id + '.assetClass', 'is not a recognized asset class');
   }
@@ -2285,6 +2299,13 @@ function migrate(data) {
   merged.retirementSettings = Object.assign(defaultRetirementSettings(), data.retirementSettings || {});
   merged.collegeSettings = Object.assign(defaultCollegeSettings(), data.collegeSettings || {});
   if (!merged.collegeSettings.byChild || typeof merged.collegeSettings.byChild !== 'object') merged.collegeSettings.byChild = {};
+  // v6 → v7: ticker symbols are canonical uppercase and new taxable holdings
+  // record only an explicit long-term status rather than a purchase date.
+  for (const h of merged.holdings || []) if (typeof h.ticker === 'string') h.ticker = h.ticker.trim().toUpperCase();
+  for (const plan of merged.plans || []) for (const move of plan.moves || []) {
+    if (typeof move.sellTicker === 'string') move.sellTicker = move.sellTicker.trim().toUpperCase();
+    if (typeof move.buyTicker === 'string') move.buyTicker = move.buyTicker.trim().toUpperCase();
+  }
   // v5 → v6: smoother simulations are explicit runs rather than recalculating
   // on every input change. Preserve intentional custom counts; upgrade the old default.
   if (v < 6) {
@@ -2666,7 +2687,7 @@ function holdingDragRows(snapshot, rates) {
     rows.push({
       holdingId: h.id, ticker: h.ticker || '', name: h.name || '',
       accountId: h.accountId, accountName: acct.name || '(account)',
-      assetClass: h.assetClass, mv, costBasis: cb == null ? null : Number(cb), acquiredDate: h.acquiredDate || null,
+      assetClass: h.assetClass, mv, costBasis: cb == null ? null : Number(cb), longTermHolding: h.longTermHolding, acquiredDate: h.acquiredDate || null,
       sheltered: shelter.sheltered, reason: shelter.reason,
       profile, estimated, source, drag, wouldBeDrag,
       avoided: shelter.sheltered ? wouldBeDrag : 0, // tax shielded by good placement
@@ -2699,13 +2720,19 @@ function taxScorecard(snapshot) {
 const EFFICIENT_FOR_TAXABLE = ['us_large', 'us_total', 'intl_dev', 'us_mid', 'us_small'];
 
 // Taxable-sale suggestions are shown only when the app can evaluate both the
-// gain and long-term holding period. Missing tax-lot facts never become $0.
+// gain and an explicitly confirmed long-term holding period. Purchase dates
+// remain a compatibility fallback for older portfolio files only.
 function taxableSaleInfo(row, asOfDate) {
   const account = accountById(row.accountId);
   if (!account || accountShelter(account).sheltered) return { eligible: true, sheltered: true, gain: 0 };
-  if (row.costBasis == null || !row.acquiredDate) return { eligible: false, reason: 'basis or purchase date missing' };
-  const heldDays = (Date.parse(asOfDate) - Date.parse(row.acquiredDate)) / 864e5;
-  if (!Number.isFinite(heldDays) || heldDays <= 365) return { eligible: false, reason: 'not confirmed long-term' };
+  if (row.costBasis == null) return { eligible: false, reason: 'cost basis missing' };
+  if (row.longTermHolding === false) return { eligible: false, reason: 'not confirmed long-term' };
+  let heldDays = null;
+  if (row.longTermHolding !== true) {
+    if (!row.acquiredDate) return { eligible: false, reason: 'long-term status missing' };
+    heldDays = (Date.parse(asOfDate) - Date.parse(row.acquiredDate)) / 864e5;
+    if (!Number.isFinite(heldDays) || heldDays <= 365) return { eligible: false, reason: 'not confirmed long-term' };
+  }
   return { eligible: true, sheltered: false, gain: Math.max(0, row.mv - row.costBasis), heldDays };
 }
 
@@ -3351,7 +3378,7 @@ function topTabOf(view) {
   return 'review';
 }
 
-const CATEGORY_ORDER = ['Retirement', '529', 'Non-Retirement', 'Other', 'Savings'];
+const CATEGORY_ORDER = ['Retirement', '529', 'Non-Retirement', 'Savings', 'Other'];
 /* Display labels for stored category values (value stays stable in the data). */
 const CATEGORY_LABELS = { 'Non-Retirement': 'Investments (non-retirement)' };
 function catLabel(cat) { return CATEGORY_LABELS[cat] || cat; }
@@ -3780,10 +3807,13 @@ function onChartHover(e) {
 
 function corners() { return '<i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>'; }
 
-/* Brand mark — a segmented allocation ring (echoes the concentric donut). */
-// Handoff mark: quartered ring with an open lower-right corner and Q tick.
-function logoSVG(size = 26) {
-  return `<svg viewBox="0 0 32 32" width="${size}" height="${size}" aria-hidden="true" style="flex:none;display:block;"><g fill="none" stroke-width="5"><path d="M 24.17 8.64 A 11 11 0 0 1 24.17 23.36" stroke="var(--c1)"/><path d="M 23.36 24.17 A 11 11 0 0 1 8.64 24.17" stroke="var(--c2)"/><path d="M 7.83 23.36 A 11 11 0 0 1 7.83 8.64" stroke="var(--c4)"/><path d="M 8.64 7.83 A 11 11 0 0 1 23.36 7.83" stroke="var(--c3)"/><path d="M 22.4 22.4 L 27.4 27.4" stroke="var(--color-text)" stroke-width="4.5"/></g></svg>`;
+/* Official brand assets. Both variants are included so the local app can switch
+   themes without fetching anything from the network. */
+function logoMark(size = 26) {
+  return `<span class="qm-logo qm-logo-mark" style="--qm-logo-size:${size}px" aria-hidden="true"><img class="qm-logo-light" src="assets/quartermaster-mark.png" alt=""><img class="qm-logo-dark" src="assets/quartermaster-mark-dark.png" alt=""></span>`;
+}
+function logoLockup(height = 28) {
+  return `<span class="qm-logo qm-logo-lockup" style="--qm-logo-size:${height}px" aria-hidden="true"><img class="qm-logo-light" src="assets/quartermaster-lockup.png" alt=""><img class="qm-logo-dark" src="assets/quartermaster-lockup-dark.png" alt=""></span>`;
 }
 
 /* ===============================================================
@@ -3928,7 +3958,7 @@ function navHTML() {
   ];
   const mobileDock = `<nav class="mobile-dock no-print" aria-label="Mobile navigation">${dockItems.map(([tab, icon, label, view]) => `<button class="${active === tab ? 'active' : ''}" data-act="nav" data-view="${view}"><span class="dock-icon" aria-hidden="true">${icon}</span><span>${label}</span></button>`).join('')}<button class="${settingsActive || active === 'outlook' ? 'active' : ''}" data-act="toggle-drawer"><span class="dock-icon" aria-hidden="true">•••</span><span>More</span></button></nav>`;
   return `<div class="filebar no-print">
-      <a class="brand" href="${esc(publicSiteURL(''))}" title="Quartermaster — home">${logoSVG(24)}<span style="font-family:var(--font-heading);font-weight:700;font-size:19px;letter-spacing:.06em;text-transform:uppercase;">Quartermaster</span></a>
+      <a class="brand" href="${esc(publicSiteURL(''))}" title="Quartermaster — home" aria-label="Quartermaster home"><span class="filebar-lockup">${logoLockup(28)}</span><span class="filebar-mark">${logoMark(28)}</span></a>
       <span class="file-chip"><span class="dot" style="${needsSave ? 'background:var(--color-warn);' : ''}"></span><span class="fname">${esc(fileName)}</span><span class="fmeta">· ${dirtyNote} · local disk</span></span>
       <button class="filebtn ${needsSave ? 'save-needed' : ''}" data-act="save" ${demoMode ? 'disabled' : ''} title="Save your portfolio file before leaving">${persistenceStatus === 'download-pending' && !dirty && !checkinDraftDirty ? 'Confirm download' : (needsSave ? '⚠ Save needed' : 'Save file')}</button>
       <button class="filebtn" data-act="open">Open</button>
@@ -4078,7 +4108,7 @@ function handlePublicRoute() {
 function renderWelcome() {
   return `<section class="view app-entry">
     <div class="app-entry-visual" aria-hidden="true">
-      <div class="app-entry-orbit">${logoSVG(132)}</div>
+      <div class="app-entry-orbit">${logoMark(132)}</div>
     </div>
     <div class="app-entry-copy">
       <h1>Quartermaster</h1>
@@ -4094,7 +4124,7 @@ function renderWelcome() {
 function renderOpenFile() {
   return `<section class="view app-entry">
     <div class="app-entry-copy"><h1>Quartermaster</h1></div>
-    <div class="app-entry-visual" aria-hidden="true"><div class="app-entry-orbit">${logoSVG(92)}</div></div>
+    <div class="app-entry-visual" aria-hidden="true"><div class="app-entry-orbit">${logoMark(92)}</div></div>
     <div style="position:relative;z-index:2;text-align:center;max-width:520px;">
       <h2 style="margin:0;font-size:28px;">Open your portfolio file</h2>
       <p class="text-muted" style="margin:10px 0 0;line-height:1.6;">Choose the Quartermaster JSON file you previously saved. It stays on this device and opens directly in the app.</p>
@@ -4150,7 +4180,7 @@ function renderMarketingLanding() {
 
   return `<div class="landing" style="max-width:1520px;margin:0 auto;background:var(--color-panel);border:1px solid var(--color-divider);">
     <header class="marketing-header">
-      <a class="marketing-brand" href="index.html">${logoSVG(30)}<span>QUARTERMASTER</span></a>
+      <a class="marketing-brand" href="index.html" aria-label="Quartermaster home"><span class="marketing-brand-lockup">${logoLockup(34)}</span><span class="marketing-brand-mark">${logoMark(34)}</span></a>
       <nav class="marketing-nav" aria-label="Main navigation">
         <button class="marketing-link" data-act="lp-scroll" data-target="lp-features">Asset allocation</button>
         <button class="marketing-link" data-act="lp-scroll" data-target="lp-simulations">Simulators</button>
@@ -4269,7 +4299,7 @@ function renderMarketingLanding() {
 
 function renderHighlights() {
   const hero = `<div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:2px;">
-      ${logoSVG(64)}
+      ${logoMark(64)}
       <h1 style="margin:8px 0 0;">Quartermaster</h1>
       <div class="kicker" style="font-size:12px;">Asset Allocation Tracker</div>
     </div>`;
@@ -4333,7 +4363,7 @@ function renderCheckinEmpty() {
 
   return `<div class="view" style="max-width:900px;margin:0 auto;width:100%;align-items:center;">
     <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:2px;">
-      ${logoSVG(64)}
+      ${logoMark(64)}
       <h1 style="margin:8px 0 0;">Quartermaster</h1>
       <div class="kicker" style="font-size:12px;">Asset Allocation Tracker</div>
       <p class="text-muted" style="margin:8px 0 0;max-width:64ch;">See what you actually own — track your true asset allocation across every account, compare it to a goal, and watch it over time. All in one local file.</p>
@@ -4362,7 +4392,7 @@ function renderCheckinEmpty() {
 
 /* About/Help modal inner content (opened from the logo, §14). */
 function aboutDialogHTML() {
-  return `<div class="dialog-title" style="display:flex;align-items:center;gap:10px;">${logoSVG(24)}Quartermaster <span class="text-muted" style="font-family:var(--font-body);font-weight:400;font-size:13px;">· Asset Allocation Tracker</span></div>
+  return `<div class="dialog-title" style="display:flex;align-items:center;gap:10px;">${logoMark(24)}Quartermaster <span class="text-muted" style="font-family:var(--font-body);font-weight:400;font-size:13px;">· Asset Allocation Tracker</span></div>
     <div style="font-size:13px;line-height:1.6;">
       <p style="margin:0 0 10px;">Quartermaster tracks your true asset allocation across every account, compares it to a goal, plans tax-aware moves, and watches it over time — all in one local file that works fully offline. It's an allocation tool, not a net-worth tracker.</p>
       <p style="margin:0 0 10px;"><strong>index.html</strong> is the app — this page. It never changes and you can hand the same file to a friend.</p>
@@ -5529,7 +5559,7 @@ function driftMoves(snap) {
       if (cls !== o.id || !value || !(Number(value.marketValue) > 0)) return false;
       const acct = accountById(h.accountId);
       if (acct && accountShelter(acct).sheltered) return true;
-      return taxableSaleInfo({ accountId: h.accountId, mv: Number(value.marketValue), costBasis: value.costBasis != null ? Number(value.costBasis) : (h.costBasis != null ? Number(h.costBasis) : null), acquiredDate: h.acquiredDate || null }, snap.date).eligible;
+      return taxableSaleInfo({ accountId: h.accountId, mv: Number(value.marketValue), costBasis: value.costBasis != null ? Number(value.costBasis) : (h.costBasis != null ? Number(h.costBasis) : null), longTermHolding: h.longTermHolding, acquiredDate: h.acquiredDate || null }, snap.date).eligible;
     });
     cands.sort((h1, h2) => {
       const s1 = accountShelter(accountById(h1.accountId)).sheltered ? 0 : 1;
@@ -5560,7 +5590,7 @@ function moveRealizedGain(m, snap) {
   const v = idx[h.id]; if (!v) return null;
   const mv = Number(v.marketValue) || 0;
   const cb = v.costBasis != null ? Number(v.costBasis) : (h.costBasis != null ? Number(h.costBasis) : null);
-  const sale = taxableSaleInfo({ accountId: h.accountId, mv, costBasis: cb, acquiredDate: h.acquiredDate || null }, snap.date);
+  const sale = taxableSaleInfo({ accountId: h.accountId, mv, costBasis: cb, longTermHolding: h.longTermHolding, acquiredDate: h.acquiredDate || null }, snap.date);
   if (!sale.eligible || mv <= 0) return null;
   return Math.max(0, (mv - cb) * (Math.min(X, mv) / mv));
 }
@@ -6859,7 +6889,7 @@ function dialogHTML() {
       <div class="field"><label>Institution (optional)</label><input class="input" id="f-inst" value="${esc(a ? a.institution || '' : '')}" placeholder="e.g. Fidelity"></div>
       <div class="field"><label>What kind of account is this?</label><select class="input" id="f-cat" data-act="acct-cat">${catOpts}</select><span class="text-muted" style="font-size:11px;">Choose its purpose. Quartermaster uses the name and purpose to detect the underlying account and usual tax treatment.</span></div>
       <div id="f-vehicle-auto" class="text-muted" style="display:${!vehicleNeedsInput && inferredVehicle ? 'block' : 'none'};font-size:12px;">Account type detected automatically: <strong>${inferredVehicle ? esc(VEHICLE_LABELS[inferredVehicle]) : ''}</strong></div>
-      <details class="projection-how" ${vehicleNeedsInput ? 'open' : ''} style="margin-top:12px;"><summary>${vehicleNeedsInput ? 'Complete account details' : 'Review account details'}</summary><div style="padding:0 12px 12px;display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;">
+      <details class="projection-how" style="margin-top:12px;"><summary>Additional account details</summary><div style="padding:0 12px 12px;display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;">
         <div class="field" id="f-vehicle-wrap" style="display:${vehicleNeedsInput ? 'block' : 'none'};"><label>Account type</label><select class="input" id="f-vehicle" data-act="acct-vehicle">${vehOpts}</select>
           <span class="text-muted" style="font-size:11px;">Distinguishes a 401(k) ($${lim401} limit) from an IRA ($${limIra}); pick HSA for a health savings account.</span></div>
         <div class="field"><label>Tax treatment</label><select class="input" id="f-tax" data-act="acct-tax">${taxOpts}</select>
@@ -6888,17 +6918,19 @@ function dialogHTML() {
       <div class="dialog-actions"><button class="btn btn-secondary" data-act="close-dialog">Cancel</button><button class="btn btn-primary" data-act="save-child">Add child</button></div>`;
   } else if (d.type === 'holding') {
     const clsOpts = ['<option value="">— auto from ticker —</option>'].concat(TAXONOMY.detail.map(c => `<option value="${c.id}">${esc(c.label)}</option>`)).join('');
+    const holdingAccount = accountById(d.acctId);
+    const longTermField = holdingAccount && !accountShelter(holdingAccount).sheltered ? `<div class="field"><label style="display:flex;align-items:flex-start;gap:9px;cursor:pointer;"><input id="f-long-term" type="checkbox" style="margin-top:3px;flex:none;"><span><strong>Held longer than one year</strong><span class="text-muted" style="display:block;font-size:11px;font-weight:400;margin-top:3px;">Check only when this holding qualifies for long-term capital-gains treatment. Quartermaster requires this confirmation and cost basis before showing an illustrative taxable-sale scenario.</span></span></label></div>` : '';
     inner = `<div class="dialog-title">Add holding</div>
       <div class="dialog-body">Type a ticker and value. We'll classify common tickers automatically; pick a class only if asked.</div>
       <div style="display:flex;gap:12px;">
-        <div class="field" style="flex:1;"><label>Ticker</label><input class="input" id="f-ticker" data-act="holding-ticker" autocomplete="off" autocapitalize="characters" placeholder="e.g. VOO, BTC, CASH"></div>
+        <div class="field" style="flex:1;"><label>Ticker</label><input class="input" id="f-ticker" data-act="holding-ticker" autocomplete="off" autocapitalize="characters" spellcheck="false" style="text-transform:uppercase;" placeholder="e.g. VOO, BTC, CASH"></div>
         <div class="field" style="flex:1;"><label>Name (optional)</label><input class="input" id="f-hname" placeholder="e.g. Vanguard S&amp;P 500"></div>
       </div>
       <div style="display:flex;gap:12px;">
         <div class="field" style="flex:1;"><label>Current value</label><input class="input tnum" id="f-val" inputmode="decimal" placeholder="0"></div>
         <div class="field" style="flex:1;"><label>Cost basis (optional)</label><input class="input tnum" id="f-basis" inputmode="decimal" placeholder="—"></div>
       </div>
-      <div class="field"><label>Purchase date (optional)</label><input class="input" id="f-acquired" type="date"><span class="text-muted" style="font-size:11px;">Used with cost basis only to evaluate whether an automated taxable-sale scenario is long-term. Leave either field blank and Quartermaster will not suggest selling this holding in taxable.</span></div>
+      ${longTermField}
       <div class="field classification-field" id="holding-class-field"><label>Asset class</label><select class="input" id="f-cls" data-act="holding-class" aria-describedby="f-cls-help" disabled>${clsOpts}</select>
         <span class="text-muted classification-help" id="f-cls-help" style="font-size:11px;">Enter a ticker and Quartermaster will classify it when possible.</span></div>
       <div class="dialog-actions"><button class="btn btn-secondary" data-act="close-dialog">Cancel</button><button class="btn btn-primary" data-act="save-holding" data-account="${esc(d.acctId)}">Add holding</button></div>`;
@@ -6982,12 +7014,13 @@ function dialogHTML() {
 let _toastTimer = null;
 function showFieldError(id, message) {
   const field = document.getElementById(id); if (!field) { toast(message); return false; }
+  const details = field.closest && field.closest('details'); if (details) details.open = true;
   field.setAttribute('aria-invalid', 'true');
   let error = document.getElementById(id + '-error');
   if (!error) { error = document.createElement('span'); error.id = id + '-error'; error.className = 'field-error'; field.insertAdjacentElement('afterend', error); }
   error.textContent = message;
   const described = new Set((field.getAttribute('aria-describedby') || '').split(/\s+/).filter(Boolean)); described.add(error.id);
-  field.setAttribute('aria-describedby', Array.from(described).join(' ')); field.focus();
+  field.setAttribute('aria-describedby', Array.from(described).join(' ')); field.focus(); toast(message);
   return false;
 }
 function clearFieldError(field) {
@@ -7090,6 +7123,7 @@ function syncHoldingClassField() {
   const help = document.getElementById('f-cls-help');
   if (!ticker || !select || !field || !help) return;
   const key = ticker.value.trim().toUpperCase();
+  ticker.value = key;
   const inferred = key ? classifyTicker(key, portfolio.tickerMap) : null;
   if (!key) {
     select.value = '';
@@ -7605,7 +7639,8 @@ function onInput(e) {
   if (a === 'setup-name') { portfolio.meta.name = t.value; markDirty(); return; }
   if (a === 'setup-goal-value') { ui.setupGoal.targets[ds.class] = t.value === '' ? 0 : Number(t.value); markDirty(); const total = document.getElementById('setup-goal-total'); if (total) total.textContent = `Total: ${setupGoalTotal()}% · targets must add up to 100%.`; return; }
   if (a === 'acct-name') { syncAccountVehicleField(); return; }
-  if (a === 'holding-ticker') { syncHoldingClassField(); return; }
+  if (a === 'holding-ticker') { t.value = t.value.toUpperCase(); syncHoldingClassField(); return; }
+  if (a === 'plan-sell' || a === 'plan-buy') { t.value = t.value.toUpperCase(); return; }
   // check-in fields — mutate draft WITHOUT re-render (preserve focus); recompute totals lazily
   if (a === 'ci-val')   { ui.checkin.values[ds.hid] = ui.checkin.values[ds.hid] || {}; ui.checkin.values[ds.hid].marketValue = t.value; updateCheckinTotals(); updateBasisFlag(ds.hid); }
   else if (a === 'ci-basis') { ui.checkin.values[ds.hid] = ui.checkin.values[ds.hid] || {}; ui.checkin.values[ds.hid].costBasis = t.value; (ui.checkin.basisSet = ui.checkin.basisSet || {})[ds.hid] = true; updateBasisFlag(ds.hid); }
@@ -7835,14 +7870,14 @@ function saveInlineChildFromAccountDialog() {
   toast(`${child.label} added and selected`);
 }
 function saveHoldingFromDialog(acctId) {
-  const ticker = document.getElementById('f-ticker').value.trim();
+  const ticker = document.getElementById('f-ticker').value.trim().toUpperCase();
   if (!ticker) return showFieldError('f-ticker', 'Enter a ticker or cash label.');
   const name = document.getElementById('f-hname').value.trim() || undefined;
   const classField = document.getElementById('f-cls');
   let cls = classField.value;
   const val = parseNum(document.getElementById('f-val').value);
   const basis = parseNum(document.getElementById('f-basis').value);
-  const acquiredDate = document.getElementById('f-acquired').value || undefined;
+  const longTermField = document.getElementById('f-long-term');
   if (document.getElementById('f-val').value.trim() && (val == null || val < 0)) return showFieldError('f-val', 'Enter a non-negative value or leave it blank.');
   if (document.getElementById('f-basis').value.trim() && (basis == null || basis < 0)) return showFieldError('f-basis', 'Enter a non-negative cost basis or leave it blank.');
   if (!cls) cls = classifyTicker(ticker, portfolio.tickerMap);
@@ -7850,7 +7885,7 @@ function saveHoldingFromDialog(acctId) {
   if (!classField.disabled && classField.value) portfolio.tickerMap[ticker.toUpperCase()] = cls; // remember explicit pick
   const h = { id: uid('hold'), accountId: acctId, ticker, name, assetClass: cls, status: 'active' };
   if (basis != null) h.costBasis = basis;
-  if (acquiredDate) h.acquiredDate = acquiredDate;
+  if (longTermField) h.longTermHolding = !!longTermField.checked;
   portfolio.holdings.push(h);
   if (ui.checkin) { ui.checkin.values[h.id] = { marketValue: val != null ? String(val) : '', costBasis: basis != null ? String(basis) : '' }; checkinDraftDirty = true; }
   markDirty(); closeDialog();

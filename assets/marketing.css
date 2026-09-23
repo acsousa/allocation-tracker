@@ -33,8 +33,10 @@ a:focus-visible,button:focus-visible { outline:3px solid var(--teal);outline-off
 .skip:focus { top:12px; }
 .marketing-page { width:100%;max-width:1472px;margin:0 auto;background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:0 1px 2px #1518230a,0 20px 38px -24px #15182380;overflow:hidden; }
 .marketing-header { position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:14px 56px;border-bottom:1px solid var(--line-soft);background:rgba(255,255,255,.96);backdrop-filter:blur(10px); }
-.marketing-brand { display:flex;align-items:center;gap:12px;color:var(--ink);text-decoration:none;font-family:"Barlow Condensed",system-ui,sans-serif;font-size:22px;font-weight:700;letter-spacing:.08em; }
-.marketing-logo { flex:none;display:block; }
+.marketing-brand { display:flex;align-items:center;color:var(--ink);text-decoration:none; }
+.marketing-brand-art { display:inline-flex;align-items:center;flex:none; }
+.marketing-brand-lockup { display:block;width:auto;height:34px; }
+.marketing-brand-mark { display:none;width:34px;height:34px;object-fit:contain; }
 .marketing-nav { display:flex;align-items:center;gap:28px; }
 .marketing-nav .marketing-link { min-height:44px;padding:10px 0;border:0;background:none;color:var(--muted);font:inherit;font-size:15px;font-weight:400;text-decoration:none;cursor:pointer; }
 .marketing-nav .marketing-link:visited { color:var(--muted); }
@@ -185,7 +187,8 @@ a:focus-visible,button:focus-visible { outline:3px solid var(--teal);outline-off
 @media(max-width:700px) {
   body { padding:12px 12px 32px; }
   .marketing-header { padding:10px 18px;flex-wrap:nowrap; }
-  .marketing-brand span { display:none; }
+  .marketing-brand-lockup { display:none; }
+  .marketing-brand-mark { display:block; }
   .marketing-nav { width:auto;margin-left:auto;display:flex;grid-template-columns:none;gap:8px;flex-wrap:nowrap; }
   .marketing-nav .marketing-link { display:none; }
   .marketing-open { white-space:nowrap;padding-inline:20px; }

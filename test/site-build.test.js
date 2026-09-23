@@ -42,14 +42,20 @@ try {
     vm.runInNewContext(alias.match(/<script>([\s\S]*?)<\/script>/)[1], {URL, location});
     assert.equal(destination, 'https://example.com/app/?preview=1#start');
   });
-  check('hosted pages include the deployable favicon and offline copy embeds its icon', () => {
-    assert.match(fs.readFileSync(path.join(tmp, 'favicon.svg'), 'utf8'), /<svg/);
+  check('hosted pages include the official brand assets and offline copy embeds them', () => {
+    for (const name of ['quartermaster-mark.png', 'quartermaster-mark-dark.png', 'quartermaster-lockup.png', 'quartermaster-lockup-dark.png']) {
+      const asset = fs.readFileSync(path.join(tmp, 'assets', name));
+      assert.equal(asset.subarray(1, 4).toString(), 'PNG');
+    }
     for (const name of ['index.html', 'app/index.html', 'pricing.html', 'privacy.html']) {
       const html = fs.readFileSync(path.join(tmp, name), 'utf8');
       assert.equal((html.match(/rel="icon"/g) || []).length, 1);
-      assert.match(html, /href="\/?favicon.svg"/);
+      assert.match(html, /href="\/assets\/quartermaster-mark.png"/);
     }
-    assert.match(fs.readFileSync(path.join(tmp, 'downloads/quartermaster.html'), 'utf8'), /href="data:image\/svg\+xml,/);
+    const offline = fs.readFileSync(path.join(tmp, 'downloads/quartermaster.html'), 'utf8');
+    assert.match(offline, /href="data:image\/png;base64,/);
+    assert.match(offline, /class="qm-logo-dark" src="data:image\/png;base64,/);
+    assert.ok(!offline.includes('assets/quartermaster-'));
   });
   check('every marketing page has working local navigation', () => {
     for (const name of pages) {
@@ -83,6 +89,8 @@ try {
     for (const html of built) {
       assert.ok(!footer(html).includes('Pricing'));
       assert.match(html, /href="assets\/marketing.css"/);
+      assert.match(header(html), /class="marketing-brand-lockup" src="assets\/quartermaster-lockup.png"/);
+      assert.match(header(html), /class="marketing-brand-mark" src="assets\/quartermaster-mark.png"/);
     }
   });
   check('landing has a local start dialog, reduced-motion support, and concise trust cards', () => {
@@ -126,7 +134,8 @@ try {
     assert.ok(!app.includes('app-entry-signal app-entry-signal-one'));
     assert.match(app, /@keyframes app-entry-float/);
     assert.match(app, /@keyframes app-entry-orbit-spin/);
-    assert.match(app, /logoSVG\(132\)/);
+    assert.match(app, /logoMark\(132\)/);
+    assert.match(app, /logoLockup\(28\)/);
     assert.match(app, /\.filebar \.brand,[^}]*color:var\(--color-text\);text-decoration:none/);
     assert.match(app, /isHostedAppEntry\(\) && !window\.location\.hash/);
     assert.match(app, /case 'openfile':\s+body = renderOpenFile\(\)/);
