@@ -56,6 +56,9 @@ try {
     assert.match(offline, /href="data:image\/png;base64,/);
     assert.match(offline, /class="qm-logo-dark" src="data:image\/png;base64,/);
     assert.ok(!offline.includes('assets/quartermaster-'));
+    for (const name of ['Barlow-Regular.ttf', 'Barlow-SemiBold.ttf', 'BarlowCondensed-SemiBold.ttf', 'BarlowCondensed-Bold.ttf', 'IBMPlexMono-Regular.ttf', 'IBMPlexMono-Medium.ttf', 'OFL-Barlow.txt', 'OFL-IBMPlexMono.txt']) {
+      assert.ok(fs.statSync(path.join(tmp, 'assets', 'fonts', name)).size > 100, `font asset ${name}`);
+    }
   });
   check('every marketing page has working local navigation', () => {
     for (const name of pages) {
@@ -105,16 +108,17 @@ try {
     assert.match(html, /class="hero-field"/);
     assert.match(html, /Built for US investors with multiple accounts/);
     for (const id of ['lp-whole', 'lp-tax', 'lp-goals', 'lp-decisions', 'lp-privacy']) assert.match(html, new RegExp(`id="${id}"`));
-    assert.match(html, /class="story-rail"/);
+    assert.ok(!html.includes('story-rail'));
     assert.match(html, /data-focus-ring="1"/);
     assert.match(html, /href="\/app\/#demo\/dashboard"/);
     assert.match(html, /href="\/app\/#demo\/review\/tax"/);
     assert.match(html, /href="\/app\/#demo\/outlook"/);
     assert.match(html, /\$265,000/);
-    assert.match(html, /\$360 \/ year/);
+    assert.match(html, /\$360<span>\/ year<\/span>/);
     assert.match(html, /\$1\.95M/);
     assert.match(html, /<strong>87%<\/strong>/);
     assert.ok(!html.includes('6 accounts'));
+    assert.ok(!/guided demo/i.test(html));
     assert.match(html, /id="start-dialog" hidden/);
     assert.match(html, /href="\/app\/#setup">Build my portfolio/);
     assert.match(html, /href="\/app\/#open" data-open-portfolio/);
@@ -125,9 +129,12 @@ try {
     assert.match(interactions, /new IntersectionObserver/);
     assert.match(interactions, /rootMargin: '-45% 0px -50% 0px'/);
     assert.match(interactions, /lockedUntil = Date\.now\(\) \+ 4000/);
+    assert.match(interactions, /values\.forEach\(\(item, index\) => item\.style\.setProperty\('--value-i'/);
     assert.match(interactions, /sessionStorage\.setItem\(portfolioHandoffKey/);
     assert.match(interactions, /input\.accept = '\.json,application\/json'/);
     assert.match(html, /No affiliate commissions · no products to sell · no custody or trading/);
+    assert.match(css, /@font-face \{ font-family:"Barlow"/);
+    assert.match(css, /\.story-heading \{ max-width:1180px;[^}]*text-align:left/);
   });
   check('dedicated app entry stays simple with one graphic and three actions', () => {
     const app = fs.readFileSync(path.join(tmp, 'app', 'index.html'), 'utf8');

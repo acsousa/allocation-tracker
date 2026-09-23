@@ -54,6 +54,17 @@ function buildSite(output = path.join(root, 'dist'), token = process.env.CF_WEB_
     'quartermaster-lockup-dark.png',
   ];
   for (const name of productImages) write('assets/' + name, fs.readFileSync(path.join(root, 'assets', name)));
+  const marketingFonts = [
+    'Barlow-Regular.ttf',
+    'Barlow-SemiBold.ttf',
+    'BarlowCondensed-SemiBold.ttf',
+    'BarlowCondensed-Bold.ttf',
+    'IBMPlexMono-Regular.ttf',
+    'IBMPlexMono-Medium.ttf',
+    'OFL-Barlow.txt',
+    'OFL-IBMPlexMono.txt',
+  ];
+  for (const name of marketingFonts) write('assets/fonts/' + name, fs.readFileSync(path.join(root, 'assets', 'fonts', name)));
   const hostedIcons = html => html.replace(/<link rel="icon"[^>]*>/g, '<link rel="icon" type="image/png" href="/assets/quartermaster-mark.png">');
   for (const [name, current] of publicPages) {
     const html = applyMarketingShell(fs.readFileSync(path.join(root, name), 'utf8'), current);

@@ -40,7 +40,7 @@
       <p class="landing-lead">See your complete investment allocation, uncover potential tax drag across account types, and model the goals your portfolio needs to fund.</p>
       <div class="landing-actions">
         <a class="landing-action primary" data-analytics-event="start_here_click" href="#start">Start here</a>
-        <a class="landing-action" data-analytics-event="demo_start" href="/app/#demo">Explore a guided demo</a>
+        <a class="landing-action" data-analytics-event="demo_start" href="/app/#demo">Explore the demo profile</a>
       </div>
       <p class="landing-local"><span aria-hidden="true"></span>No account linking. Your portfolio data stays in a file you control. <a href="/privacy.html">Privacy</a></p>
     </div>
@@ -56,6 +56,7 @@
     <header class="story-heading" data-reveal>
       <div class="story-heading-line"><div class="eyebrow">01 · See the whole picture</div><span class="sample-chip">Illustrative household · sample data</span></div>
       <h2>One portfolio—<em>not disconnected account views.</em></h2>
+      <p>Bring every investment account into one household allocation, then compare the complete picture with your target.</p>
     </header>
     <div class="whole-layout">
       <div class="app-window" data-reveal>
@@ -68,7 +69,7 @@
       </div>
       <div class="whole-callouts" data-reveal-group>
         <article class="metric-callout" data-reveal data-focus-target="1"><span>1</span><small>Total portfolio value</small><strong>$265,000</strong><p>Tracked investments across the household, excluding the 529 goal.</p></article>
-        <article class="metric-callout amber" data-reveal data-focus-target="2"><span>2</span><small>Drift from target</small><strong>+16.1 / −10.5 pts</strong><p>Stocks over goal, bonds under—both outside the ±5-point band.</p></article>
+        <article class="metric-callout drift-callout" data-reveal data-focus-target="2"><span>2</span><small>Drift from target</small><div class="drift-values"><strong>Stocks: +16.1 pts</strong><strong>Bonds: −10.5 pts</strong></div><p>Both are outside the household’s ±5-point review band.</p></article>
         <a class="text-link" href="/app/#demo/dashboard">Explore this dashboard <span aria-hidden="true">→</span></a>
       </div>
     </div>
@@ -76,19 +77,21 @@
 
   <section id="lp-tax" class="story-section tax-section" data-story="tax" data-story-finding="FXNAX in taxable · about $360 of modeled annual tax drag">
     <header class="story-heading" data-reveal>
-      <div class="eyebrow">02 · Find potential tax drag</div>
+      <div class="story-heading-line"><div class="eyebrow">02 · Find potential tax drag</div><span class="sample-chip dark-chip">Same illustrative household</span></div>
       <h2>See where account placement <em>may be costing you.</em></h2>
+      <p>Follow one holding from the investment, to its account, to the modeled annual tax effect.</p>
     </header>
     <div class="tax-flow" data-reveal>
-      <article><small>Holding</small><strong>FXNAX</strong><span>Fidelity U.S. Bond Index</span><b>$20,000</b></article>
+      <article class="tax-flow-card holding-card"><small>Holding</small><strong>FXNAX</strong><span>Fidelity U.S. Bond Index · $20,000</span></article>
       <i class="tax-connector connector-one" aria-hidden="true"></i>
-      <article><small>Sits in</small><strong>Taxable</strong><span>Schwab brokerage</span></article>
+      <article class="tax-flow-card account-card"><small>Sits in</small><strong>Taxable</strong><span>Schwab brokerage · interest taxed yearly</span></article>
       <i class="tax-connector connector-two" aria-hidden="true"></i>
-      <article class="tax-cost"><small>Modeled tax drag</small><strong>$360 / year</strong><span>Single · $200K–$400K income · Massachusetts</span></article>
+      <article class="tax-flow-card tax-cost"><small>Modeled tax drag</small><strong>$360<span>/ year</span></strong><p>Not the largest holding—the costliest placement in this sample.</p></article>
     </div>
-    <div class="tax-result" data-reveal><div><small>Potential improvement</small><strong>Swap equal exposures between accounts</strong><p>Hold the bond exposure in the 401(k) and the equity exposure in taxable.</p></div><div><b>about $298 / year</b><span>modeled reduction</span></div></div>
-    <div class="tax-actions" data-reveal><a class="landing-action tax-primary" href="#start">Start here</a><a class="tax-link" href="/app/#demo/review/tax">See the asset-location analysis →</a></div>
-    <p class="fine-print">Illustrative estimate based on the tax assumptions shown in the app. Tax effects are simplified and may omit future taxes, plan restrictions, trading costs, and changes in yields or law.</p>
+    <div class="tax-lower" data-reveal>
+      <div class="tax-result"><span class="tax-result-arrow" aria-hidden="true">↳</span><div><small>May be more tax-efficient after an exposure swap</small><strong>Traditional 401(k) <b>· about $298/year modeled reduction</b></strong><p>Hold the bond exposure in the 401(k) and the equity exposure in taxable. Future 401(k) withdrawals may be taxable.</p></div></div>
+      <div class="tax-next"><div class="tax-actions"><a class="landing-action tax-primary" href="#start">Start here</a><a class="tax-link" href="/app/#demo/review/tax">See the asset-location analysis →</a></div><p class="fine-print">Single · $200K–$400K income · Massachusetts. Illustrative estimate based on the assumptions shown in the app. Tax effects are simplified and may omit future taxes, plan restrictions, trading costs, and changes in yields or law.</p></div>
+    </div>
   </section>
 
   <section id="lp-goals" class="story-section goals-section" data-story="goals" data-story-finding="86% retirement withdrawal confidence · 87% of paths fully fund college">
@@ -135,16 +138,18 @@
   </section>
 
   <section id="lp-privacy" class="privacy-section">
-    <div class="privacy-copy" data-reveal>
-      <div class="eyebrow">Private by design</div>
-      <h2>Your portfolio stays yours.</h2>
-      <p>Quartermaster doesn’t connect to your financial accounts or upload your holdings. Your work stays in a private portfolio file that you save and reopen.</p>
-      <details><summary>How saving works</summary><ul><li>Unsaved work is shown clearly.</li><li>You get a warning before leaving.</li><li>The same file reopens on desktop or mobile.</li></ul></details>
-      <p class="privacy-proof">No affiliate commissions · no products to sell · no custody or trading</p>
-    </div>
-    <div class="privacy-visuals" data-reveal>
-      <figure class="history-detail"><span>Unsaved</span><img src="assets/quartermaster-history-detail.png" alt="Quartermaster history detail showing prior check-ins in the illustrative portfolio"></figure>
-      <figure class="phone-detail"><img src="assets/quartermaster-phone.png" alt="Quartermaster shown on a phone"></figure>
+    <div class="privacy-inner">
+      <div class="privacy-copy" data-reveal>
+        <div class="eyebrow">Private by design</div>
+        <h2>Your portfolio stays yours.</h2>
+        <p>Quartermaster doesn’t connect to your financial accounts or upload your holdings. Your work stays in a private portfolio file that you save and reopen.</p>
+        <details><summary>How saving works</summary><ul><li>Unsaved work is shown clearly.</li><li>You get a warning before leaving.</li><li>The same file reopens on desktop or mobile.</li></ul></details>
+        <p class="privacy-proof">No affiliate commissions · no products to sell · no custody or trading</p>
+      </div>
+      <div class="privacy-visuals" data-reveal>
+        <figure class="history-detail"><span>Unsaved</span><img src="assets/quartermaster-history-detail.png" alt="Quartermaster history detail showing prior check-ins in the illustrative portfolio"></figure>
+        <figure class="phone-detail"><img src="assets/quartermaster-phone.png" alt="Quartermaster shown on a phone"></figure>
+      </div>
     </div>
   </section>
 
@@ -153,10 +158,6 @@
     <div class="closing-actions" data-reveal><a class="landing-action" href="#start">Start here</a><a class="landing-action secondary-inverse" href="/app/#demo">Explore this exact portfolio</a></div>
   </section>
 </main>
-<nav class="story-rail" aria-label="Illustrative portfolio story" hidden>
-  <div class="story-dots"><a href="#lp-whole" data-story-dot="whole" aria-label="See the whole picture"></a><a href="#lp-tax" data-story-dot="tax" aria-label="Find potential tax drag"></a><a href="#lp-goals" data-story-dot="goals" aria-label="Model your goals"></a><a href="#lp-decisions" data-story-dot="decisions" aria-label="Make better decisions"></a></div>
-  <span>Illustrative household · sample data</span><b data-story-text></b>
-</nav>
 <div class="marketing-dialog-backdrop" id="start-dialog" hidden>
   <section class="marketing-dialog" role="dialog" aria-modal="true" aria-labelledby="start-dialog-title" tabindex="-1">
     <button class="marketing-dialog-close" type="button" data-close-start aria-label="Close">×</button>
@@ -170,7 +171,7 @@
     <div class="start-dialog-warning protected"><strong>Your work is protected.</strong> You’ll always see when changes aren’t saved, and you’ll be warned before leaving.</div>
     <div class="marketing-dialog-actions">
       <a class="landing-action primary" href="/app/#setup">Build my portfolio</a>
-      <a class="landing-action" href="/app/#demo">Explore the guided demo</a>
+      <a class="landing-action" href="/app/#demo">Explore the demo profile</a>
       <a class="marketing-dialog-open-file" href="/app/#open" data-open-portfolio>Open an existing portfolio file</a>
     </div>
   </section>

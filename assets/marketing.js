@@ -115,8 +115,6 @@
   /* ---------- Landing story navigation ---------- */
   function initStoryNavigation() {
     const sections = Array.from(document.querySelectorAll('[data-story]'));
-    const rail = document.querySelector('.story-rail');
-    const railText = rail?.querySelector('[data-story-text]');
     if (!sections.length || !('IntersectionObserver' in window)) return;
 
     let active = null;
@@ -128,13 +126,7 @@
         if (match) link.setAttribute('aria-current', 'location');
         else if (link.getAttribute('aria-current') === 'location') link.removeAttribute('aria-current');
       });
-      rail?.querySelectorAll('[data-story-dot]').forEach(dot => {
-        if (section && dot.dataset.storyDot === section.dataset.story) dot.setAttribute('aria-current', 'step');
-        else dot.removeAttribute('aria-current');
-      });
       active = section;
-      if (rail) rail.hidden = !section;
-      if (railText) railText.textContent = section?.dataset.storyFinding || '';
     };
 
     const observer = new IntersectionObserver(entries => {
@@ -143,6 +135,13 @@
       else if (entries.some(entry => entry.target === active && !entry.isIntersecting)) setActive(null);
     }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
     sections.forEach(section => observer.observe(section));
+  }
+
+  function initValueStrip() {
+    const values = Array.from(document.querySelectorAll('.value-signpost'));
+    values.forEach((item, index) => item.style.setProperty('--value-i', String(index)));
+    if (!motionOn()) return;
+    requestAnimationFrame(() => requestAnimationFrame(() => values.forEach(item => item.classList.add('is-in'))));
   }
 
   /* ---------- Whole-portfolio focus rings ---------- */
@@ -254,6 +253,7 @@
 
   initStoryNavigation();
   initFocusRings();
+  initValueStrip();
   if (motionOn()) {
     initReveals();
     initShots();
