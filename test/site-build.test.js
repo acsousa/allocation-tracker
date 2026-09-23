@@ -135,6 +135,8 @@ try {
     assert.match(html, /No affiliate commissions · no products to sell · no custody or trading/);
     assert.match(css, /@font-face \{ font-family:"Barlow"/);
     assert.match(css, /\.story-heading \{ max-width:1180px;[^}]*text-align:left/);
+    assert.match(css, /\.history-detail \{[^}]*z-index:1/);
+    assert.match(css, /\.phone-detail \{[^}]*z-index:2/);
   });
   check('dedicated app entry stays simple with one graphic and three actions', () => {
     const app = fs.readFileSync(path.join(tmp, 'app', 'index.html'), 'utf8');
