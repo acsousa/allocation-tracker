@@ -33,131 +33,144 @@
 <!-- MARKETING_HEADER -->
 <main id="main" class="landing-main">
   <section class="landing-hero">
-    <div class="hero-field" aria-hidden="true">
-      <div class="hero-field-pass"></div>
-      <div class="hero-field-wash"></div>
-    </div>
+    <div class="hero-field" aria-hidden="true"><div class="hero-field-pass"></div><div class="hero-field-wash"></div></div>
     <div class="landing-hero-copy">
-      <div class="landing-trust-pill"><span class="landing-trust-status" aria-hidden="true"><span class="landing-trust-dot"></span></span>Runs on your machine · portfolio data stays in your file</div>
+      <div class="landing-audience"><span aria-hidden="true"></span>Built for US investors with multiple accounts</div>
       <h1>Every account.<br><span class="landing-gradient-title">One real allocation.</span></h1>
-      <p class="landing-lead">Every institution shows you a reported allocation—its own slice, in isolation. Nobody shows you the whole. Quartermaster blends every account you hold into one real allocation, then helps you check it against your target and plan with a complete view.</p>
+      <p class="landing-lead">See your complete investment allocation, uncover potential tax drag across account types, and model the goals your portfolio needs to fund.</p>
       <div class="landing-actions">
-        <a class="landing-action primary" data-analytics-event="start_here_click" href="#start">Start here · free</a>
-        <a class="landing-action" data-analytics-event="demo_start" href="/app/#demo">Explore demo data</a>
+        <a class="landing-action primary" data-analytics-event="start_here_click" href="#start">Start here</a>
+        <a class="landing-action" data-analytics-event="demo_start" href="/app/#demo">Explore a guided demo</a>
       </div>
-      <div class="landing-hero-meta"><span>No account, card, or sign-in</span><span>Holdings stay in your file</span><span>Desktop and phone</span></div>
+      <p class="landing-local"><span aria-hidden="true"></span>No account linking. Your portfolio data stays in a file you control. <a href="/privacy.html">Privacy</a></p>
     </div>
-    <div class="landing-product-stage" aria-label="Quartermaster shown on desktop and mobile">
-      <div class="shot-parallax shot-parallax-desktop" data-parallax="-22">
-        <figure class="landing-desktop-shot" data-shot="desktop"><img src="assets/quartermaster-review.png" alt="Quartermaster dashboard showing a complete household allocation, history, goals, and accounts by purpose using demo data"></figure>
+    <nav class="value-strip" aria-label="What Quartermaster helps you do">
+      <a href="#lp-whole" class="value-signpost signpost-blue"><span class="value-number">01</span><strong>See the whole picture</strong><small>Every brokerage, 401(k), IRA, Roth, and 529 in one allocation.</small></a>
+      <a href="#lp-tax" class="value-signpost signpost-teal"><span class="value-number">02</span><strong>Find potential tax drag</strong><small>See when an investment may sit in a less tax-efficient account.</small></a>
+      <a href="#lp-goals" class="value-signpost signpost-plum"><span class="value-number">03</span><strong>Model your goals</strong><small>Explore retirement and college using your complete portfolio.</small></a>
+      <a href="#lp-decisions" class="value-signpost signpost-gold"><span class="value-number">04</span><strong>Make better decisions</strong><small>Review regularly and record why you made each change.</small></a>
+    </nav>
+  </section>
+
+  <section id="lp-whole" class="story-section whole-section" data-story="whole" data-story-finding="$265,000 across the household · stocks +16.1 points above goal">
+    <header class="story-heading" data-reveal>
+      <div class="story-heading-line"><div class="eyebrow">01 · See the whole picture</div><span class="sample-chip">Illustrative household · sample data</span></div>
+      <h2>One portfolio—<em>not disconnected account views.</em></h2>
+    </header>
+    <div class="whole-layout">
+      <div class="app-window" data-reveal>
+        <div class="window-bar"><i></i><i></i><i></i><span>demo-portfolio.json · sample data</span></div>
+        <div class="focus-stage">
+          <img src="assets/quartermaster-review.png" alt="Quartermaster dashboard for the illustrative portfolio, showing its total value and allocation drift">
+          <span class="focus-ring focus-one is-active" data-focus-ring="1"><b>1</b></span>
+          <span class="focus-ring focus-two" data-focus-ring="2"><b>2</b></span>
+        </div>
       </div>
-      <div class="shot-parallax shot-parallax-phone" data-parallax="-58">
-        <figure class="landing-phone-shot" data-shot="phone"><img src="assets/quartermaster-history.png" alt="Quartermaster mobile dashboard showing allocation and account categories using demo data"></figure>
+      <div class="whole-callouts" data-reveal-group>
+        <article class="metric-callout" data-reveal data-focus-target="1"><span>1</span><small>Total portfolio value</small><strong>$265,000</strong><p>Tracked investments across the household, excluding the 529 goal.</p></article>
+        <article class="metric-callout amber" data-reveal data-focus-target="2"><span>2</span><small>Drift from target</small><strong>+16.1 / −10.5 pts</strong><p>Stocks over goal, bonds under—both outside the ±5-point band.</p></article>
+        <a class="text-link" href="/app/#demo/dashboard">Explore this dashboard <span aria-hidden="true">→</span></a>
       </div>
     </div>
   </section>
 
-  <section id="lp-features" class="landing-section gap-section">
-    <div data-reveal><div class="eyebrow" style="--eyebrow:#45bfae">The gap</div></div>
-    <h2 data-reveal>Most people optimize one account at a time. Your money doesn’t work that way.</h2>
-    <p class="landing-section-copy" data-reveal>Each institution shows one part of the picture. Quartermaster brings the accounts together into your real allocation, compares it to your target, and estimates how the location of each holding affects annual taxes.</p>
-    <div class="gap-grid" data-reveal-group>
-      <article class="gap-card" data-reveal style="--card-color:#a6b0b9"><div class="gap-card-label">Your accounts</div><div class="gap-card-value">6</div><div class="gap-card-copy">separate views of individual accounts</div></article>
-      <article class="gap-card" data-reveal style="--card-color:#57acdc"><div class="gap-card-label">Your real allocation</div><div class="gap-card-value">70.6%</div><div class="gap-card-copy">equity across all six, against a target of 82.0%</div></article>
-      <article class="gap-card" data-reveal style="--card-color:#e5ae4c"><div class="gap-card-label">Sitting in the wrong account</div><div class="gap-card-value">$29,900</div><div class="gap-card-copy">one bond fund, costing real money every year</div></article>
-      <article class="gap-card" data-reveal style="--card-color:#e3826f"><div class="gap-card-label">Illustrative annual tax drag</div><div class="gap-card-value">$4,430</div><div class="gap-card-copy">example only; actual tax effects depend on your inputs</div></article>
+  <section id="lp-tax" class="story-section tax-section" data-story="tax" data-story-finding="FXNAX in taxable · about $360 of modeled annual tax drag">
+    <header class="story-heading" data-reveal>
+      <div class="eyebrow">02 · Find potential tax drag</div>
+      <h2>See where account placement <em>may be costing you.</em></h2>
+    </header>
+    <div class="tax-flow" data-reveal>
+      <article><small>Holding</small><strong>FXNAX</strong><span>Fidelity U.S. Bond Index</span><b>$20,000</b></article>
+      <i class="tax-connector connector-one" aria-hidden="true"></i>
+      <article><small>Sits in</small><strong>Taxable</strong><span>Schwab brokerage</span></article>
+      <i class="tax-connector connector-two" aria-hidden="true"></i>
+      <article class="tax-cost"><small>Modeled tax drag</small><strong>$360 / year</strong><span>Single · $200K–$400K income · Massachusetts</span></article>
     </div>
+    <div class="tax-result" data-reveal><div><small>Potential improvement</small><strong>Swap equal exposures between accounts</strong><p>Hold the bond exposure in the 401(k) and the equity exposure in taxable.</p></div><div><b>about $298 / year</b><span>modeled reduction</span></div></div>
+    <div class="tax-actions" data-reveal><a class="landing-action tax-primary" href="#start">Start here</a><a class="tax-link" href="/app/#demo/review/tax">See the asset-location analysis →</a></div>
+    <p class="fine-print">Illustrative estimate based on the tax assumptions shown in the app. Tax effects are simplified and may omit future taxes, plan restrictions, trading costs, and changes in yields or law.</p>
   </section>
 
-  <section id="lp-location" class="landing-section location-section">
-    <div>
-      <div data-reveal><div class="eyebrow" style="--eyebrow:var(--plum)">Asset location</div></div>
-      <h2 data-reveal>Your best fund can be in your worst account.</h2>
-      <p class="landing-section-copy" data-reveal>Bonds in a taxable account and international in a Roth are both defensible in isolation. Together they can cost you more than the expense ratios you worked hard to optimize. Quartermaster prices the difference rather than quoting the rule of thumb.</p>
-      <div class="location-note" data-reveal>In this illustrative example, FXNAX in taxable creates about <strong>$740 a year</strong> of estimated tax drag. VTEB in taxable and VNQ in the Roth show no estimated drag, while VXUS may provide roughly <strong>$310 a year</strong> of foreign-tax-credit value. The app highlights the estimated cost—and where the answer remains unknown.</div>
+  <section id="lp-goals" class="story-section goals-section" data-story="goals" data-story-finding="86% retirement withdrawal confidence · 87% of paths fully fund college">
+    <header class="story-heading" data-reveal>
+      <div class="eyebrow">03 · Model your goals</div>
+      <h2>See what your portfolio <em>could support.</em></h2>
+      <p>Change the assumptions. Run the simulation. See a range of possible outcomes.</p>
+    </header>
+    <div class="goal-cards" data-reveal-group>
+      <article class="goal-card retirement-goal" data-reveal>
+        <div class="goal-card-top"><span>Retirement</span><small>10,000 simulated paths</small></div>
+        <div class="goal-metrics"><div><small>Median at retirement</small><strong>$1.95M</strong></div><div><small>Withdrawal confidence</small><strong>86%</strong></div></div>
+        <div class="range-bar" aria-label="Projected retirement balance range: 10th percentile $1.11 million; median $1.95 million"><span class="range-fill"></span><i class="range-low"></i><i class="range-median"></i></div>
+        <div class="range-labels"><span>10th percentile<br><b>$1.11M</b></span><span>Median<br><b>$1.95M</b></span></div>
+        <p>$90K annual after-tax spending · $3,500 monthly Social Security at 67</p>
+      </article>
+      <article class="goal-card college-goal" data-reveal>
+        <div class="goal-card-top"><span>College</span><small>10,000 simulated paths</small></div>
+        <div class="goal-metrics"><div><small>Fully funded</small><strong>87%</strong></div><div><small>Average funded</small><strong>3.9 of 4 years</strong></div></div>
+        <div class="college-bar" aria-label="College savings starts at $15,000 and is modeled with $9,000 annual contributions toward four years at $25,000 each"><span></span><i></i></div>
+        <p>$15K today · $9K annual contributions · $25K per college year</p>
+      </article>
     </div>
-    <div class="location-table" role="region" aria-label="Illustrative asset-location table" tabindex="0" data-reveal-group>
-      <div class="location-row head" data-reveal><span>Holding</span><span>Sits in</span><span class="right">Should be</span><span class="right">Cost / yr</span></div>
-      <div class="location-row" data-reveal style="--row-color:var(--danger)"><strong>FXNAX</strong><span>Taxable brokerage</span><span class="right">401(k)</span><span class="right value">−$740 / yr</span></div>
-      <div class="location-row" data-reveal style="--row-color:var(--teal)"><strong>VTEB</strong><span>Taxable brokerage</span><span class="right">Taxable</span><span class="right value">$0</span></div>
-      <div class="location-row" data-reveal style="--row-color:var(--teal)"><strong>VNQ</strong><span>Roth IRA</span><span class="right">Roth IRA</span><span class="right value">$0</span></div>
-      <div class="location-row" data-reveal style="--row-color:var(--teal)"><strong>VXUS</strong><span>Taxable brokerage</span><span class="right">Taxable</span><span class="right value">+$310 credit</span></div>
-      <div class="location-row" data-reveal><strong>VTTSX</strong><span>529 plan</span><span class="right">—</span><span class="right value">—</span></div>
-      <div class="location-caption" data-reveal>FXNAX is the expensive one, and it is not the one with the largest balance. A dash means the cost is unknown, not zero.</div>
-    </div>
+    <div class="goals-action" data-reveal><a class="landing-action goals-primary" href="/app/#demo/outlook">Explore retirement and college</a><span class="coming-soon"><b>Coming soon</b> General goals—a house, sabbatical, or anything with a date.</span></div>
+    <p class="fine-print">Illustrative sample data and assumptions. Simulations illustrate possibilities, not forecasts or guarantees. Not investment, tax, or legal advice.</p>
   </section>
 
-  <section id="lp-ritual" class="landing-section ritual-section">
-    <div data-reveal><div class="eyebrow">The quarterly check-in</div></div>
-    <h2 data-reveal>Four steps, once a quarter, about twenty minutes.</h2>
-    <div class="ritual-grid" data-reveal-group>
-      <article class="ritual-card" data-reveal style="--card-color:var(--blue)"><div class="ritual-number">01</div><h3>Refresh</h3><p>Enter updated balances from all accounts. CSV upload or manual entry.</p></article>
-      <article class="ritual-card" data-reveal style="--card-color:var(--teal)"><div class="ritual-number">02</div><h3>Review</h3><p>Compare the latest check-in with the previous one and with your allocation target.</p></article>
-      <article class="ritual-card" data-reveal style="--card-color:var(--plum)"><div class="ritual-number">03</div><h3>Plan changes</h3><p>Record potential changes, or intentionally choose no action this quarter.</p></article>
-      <article class="ritual-card" data-reveal style="--card-color:var(--gold)"><div class="ritual-number">04</div><h3>Report</h3><p>Save a clear record of the review, assumptions, and decisions.</p></article>
+  <section id="lp-decisions" class="story-section decisions-section" data-story="decisions" data-story-finding="Refresh · review · plan changes · report">
+    <header class="story-heading" data-reveal>
+      <div class="eyebrow">04 · Make better decisions</div>
+      <h2>Make better decisions—<em>and remember why.</em></h2>
+      <p>Return monthly, quarterly, or annually to update values, review drift, document decisions, and preserve a record of your plan.</p>
+    </header>
+    <div class="cadence-steps" data-reveal-group>
+      <div data-reveal><b>01</b><strong>Refresh</strong></div><i aria-hidden="true">→</i>
+      <div data-reveal><b>02</b><strong>Review</strong></div><i aria-hidden="true">→</i>
+      <div data-reveal><b>03</b><strong>Plan changes</strong></div><i aria-hidden="true">→</i>
+      <div data-reveal><b>04</b><strong>Report</strong></div>
     </div>
+    <article class="decision-record" data-reveal>
+      <div class="decision-record-head"><span>Q2 record · May 15, 2026</span><small>Next check-in · August 2026</small></div>
+      <div class="decision-columns"><div><small>Decided</small><p>Direct the next contribution toward underweight bonds.</p></div><div><small>To reconsider</small><p>An allocation-neutral FXNAX/FXAIX location swap after confirming plan availability and tax details.</p></div><div><small>Why</small><p>Stocks are +16.1 percentage points over target and bonds −10.5 points under.</p></div></div>
+    </article>
   </section>
 
-  <section id="lp-simulations" class="outlook-section" aria-labelledby="outlook-title">
-    <div class="outlook-intro">
-      <div>
-        <div data-reveal><div class="eyebrow" style="--eyebrow:var(--plum)">Look ahead · retirement &amp; college</div></div>
-        <h2 id="outlook-title" data-reveal>Today’s allocation.<br>Tomorrow’s possibilities.</h2>
-        <p data-reveal>Your portfolio has a job to do. Explore how it could support the retirement you want and the education you hope to fund—before those milestones arrive.</p>
-      </div>
-      <div class="scenario-prompts" aria-label="Questions you can explore" data-reveal-group>
-        <div class="scenario-prompt" data-reveal>What changes if I retire a few years earlier?</div>
-        <div class="scenario-prompt" data-reveal>How could saving more each year change the outlook?</div>
-        <div class="scenario-prompt" data-reveal style="border-color:var(--teal)">Could this 529 cover the college costs I have in mind?</div>
-      </div>
+  <section id="lp-privacy" class="privacy-section">
+    <div class="privacy-copy" data-reveal>
+      <div class="eyebrow">Private by design</div>
+      <h2>Your portfolio stays yours.</h2>
+      <p>Quartermaster doesn’t connect to your financial accounts or upload your holdings. Your work stays in a private portfolio file that you save and reopen.</p>
+      <details><summary>How saving works</summary><ul><li>Unsaved work is shown clearly.</li><li>You get a warning before leaving.</li><li>The same file reopens on desktop or mobile.</li></ul></details>
+      <p class="privacy-proof">No affiliate commissions · no products to sell · no custody or trading</p>
     </div>
-    <div class="outlook-cards" data-reveal-group>
-      <article class="outlook-card" data-reveal style="--card-color:var(--plum)"><div class="eyebrow" style="--eyebrow:var(--plum)">01 · Retirement</div><h3>Put your next chapter in perspective.</h3><p>Adjust retirement age, annual spending, and contributions. Run simulated market paths to see a range of possible balances and how often your savings cover your spending under the assumptions you choose.</p><a class="landing-action primary" href="/app/#demo-retire">Explore retirement with demo data</a></article>
-      <article class="outlook-card" data-reveal style="--card-color:var(--teal)"><div class="eyebrow" style="--eyebrow:var(--teal)">02 · 529 funding</div><h3>Give the college plan a clearer shape.</h3><p>Set college costs, starting age, years of study, and yearly contributions for each child. Explore how a 529’s age-based investment mix could grow, then fund education over time.</p><a class="landing-action" href="/app/#demo-college">Explore college with demo data</a></article>
-    </div>
-    <p class="simulation-note" data-reveal>Simulations illustrate possibilities, not forecasts or guarantees; tax and withdrawal rules are simplified. Both tools are available in Outlook in the free introductory release.</p>
-  </section>
-
-  <section id="lp-trust" class="landing-section trust-section">
-    <div>
-      <div data-reveal><div class="eyebrow" style="--eyebrow:var(--gold)">How we’re different</div></div>
-      <h2 data-reveal>Built to help you think—not to sell you something.</h2>
-      <p class="landing-section-copy" data-reveal>Quartermaster has no affiliate commissions, financial products, or portfolio-data marketplace. The introductory release keeps your portfolio in a file you control.</p>
-      <div class="trust-list" data-reveal-group>
-        <div class="trust-item" data-reveal style="--card-color:var(--gold);--card-tint:#faf3e6">No affiliate compensation</div>
-        <div class="trust-item" data-reveal style="--card-color:var(--blue);--card-tint:#eaf3f9">No financial products to sell</div>
-        <div class="trust-item" data-reveal style="--card-color:var(--teal);--card-tint:#e7f3f0">No sale of personal or portfolio data</div>
-        <div class="trust-item" data-reveal style="--card-color:var(--plum);--card-tint:#efecf8">No custody or trading</div>
-      </div>
-    </div>
-    <div>
-      <div data-reveal><div class="eyebrow" style="--eyebrow:var(--teal)">And it stays on your machine</div></div>
-      <p class="landing-section-copy" data-reveal>Portfolio calculations run in your browser. This version has no portfolio-upload service, account sign-in, or automatic market-data connection.</p>
-      <div class="privacy-card" data-reveal><h3>Your file. Your control.</h3><p>Save your portfolio file when you finish a session. Next time, open that file to pick up where you left off. Keep a backup somewhere you trust; we cannot recover a file you lose.</p><p>The standalone app works offline without analytics. The hosted website uses privacy-conscious analytics to measure page visits and performance without including your portfolio contents.</p></div>
-      <p class="landing-section-copy" data-reveal>Keep a backup of your local portfolio file. Future cloud saving would be optional and would upload data only if you choose it; <a href="/pricing.html">explore upcoming paid capabilities</a>.</p>
+    <div class="privacy-visuals" data-reveal>
+      <figure class="history-detail"><span>Unsaved</span><img src="assets/quartermaster-history-detail.png" alt="Quartermaster history detail showing prior check-ins in the illustrative portfolio"></figure>
+      <figure class="phone-detail"><img src="assets/quartermaster-phone.png" alt="Quartermaster shown on a phone"></figure>
     </div>
   </section>
 
   <section class="closing-cta">
-    <div data-reveal><h2>Find your real allocation.</h2><p>Quartermaster is in its introductory release. Your feedback will help shape what we improve and build next.</p></div>
-    <div class="closing-actions" data-reveal><a class="landing-action" href="#start">Start here</a><a class="landing-action secondary-inverse" href="/app/#demo">Explore with demo data</a></div>
+    <div data-reveal><h2>Find your real allocation.</h2><p>Introductory release—your feedback helps decide what Quartermaster improves next.</p></div>
+    <div class="closing-actions" data-reveal><a class="landing-action" href="#start">Start here</a><a class="landing-action secondary-inverse" href="/app/#demo">Explore this exact portfolio</a></div>
   </section>
 </main>
+<nav class="story-rail" aria-label="Illustrative portfolio story" hidden>
+  <div class="story-dots"><a href="#lp-whole" data-story-dot="whole" aria-label="See the whole picture"></a><a href="#lp-tax" data-story-dot="tax" aria-label="Find potential tax drag"></a><a href="#lp-goals" data-story-dot="goals" aria-label="Model your goals"></a><a href="#lp-decisions" data-story-dot="decisions" aria-label="Make better decisions"></a></div>
+  <span>Illustrative household · sample data</span><b data-story-text></b>
+</nav>
 <div class="marketing-dialog-backdrop" id="start-dialog" hidden>
   <section class="marketing-dialog" role="dialog" aria-modal="true" aria-labelledby="start-dialog-title" tabindex="-1">
     <button class="marketing-dialog-close" type="button" data-close-start aria-label="Close">×</button>
     <div class="start-dialog-eyebrow">Start here</div>
-    <h2 id="start-dialog-title">Your portfolio. Your file. Your control.</h2>
-    <p class="start-dialog-intro">No account registration or bank connection required. Here’s how to get started:</p>
+    <h2 id="start-dialog-title">Three steps to your real allocation.</h2>
     <ol class="start-dialog-steps">
-      <li><strong>Add your accounts.</strong> Start with at least one account and add more whenever you’re ready.</li>
-      <li><strong>Choose your allocation goals.</strong> Select an example mix, enter your own targets, or leave this for later.</li>
-      <li><strong>Enter your holdings.</strong> Use the values from your accounts to see your real allocation. Enter manually or import a CSV.</li>
+      <li><strong>Add your accounts.</strong> Brokerage, 401(k), IRA, Roth, 529, savings, and more.</li>
+      <li><strong>Choose a target.</strong> Start from an example or enter the allocation you use.</li>
+      <li><strong>Enter holdings.</strong> Add current values manually or import a CSV.</li>
     </ol>
-    <div class="start-dialog-warning"><strong>Save your work before leaving the app.</strong> Changes stay in your browser session until you save your portfolio file. Save at the end of your session and keep a backup somewhere you trust.</div>
+    <div class="start-dialog-warning protected"><strong>Your work is protected.</strong> You’ll always see when changes aren’t saved, and you’ll be warned before leaving.</div>
     <div class="marketing-dialog-actions">
       <a class="landing-action primary" href="/app/#setup">Build my portfolio</a>
-      <a class="landing-action" href="/app/#demo">Explore the demo</a>
+      <a class="landing-action" href="/app/#demo">Explore the guided demo</a>
       <a class="marketing-dialog-open-file" href="/app/#open" data-open-portfolio>Open an existing portfolio file</a>
     </div>
   </section>

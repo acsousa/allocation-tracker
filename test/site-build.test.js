@@ -42,8 +42,8 @@ try {
     vm.runInNewContext(alias.match(/<script>([\s\S]*?)<\/script>/)[1], {URL, location});
     assert.equal(destination, 'https://example.com/app/?preview=1#start');
   });
-  check('hosted pages include the official brand assets and offline copy embeds them', () => {
-    for (const name of ['quartermaster-mark.png', 'quartermaster-mark-dark.png', 'quartermaster-lockup.png', 'quartermaster-lockup-dark.png']) {
+  check('hosted pages include the official brand and landing assets and offline copy embeds them', () => {
+    for (const name of ['quartermaster-mark.png', 'quartermaster-mark-dark.png', 'quartermaster-lockup.png', 'quartermaster-lockup-dark.png', 'quartermaster-history-detail.png', 'quartermaster-phone.png']) {
       const asset = fs.readFileSync(path.join(tmp, 'assets', name));
       assert.equal(asset.subarray(1, 4).toString(), 'PNG');
     }
@@ -93,7 +93,7 @@ try {
       assert.match(header(html), /class="marketing-brand-mark" src="assets\/quartermaster-mark.png"/);
     }
   });
-  check('landing has a local start dialog, reduced-motion support, and concise trust cards', () => {
+  check('landing tells one audited four-part story with accessible motion and a local start dialog', () => {
     const html = fs.readFileSync(path.join(tmp, 'index.html'), 'utf8');
     const css = fs.readFileSync(path.join(tmp, 'assets', 'marketing.css'), 'utf8');
     const interactions = fs.readFileSync(path.join(tmp, 'assets', 'marketing.js'), 'utf8');
@@ -103,25 +103,31 @@ try {
     assert.match(css, /\.marketing-open:hover\s*\{[^}]*translateY\(-2px\)/);
     assert.match(html, /src="assets\/marketing.js"/);
     assert.match(html, /class="hero-field"/);
-    assert.match(html, /data-shot="desktop"/);
-    assert.match(html, /data-parallax="-58"/);
+    assert.match(html, /Built for US investors with multiple accounts/);
+    for (const id of ['lp-whole', 'lp-tax', 'lp-goals', 'lp-decisions', 'lp-privacy']) assert.match(html, new RegExp(`id="${id}"`));
+    assert.match(html, /class="story-rail"/);
+    assert.match(html, /data-focus-ring="1"/);
+    assert.match(html, /href="\/app\/#demo\/dashboard"/);
+    assert.match(html, /href="\/app\/#demo\/review\/tax"/);
+    assert.match(html, /href="\/app\/#demo\/outlook"/);
+    assert.match(html, /\$265,000/);
+    assert.match(html, /\$360 \/ year/);
+    assert.match(html, /\$1\.95M/);
+    assert.match(html, /<strong>87%<\/strong>/);
+    assert.ok(!html.includes('6 accounts'));
     assert.match(html, /id="start-dialog" hidden/);
     assert.match(html, /href="\/app\/#setup">Build my portfolio/);
     assert.match(html, /href="\/app\/#open" data-open-portfolio/);
     assert.match(html, /<ol class="start-dialog-steps">/);
-    assert.match(html, /Save your work before leaving the app/);
+    assert.match(html, /Your work is protected/);
     assert.match(interactions, /const openDialog = \(\) =>/);
     assert.match(interactions, /document\.body\.appendChild\(backdrop\)/);
     assert.match(interactions, /new IntersectionObserver/);
-    assert.match(interactions, /requestAnimationFrame/);
-    assert.match(interactions, /stage\.getBoundingClientRect\(\)/);
+    assert.match(interactions, /rootMargin: '-45% 0px -50% 0px'/);
+    assert.match(interactions, /lockedUntil = Date\.now\(\) \+ 4000/);
     assert.match(interactions, /sessionStorage\.setItem\(portfolioHandoffKey/);
     assert.match(interactions, /input\.accept = '\.json,application\/json'/);
-    assert.ok(!interactions.includes('--phone-shift'));
-    for (const label of ['No affiliate compensation', 'No financial products to sell', 'No sale of personal or portfolio data', 'No custody or trading']) {
-      assert.match(html, new RegExp('class="trust-item"[^>]*>' + label + '<\\/div>'));
-    }
-    assert.ok(!html.includes('Recommendations are not influenced by referral payments'));
+    assert.match(html, /No affiliate commissions · no products to sell · no custody or trading/);
   });
   check('dedicated app entry stays simple with one graphic and three actions', () => {
     const app = fs.readFileSync(path.join(tmp, 'app', 'index.html'), 'utf8');
@@ -159,7 +165,7 @@ try {
   check('pricing keeps four clarity cards in one desktop row', () => {
     const html = fs.readFileSync(path.join(tmp, 'pricing.html'), 'utf8');
     assert.match(html, /\.features\{grid-template-columns:repeat\(4,minmax\(0,1fr\)\)\}/);
-    assert.match(html, /href="\/#lp-features">Asset allocation<\/a>/);
+    assert.match(html, /href="\/#lp-whole">Whole portfolio<\/a>/);
   });
   check('Google tag appears once immediately after head on hosted pages only', () => {
     for (const name of ['index.html', 'app/index.html', 'pricing.html', 'privacy.html']) {

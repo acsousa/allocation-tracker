@@ -245,20 +245,66 @@ Default card padding 26px; gap between cards 20px.
 
 ## 6 · Logo
 
-A quartered ring, open at the lower right, with a tick crossing the gap. It reads as the allocation
-donut, as a **Q**, and as the gap between what you hold and what you meant to hold.
+**Mark 1A · Precision.** A quartered ring split by parallel-sided gaps on the diagonals. The
+lower-right gap is widened into a channel that holds the tick, and the tick never touches an arc. It reads
+as the allocation donut, as a **Q**, and as the gap between what you hold and what you meant to hold.
+
+### 6.1 Construction (100-unit grid)
+
+| Element | Value |
+|---|---|
+| Ring | Centre 50,50 · outer radius 41 · inner radius 27 · stroke 14 |
+| Segment order | Top gold `c1` · right blue `c2` · bottom teal `c3` · left plum `c4` |
+| Gaps | 4 units, parallel-sided, along both diagonals |
+| Tick channel | 18 units wide, lower-right diagonal, runs from the centre outward |
+| Tick | 24 × 10 rectangle on the 45° axis, from 23 to 47 units out from the centre; 4 units clear of each arc |
+
+```svg
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <defs><mask id="qm-gap" maskUnits="userSpaceOnUse" x="0" y="0" width="100" height="100">
+    <rect width="100" height="100" fill="#fff"/>
+    <g transform="rotate(45 50 50)" fill="#000">
+      <rect x="-20" y="48" width="140" height="4"/><rect x="48" y="-20" width="4" height="140"/>
+      <rect x="50" y="41" width="70" height="18"/>
+    </g></mask></defs>
+  <g mask="url(#qm-gap)">
+    <path d="M21.01 21.01A41 41 0 0 1 78.99 21.01L69.09 30.91A27 27 0 0 0 30.91 30.91Z" fill="#C08A2E"/>
+    <path d="M78.99 21.01A41 41 0 0 1 78.99 78.99L69.09 69.09A27 27 0 0 0 69.09 30.91Z" fill="#1B6F9B"/>
+    <path d="M78.99 78.99A41 41 0 0 1 21.01 78.99L30.91 69.09A27 27 0 0 0 69.09 69.09Z" fill="#1E8175"/>
+    <path d="M21.01 78.99A41 41 0 0 1 21.01 21.01L30.91 30.91A27 27 0 0 0 30.91 69.09Z" fill="#6C5AA8"/>
+  </g>
+  <rect x="73" y="45" width="24" height="10" fill="#151823" transform="rotate(45 50 50)"/>
+</svg>
+```
+
+### 6.2 Versions
 
 | Version | Arcs | Tick | Use |
 |---|---|---|---|
 | Four-hue (light) | `#1B6F9B` `#1E8175` `#6C5AA8` `#C08A2E` | `#151823` | Default at 24px+ |
 | Four-hue (dark) | `#57ACDC` `#45BFAE` `#A99BE0` `#E5AE4C` | `#ECEFF3` | Dark backgrounds |
-| Mono | one color | `#0F6493` | Below 24px, favicon, on color fields |
+| Mono | `#0F6493` (all) | `#0F6493` | Below 24px, favicon |
+| Reversed | `#FFFFFF` (all) | `#FFFFFF` | On blue or gradient fields, app icon |
+
+### 6.3 Files
+
+| File | Contents |
+|---|---|
+| `assets/quartermaster-mark.png` | Four-hue light mark, 1024², transparent (also at `uploads/quartermaster-logo.png`) |
+| `assets/quartermaster-mark-dark.png` | Four-hue dark mark, 1024², transparent |
+| `assets/quartermaster-lockup.png` | Light lockup, transparent |
+| `assets/quartermaster-lockup-dark.png` | Dark lockup, transparent, for dark grounds |
+
+### 6.4 Rules
+
 
 - Lockup: mark + **QUARTERMASTER** (Barlow Condensed 700, caps, +8% tracking). Gap between mark
   and word ≈ 0.45 × mark height.
-- Clear space: one ring-stroke width on all sides.
-- Never rotate (the opening must stay lower-right). Never fill the ring. Never add a fifth segment.
-- SVG path data: see the `<svg viewBox="0 0 32 32">` in `Quartermaster Redesign v2.dc.html`.
+  Wordmark cap height ≈ 0.35 × mark height, vertically centred on the ring.
+- Clear space: one ring-stroke width (14% of mark height) on all sides.
+- Never rotate (the tick must stay lower-right). Never fill the ring. Never add a fifth segment.
+- Never let the tick touch or overlap an arc, and never recolour it with an arc hue.
+- Keep the gaps parallel-sided. Don't substitute stroked arcs with butt or round caps.
 
 ---
 

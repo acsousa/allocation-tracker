@@ -46,6 +46,8 @@ function buildSite(output = path.join(root, 'dist'), token = process.env.CF_WEB_
   const productImages = [
     'quartermaster-review.png',
     'quartermaster-history.png',
+    'quartermaster-history-detail.png',
+    'quartermaster-phone.png',
     'quartermaster-mark.png',
     'quartermaster-mark-dark.png',
     'quartermaster-lockup.png',

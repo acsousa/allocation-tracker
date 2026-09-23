@@ -3266,20 +3266,20 @@ function loadDemoData() {
   const aBrok  = A('Brokerage',     'Schwab',   'Non-Retirement', { taxTreatment: 'Taxable' });
   p.accounts.push(a401k, aRoth, a529, aBrok);
 
-  const H = (accountId, ticker, assetClass, name) =>
-    ({ id: uid('hold'), accountId, ticker, name: name || '', assetClass, status: 'active' });
+  const H = (accountId, ticker, assetClass, name, extra) =>
+    Object.assign({ id: uid('hold'), accountId, ticker, name: name || '', assetClass, status: 'active' }, extra || {});
 
   const holds = [
     H(a401k.id, 'FXAIX', 'us_large'),
     H(a401k.id, 'FSMDX', 'us_mid'),
     H(a401k.id, 'FTIHX', 'intl_dev'),
-    H(a401k.id, 'FXNAX', 'us_bond'),
+    H(a401k.id, 'VOO',   'us_large'),
     H(aRoth.id, 'VTI',   'us_total'),
     H(aRoth.id, 'VXUS',  'intl_dev'),
     H(a529.id,  'SWTSX', 'us_total'),
     H(a529.id,  'BND',   'us_bond'),
     H(a529.id,  'SNVXX', 'cash'),
-    H(aBrok.id, 'VOO',   'us_large'),
+    H(aBrok.id, 'FXNAX', 'us_bond', 'Fidelity U.S. Bond Index Fund', { longTermHolding: true }),
     H(aBrok.id, 'VNQ',   'reit'),
     H(aBrok.id, 'IBIT',  'crypto', 'Bitcoin ETF'),
     H(aBrok.id, 'VMFXX', 'cash'),
@@ -3294,13 +3294,13 @@ function loadDemoData() {
       { holdingId: byT.FXAIX, marketValue: Math.round(82000 * mult) },
       { holdingId: byT.FSMDX, marketValue: Math.round(18000 * mult) },
       { holdingId: byT.FTIHX, marketValue: Math.round(24000 * mult) },
-      { holdingId: byT.FXNAX, marketValue: Math.round(20000 * mult) },
+      { holdingId: byT.VOO,   marketValue: Math.round(38000 * mult) },
       { holdingId: byT.VTI,   marketValue: Math.round(41000 * mult), costBasis: 30000 },
       { holdingId: byT.VXUS,  marketValue: Math.round(12000 * mult), costBasis: 11000 },
       { holdingId: byT.SWTSX, marketValue: Math.round(11700 * mult) },
       { holdingId: byT.BND,   marketValue: Math.round(2550 * mult) },
       { holdingId: byT.SNVXX, marketValue: Math.round(750 * mult) },
-      { holdingId: byT.VOO,   marketValue: Math.round(38000 * mult), costBasis: 25000 },
+      { holdingId: byT.FXNAX, marketValue: Math.round(20000 * mult), costBasis: Math.round(20000 * mult) },
       { holdingId: byT.VNQ,   marketValue: Math.round(9000  * mult), costBasis: 10000 },
       { holdingId: byT.IBIT,  marketValue: Math.round(7000  * mult), costBasis: 4000 },
       { holdingId: byT.VMFXX, marketValue: Math.round(14000 * mult) },
@@ -3318,9 +3318,9 @@ function loadDemoData() {
   // Rollup: stocks 65 / bonds 18 / real 5 / crypto 5 / cash 7.
   p.goals.push({
     effectiveDate: '2026-02-01',
-    name: 'Home-fund glidedown',
+    name: 'Current household target',
     targets: { us_large: 37, us_mid: 7, us_small: 5, intl_dev: 11, em: 5, us_bond: 15, intl_bond: 3, reit: 4, commod: 1, crypto: 5, cash: 7 },
-    rationale: 'Trimmed equities 5% into bonds as we near the home-fund milestone; nudged crypto ceiling up slightly.',
+    rationale: 'Illustrative household target used to demonstrate drift review; it is not a recommended allocation.',
   });
 
   p.glidePaths.push({
@@ -3332,6 +3332,45 @@ function loadDemoData() {
       { ageFrom: 11, ageTo: 14, targets: { stocks: 60, bonds: 32, cash: 8 } },
       { ageFrom: 15, ageTo: 17, targets: { stocks: 40, bonds: 45, cash: 15 } },
       { ageFrom: 18, ageTo: 30, targets: { stocks: 20, bonds: 50, cash: 30 } },
+    ],
+  });
+
+  // The sample household is a coherent planning story, not a recommendation.
+  // These inputs deliberately drive every landing-page figure so the public
+  // claims can be audited against the same engines users explore in the demo.
+  p.taxSettings = Object.assign(defaultTaxSettings(), {
+    filingStatus: 'single',
+    incomeBand: '200_400',
+    state: 'MA',
+    profileReviewed: true,
+  });
+  p.retirementSettings = Object.assign(defaultRetirementSettings(), {
+    birthYears: [1986, null],
+    retirementAge: 65,
+    spendingTargetRealAnnual: 90000,
+    accountScope: 'all',
+    contribOverride: { pretax: 18000, taxable: 6000, roth: 7000, taxfree: 0 },
+    retirementAllocation: 'balanced',
+    ssPIA: [3500, 0],
+    ssClaimAge: [67, 67],
+    mappingConfirmed: true,
+    paths: 10000,
+  });
+  p.collegeSettings = Object.assign(defaultCollegeSettings(), {
+    paths: 10000,
+    byChild: {
+      [kid.id]: { annualCostReal: 25000, years: 4, startAge: 18, annualContribReal: 9000 },
+    },
+  });
+
+  p.plans.push({
+    snapshotDate: '2026-05-15',
+    noAction: false,
+    directive: { text: 'Until the next check-in, direct new savings toward the underweight bond target.', splits: [] },
+    notes: 'Direct the next contribution toward underweight bonds. Reconsider an allocation-neutral location swap after confirming plan availability and tax details.',
+    moves: [
+      { accountId: aBrok.id, sellTicker: 'FXNAX', buyTicker: 'FXAIX', amount: 20000, source: 'tax-swap', taxNote: 'Reconsider after confirming tax details', done: false },
+      { accountId: a401k.id, sellTicker: 'FXAIX', buyTicker: 'FXNAX', amount: 20000, source: 'tax-swap', taxNote: 'Confirm the plan offers the needed funds', done: false },
     ],
   });
 
@@ -4071,7 +4110,7 @@ function demoActionAllowed(action) {
 }
 function handlePublicRoute() {
   const hash = window.location.hash;
-  if (!['#start', '#setup', '#open', '#demo', '#demo-retire', '#demo-college'].includes(hash)) return false;
+  if (!['#start', '#setup', '#open', '#demo', '#demo/dashboard', '#demo/review/tax', '#demo/outlook', '#demo-retire', '#demo-college'].includes(hash)) return false;
   if (hash === '#setup') {
     beginSetup();
     return true;
@@ -4100,7 +4139,10 @@ function handlePublicRoute() {
   ui.dialog = null;
   loadDemoData();
   resetViewState();
-  ui.view = hash === '#demo-retire' ? 'retire' : hash === '#demo-college' ? 'college' : 'dashboard';
+  ui.view = hash === '#demo-retire' || hash === '#demo/outlook' ? 'retire'
+    : hash === '#demo-college' ? 'college'
+    : hash === '#demo/review/tax' ? 'tax'
+    : 'dashboard';
   render();
   return true;
 }

@@ -1,8 +1,11 @@
 const logo = `<span class="marketing-brand-art" aria-hidden="true"><img class="marketing-brand-lockup" src="assets/quartermaster-lockup.png" alt=""><img class="marketing-brand-mark" src="assets/quartermaster-mark.png" alt=""></span>`;
 
 const navigation = [
-  ['allocation', '/#lp-features', 'Asset allocation'],
-  ['simulators', '/#lp-simulations', 'Simulators'],
+  ['whole', '/#lp-whole', 'Whole portfolio'],
+  ['tax', '/#lp-tax', 'Tax drag'],
+  ['goals', '/#lp-goals', 'Goals'],
+  ['decisions', '/#lp-decisions', 'Decisions'],
+  ['privacy-section', '/#lp-privacy', 'Privacy'],
   ['pricing', '/pricing.html', 'Pricing'],
 ];
 
@@ -14,7 +17,7 @@ function marketingHeader(current = '') {
     <a class="marketing-brand" href="/" aria-label="Quartermaster home">${logo}</a>
     <nav class="marketing-nav" aria-label="Main navigation">
       ${links}
-      <a class="marketing-open" data-analytics-event="start_here_click" href="/#start">Start here</a>
+      <a class="marketing-open" data-analytics-event="start_here_click" href="/#start">Start here <span aria-hidden="true">→</span></a>
     </nav>
   </header>`;
 }

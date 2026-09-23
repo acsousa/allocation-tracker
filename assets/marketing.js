@@ -112,6 +112,65 @@
   const motionOn = () => root.classList.contains('qm-motion') && !reduceQuery?.matches;
   if (!('IntersectionObserver' in window)) root.classList.remove('qm-motion');
 
+  /* ---------- Landing story navigation ---------- */
+  function initStoryNavigation() {
+    const sections = Array.from(document.querySelectorAll('[data-story]'));
+    const rail = document.querySelector('.story-rail');
+    const railText = rail?.querySelector('[data-story-text]');
+    if (!sections.length || !('IntersectionObserver' in window)) return;
+
+    let active = null;
+    const setActive = section => {
+      if (active === section) return;
+      sections.forEach(item => item.classList.toggle('is-story-active', item === section));
+      document.querySelectorAll('.marketing-nav a[href*="#lp-"]').forEach(link => {
+        const match = section && link.hash === '#' + section.id;
+        if (match) link.setAttribute('aria-current', 'location');
+        else if (link.getAttribute('aria-current') === 'location') link.removeAttribute('aria-current');
+      });
+      rail?.querySelectorAll('[data-story-dot]').forEach(dot => {
+        if (section && dot.dataset.storyDot === section.dataset.story) dot.setAttribute('aria-current', 'step');
+        else dot.removeAttribute('aria-current');
+      });
+      active = section;
+      if (rail) rail.hidden = !section;
+      if (railText) railText.textContent = section?.dataset.storyFinding || '';
+    };
+
+    const observer = new IntersectionObserver(entries => {
+      const entered = entries.find(entry => entry.isIntersecting);
+      if (entered) setActive(entered.target);
+      else if (entries.some(entry => entry.target === active && !entry.isIntersecting)) setActive(null);
+    }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+    sections.forEach(section => observer.observe(section));
+  }
+
+  /* ---------- Whole-portfolio focus rings ---------- */
+  function initFocusRings() {
+    const rings = Array.from(document.querySelectorAll('[data-focus-ring]'));
+    const callouts = Array.from(document.querySelectorAll('[data-focus-target]'));
+    if (rings.length < 2) return;
+    const show = id => rings.forEach(ring => ring.classList.toggle('is-active', ring.dataset.focusRing === String(id)));
+    if (!motionOn()) { rings.forEach(ring => ring.classList.add('is-active')); return; }
+    let current = 1;
+    let lockedUntil = 0;
+    const timer = window.setInterval(() => {
+      if (Date.now() < lockedUntil) return;
+      current = current === 1 ? 2 : 1;
+      show(current);
+    }, 3400);
+    callouts.forEach(callout => {
+      const lock = () => {
+        current = Number(callout.dataset.focusTarget) || 1;
+        lockedUntil = Date.now() + 4000;
+        show(current);
+      };
+      callout.addEventListener('mouseenter', lock);
+      callout.addEventListener('focusin', lock);
+    });
+    window.addEventListener('pagehide', () => window.clearInterval(timer), { once: true });
+  }
+
   /* ---------- 2. Scroll reveals ---------- */
   function initReveals() {
     // Stagger index per group: children of [data-reveal-group] inherit 0,1,2,…
@@ -193,6 +252,8 @@
     });
   }
 
+  initStoryNavigation();
+  initFocusRings();
   if (motionOn()) {
     initReveals();
     initShots();
