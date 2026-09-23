@@ -137,13 +137,6 @@
     sections.forEach(section => observer.observe(section));
   }
 
-  function initValueStrip() {
-    const values = Array.from(document.querySelectorAll('.value-signpost'));
-    values.forEach((item, index) => item.style.setProperty('--value-i', String(index)));
-    if (!motionOn()) return;
-    requestAnimationFrame(() => requestAnimationFrame(() => values.forEach(item => item.classList.add('is-in'))));
-  }
-
   /* ---------- Whole-portfolio focus rings ---------- */
   function initFocusRings() {
     const rings = Array.from(document.querySelectorAll('[data-focus-ring]'));
@@ -253,7 +246,6 @@
 
   initStoryNavigation();
   initFocusRings();
-  initValueStrip();
   if (motionOn()) {
     initReveals();
     initShots();

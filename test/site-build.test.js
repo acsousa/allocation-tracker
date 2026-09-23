@@ -129,7 +129,8 @@ try {
     assert.match(interactions, /new IntersectionObserver/);
     assert.match(interactions, /rootMargin: '-45% 0px -50% 0px'/);
     assert.match(interactions, /lockedUntil = Date\.now\(\) \+ 4000/);
-    assert.match(interactions, /values\.forEach\(\(item, index\) => item\.style\.setProperty\('--value-i'/);
+    assert.match(css, /@keyframes value-signpost-in/);
+    assert.match(css, /animation:value-signpost-in 440ms/);
     assert.match(interactions, /sessionStorage\.setItem\(portfolioHandoffKey/);
     assert.match(interactions, /input\.accept = '\.json,application\/json'/);
     assert.match(html, /No affiliate commissions · no products to sell · no custody or trading/);
@@ -137,6 +138,7 @@ try {
     assert.match(css, /\.story-heading \{ max-width:1180px;[^}]*text-align:left/);
     assert.match(css, /\.history-detail \{[^}]*z-index:1/);
     assert.match(css, /\.phone-detail \{[^}]*z-index:2/);
+    assert.ok(!html.includes('<span>Unsaved</span>'));
   });
   check('dedicated app entry stays simple with one graphic and three actions', () => {
     const app = fs.readFileSync(path.join(tmp, 'app', 'index.html'), 'utf8');
