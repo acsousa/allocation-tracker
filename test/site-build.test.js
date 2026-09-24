@@ -42,14 +42,27 @@ try {
     vm.runInNewContext(alias.match(/<script>([\s\S]*?)<\/script>/)[1], {URL, location});
     assert.equal(destination, 'https://example.com/app/?preview=1#start');
   });
-  check('hosted pages include the deployable favicon and offline copy embeds its icon', () => {
-    assert.match(fs.readFileSync(path.join(tmp, 'favicon.svg'), 'utf8'), /<svg/);
+  check('hosted pages include the official brand and landing assets and offline copy embeds them', () => {
+    for (const name of ['quartermaster-mark.png', 'quartermaster-mark-dark.png', 'quartermaster-lockup.png', 'quartermaster-lockup-dark.png', 'quartermaster-history-detail.png', 'quartermaster-phone.png']) {
+      const asset = fs.readFileSync(path.join(tmp, 'assets', name));
+      assert.equal(asset.subarray(1, 4).toString(), 'PNG');
+    }
+    const lockup = fs.readFileSync(path.join(tmp, 'assets', 'quartermaster-lockup.png'));
+    const mark = fs.readFileSync(path.join(tmp, 'assets', 'quartermaster-mark.png'));
+    assert.deepEqual([lockup.readUInt32BE(16), lockup.readUInt32BE(20)], [1273, 240]);
+    assert.deepEqual([mark.readUInt32BE(16), mark.readUInt32BE(20)], [900, 900]);
     for (const name of ['index.html', 'app/index.html', 'pricing.html', 'privacy.html']) {
       const html = fs.readFileSync(path.join(tmp, name), 'utf8');
       assert.equal((html.match(/rel="icon"/g) || []).length, 1);
-      assert.match(html, /href="\/?favicon.svg"/);
+      assert.match(html, /href="\/assets\/quartermaster-mark.png"/);
     }
-    assert.match(fs.readFileSync(path.join(tmp, 'downloads/quartermaster.html'), 'utf8'), /href="data:image\/svg\+xml,/);
+    const offline = fs.readFileSync(path.join(tmp, 'downloads/quartermaster.html'), 'utf8');
+    assert.match(offline, /href="data:image\/png;base64,/);
+    assert.match(offline, /class="qm-logo-dark" src="data:image\/png;base64,/);
+    assert.ok(!offline.includes('assets/quartermaster-'));
+    for (const name of ['Barlow-Regular.ttf', 'Barlow-SemiBold.ttf', 'BarlowCondensed-SemiBold.ttf', 'BarlowCondensed-Bold.ttf', 'IBMPlexMono-Regular.ttf', 'IBMPlexMono-Medium.ttf', 'OFL-Barlow.txt', 'OFL-IBMPlexMono.txt']) {
+      assert.ok(fs.statSync(path.join(tmp, 'assets', 'fonts', name)).size > 100, `font asset ${name}`);
+    }
   });
   check('every marketing page has working local navigation', () => {
     for (const name of pages) {
@@ -83,9 +96,11 @@ try {
     for (const html of built) {
       assert.ok(!footer(html).includes('Pricing'));
       assert.match(html, /href="assets\/marketing.css"/);
+      assert.match(header(html), /class="marketing-brand-lockup" src="assets\/quartermaster-lockup.png"/);
+      assert.match(header(html), /class="marketing-brand-mark" src="assets\/quartermaster-mark.png"/);
     }
   });
-  check('landing has a local start dialog, reduced-motion support, and concise trust cards', () => {
+  check('landing tells one audited four-part story with accessible motion and a local start dialog', () => {
     const html = fs.readFileSync(path.join(tmp, 'index.html'), 'utf8');
     const css = fs.readFileSync(path.join(tmp, 'assets', 'marketing.css'), 'utf8');
     const interactions = fs.readFileSync(path.join(tmp, 'assets', 'marketing.js'), 'utf8');
@@ -95,25 +110,49 @@ try {
     assert.match(css, /\.marketing-open:hover\s*\{[^}]*translateY\(-2px\)/);
     assert.match(html, /src="assets\/marketing.js"/);
     assert.match(html, /class="hero-field"/);
-    assert.match(html, /data-shot="desktop"/);
-    assert.match(html, /data-parallax="-58"/);
+    assert.match(html, /Built for US investors with multiple accounts/);
+    for (const id of ['lp-whole', 'lp-tax', 'lp-goals', 'lp-decisions', 'lp-privacy']) assert.match(html, new RegExp(`id="${id}"`));
+    assert.match(html, /id="lp-privacy" class="privacy-section" data-story="privacy"/);
+    assert.ok(!html.includes('story-rail'));
+    assert.match(html, /data-focus-ring="1"/);
+    assert.match(html, /href="\/app\/#demo\/dashboard"/);
+    assert.match(html, /href="\/app\/#demo\/review\/tax"/);
+    assert.match(html, /href="\/app\/#demo\/outlook"/);
+    assert.match(html, /\$265,000/);
+    assert.match(html, /\$360<span>\/ year<\/span>/);
+    assert.match(html, /\$1\.95M/);
+    assert.match(html, /<strong>87%<\/strong>/);
+    assert.ok(!html.includes('6 accounts'));
+    assert.ok(!/guided demo/i.test(html));
     assert.match(html, /id="start-dialog" hidden/);
     assert.match(html, /href="\/app\/#setup">Build my portfolio/);
     assert.match(html, /href="\/app\/#open" data-open-portfolio/);
     assert.match(html, /<ol class="start-dialog-steps">/);
-    assert.match(html, /Save your work before leaving the app/);
+    assert.match(html, /Your work is protected/);
     assert.match(interactions, /const openDialog = \(\) =>/);
     assert.match(interactions, /document\.body\.appendChild\(backdrop\)/);
     assert.match(interactions, /new IntersectionObserver/);
-    assert.match(interactions, /requestAnimationFrame/);
-    assert.match(interactions, /stage\.getBoundingClientRect\(\)/);
+    assert.match(interactions, /rootMargin: '-45% 0px -50% 0px'/);
+    assert.match(interactions, /const focusY = \(window\.innerHeight \|\| 800\) \* \.475/);
+    assert.match(interactions, /\.value-strip > \[data-reveal\]/);
+    assert.match(interactions, /loadValues\.forEach\(value => value\.classList\.add\('is-in'\)\)/);
+    assert.match(interactions, /lockedUntil = Date\.now\(\) \+ 4000/);
+    assert.match(html, /class="value-strip"[^>]*data-reveal-group/);
+    assert.equal((html.match(/class="value-signpost[^\"]*" data-reveal/g) || []).length, 4);
     assert.match(interactions, /sessionStorage\.setItem\(portfolioHandoffKey/);
     assert.match(interactions, /input\.accept = '\.json,application\/json'/);
-    assert.ok(!interactions.includes('--phone-shift'));
-    for (const label of ['No affiliate compensation', 'No financial products to sell', 'No sale of personal or portfolio data', 'No custody or trading']) {
-      assert.match(html, new RegExp('class="trust-item"[^>]*>' + label + '<\\/div>'));
-    }
-    assert.ok(!html.includes('Recommendations are not influenced by referral payments'));
+    assert.match(html, /No affiliate commissions · no products to sell · no custody or trading/);
+    assert.match(css, /@font-face \{ font-family:"Barlow"/);
+    assert.match(css, /\.story-heading \{ max-width:1180px;[^}]*text-align:left/);
+    assert.match(css, /\.history-detail \{[^}]*z-index:1/);
+    assert.match(css, /\.phone-detail \{[^}]*z-index:2/);
+    assert.ok(!html.includes('<span>Unsaved</span>'));
+    assert.match(css, /\.marketing-page \{[^}]*overflow:visible/);
+    assert.match(css, /\.marketing-header \{ position:sticky;top:0;z-index:60/);
+    assert.match(css, /\.marketing-nav \.marketing-link\[aria-current="page"\],\.marketing-nav \.marketing-link\[aria-current="location"\] \{ color:var\(--blue\);font-weight:600/);
+    assert.match(css, /\.tax-flow \{[^}]*align-items:stretch/);
+    assert.match(css, /\.cadence-steps \{ display:grid;grid-template-columns:repeat\(4/);
+    for (const [, heading] of html.matchAll(/(<header class="story-heading"[\s\S]*?<\/header>)/g)) assert.ok(!heading.includes('<p>'));
   });
   check('dedicated app entry stays simple with one graphic and three actions', () => {
     const app = fs.readFileSync(path.join(tmp, 'app', 'index.html'), 'utf8');
@@ -126,7 +165,10 @@ try {
     assert.ok(!app.includes('app-entry-signal app-entry-signal-one'));
     assert.match(app, /@keyframes app-entry-float/);
     assert.match(app, /@keyframes app-entry-orbit-spin/);
-    assert.match(app, /logoSVG\(132\)/);
+    assert.match(app, /logoMark\(132\)/);
+    assert.match(app, /logoLockup\(42\)/);
+    assert.match(app, /logoMark\(40\)/);
+    assert.match(app, /--qm-logo-size\) \* 5\.304167/);
     assert.match(app, /\.filebar \.brand,[^}]*color:var\(--color-text\);text-decoration:none/);
     assert.match(app, /isHostedAppEntry\(\) && !window\.location\.hash/);
     assert.match(app, /case 'openfile':\s+body = renderOpenFile\(\)/);
@@ -150,7 +192,7 @@ try {
   check('pricing keeps four clarity cards in one desktop row', () => {
     const html = fs.readFileSync(path.join(tmp, 'pricing.html'), 'utf8');
     assert.match(html, /\.features\{grid-template-columns:repeat\(4,minmax\(0,1fr\)\)\}/);
-    assert.match(html, /href="\/#lp-features">Asset allocation<\/a>/);
+    assert.match(html, /href="\/#lp-whole">Whole portfolio<\/a>/);
   });
   check('Google tag appears once immediately after head on hosted pages only', () => {
     for (const name of ['index.html', 'app/index.html', 'pricing.html', 'privacy.html']) {

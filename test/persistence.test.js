@@ -20,9 +20,9 @@ const fresh = () => JSON.parse(JSON.stringify(A.emptyPortfolio()));
 let checks = 0;
 function check(name, fn) { fn(); checks++; console.log('✓ ' + name); }
 check('migration is immutable and restores missing metadata defaults', () => {
-  const p = { meta: { schemaVersion: 3 }, accounts: [{ id: 'a', name: 'IRA' }], holdings: [] };
+  const p = { meta: { schemaVersion: 3 }, accounts: [{ id: 'a', name: 'IRA' }], holdings: [{id:'h',accountId:'a',ticker:'voo'}] };
   const before = JSON.stringify(p), next = A.migrate(p);
-  assert.equal(JSON.stringify(p), before); assert.equal(next.meta.driftBandPct, 5); assert.ok(next.accounts[0].vehicle);
+  assert.equal(JSON.stringify(p), before); assert.equal(next.meta.driftBandPct, 5); assert.ok(next.accounts[0].vehicle); assert.equal(next.holdings[0].ticker,'VOO'); assert.equal(next.meta.schemaVersion,7);
 });
 check('metadata-only legacy files and demo round-trip remain supported', () => {
   assert.equal(A.migrate({meta:{schemaVersion:5}}).holdings.length, 0);
@@ -39,6 +39,7 @@ check('invalid snapshot money, duplicates, dates, and runaway path counts reject
   for (const date of ['2026-02-30', 'bad']) { const p=structuredClone(base);p.snapshots=[{date,values:[]}];assert.throws(() => A.migrate(p)); }
   const p=structuredClone(base);p.snapshots=[{date:'2026-01-01',values:[{holdingId:'h',marketValue:1},{holdingId:'h',marketValue:2}]}];assert.throws(() => A.migrate(p));
   p.snapshots=[];p.retirementSettings.paths=100000000;assert.throws(() => A.migrate(p));
+  const badFlag=structuredClone(base);badFlag.holdings[0].longTermHolding='yes';assert.throws(() => A.migrate(badFlag));
 });
 check('CSV protects text formulas, preserves numeric losses, and escapes CR', () => {
   assert.equal(T.csvEscape('=1+1'), "'=1+1"); assert.equal(T.csvEscape(' \t@SUM(A1)'), "' \t@SUM(A1)");

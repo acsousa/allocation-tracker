@@ -112,6 +112,73 @@
   const motionOn = () => root.classList.contains('qm-motion') && !reduceQuery?.matches;
   if (!('IntersectionObserver' in window)) root.classList.remove('qm-motion');
 
+  /* ---------- Landing story navigation ---------- */
+  function initStoryNavigation() {
+    const sections = Array.from(document.querySelectorAll('[data-story]'));
+    if (!sections.length || !('IntersectionObserver' in window)) return;
+
+    let active = null;
+    let ticking = false;
+    const setActive = section => {
+      if (active === section) return;
+      sections.forEach(item => item.classList.toggle('is-story-active', item === section));
+      document.querySelectorAll('.marketing-nav a[href*="#lp-"]').forEach(link => {
+        const match = section && link.hash === '#' + section.id;
+        if (match) link.setAttribute('aria-current', 'location');
+        else if (link.getAttribute('aria-current') === 'location') link.removeAttribute('aria-current');
+      });
+      active = section;
+    };
+
+    const updateActive = () => {
+      ticking = false;
+      const focusY = (window.innerHeight || 800) * .475;
+      const section = sections.find(item => {
+        const rect = item.getBoundingClientRect();
+        return rect.top <= focusY && rect.bottom > focusY;
+      }) || null;
+      setActive(section);
+    };
+
+    const queueUpdate = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(updateActive);
+    };
+
+    const observer = new IntersectionObserver(queueUpdate, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+    sections.forEach(section => observer.observe(section));
+    window.addEventListener('scroll', queueUpdate, { passive: true });
+    window.addEventListener('resize', queueUpdate, { passive: true });
+    updateActive();
+  }
+
+  /* ---------- Whole-portfolio focus rings ---------- */
+  function initFocusRings() {
+    const rings = Array.from(document.querySelectorAll('[data-focus-ring]'));
+    const callouts = Array.from(document.querySelectorAll('[data-focus-target]'));
+    if (rings.length < 2) return;
+    const show = id => rings.forEach(ring => ring.classList.toggle('is-active', ring.dataset.focusRing === String(id)));
+    if (!motionOn()) { rings.forEach(ring => ring.classList.add('is-active')); return; }
+    let current = 1;
+    let lockedUntil = 0;
+    const timer = window.setInterval(() => {
+      if (Date.now() < lockedUntil) return;
+      current = current === 1 ? 2 : 1;
+      show(current);
+    }, 3400);
+    callouts.forEach(callout => {
+      const lock = () => {
+        current = Number(callout.dataset.focusTarget) || 1;
+        lockedUntil = Date.now() + 4000;
+        show(current);
+      };
+      callout.addEventListener('mouseenter', lock);
+      callout.addEventListener('focusin', lock);
+    });
+    window.addEventListener('pagehide', () => window.clearInterval(timer), { once: true });
+  }
+
   /* ---------- 2. Scroll reveals ---------- */
   function initReveals() {
     // Stagger index per group: children of [data-reveal-group] inherit 0,1,2,…
@@ -123,6 +190,13 @@
 
     const targets = document.querySelectorAll('[data-reveal]');
     if (!targets.length) return;
+
+    // The four outcome signposts are part of the page-load sequence, even on
+    // shorter screens where their bottom edge begins just below the fold.
+    const loadValues = document.querySelectorAll('.value-strip > [data-reveal]');
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      loadValues.forEach(value => value.classList.add('is-in'));
+    }));
 
     const observer = new IntersectionObserver((entries, obs) => {
       entries.forEach(entry => {
@@ -193,6 +267,8 @@
     });
   }
 
+  initStoryNavigation();
+  initFocusRings();
   if (motionOn()) {
     initReveals();
     initShots();

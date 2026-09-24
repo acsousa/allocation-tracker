@@ -206,6 +206,13 @@ Optional cloud saving, review reminders, and ongoing downloadable reports are
 **coming soon**. Reports are free during the introductory release; there is no
 checkout or download quota yet.
 
+A future release may add an automatic, device-local browser recovery copy to
+reduce accidental loss between file saves. It should show separate timestamps
+for the browser recovery copy and the user-owned portfolio file, offer recovery
+rather than silently replacing a file, and provide a way to clear local recovery
+data. Browser recovery is not a backup and does not replace the portable file as
+the durable source of truth.
+
 Tax figures use simplified rules and entered assumptions; simulations illustrate
 possible outcomes, not forecasts or guarantees. This is a personal tracking and
 education tool, not investment, tax, or legal advice.
