@@ -149,9 +149,10 @@ try {
     assert.ok(!html.includes('<span>Unsaved</span>'));
     assert.match(css, /\.marketing-page \{[^}]*overflow:visible/);
     assert.match(css, /\.marketing-header \{ position:sticky;top:0;z-index:60/);
-    assert.match(css, /\.marketing-link\[aria-current="location"\][^{]*\{[^}]*background:var\(--nav-tint\)/);
+    assert.match(css, /\.marketing-nav \.marketing-link\[aria-current="page"\],\.marketing-nav \.marketing-link\[aria-current="location"\] \{ color:var\(--blue\);font-weight:600/);
     assert.match(css, /\.tax-flow \{[^}]*align-items:stretch/);
     assert.match(css, /\.cadence-steps \{ display:grid;grid-template-columns:repeat\(4/);
+    for (const [, heading] of html.matchAll(/(<header class="story-heading"[\s\S]*?<\/header>)/g)) assert.ok(!heading.includes('<p>'));
   });
   check('dedicated app entry stays simple with one graphic and three actions', () => {
     const app = fs.readFileSync(path.join(tmp, 'app', 'index.html'), 'utf8');
@@ -165,7 +166,9 @@ try {
     assert.match(app, /@keyframes app-entry-float/);
     assert.match(app, /@keyframes app-entry-orbit-spin/);
     assert.match(app, /logoMark\(132\)/);
-    assert.match(app, /logoLockup\(28\)/);
+    assert.match(app, /logoLockup\(42\)/);
+    assert.match(app, /logoMark\(40\)/);
+    assert.match(app, /--qm-logo-size\) \* 5\.304167/);
     assert.match(app, /\.filebar \.brand,[^}]*color:var\(--color-text\);text-decoration:none/);
     assert.match(app, /isHostedAppEntry\(\) && !window\.location\.hash/);
     assert.match(app, /case 'openfile':\s+body = renderOpenFile\(\)/);

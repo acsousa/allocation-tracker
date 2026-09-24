@@ -282,7 +282,7 @@
   .filebar .brand { display: flex; align-items: center; gap: 10px; cursor: pointer; }
   .qm-logo { --qm-logo-size:26px;display:inline-grid;align-items:center;justify-items:center;flex:none;height:var(--qm-logo-size); }
   .qm-logo-mark { width:var(--qm-logo-size); }
-  .qm-logo-lockup { width:calc(var(--qm-logo-size) * 3.978125); }
+  .qm-logo-lockup { width:calc(var(--qm-logo-size) * 5.304167); }
   .qm-logo > img { grid-area:1 / 1;display:block;width:100%;height:100%;object-fit:contain; }
   .qm-logo-dark { display:none !important; }
   :root[data-theme="dark"] .qm-logo-light { display:none; }
@@ -3997,7 +3997,7 @@ function navHTML() {
   ];
   const mobileDock = `<nav class="mobile-dock no-print" aria-label="Mobile navigation">${dockItems.map(([tab, icon, label, view]) => `<button class="${active === tab ? 'active' : ''}" data-act="nav" data-view="${view}"><span class="dock-icon" aria-hidden="true">${icon}</span><span>${label}</span></button>`).join('')}<button class="${settingsActive || active === 'outlook' ? 'active' : ''}" data-act="toggle-drawer"><span class="dock-icon" aria-hidden="true">•••</span><span>More</span></button></nav>`;
   return `<div class="filebar no-print">
-      <a class="brand" href="${esc(publicSiteURL(''))}" title="Quartermaster — home" aria-label="Quartermaster home"><span class="filebar-lockup">${logoLockup(28)}</span><span class="filebar-mark">${logoMark(28)}</span></a>
+      <a class="brand" href="${esc(publicSiteURL(''))}" title="Quartermaster — home" aria-label="Quartermaster home"><span class="filebar-lockup">${logoLockup(42)}</span><span class="filebar-mark">${logoMark(40)}</span></a>
       <span class="file-chip"><span class="dot" style="${needsSave ? 'background:var(--color-warn);' : ''}"></span><span class="fname">${esc(fileName)}</span><span class="fmeta">· ${dirtyNote} · local disk</span></span>
       <button class="filebtn ${needsSave ? 'save-needed' : ''}" data-act="save" ${demoMode ? 'disabled' : ''} title="Save your portfolio file before leaving">${persistenceStatus === 'download-pending' && !dirty && !checkinDraftDirty ? 'Confirm download' : (needsSave ? '⚠ Save needed' : 'Save file')}</button>
       <button class="filebtn" data-act="open">Open</button>
@@ -4222,7 +4222,7 @@ function renderMarketingLanding() {
 
   return `<div class="landing" style="max-width:1520px;margin:0 auto;background:var(--color-panel);border:1px solid var(--color-divider);">
     <header class="marketing-header">
-      <a class="marketing-brand" href="index.html" aria-label="Quartermaster home"><span class="marketing-brand-lockup">${logoLockup(34)}</span><span class="marketing-brand-mark">${logoMark(34)}</span></a>
+      <a class="marketing-brand" href="index.html" aria-label="Quartermaster home"><span class="marketing-brand-lockup">${logoLockup(44)}</span><span class="marketing-brand-mark">${logoMark(42)}</span></a>
       <nav class="marketing-nav" aria-label="Main navigation">
         <button class="marketing-link" data-act="lp-scroll" data-target="lp-features">Asset allocation</button>
         <button class="marketing-link" data-act="lp-scroll" data-target="lp-simulations">Simulators</button>
