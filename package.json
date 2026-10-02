@@ -6,7 +6,8 @@
   "scripts": {
     "build": "node scripts/build-site.js",
     "test": "node test/analytics.test.js && node test/tax-engine.test.js && node test/persistence.test.js && node test/projection-display.test.js && node test/site-build.test.js && node test/onboarding.test.js && node test/growth-savings.test.js && node test/landing-demo.test.js",
-    "check": "npm test && npm run build"
+    "check": "npm test && npm run build",
+    "dev": "npm run build && python3 -m http.server 8747 --bind 127.0.0.1 --directory dist"
   },
   "devDependencies": {
     "wrangler": "4.136.1"

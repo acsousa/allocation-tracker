@@ -73,6 +73,27 @@ enter setup with empty data. Printed demo reports are labeled as sample data.
 The mobile **Navigate** menu selects the main view. **Help** explains the app and
 local-file model. The logo returns to the public landing page.
 
+### Retirement planning ages
+
+In **Settings → Retirement**, **Plan through age** defaults to 95 and can be
+edited up to 110. It controls the full simulation horizon, confidence, additional
+savings estimate, charts, and report. It must extend at least one year beyond
+both your current age and retirement age. Older files receive the default; the
+app extends it when necessary to keep the horizon in the future.
+
+**Survivor age (first death)** is separate: when a spouse is entered, it changes
+taxes and income from that age in modeled retirement years. The model uses
+single tax rates, the larger active Social Security benefit, and each pension's
+survivor percentage. This is a simplified annual transition; death-year filing
+rules and detailed survivor-benefit eligibility are not modeled. Both ages use
+the primary user's age timeline, including when planning for a younger spouse.
+
+**Annual spending target** is after-tax spending every retirement year in
+today's dollars. Actual portfolio withdrawals vary with taxes, Social Security,
+pensions, and required distributions. **Additional Savings Gap** estimates extra
+annual taxable-account savings before retirement using up to 2,500 repeatable
+simulation paths; it is an illustrative estimate, not a savings instruction.
+
 ## Cloudflare Workers deployment
 
 The main deployed page is the lightweight **`index.html`** landing page; the app
@@ -172,9 +193,8 @@ and purge stale cached HTML. Do not use aggressive caching for these HTML pages.
 ## Local development and verification
 
 ```bash
-# Build and serve the exact deployment output.
-node scripts/build-site.js
-python3 -m http.server 8747 --directory dist
+# Build and serve the exact deployment output on the fixed development port.
+npm run dev
 # Open http://127.0.0.1:8747/
 
 # Exact regression and build check used by GitHub Actions.
@@ -182,7 +202,14 @@ npm ci
 npm run check
 ```
 
-For direct source development, serve the repository root instead of `dist`.
+The canonical development address is **http://127.0.0.1:8747/** (app: `/app/`).
+Always use port **8747** for this project. Reuse an existing Quartermaster server
+on that port; if another process owns it, report the conflict rather than switching
+ports. `npm run dev` fails if the port is occupied and never selects a different one.
+Rebuild after edits to refresh the served deployment files.
+
+For direct source development, serve the repository root instead of `dist`, using
+the same host and port after stopping the deployment preview.
 Rebuild after source edits before testing `dist`. Never use a real portfolio file
 for testing; use the demo or a throwaway copy.
 

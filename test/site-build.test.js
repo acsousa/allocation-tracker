@@ -100,6 +100,19 @@ try {
       assert.match(header(html), /class="marketing-brand-mark" src="assets\/quartermaster-mark.png"/);
     }
   });
+  check('public pages include a correctly sized social sharing card', () => {
+    const card = fs.readFileSync(path.join(tmp, 'assets', 'quartermaster-social.png'));
+    assert.equal(card.subarray(1, 4).toString(), 'PNG');
+    assert.equal(card.readUInt32BE(16), 1200);
+    assert.equal(card.readUInt32BE(20), 630);
+    for (const page of ['index.html', 'pricing.html', 'privacy.html']) {
+      const html = fs.readFileSync(path.join(tmp, page), 'utf8');
+      assert.match(html, /property="og:image" content="https:\/\/realallocation\.com\/assets\/quartermaster-social\.png"/);
+      assert.match(html, /property="og:image:width" content="1200"/);
+      assert.match(html, /property="og:image:height" content="630"/);
+      assert.match(html, /name="twitter:card" content="summary_large_image"/);
+    }
+  });
   check('landing tells one audited four-part story with accessible motion and a local start dialog', () => {
     const html = fs.readFileSync(path.join(tmp, 'index.html'), 'utf8');
     const css = fs.readFileSync(path.join(tmp, 'assets', 'marketing.css'), 'utf8');
