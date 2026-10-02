@@ -21,6 +21,8 @@ const shim = `
   ltcgStackTax, rmdStartAge, rmdDivisor, rmdAmount, mulberry32, gaussFrom, drawReturnFrom, ssFactor,
   estimatePIAmonthly, taxableSocialSecurity, doWithdraw, decumulateYear, runProjection, switchPointVerdict, conversionFillTop,
   defaultCollegeSettings, collegeGroupMuSigma, runCollegeProjection, fmtCompactMoney, allocTableHTML,
+  retirePlanThroughAge, applyRetireSetting, estimateAnnualSavingsGap, projectionWorkerSource,
+  retireModel, retireCacheIsCurrent,
 });`;
 const src = m[1] + shim;
 
@@ -483,6 +485,78 @@ near('lognormal median matches deterministic 5%', A.drawReturnFrom(() => ++zeroN
   const incomeOnly = A.runProjection({...cfg, start: {pretax: 0, taxable: 0, roth: 0, taxfree: 0, basis: 0},
     ssGross: 20000, spend: 20000});
   near('fully funded income-only plan succeeds with zero ending assets', incomeOnly.success, 1, 1e-9);
+})();
+
+// First-death input changes the transition year and never reduces a single person's pension.
+(() => {
+  const p=A.emptyPortfolio(); A.portfolio=p;
+  const year=new Date().getFullYear();
+  p.retirementSettings.birthYears=[year-65,year-65];p.retirementSettings.retirementAge=65;
+  p.retirementSettings.survivorAge=70;p.retirementSettings.ssPIA=[2000,1000];p.retirementSettings.ssClaimAge=[65,65];
+  p.retirementSettings.pensions=[{amountReal:10000,startAge:65,cola:true,survivorPct:50}];
+  const cfg={...A.buildRetireConfig(),deterministic:true,paths:1,spend:0,conversionFill:0};
+  const run=A.runProjection(cfg);const before=run.detTable.find(r=>r.age===69), after=run.detTable.find(r=>r.age===70);
+  near('pension before chosen first-death age',before.src.pension,10000,1e-6);
+  near('pension survivor share at chosen age',after.src.pension,5000,1e-6);
+  near('survivor SS uses larger active benefit',after.ss,Math.max(...cfg.ssPeople.map(p=>p.annualBenefit)),1e-6);
+  const later=A.runProjection({...cfg,survivorAtAge:75});
+  near('later first-death input preserves joint pension longer',later.detTable.find(r=>r.age===70).src.pension,10000,1e-6);
+  const single=A.runProjection({...cfg,hasSpouse:false});
+  near('no spouse means no survivor pension reduction',single.detTable.find(r=>r.age===70).src.pension,10000,1e-6);
+  ok('no spouse means no survivor tax comparison',single.rThenSurvivor === null);
+  const beyond=A.runProjection({...cfg,survivorAtAge:100,endAge:95});
+  ok('no survivor rates when first death is beyond horizon',beyond.rThenSurvivor === null);
+  const already=A.runProjection({...cfg,survivorAtAge:60});
+  ok('no pre-death comparison when first death is already past',already.rThenJoint === null);
+  near('verdict uses survivor rate if all retirement years are survivor years',A.switchPointVerdict(cfg.rNow,already.rThenJoint,already.rThenSurvivor).rThen,already.rThenSurvivor,0);
+})();
+
+// The same editable horizon feeds charts, confidence, savings-gap trials, and worker runs.
+(() => {
+  const p=A.emptyPortfolio(); A.portfolio=p;
+  p.retirementSettings.birthYears=[new Date().getFullYear()-60,null];
+  p.retirementSettings.ssPIA='exclude';
+  near('new portfolios default to age 95',A.buildRetireConfig().endAge,95,0);
+  A.applyRetireSetting('rd-plan-through-age',{}, {value:'100'});
+  near('horizon setting reaches model configuration',A.buildRetireConfig().endAge,100,0);
+  A.applyRetireSetting('rd-plan-through-age',{}, {value:'50'});
+  near('horizon includes at least one full retirement year',p.retirementSettings.planThroughAge,66,0);
+  A.applyRetireSetting('rd-plan-through-age',{}, {value:'999'});
+  near('horizon has a supported age limit',p.retirementSettings.planThroughAge,110,0);
+  const cfg={...A.buildRetireConfig(),currentAge:55,retireAge:65,endAge:80,paths:100,
+    start:{pretax:0,roth:1300000,taxable:0,taxfree:0,basis:0},spend:80000,
+    weightsNow:{cash:1},weightsTarget:null,muSigma:{cash:[0,0]},
+    contrib:{pretax:0,taxable:0,roth:0,taxfree:0},contribGrowth:0,conversionFill:0};
+  const short=A.runProjection(cfg), longCfg={...cfg,endAge:100}, long=A.runProjection(longCfg);
+  near('chart stops at selected age 80',short.bands.at(-1).age,80,0);
+  near('chart stops at selected age 100',long.bands.at(-1).age,100,0);
+  near('short horizon funds 16 annual withdrawals',short.success,1,0);
+  near('long horizon exhausts same finite portfolio',long.success,0,0);
+  near('no savings gap in fully funded short horizon',A.estimateAnnualSavingsGap(cfg,short.success).amount,0,0);
+  const gap=A.estimateAnnualSavingsGap(longCfg,long.success);
+  ok('longer horizon requires additional savings',gap.amount>0 && gap.reached);
+  const funded=A.runProjection({...longCfg,contrib:{...longCfg.contrib,taxable:gap.amount}});
+  ok('reported extra savings funds longer horizon in zero-volatility case',funded.success>=0.85);
+  const messages=[], worker={self:{postMessage(message){messages.push(message);}}};
+  vm.createContext(worker);vm.runInContext(A.projectionWorkerSource(),worker);
+  worker.self.onmessage({data:{kind:'retire',cfg:longCfg}});
+  const result=messages.at(-1).result;
+  ok('worker completes without error',!!result);
+  if(result){
+    near('worker Monte Carlo respects selected horizon',result.base.bands.at(-1).age,100,0);
+    near('worker annual table respects selected horizon',result.det.detTable.at(-1).age,100,0);
+    near('worker savings gap matches same-horizon engine',result.savingsGap.amount,gap.amount,0);
+  }
+  p.retirementSettings.spendingTargetRealAnnual=1;p.retirementSettings.planThroughAge=95;
+  const cached=A.retireModel();
+  p.retirementSettings.planThroughAge=100;
+  ok('changed horizon invalidates existing results',!A.retireCacheIsCurrent());
+  ok('rerunning horizon creates a new model',A.retireModel()!==cached);
+  near('rerun uses changed age',A.retireModel().cfg.endAge,100,0);
+  near('RMD divisor at 106 uses extended IRS table',A.rmdDivisor(106),4.3,0);
+  near('RMD divisor at 110 uses extended IRS table',A.rmdDivisor(110),3.5,0);
+  p.retirementSettings.birthYears[0]=new Date().getFullYear()-99;p.retirementSettings.planThroughAge=95;
+  near('older imported profile retains a future horizon',A.buildRetireConfig().endAge,100,0);
 })();
 
 console.log(`\n${pass} passed, ${fail} failed`);

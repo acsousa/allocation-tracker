@@ -28,6 +28,16 @@ check('metadata-only legacy files and demo round-trip remain supported', () => {
   assert.equal(A.migrate({meta:{schemaVersion:5}}).holdings.length, 0);
   A.loadDemoData(); assert.equal(A.migrate(JSON.parse(JSON.stringify(A.portfolio))).holdings.length, 13);
 });
+check('planning horizon defaults for old files and survives saving/reloading', () => {
+  const p=fresh();delete p.retirementSettings.planThroughAge;
+  assert.equal(A.migrate(p).retirementSettings.planThroughAge,95);
+  p.retirementSettings.planThroughAge=100;
+  assert.equal(A.migrate(JSON.parse(JSON.stringify(p))).retirementSettings.planThroughAge,100);
+  for(const invalid of [0,40,111,95.5,'100']){
+    p.retirementSettings.planThroughAge=invalid;
+    assert.throws(()=>A.migrate(p),/planThroughAge/);
+  }
+});
 check('malformed arrays, unsafe properties, duplicate IDs, and orphan holdings rejected', () => {
   for (const p of [[], {}, { meta: {}, accounts: {} }, JSON.parse('{"meta":{},"__proto__":{"x":1}}'),
     { accounts: [{id:'a'}, {id:'a'}], holdings: [] }, {accounts:[],holdings:[{id:'h',accountId:'a'}]},

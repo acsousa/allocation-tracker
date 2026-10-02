@@ -54,6 +54,7 @@ function buildSite(output = path.join(root, 'dist'), token = process.env.CF_WEB_
     'quartermaster-lockup-dark.png',
   ];
   for (const name of productImages) write('assets/' + name, fs.readFileSync(path.join(root, 'assets', name)));
+  write('assets/quartermaster-social.png', fs.readFileSync(path.join(root, 'assets', 'quartermaster-social.png')));
   const marketingFonts = [
     'Barlow-Regular.ttf',
     'Barlow-SemiBold.ttf',
@@ -66,9 +67,33 @@ function buildSite(output = path.join(root, 'dist'), token = process.env.CF_WEB_
   ];
   for (const name of marketingFonts) write('assets/fonts/' + name, fs.readFileSync(path.join(root, 'assets', 'fonts', name)));
   const hostedIcons = html => html.replace(/<link rel="icon"[^>]*>/g, '<link rel="icon" type="image/png" href="/assets/quartermaster-mark.png">');
+  const socialMetadata = (html, current) => {
+    const title = (html.match(/<title>([^<]+)<\/title>/) || [])[1] || 'Quartermaster';
+    const description = (html.match(/<meta name="description" content="([^"]+)"/) || [])[1] || 'See your complete investment picture with Quartermaster.';
+    const url = `https://realallocation.com/${current ? current + '.html' : ''}`;
+    const image = 'https://realallocation.com/assets/quartermaster-social.png';
+    const markup = `<meta property="og:type" content="website">
+<meta property="og:site_name" content="Quartermaster">
+<meta property="og:title" content="${title}">
+<meta property="og:description" content="${description}">
+<meta property="og:url" content="${url}">
+<meta property="og:image" content="${image}">
+<meta property="og:image:secure_url" content="${image}">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Quartermaster — every account, one real allocation">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${title}">
+<meta name="twitter:description" content="${description}">
+<meta name="twitter:image" content="${image}">
+<meta name="twitter:image:alt" content="Quartermaster — every account, one real allocation">
+`;
+    return html.replace('</head>', markup + '</head>');
+  };
   for (const [name, current] of publicPages) {
     const html = applyMarketingShell(fs.readFileSync(path.join(root, name), 'utf8'), current);
-    write(name, hostedIcons(html).replace('</body>', analytics + '</body>'));
+    write(name, socialMetadata(hostedIcons(html), current).replace('</body>', analytics + '</body>'));
   }
   const app = fs.readFileSync(path.join(root, 'app.html'), 'utf8');
   const hostedApp = hostedIcons(productImages.reduce(
