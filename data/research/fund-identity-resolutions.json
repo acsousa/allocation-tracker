@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 1,
+  "retrievedOn": "2026-10-05",
+  "description": "Research dispositions. Preserve original audit universe; no automatic holding migrations or successor fee substitutions.",
+  "entries": {
+    "PUTW": {
+      "status": "renamed",
+      "successor": "WTPI",
+      "effectiveDate": "2025-04-04",
+      "source": "https://www.sec.gov/Archives/edgar/data/1350487/000121465925005428/z43251497.htm"
+    },
+    "ROOF": {
+      "status": "liquidated",
+      "effectiveDate": "2024-11-27",
+      "source": "https://www.newyorklifeinvestments.com/assets/documents/tax/nyli-etf-qdi-tax-flyer.pdf"
+    },
+    "AVB": {
+      "status": "not-a-fund",
+      "source": "https://www.sec.gov/Archives/edgar/data/915912/000119312526354192/xslF345X06/ownership.xml",
+      "note": "Individual company equity; fund expense ratio not applicable. Not a zero-fee fund."
+    },
+    "EQR": {
+      "status": "not-a-fund",
+      "source": "https://www.sec.gov/Archives/edgar/data/915912/000119312526354192/xslF345X06/ownership.xml",
+      "note": "Individual company equity; fund expense ratio not applicable. Not a zero-fee fund."
+    },
+    "HLX": {
+      "status": "not-a-fund",
+      "source": "https://www.sec.gov/Archives/edgar/data/866829/000086682926000022/hlx-20260630x10q.htm",
+      "note": "Individual company equity; fund expense ratio not applicable. Not a zero-fee fund."
+    },
+    "LEG": {
+      "status": "not-a-fund",
+      "source": "https://www.sec.gov/Archives/edgar/data/58492/000005849226000107/leg-20251231.htm",
+      "note": "Individual company equity; fund expense ratio not applicable. Not a zero-fee fund."
+    },
+    "STEL": {
+      "status": "not-a-fund",
+      "source": "https://s203.q4cdn.com/515803697/files/doc_news/2026/STEL-2026-Q1-10Q-FINAL.pdf",
+      "note": "Individual company equity; fund expense ratio not applicable. Not a zero-fee fund."
+    },
+    "WBS": {
+      "status": "not-a-fund",
+      "source": "https://www.sec.gov/Archives/edgar/data/801337/000080133726000008/wbs-20251231.htm",
+      "note": "Individual company equity; fund expense ratio not applicable. Not a zero-fee fund."
+    },
+    "NUSI": {
+      "status": "renamed",
+      "successor": "QQQH",
+      "effectiveDate": "2025-02-21",
+      "source": "https://www.sec.gov/Archives/edgar/data/1848758/000199937125001124/nusi-497_020325.htm"
+    },
+    "GXG": {
+      "status": "renamed",
+      "successor": "COLO",
+      "source": "https://assets-cms.globalxetfs.com/Semi-Annual-Financial-Statements_international.pdf"
+    },
+    "VMOT": {
+      "status": "renamed",
+      "successor": "AAVM",
+      "effectiveDate": "2025-01-31",
+      "source": "https://www.sec.gov/Archives/edgar/data/1592900/000159290025004114/ck0001592900-20250930.htm"
+    },
+    "JKD": {
+      "status": "renamed",
+      "successor": "ILCB",
+      "source": "https://www.miaxglobal.com/sites/default/files/circular-files/MIAX_Pearl_Equities_PC_2021_2505.pdf"
+    },
+    "SPLG": {
+      "status": "renamed",
+      "successor": "SPYM",
+      "source": "https://infomemo.theocc.com/infomemos?number=57498"
+    },
+    "VPGDX": {
+      "status": "merged",
+      "successor": "VSMGX",
+      "effectiveDate": "2023-05-19",
+      "source": "https://investor.vanguard.com/content/dam/retail/publicsite/en/documents/taxes/1042sb-2024.pdf"
+    },
+    "VTXVX": {
+      "status": "merged",
+      "successor": "VTINX",
+      "effectiveDate": "2022-07-08",
+      "source": "https://www.sec.gov/Archives/edgar/data/752177/000113743922000245/vanguardtrf49703162022.htm"
+    }
+  }
+}

@@ -4,7 +4,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 
-const html = fs.readFileSync(path.join(__dirname, '..', 'app.html'), 'utf8');
+const html = require('../scripts/instrument-catalog').readApp();
 const source = html.match(/\n<script>\n([\s\S]*)\n<\/script>/)[1];
 const window = {
   addEventListener() {}, removeEventListener() {},

@@ -3,7 +3,7 @@ const fs = require('node:fs');
 const assert = require('node:assert/strict');
 const path = require('node:path');
 
-const html = fs.readFileSync(path.join(__dirname, '..', 'app.html'), 'utf8');
+const html = require('../scripts/instrument-catalog').readApp();
 let checks = 0;
 function check(message, fn) { fn(); checks++; console.log('✓ ' + message); }
 
@@ -99,7 +99,7 @@ check('college drawdown shading begins one year before withdrawal', () => {
   assert.match(html, /const drawdownBandStart = Math\.max\(cfg\.currentAge, cfg\.startAge - 1\)/);
   assert.match(html, /\{ age: drawdownBandStart, label: 'Plan peak', showAge: false \}/);
   assert.match(html, /shadeFrom: drawdownBandStart/);
-  assert.match(html, /yellow band begins one year before the first withdrawal/);
+  assert.match(html, /yellow band covers the decline into the first bill/);
   assert.match(collegeView, /shadeLabel: 'drawdown years', showData: false/);
 });
 
@@ -114,7 +114,7 @@ check('college keeps completed results visible while revised inputs are stale', 
 
 check('shared app footer is the only app-page disclaimer footer', () => {
   assert.equal((html.match(/<footer class="app-base-footer/g) || []).length, 1);
-  assert.equal((html.match(/Suggestions, not advice — nothing is executed here/g) || []).length, 1);
+  assert.equal((html.match(/All content and tools on this platform are for educational and informational purposes only\./g) || []).length, 1);
 });
 
 check('allocation refinements keep related data compact and grouped', () => {

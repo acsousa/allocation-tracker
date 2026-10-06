@@ -5,7 +5,7 @@ const fs = require('fs');
 const vm = require('vm');
 const path = require('path');
 
-const HTML = fs.readFileSync(path.join(__dirname, '..', 'app.html'), 'utf8');
+const HTML = require('../scripts/instrument-catalog').readApp();
 const m = HTML.match(/\n<script>\n([\s\S]*)\n<\/script>/);
 if (!m) { console.error('could not extract <script>'); process.exit(1); }
 

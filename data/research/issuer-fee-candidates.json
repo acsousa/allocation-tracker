@@ -1,0 +1,3789 @@
+{
+  "status": "research-only; not shipped or used for calculations",
+  "retrievedOn": "2026-10-05",
+  "source": "Per-record issuer sources",
+  "sourceSHA256": "2cab9df34cc9b90edcd3e9e4e83ca3b2c5e9c6ff8cc8662385a7ac5c491648e0",
+  "fundUniverseCount": 448,
+  "entries": {
+    "STIP": {
+      "grossPct": 0.03,
+      "netPct": 0.03,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239450/ishares-05-year-tips-bond-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "SHY": {
+      "grossPct": 0.15,
+      "netPct": 0.15,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239452/ishares-13-year-treasury-bond-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "TLH": {
+      "grossPct": 0.15,
+      "netPct": 0.15,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239453/ishares-1020-year-treasury-bond-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "TLT": {
+      "grossPct": 0.15,
+      "netPct": 0.15,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239454/ishares-20-year-treasury-bond-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "IEI": {
+      "grossPct": 0.15,
+      "netPct": 0.15,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239455/ishares-37-year-treasury-bond-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "IEF": {
+      "grossPct": 0.15,
+      "netPct": 0.15,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239456/ishares-710-year-treasury-bond-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "AGG": {
+      "grossPct": 0.03,
+      "netPct": 0.03,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239458/ishares-core-total-us-bond-market-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "GVI": {
+      "grossPct": 0.2,
+      "netPct": 0.2,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239464/ishares-intermediate-governmentcredit-bond-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "MBB": {
+      "grossPct": 0.04,
+      "netPct": 0.04,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239465/ishares-mbs-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "SHV": {
+      "grossPct": 0.15,
+      "netPct": 0.15,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239466/ishares-short-treasury-bond-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "TIP": {
+      "grossPct": 0.18,
+      "netPct": 0.18,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239467/ishares-tips-bond-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "GOVT": {
+      "grossPct": 0.05,
+      "netPct": 0.05,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239468/ishares-us-treasury-bond-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "ICF": {
+      "grossPct": 0.32,
+      "netPct": 0.32,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239482/ishares-cohen-steers-reit-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "IDV": {
+      "grossPct": 0.5,
+      "netPct": 0.5,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239499/ishares-international-select-dividend-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "DVY": {
+      "grossPct": 0.38,
+      "netPct": 0.38,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239500/ishares-select-dividend-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "IYR": {
+      "grossPct": 0.37,
+      "netPct": 0.37,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239520/ishares-us-real-estate-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "IYW": {
+      "grossPct": 0.37,
+      "netPct": 0.37,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239522/ishares-us-technology-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "LEMB": {
+      "grossPct": 0.3,
+      "netPct": 0.3,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239528/ishares-emerging-markets-local-currency-bond-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "FLOT": {
+      "grossPct": 0.15,
+      "netPct": 0.15,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239534/ishares-floating-rate-bond-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "FXI": {
+      "grossPct": 0.73,
+      "netPct": 0.73,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239536/ishares-china-largecap-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "REM": {
+      "grossPct": 0.48,
+      "netPct": 0.48,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239543/ishares-mortgage-real-estate-capped-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "USRT": {
+      "grossPct": 0.08,
+      "netPct": 0.08,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239544/ishares-real-estate-50-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "REZ": {
+      "grossPct": 0.48,
+      "netPct": 0.48,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239545/ishares-residential-real-estate-capped-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "IAU": {
+      "grossPct": 0.25,
+      "netPct": 0.25,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239561/ishares-gold-trust-fund",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "HDV": {
+      "grossPct": 0.08,
+      "netPct": 0.08,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239563/ishares-high-dividend-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "HYG": {
+      "grossPct": 0.49,
+      "netPct": 0.49,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239565/ishares-iboxx-high-yield-corporate-bond-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "LQD": {
+      "grossPct": 0.14,
+      "netPct": 0.14,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239566/ishares-iboxx-investment-grade-corporate-bond-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "EMB": {
+      "grossPct": 0.39,
+      "netPct": 0.39,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239572/ishares-jp-morgan-usd-emerging-markets-bond-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "ACWX": {
+      "grossPct": 0.32,
+      "netPct": 0.32,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239594/ishares-msci-acwi-ex-us-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "ACWI": {
+      "grossPct": 0.32,
+      "netPct": 0.32,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239600/ishares-msci-acwi-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "EWA": {
+      "grossPct": 0.5,
+      "netPct": 0.5,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239607/ishares-msci-australia-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "EWO": {
+      "grossPct": 0.49,
+      "netPct": 0.49,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239609/ishares-msci-austria-capped-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "EWK": {
+      "grossPct": 0.49,
+      "netPct": 0.49,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239610/ishares-msci-belgium-capped-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "EWZ": {
+      "grossPct": 0.59,
+      "netPct": 0.59,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239612/ishares-msci-brazil-capped-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "EWC": {
+      "grossPct": 0.5,
+      "netPct": 0.5,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239615/ishares-msci-canada-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "ECH": {
+      "grossPct": 0.59,
+      "netPct": 0.59,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239618/ishares-msci-chile-capped-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "MCHI": {
+      "grossPct": 0.59,
+      "netPct": 0.59,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239619/ishares-msci-china-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "EFG": {
+      "grossPct": 0.34,
+      "netPct": 0.34,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239622/ishares-msci-eafe-growth-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "EFA": {
+      "grossPct": 0.32,
+      "netPct": 0.32,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239623/ishares-msci-eafe-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "EFAV": {
+      "grossPct": 0.2,
+      "netPct": 0.2,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239626/ishares-msci-eafe-minimum-volatility-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "EFV": {
+      "grossPct": 0.31,
+      "netPct": 0.31,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239628/ishares-msci-eafe-value-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "EEM": {
+      "grossPct": 0.72,
+      "netPct": 0.72,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239637/ishares-msci-emerging-markets-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "EEMV": {
+      "grossPct": 0.25,
+      "netPct": 0.25,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239641/ishares-msci-emerging-markets-minimum-volatility-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "EWQ": {
+      "grossPct": 0.5,
+      "netPct": 0.5,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239648/ishares-msci-france-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "EWG": {
+      "grossPct": 0.49,
+      "netPct": 0.49,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239650/ishares-msci-germany-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "EWH": {
+      "grossPct": 0.5,
+      "netPct": 0.5,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239657/ishares-msci-hong-kong-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "INDA": {
+      "grossPct": 0.61,
+      "netPct": 0.61,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239659/ishares-msci-india-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "EIDO": {
+      "grossPct": 0.59,
+      "netPct": 0.59,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239661/ishares-msci-indonesia-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "EWI": {
+      "grossPct": 0.5,
+      "netPct": 0.5,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239664/ishares-msci-italy-capped-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "EWJ": {
+      "grossPct": 0.49,
+      "netPct": 0.49,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239665/ishares-msci-japan-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "EWM": {
+      "grossPct": 0.5,
+      "netPct": 0.5,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239669/ishares-msci-malaysia-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "EWW": {
+      "grossPct": 0.5,
+      "netPct": 0.5,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239670/ishares-msci-mexico-capped-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "EWN": {
+      "grossPct": 0.5,
+      "netPct": 0.5,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239671/ishares-msci-netherlands-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "ENZL": {
+      "grossPct": 0.5,
+      "netPct": 0.5,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239672/ishares-msci-new-zealand-capped-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "EPP": {
+      "grossPct": 0.47,
+      "netPct": 0.47,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239674/ishares-msci-pacific-ex-japan-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "EPHE": {
+      "grossPct": 0.59,
+      "netPct": 0.59,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239675/ishares-msci-philippines-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "EWS": {
+      "grossPct": 0.5,
+      "netPct": 0.5,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239678/ishares-msci-singapore-capped-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "EZA": {
+      "grossPct": 0.59,
+      "netPct": 0.59,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239680/ishares-msci-south-africa-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "EWY": {
+      "grossPct": 0.59,
+      "netPct": 0.59,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239681/ishares-msci-south-korea-capped-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "EWP": {
+      "grossPct": 0.5,
+      "netPct": 0.5,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239683/ishares-msci-spain-capped-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "EWD": {
+      "grossPct": 0.51,
+      "netPct": 0.51,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239684/ishares-msci-sweden-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "EWL": {
+      "grossPct": 0.5,
+      "netPct": 0.5,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239685/ishares-msci-switzerland-capped-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "EWT": {
+      "grossPct": 0.59,
+      "netPct": 0.59,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239686/ishares-msci-taiwan-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "THD": {
+      "grossPct": 0.59,
+      "netPct": 0.59,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239688/ishares-msci-thailand-capped-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "TUR": {
+      "grossPct": 0.59,
+      "netPct": 0.59,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239689/ishares-msci-turkey-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "EWU": {
+      "grossPct": 0.5,
+      "netPct": 0.5,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239690/ishares-msci-united-kingdom-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "USMV": {
+      "grossPct": 0.15,
+      "netPct": 0.15,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239695/ishares-msci-usa-minimum-volatility-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "SOXX": {
+      "grossPct": 0.33,
+      "netPct": 0.33,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239705/ishares-phlx-semiconductor-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "IWF": {
+      "grossPct": 0.18,
+      "netPct": 0.18,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239706/ishares-russell-1000-growth-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "IWB": {
+      "grossPct": 0.15,
+      "netPct": 0.15,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239707/ishares-russell-1000-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "IWD": {
+      "grossPct": 0.18,
+      "netPct": 0.18,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239708/ishares-russell-1000-value-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "IWM": {
+      "grossPct": 0.19,
+      "netPct": 0.19,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239710/ishares-russell-2000-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "IWV": {
+      "grossPct": 0.2,
+      "netPct": 0.2,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239714/ishares-russell-3000-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "IWP": {
+      "grossPct": 0.23,
+      "netPct": 0.23,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239717/ishares-russell-midcap-growth-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "IWR": {
+      "grossPct": 0.18,
+      "netPct": 0.18,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239718/ishares-russell-midcap-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "IWS": {
+      "grossPct": 0.23,
+      "netPct": 0.23,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239719/ishares-russell-midcap-value-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "IWL": {
+      "grossPct": 0.15,
+      "netPct": 0.15,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239721/ishares-russell-top-200-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "OEF": {
+      "grossPct": 0.2,
+      "netPct": 0.2,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239723/ishares-sp-100-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "ITOT": {
+      "grossPct": 0.03,
+      "netPct": 0.03,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239724/ishares-core-sp-total-us-stock-market-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "IVV": {
+      "grossPct": 0.03,
+      "netPct": 0.03,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239726/ishares-core-sp-500-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "AOA": {
+      "grossPct": 0.19,
+      "netPct": 0.15,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239729/ishares-aggressive-allocation-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "AOK": {
+      "grossPct": 0.2,
+      "netPct": 0.15,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239733/ishares-conservative-allocation-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "IEV": {
+      "grossPct": 0.6,
+      "netPct": 0.6,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239736/ishares-europe-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "IOO": {
+      "grossPct": 0.4,
+      "netPct": 0.4,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239737/ishares-global-100-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "AOR": {
+      "grossPct": 0.2,
+      "netPct": 0.15,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239756/ishares-growth-allocation-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "GSG": {
+      "grossPct": 0.75,
+      "netPct": 0.75,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239757/ishares-sp-gsci-commodityindexed-trust-fund",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "INDY": {
+      "grossPct": 0.65,
+      "netPct": 0.65,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239758/ishares-india-50-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "IJK": {
+      "grossPct": 0.16,
+      "netPct": 0.16,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239762/ishares-sp-midcap-400-growth-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "IJH": {
+      "grossPct": 0.05,
+      "netPct": 0.05,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239763/ishares-core-sp-midcap-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "IJJ": {
+      "grossPct": 0.18,
+      "netPct": 0.18,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239764/ishares-sp-midcap-400-value-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "AOM": {
+      "grossPct": 0.2,
+      "netPct": 0.15,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239765/ishares-moderate-allocation-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "MUB": {
+      "grossPct": 0.05,
+      "netPct": 0.05,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239766/ishares-national-amtfree-muni-bond-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "IGV": {
+      "grossPct": 0.38,
+      "netPct": 0.38,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239771/ishares-north-american-techsoftware-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "SUB": {
+      "grossPct": 0.07,
+      "netPct": 0.07,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239772/ishares-shortterm-national-amtfree-muni-bond-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "IJT": {
+      "grossPct": 0.18,
+      "netPct": 0.18,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239773/ishares-sp-smallcap-600-growth-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "IJR": {
+      "grossPct": 0.06,
+      "netPct": 0.06,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239774/ishares-core-sp-smallcap-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "IJS": {
+      "grossPct": 0.18,
+      "netPct": 0.18,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239775/ishares-sp-smallcap-600-value-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "PFF": {
+      "grossPct": 0.45,
+      "netPct": 0.45,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239826/ishares-us-preferred-stock-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "IGOV": {
+      "grossPct": 0.35,
+      "netPct": 0.35,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239830/ishares-international-treasury-bond-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "NEAR": {
+      "grossPct": 0.25,
+      "netPct": 0.25,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239854/ishares-short-maturity-bond-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "SLV": {
+      "grossPct": 0.5,
+      "netPct": 0.5,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/239855/ishares-silver-trust-fund",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "IXUS": {
+      "grossPct": 0.07,
+      "netPct": 0.07,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/244048/ishares-core-msci-total-international-stock-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "IEFA": {
+      "grossPct": 0.07,
+      "netPct": 0.07,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/244049/ishares-core-msci-eafe-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "IEMG": {
+      "grossPct": 0.09,
+      "netPct": 0.09,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/244050/ishares-core-msci-emerging-markets-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "MTUM": {
+      "grossPct": 0.15,
+      "netPct": 0.15,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/251614/ishares-msci-usa-momentum-factor-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "VLUE": {
+      "grossPct": 0.15,
+      "netPct": 0.15,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/251616/ishares-msci-usa-value-factor-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "QUAL": {
+      "grossPct": 0.15,
+      "netPct": 0.15,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/256101/ishares-msci-usa-quality-factor-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "SHYG": {
+      "grossPct": 0.3,
+      "netPct": 0.3,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/258100/ishares-05-year-high-yield-corporate-bond-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "ICSH": {
+      "grossPct": 0.08,
+      "netPct": 0.08,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/258806/ishares-liquidity-income-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "HEFA": {
+      "grossPct": 0.7,
+      "netPct": 0.35,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/259622/ishares-currency-hedged-msci-eafe-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "TFLO": {
+      "grossPct": 0.15,
+      "netPct": 0.15,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/260652/ishares-treasury-floating-rate-bond-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "IEUR": {
+      "grossPct": 0.1,
+      "netPct": 0.1,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/264617/ishares-core-msci-europe-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "DGRO": {
+      "grossPct": 0.08,
+      "netPct": 0.08,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/264623/ishares-core-dividend-growth-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "REET": {
+      "grossPct": 0.14,
+      "netPct": 0.14,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/268752/ishares-global-reit-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "COMT": {
+      "grossPct": 0.49,
+      "netPct": 0.48,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/270319/ishares-commodity-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "IQLT": {
+      "grossPct": 0.3,
+      "netPct": 0.3,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/271540/ishares-msci-international-developed-quality-factor-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "IAGG": {
+      "grossPct": 0.07,
+      "netPct": 0.07,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/279626/ishares-international-aggregate-bond-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "FALN": {
+      "grossPct": 0.25,
+      "netPct": 0.25,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/283855/ishares-fallen-angels-usd-bond-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "IDEV": {
+      "grossPct": 0.04,
+      "netPct": 0.04,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/286762/ishares-core-msci-international-developed-markets-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "EMXC": {
+      "grossPct": 0.25,
+      "netPct": 0.25,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/288504/ishares-msci-emerging-markets-ex-china-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "USHY": {
+      "grossPct": 0.08,
+      "netPct": 0.08,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/291299/ishares-broad-usd-high-yield-corporate-bond-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "IAUM": {
+      "grossPct": 0.09,
+      "netPct": 0.09,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/306979/ishares-gold-trust-micro",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "SGOV": {
+      "grossPct": 0.09,
+      "netPct": 0.09,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/314116/ishares-0-3-month-treasury-bond-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "IBIT": {
+      "grossPct": 0.25,
+      "netPct": 0.25,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/333011/ishares-bitcoin-trust-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "ETHA": {
+      "grossPct": 0.25,
+      "netPct": 0.25,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ishares.com/us/products/337614/ishares-ethereum-trust-etf",
+      "status": "candidate",
+      "note": "Issuer screener fees; no fee-effective date in table. Retrieval date is not the effective date."
+    },
+    "SCHZ": {
+      "name": "Schwab U.S. Aggregate Bond ETF",
+      "grossPct": 0.03,
+      "netPct": 0.03,
+      "asOf": "2026-09-22",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.schwabassetmanagement.com/product-finder?producttype=mf",
+      "status": "candidate"
+    },
+    "SCHP": {
+      "name": "Schwab U.S. TIPS ETF",
+      "grossPct": 0.03,
+      "netPct": 0.03,
+      "asOf": "2026-09-22",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.schwabassetmanagement.com/product-finder?producttype=mf",
+      "status": "candidate"
+    },
+    "SWISX": {
+      "name": "Schwab International Index Fund",
+      "grossPct": 0.06,
+      "netPct": 0.06,
+      "asOf": "2026-09-22",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.schwabassetmanagement.com/product-finder?producttype=mf",
+      "status": "candidate"
+    },
+    "SCHE": {
+      "name": "Schwab Emerging Markets Equity ETF",
+      "grossPct": 0.06,
+      "netPct": 0.06,
+      "asOf": "2026-09-22",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.schwabassetmanagement.com/product-finder?producttype=mf",
+      "status": "candidate"
+    },
+    "FNDE": {
+      "name": "Schwab Fundamental Emerging Markets Equity ETF",
+      "grossPct": 0.39,
+      "netPct": 0.39,
+      "asOf": "2026-09-22",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.schwabassetmanagement.com/product-finder?producttype=mf",
+      "status": "candidate"
+    },
+    "SCHF": {
+      "name": "Schwab International Equity ETF",
+      "grossPct": 0.03,
+      "netPct": 0.03,
+      "asOf": "2026-09-22",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.schwabassetmanagement.com/product-finder?producttype=mf",
+      "status": "candidate"
+    },
+    "SNVXX": {
+      "name": "Schwab Government Money Fund - Investor Shares",
+      "grossPct": 0.35,
+      "netPct": 0.34,
+      "asOf": "2026-09-22",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.schwabassetmanagement.com/product-finder?producttype=mf",
+      "status": "candidate"
+    },
+    "SWVXX": {
+      "name": "Schwab Prime Advantage Money Fund - Investor",
+      "grossPct": 0.35,
+      "netPct": 0.34,
+      "asOf": "2026-09-22",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.schwabassetmanagement.com/product-finder?producttype=mf",
+      "status": "candidate"
+    },
+    "SNSXX": {
+      "name": "Schwab U.S. Treasury Money Fund - Investor Shares",
+      "grossPct": 0.35,
+      "netPct": 0.34,
+      "asOf": "2026-09-22",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.schwabassetmanagement.com/product-finder?producttype=mf",
+      "status": "candidate"
+    },
+    "SCHH": {
+      "name": "Schwab U.S. REIT ETF",
+      "grossPct": 0.07,
+      "netPct": 0.07,
+      "asOf": "2026-09-22",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.schwabassetmanagement.com/product-finder?producttype=mf",
+      "status": "candidate"
+    },
+    "SWPPX": {
+      "name": "Schwab S&P 500 Index Fund",
+      "grossPct": null,
+      "netPct": 0.02,
+      "asOf": "2026-09-22",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.schwabassetmanagement.com/product-finder?producttype=mf",
+      "status": "candidate"
+    },
+    "SWTSX": {
+      "name": "Schwab Total Stock Market Index Fund",
+      "grossPct": null,
+      "netPct": 0.03,
+      "asOf": "2026-09-22",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.schwabassetmanagement.com/product-finder?producttype=mf",
+      "status": "candidate"
+    },
+    "SCHB": {
+      "name": "Schwab U.S. Broad Market ETF",
+      "grossPct": null,
+      "netPct": 0.03,
+      "asOf": "2026-09-22",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.schwabassetmanagement.com/product-finder?producttype=mf",
+      "status": "candidate"
+    },
+    "SCHD": {
+      "name": "Schwab U.S. Dividend Equity ETF",
+      "grossPct": null,
+      "netPct": 0.06,
+      "asOf": "2026-09-22",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.schwabassetmanagement.com/product-finder?producttype=mf",
+      "status": "candidate"
+    },
+    "SCHX": {
+      "name": "Schwab U.S. Large-Cap ETF",
+      "grossPct": null,
+      "netPct": 0.03,
+      "asOf": "2026-09-22",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.schwabassetmanagement.com/product-finder?producttype=mf",
+      "status": "candidate"
+    },
+    "SCHG": {
+      "name": "Schwab U.S. Large-Cap Growth ETF",
+      "grossPct": null,
+      "netPct": 0.04,
+      "asOf": "2026-09-22",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.schwabassetmanagement.com/product-finder?producttype=mf",
+      "status": "candidate"
+    },
+    "SCHV": {
+      "name": "Schwab U.S. Large-Cap Value ETF",
+      "grossPct": null,
+      "netPct": 0.04,
+      "asOf": "2026-09-22",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.schwabassetmanagement.com/product-finder?producttype=mf",
+      "status": "candidate"
+    },
+    "SCHM": {
+      "name": "Schwab U.S. Mid-Cap ETF",
+      "grossPct": null,
+      "netPct": 0.03,
+      "asOf": "2026-09-22",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.schwabassetmanagement.com/product-finder?producttype=mf",
+      "status": "candidate"
+    },
+    "SCHA": {
+      "name": "Schwab U.S. Small-Cap ETF",
+      "grossPct": null,
+      "netPct": 0.03,
+      "asOf": "2026-09-22",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.schwabassetmanagement.com/product-finder?producttype=mf",
+      "status": "candidate"
+    },
+    "GLDM": {
+      "grossPct": 0.1,
+      "netPct": null,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ssga.com/us/en/intermediary/etfs/spdr-gold-minishares-gldm",
+      "bulkSource": "https://www.ssga.com/bin/v1/ssmp/fund/fundfinder?country=us&language=en&role=intermediary&product=&ui=fund-finder",
+      "status": "candidate",
+      "note": "Issuer table explicitly labels TER as gross expense ratio. NAV date not used as fee date.",
+      "documents": [
+        {
+          "docType": "Factsheet",
+          "docs": [
+            {
+              "language": "",
+              "name": "Factsheet",
+              "path": "/library-content/products/factsheets/etfs/us/factsheet-us-en-gldm.pdf",
+              "canDownload": true
+            }
+          ]
+        }
+      ]
+    },
+    "GLD": {
+      "grossPct": 0.4,
+      "netPct": null,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ssga.com/us/en/intermediary/etfs/spdr-gold-shares-gld",
+      "bulkSource": "https://www.ssga.com/bin/v1/ssmp/fund/fundfinder?country=us&language=en&role=intermediary&product=&ui=fund-finder",
+      "status": "candidate",
+      "note": "Issuer table explicitly labels TER as gross expense ratio. NAV date not used as fee date.",
+      "documents": [
+        {
+          "docType": "Factsheet",
+          "docs": [
+            {
+              "language": "",
+              "name": "Factsheet",
+              "path": "/library-content/products/factsheets/etfs/us/factsheet-us-en-gld.pdf",
+              "canDownload": true
+            }
+          ]
+        }
+      ]
+    },
+    "SRLN": {
+      "grossPct": 0.7,
+      "netPct": null,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ssga.com/us/en/intermediary/etfs/state-street-blackstone-senior-loan-etf-srln",
+      "bulkSource": "https://www.ssga.com/bin/v1/ssmp/fund/fundfinder?country=us&language=en&role=intermediary&product=&ui=fund-finder",
+      "status": "candidate",
+      "note": "Issuer table explicitly labels TER as gross expense ratio. NAV date not used as fee date.",
+      "documents": [
+        {
+          "docType": "Factsheet",
+          "docs": [
+            {
+              "language": "",
+              "name": "Factsheet",
+              "path": "/library-content/products/factsheets/etfs/us/factsheet-us-en-srln.pdf",
+              "canDownload": true
+            }
+          ]
+        }
+      ]
+    },
+    "XLRE": {
+      "grossPct": 0.08,
+      "netPct": null,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ssga.com/us/en/intermediary/etfs/state-street-real-estate-select-sector-spdr-etf-xlre",
+      "bulkSource": "https://www.ssga.com/bin/v1/ssmp/fund/fundfinder?country=us&language=en&role=intermediary&product=&ui=fund-finder",
+      "status": "candidate",
+      "note": "Issuer table explicitly labels TER as gross expense ratio. NAV date not used as fee date.",
+      "documents": [
+        {
+          "docType": "Factsheet",
+          "docs": [
+            {
+              "language": "",
+              "name": "Factsheet",
+              "path": "/library-content/products/factsheets/etfs/us/factsheet-us-en-xlre.pdf",
+              "canDownload": true
+            }
+          ]
+        }
+      ]
+    },
+    "BIL": {
+      "grossPct": 0.1353,
+      "netPct": null,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ssga.com/us/en/intermediary/etfs/state-street-spdr-bloomberg-1-3-month-t-bill-etf-bil",
+      "bulkSource": "https://www.ssga.com/bin/v1/ssmp/fund/fundfinder?country=us&language=en&role=intermediary&product=&ui=fund-finder",
+      "status": "candidate",
+      "note": "Issuer table explicitly labels TER as gross expense ratio. NAV date not used as fee date.",
+      "documents": [
+        {
+          "docType": "Factsheet",
+          "docs": [
+            {
+              "language": "",
+              "name": "Factsheet",
+              "path": "/library-content/products/factsheets/etfs/us/factsheet-us-en-bil.pdf",
+              "canDownload": true
+            }
+          ]
+        }
+      ]
+    },
+    "EBND": {
+      "grossPct": 0.3,
+      "netPct": null,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ssga.com/us/en/intermediary/etfs/state-street-spdr-bloomberg-emerging-markets-local-bond-etf-ebnd",
+      "bulkSource": "https://www.ssga.com/bin/v1/ssmp/fund/fundfinder?country=us&language=en&role=intermediary&product=&ui=fund-finder",
+      "status": "candidate",
+      "note": "Issuer table explicitly labels TER as gross expense ratio. NAV date not used as fee date.",
+      "documents": [
+        {
+          "docType": "Factsheet",
+          "docs": [
+            {
+              "language": "",
+              "name": "Factsheet",
+              "path": "/library-content/products/factsheets/etfs/us/factsheet-us-en-ebnd.pdf",
+              "canDownload": true
+            }
+          ]
+        }
+      ]
+    },
+    "JNK": {
+      "grossPct": 0.4,
+      "netPct": null,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ssga.com/us/en/intermediary/etfs/state-street-spdr-bloomberg-high-yield-bond-etf-jnk",
+      "bulkSource": "https://www.ssga.com/bin/v1/ssmp/fund/fundfinder?country=us&language=en&role=intermediary&product=&ui=fund-finder",
+      "status": "candidate",
+      "note": "Issuer table explicitly labels TER as gross expense ratio. NAV date not used as fee date.",
+      "documents": [
+        {
+          "docType": "Factsheet",
+          "docs": [
+            {
+              "language": "",
+              "name": "Factsheet",
+              "path": "/library-content/products/factsheets/etfs/us/factsheet-us-en-jnk.pdf",
+              "canDownload": true
+            }
+          ]
+        }
+      ]
+    },
+    "BWX": {
+      "grossPct": 0.35,
+      "netPct": null,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ssga.com/us/en/intermediary/etfs/state-street-spdr-bloomberg-international-treasury-bond-etf-bwx",
+      "bulkSource": "https://www.ssga.com/bin/v1/ssmp/fund/fundfinder?country=us&language=en&role=intermediary&product=&ui=fund-finder",
+      "status": "candidate",
+      "note": "Issuer table explicitly labels TER as gross expense ratio. NAV date not used as fee date.",
+      "documents": [
+        {
+          "docType": "Factsheet",
+          "docs": [
+            {
+              "language": "",
+              "name": "Factsheet",
+              "path": "/library-content/products/factsheets/etfs/us/factsheet-us-en-bwx.pdf",
+              "canDownload": true
+            }
+          ]
+        }
+      ]
+    },
+    "SJNK": {
+      "grossPct": 0.4,
+      "netPct": null,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ssga.com/us/en/intermediary/etfs/state-street-spdr-bloomberg-short-term-high-yield-bond-etf-sjnk",
+      "bulkSource": "https://www.ssga.com/bin/v1/ssmp/fund/fundfinder?country=us&language=en&role=intermediary&product=&ui=fund-finder",
+      "status": "candidate",
+      "note": "Issuer table explicitly labels TER as gross expense ratio. NAV date not used as fee date.",
+      "documents": [
+        {
+          "docType": "Factsheet",
+          "docs": [
+            {
+              "language": "",
+              "name": "Factsheet",
+              "path": "/library-content/products/factsheets/etfs/us/factsheet-us-en-sjnk.pdf",
+              "canDownload": true
+            }
+          ]
+        }
+      ]
+    },
+    "DIA": {
+      "grossPct": 0.16,
+      "netPct": null,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ssga.com/us/en/intermediary/etfs/state-street-spdr-dow-jones-industrial-average-etf-trust-dia",
+      "bulkSource": "https://www.ssga.com/bin/v1/ssmp/fund/fundfinder?country=us&language=en&role=intermediary&product=&ui=fund-finder",
+      "status": "candidate",
+      "note": "Issuer table explicitly labels TER as gross expense ratio. NAV date not used as fee date.",
+      "documents": [
+        {
+          "docType": "Factsheet",
+          "docs": [
+            {
+              "language": "",
+              "name": "Factsheet",
+              "path": "/library-content/products/factsheets/etfs/us/factsheet-us-en-dia.pdf",
+              "canDownload": true
+            }
+          ]
+        }
+      ]
+    },
+    "RWO": {
+      "grossPct": 0.5,
+      "netPct": null,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ssga.com/us/en/intermediary/etfs/state-street-spdr-dow-jones-global-real-estate-etf-rwo",
+      "bulkSource": "https://www.ssga.com/bin/v1/ssmp/fund/fundfinder?country=us&language=en&role=intermediary&product=&ui=fund-finder",
+      "status": "candidate",
+      "note": "Issuer table explicitly labels TER as gross expense ratio. NAV date not used as fee date.",
+      "documents": [
+        {
+          "docType": "Factsheet",
+          "docs": [
+            {
+              "language": "",
+              "name": "Factsheet",
+              "path": "/library-content/products/factsheets/etfs/us/factsheet-us-en-rwo.pdf",
+              "canDownload": true
+            }
+          ]
+        }
+      ]
+    },
+    "RWX": {
+      "grossPct": 0.59,
+      "netPct": null,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ssga.com/us/en/intermediary/etfs/state-street-spdr-dow-jones-international-real-estate-etf-rwx",
+      "bulkSource": "https://www.ssga.com/bin/v1/ssmp/fund/fundfinder?country=us&language=en&role=intermediary&product=&ui=fund-finder",
+      "status": "candidate",
+      "note": "Issuer table explicitly labels TER as gross expense ratio. NAV date not used as fee date.",
+      "documents": [
+        {
+          "docType": "Factsheet",
+          "docs": [
+            {
+              "language": "",
+              "name": "Factsheet",
+              "path": "/library-content/products/factsheets/etfs/us/factsheet-us-en-rwx.pdf",
+              "canDownload": true
+            }
+          ]
+        }
+      ]
+    },
+    "RWR": {
+      "grossPct": 0.25,
+      "netPct": null,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ssga.com/us/en/intermediary/etfs/state-street-spdr-dow-jones-reit-etf-rwr",
+      "bulkSource": "https://www.ssga.com/bin/v1/ssmp/fund/fundfinder?country=us&language=en&role=intermediary&product=&ui=fund-finder",
+      "status": "candidate",
+      "note": "Issuer table explicitly labels TER as gross expense ratio. NAV date not used as fee date.",
+      "documents": [
+        {
+          "docType": "Factsheet",
+          "docs": [
+            {
+              "language": "",
+              "name": "Factsheet",
+              "path": "/library-content/products/factsheets/etfs/us/factsheet-us-en-rwr.pdf",
+              "canDownload": true
+            }
+          ]
+        }
+      ]
+    },
+    "FEZ": {
+      "grossPct": 0.29,
+      "netPct": null,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ssga.com/us/en/intermediary/etfs/state-street-spdr-euro-stoxx-50-etf-fez",
+      "bulkSource": "https://www.ssga.com/bin/v1/ssmp/fund/fundfinder?country=us&language=en&role=intermediary&product=&ui=fund-finder",
+      "status": "candidate",
+      "note": "Issuer table explicitly labels TER as gross expense ratio. NAV date not used as fee date.",
+      "documents": [
+        {
+          "docType": "Factsheet",
+          "docs": [
+            {
+              "language": "",
+              "name": "Factsheet",
+              "path": "/library-content/products/factsheets/etfs/us/factsheet-us-en-fez.pdf",
+              "canDownload": true
+            }
+          ]
+        }
+      ]
+    },
+    "SHM": {
+      "grossPct": 0.2,
+      "netPct": null,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ssga.com/us/en/intermediary/etfs/state-street-spdr-nuveen-ice-short-term-municipal-bond-etf-shm",
+      "bulkSource": "https://www.ssga.com/bin/v1/ssmp/fund/fundfinder?country=us&language=en&role=intermediary&product=&ui=fund-finder",
+      "status": "candidate",
+      "note": "Issuer table explicitly labels TER as gross expense ratio. NAV date not used as fee date.",
+      "documents": [
+        {
+          "docType": "Factsheet",
+          "docs": [
+            {
+              "language": "",
+              "name": "Factsheet",
+              "path": "/library-content/products/factsheets/etfs/us/factsheet-us-en-shm.pdf",
+              "canDownload": true
+            }
+          ]
+        }
+      ]
+    },
+    "SPAB": {
+      "grossPct": 0.03,
+      "netPct": null,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ssga.com/us/en/intermediary/etfs/state-street-spdr-portfolio-aggregate-bond-etf-spab",
+      "bulkSource": "https://www.ssga.com/bin/v1/ssmp/fund/fundfinder?country=us&language=en&role=intermediary&product=&ui=fund-finder",
+      "status": "candidate",
+      "note": "Issuer table explicitly labels TER as gross expense ratio. NAV date not used as fee date.",
+      "documents": [
+        {
+          "docType": "Factsheet",
+          "docs": [
+            {
+              "language": "",
+              "name": "Factsheet",
+              "path": "/library-content/products/factsheets/etfs/us/factsheet-us-en-spab.pdf",
+              "canDownload": true
+            }
+          ]
+        }
+      ]
+    },
+    "SPDW": {
+      "grossPct": 0.03,
+      "netPct": null,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ssga.com/us/en/intermediary/etfs/state-street-spdr-portfolio-developed-world-ex-us-etf-spdw",
+      "bulkSource": "https://www.ssga.com/bin/v1/ssmp/fund/fundfinder?country=us&language=en&role=intermediary&product=&ui=fund-finder",
+      "status": "candidate",
+      "note": "Issuer table explicitly labels TER as gross expense ratio. NAV date not used as fee date.",
+      "documents": [
+        {
+          "docType": "Factsheet",
+          "docs": [
+            {
+              "language": "",
+              "name": "Factsheet",
+              "path": "/library-content/products/factsheets/etfs/us/factsheet-us-en-spdw.pdf",
+              "canDownload": true
+            }
+          ]
+        }
+      ]
+    },
+    "SPEM": {
+      "grossPct": 0.07,
+      "netPct": null,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ssga.com/us/en/intermediary/etfs/state-street-spdr-portfolio-emerging-markets-etf-spem",
+      "bulkSource": "https://www.ssga.com/bin/v1/ssmp/fund/fundfinder?country=us&language=en&role=intermediary&product=&ui=fund-finder",
+      "status": "candidate",
+      "note": "Issuer table explicitly labels TER as gross expense ratio. NAV date not used as fee date.",
+      "documents": [
+        {
+          "docType": "Factsheet",
+          "docs": [
+            {
+              "language": "",
+              "name": "Factsheet",
+              "path": "/library-content/products/factsheets/etfs/us/factsheet-us-en-spem.pdf",
+              "canDownload": true
+            }
+          ]
+        }
+      ]
+    },
+    "SPTM": {
+      "grossPct": 0.03,
+      "netPct": null,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ssga.com/us/en/intermediary/etfs/state-street-spdr-portfolio-sp-1500-composite-stock-market-etf-sptm",
+      "bulkSource": "https://www.ssga.com/bin/v1/ssmp/fund/fundfinder?country=us&language=en&role=intermediary&product=&ui=fund-finder",
+      "status": "candidate",
+      "note": "Issuer table explicitly labels TER as gross expense ratio. NAV date not used as fee date.",
+      "documents": [
+        {
+          "docType": "Factsheet",
+          "docs": [
+            {
+              "language": "",
+              "name": "Factsheet",
+              "path": "/library-content/products/factsheets/etfs/us/factsheet-us-en-sptm.pdf",
+              "canDownload": true
+            }
+          ]
+        }
+      ]
+    },
+    "SPYM": {
+      "grossPct": 0.02,
+      "netPct": null,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ssga.com/us/en/intermediary/etfs/state-street-spdr-portfolio-sp-500-etf-spym",
+      "bulkSource": "https://www.ssga.com/bin/v1/ssmp/fund/fundfinder?country=us&language=en&role=intermediary&product=&ui=fund-finder",
+      "status": "candidate",
+      "note": "Issuer table explicitly labels TER as gross expense ratio. NAV date not used as fee date.",
+      "documents": [
+        {
+          "docType": "Factsheet",
+          "docs": [
+            {
+              "language": "",
+              "name": "Factsheet",
+              "path": "/library-content/products/factsheets/etfs/us/factsheet-us-en-spym.pdf",
+              "canDownload": true
+            }
+          ]
+        }
+      ]
+    },
+    "SPYG": {
+      "grossPct": 0.04,
+      "netPct": null,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ssga.com/us/en/intermediary/etfs/state-street-spdr-portfolio-sp-500-growth-etf-spyg",
+      "bulkSource": "https://www.ssga.com/bin/v1/ssmp/fund/fundfinder?country=us&language=en&role=intermediary&product=&ui=fund-finder",
+      "status": "candidate",
+      "note": "Issuer table explicitly labels TER as gross expense ratio. NAV date not used as fee date.",
+      "documents": [
+        {
+          "docType": "Factsheet",
+          "docs": [
+            {
+              "language": "",
+              "name": "Factsheet",
+              "path": "/library-content/products/factsheets/etfs/us/factsheet-us-en-spyg.pdf",
+              "canDownload": true
+            }
+          ]
+        }
+      ]
+    },
+    "SPYV": {
+      "grossPct": 0.04,
+      "netPct": null,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ssga.com/us/en/intermediary/etfs/state-street-spdr-portfolio-sp-500-value-etf-spyv",
+      "bulkSource": "https://www.ssga.com/bin/v1/ssmp/fund/fundfinder?country=us&language=en&role=intermediary&product=&ui=fund-finder",
+      "status": "candidate",
+      "note": "Issuer table explicitly labels TER as gross expense ratio. NAV date not used as fee date.",
+      "documents": [
+        {
+          "docType": "Factsheet",
+          "docs": [
+            {
+              "language": "",
+              "name": "Factsheet",
+              "path": "/library-content/products/factsheets/etfs/us/factsheet-us-en-spyv.pdf",
+              "canDownload": true
+            }
+          ]
+        }
+      ]
+    },
+    "MDYG": {
+      "grossPct": 0.15,
+      "netPct": null,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ssga.com/us/en/intermediary/etfs/state-street-spdr-sp-400-mid-cap-growth-etf-mdyg",
+      "bulkSource": "https://www.ssga.com/bin/v1/ssmp/fund/fundfinder?country=us&language=en&role=intermediary&product=&ui=fund-finder",
+      "status": "candidate",
+      "note": "Issuer table explicitly labels TER as gross expense ratio. NAV date not used as fee date.",
+      "documents": [
+        {
+          "docType": "Factsheet",
+          "docs": [
+            {
+              "language": "",
+              "name": "Factsheet",
+              "path": "/library-content/products/factsheets/etfs/us/factsheet-us-en-mdyg.pdf",
+              "canDownload": true
+            }
+          ]
+        }
+      ]
+    },
+    "MDYV": {
+      "grossPct": 0.15,
+      "netPct": null,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ssga.com/us/en/intermediary/etfs/state-street-spdr-sp-400-mid-cap-value-etf-mdyv",
+      "bulkSource": "https://www.ssga.com/bin/v1/ssmp/fund/fundfinder?country=us&language=en&role=intermediary&product=&ui=fund-finder",
+      "status": "candidate",
+      "note": "Issuer table explicitly labels TER as gross expense ratio. NAV date not used as fee date.",
+      "documents": [
+        {
+          "docType": "Factsheet",
+          "docs": [
+            {
+              "language": "",
+              "name": "Factsheet",
+              "path": "/library-content/products/factsheets/etfs/us/factsheet-us-en-mdyv.pdf",
+              "canDownload": true
+            }
+          ]
+        }
+      ]
+    },
+    "SPY": {
+      "grossPct": 0.0945,
+      "netPct": null,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ssga.com/us/en/intermediary/etfs/state-street-spdr-sp-500-etf-trust-spy",
+      "bulkSource": "https://www.ssga.com/bin/v1/ssmp/fund/fundfinder?country=us&language=en&role=intermediary&product=&ui=fund-finder",
+      "status": "candidate",
+      "note": "Issuer table explicitly labels TER as gross expense ratio. NAV date not used as fee date.",
+      "documents": [
+        {
+          "docType": "Factsheet",
+          "docs": [
+            {
+              "language": "",
+              "name": "Factsheet",
+              "path": "/library-content/products/factsheets/etfs/us/factsheet-us-en-spy.pdf",
+              "canDownload": true
+            }
+          ]
+        }
+      ]
+    },
+    "SLYG": {
+      "grossPct": 0.15,
+      "netPct": null,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ssga.com/us/en/intermediary/etfs/state-street-spdr-sp-600-small-cap-growth-etf-slyg",
+      "bulkSource": "https://www.ssga.com/bin/v1/ssmp/fund/fundfinder?country=us&language=en&role=intermediary&product=&ui=fund-finder",
+      "status": "candidate",
+      "note": "Issuer table explicitly labels TER as gross expense ratio. NAV date not used as fee date.",
+      "documents": [
+        {
+          "docType": "Factsheet",
+          "docs": [
+            {
+              "language": "",
+              "name": "Factsheet",
+              "path": "/library-content/products/factsheets/etfs/us/factsheet-us-en-slyg.pdf",
+              "canDownload": true
+            }
+          ]
+        }
+      ]
+    },
+    "SLYV": {
+      "grossPct": 0.15,
+      "netPct": null,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ssga.com/us/en/intermediary/etfs/state-street-spdr-sp-600-small-cap-value-etf-slyv",
+      "bulkSource": "https://www.ssga.com/bin/v1/ssmp/fund/fundfinder?country=us&language=en&role=intermediary&product=&ui=fund-finder",
+      "status": "candidate",
+      "note": "Issuer table explicitly labels TER as gross expense ratio. NAV date not used as fee date.",
+      "documents": [
+        {
+          "docType": "Factsheet",
+          "docs": [
+            {
+              "language": "",
+              "name": "Factsheet",
+              "path": "/library-content/products/factsheets/etfs/us/factsheet-us-en-slyv.pdf",
+              "canDownload": true
+            }
+          ]
+        }
+      ]
+    },
+    "EDIV": {
+      "grossPct": 0.49,
+      "netPct": null,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ssga.com/us/en/intermediary/etfs/state-street-spdr-sp-emerging-markets-dividend-etf-ediv",
+      "bulkSource": "https://www.ssga.com/bin/v1/ssmp/fund/fundfinder?country=us&language=en&role=intermediary&product=&ui=fund-finder",
+      "status": "candidate",
+      "note": "Issuer table explicitly labels TER as gross expense ratio. NAV date not used as fee date.",
+      "documents": [
+        {
+          "docType": "Factsheet",
+          "docs": [
+            {
+              "language": "",
+              "name": "Factsheet",
+              "path": "/library-content/products/factsheets/etfs/us/factsheet-us-en-ediv.pdf",
+              "canDownload": true
+            }
+          ]
+        }
+      ]
+    },
+    "MDY": {
+      "grossPct": 0.23,
+      "netPct": null,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ssga.com/us/en/intermediary/etfs/state-street-spdr-sp-midcap-400-etf-trust-mdy",
+      "bulkSource": "https://www.ssga.com/bin/v1/ssmp/fund/fundfinder?country=us&language=en&role=intermediary&product=&ui=fund-finder",
+      "status": "candidate",
+      "note": "Issuer table explicitly labels TER as gross expense ratio. NAV date not used as fee date.",
+      "documents": [
+        {
+          "docType": "Factsheet",
+          "docs": [
+            {
+              "language": "",
+              "name": "Factsheet",
+              "path": "/library-content/products/factsheets/etfs/us/factsheet-us-en-mdy.pdf",
+              "canDownload": true
+            }
+          ]
+        }
+      ]
+    },
+    "SDY": {
+      "grossPct": 0.35,
+      "netPct": null,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ssga.com/us/en/intermediary/etfs/state-street-spdr-sp-dividend-etf-sdy",
+      "bulkSource": "https://www.ssga.com/bin/v1/ssmp/fund/fundfinder?country=us&language=en&role=intermediary&product=&ui=fund-finder",
+      "status": "candidate",
+      "note": "Issuer table explicitly labels TER as gross expense ratio. NAV date not used as fee date.",
+      "documents": [
+        {
+          "docType": "Factsheet",
+          "docs": [
+            {
+              "language": "",
+              "name": "Factsheet",
+              "path": "/library-content/products/factsheets/etfs/us/factsheet-us-en-sdy.pdf",
+              "canDownload": true
+            }
+          ]
+        }
+      ]
+    },
+    "DWX": {
+      "grossPct": 0.45,
+      "netPct": null,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ssga.com/us/en/intermediary/etfs/state-street-spdr-sp-international-dividend-etf-dwx",
+      "bulkSource": "https://www.ssga.com/bin/v1/ssmp/fund/fundfinder?country=us&language=en&role=intermediary&product=&ui=fund-finder",
+      "status": "candidate",
+      "note": "Issuer table explicitly labels TER as gross expense ratio. NAV date not used as fee date.",
+      "documents": [
+        {
+          "docType": "Factsheet",
+          "docs": [
+            {
+              "language": "",
+              "name": "Factsheet",
+              "path": "/library-content/products/factsheets/etfs/us/factsheet-us-en-dwx.pdf",
+              "canDownload": true
+            }
+          ]
+        }
+      ]
+    },
+    "XLK": {
+      "grossPct": 0.08,
+      "netPct": null,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.ssga.com/us/en/intermediary/etfs/state-street-technology-select-sector-spdr-etf-xlk",
+      "bulkSource": "https://www.ssga.com/bin/v1/ssmp/fund/fundfinder?country=us&language=en&role=intermediary&product=&ui=fund-finder",
+      "status": "candidate",
+      "note": "Issuer table explicitly labels TER as gross expense ratio. NAV date not used as fee date.",
+      "documents": [
+        {
+          "docType": "Factsheet",
+          "docs": [
+            {
+              "language": "",
+              "name": "Factsheet",
+              "path": "/library-content/products/factsheets/etfs/us/factsheet-us-en-xlk.pdf",
+              "canDownload": true
+            }
+          ]
+        }
+      ]
+    },
+    "SDIV": {
+      "grossPct": 0.58,
+      "netPct": null,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.globalxetfs.com/explore",
+      "factSheet": "https://assets.globalxetfs.com/funds/documents/sdiv/Fact-Sheet_SDIV.pdf",
+      "status": "candidate",
+      "note": "Issuer fund table. Missing net fee is not inferred from gross."
+    },
+    "SPFF": {
+      "grossPct": 0.48,
+      "netPct": null,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.globalxetfs.com/explore",
+      "factSheet": "https://assets.globalxetfs.com/funds/documents/spff/Fact-Sheet_SPFF.pdf",
+      "status": "candidate",
+      "note": "Issuer fund table. Missing net fee is not inferred from gross."
+    },
+    "DIV": {
+      "grossPct": 0.45,
+      "netPct": null,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.globalxetfs.com/explore",
+      "factSheet": "https://assets.globalxetfs.com/funds/documents/div/Fact-Sheet_DIV.pdf",
+      "status": "candidate",
+      "note": "Issuer fund table. Missing net fee is not inferred from gross."
+    },
+    "ALTY": {
+      "grossPct": 0.5,
+      "netPct": null,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.globalxetfs.com/explore",
+      "factSheet": "https://assets.globalxetfs.com/funds/documents/alty/Fact-Sheet_ALTY.pdf",
+      "status": "candidate",
+      "note": "Issuer fund table. Missing net fee is not inferred from gross."
+    },
+    "PFFD": {
+      "grossPct": 0.23,
+      "netPct": null,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.globalxetfs.com/explore",
+      "factSheet": "https://assets.globalxetfs.com/funds/documents/pffd/Fact-Sheet_PFFD.pdf",
+      "status": "candidate",
+      "note": "Issuer fund table. Missing net fee is not inferred from gross."
+    },
+    "XYLD": {
+      "grossPct": 0.6,
+      "netPct": null,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.globalxetfs.com/explore",
+      "factSheet": "https://assets.globalxetfs.com/funds/documents/xyld/Fact-Sheet_XYLD.pdf",
+      "status": "candidate",
+      "note": "Issuer fund table. Missing net fee is not inferred from gross."
+    },
+    "QYLD": {
+      "grossPct": 0.6,
+      "netPct": null,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.globalxetfs.com/explore",
+      "factSheet": "https://assets.globalxetfs.com/funds/documents/qyld/Fact-Sheet_QYLD.pdf",
+      "status": "candidate",
+      "note": "Issuer fund table. Missing net fee is not inferred from gross."
+    },
+    "RYLD": {
+      "grossPct": 0.6,
+      "netPct": null,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.globalxetfs.com/explore",
+      "factSheet": "https://assets.globalxetfs.com/funds/documents/ryld/Fact-Sheet_RYLD.pdf",
+      "status": "candidate",
+      "note": "Issuer fund table. Missing net fee is not inferred from gross."
+    },
+    "BKCH": {
+      "grossPct": 0.5,
+      "netPct": null,
+      "retrievedOn": "2026-10-05",
+      "asOf": null,
+      "source": "https://www.globalxetfs.com/explore",
+      "factSheet": "https://assets.globalxetfs.com/funds/documents/bkch/Fact-Sheet_BKCH.pdf",
+      "status": "candidate",
+      "note": "Issuer fund table. Missing net fee is not inferred from gross."
+    },
+    "BIV": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F0925.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "cdf461ccabd666480f078257cd6cf785df0e965aa8f89c341ea8e21a2f44c026",
+      "identityMatched": true,
+      "fundFacts": "Benchmark Bloomberg U.S. 5\u201310 Year Government/Credit Float Adjusted Index Expense ratio 1 0.03% Dividend schedule Monthly ETF total net assets $29,276 million Fund total net assets $52,656 million Inception date 2007-04-03",
+      "expenseRatioPct": 0.03,
+      "asOf": null,
+      "documentDate": "2026-06-30",
+      "note": "Fact-sheet expense ratio; document date is not a fee-effective date. Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "BND": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F0928.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "51ff45f951e1244f3ed3d3460ead00a88d21f11ce7b5aab545ff440c8a647211",
+      "identityMatched": true,
+      "fundFacts": "Benchmark Bloomberg U.S. Aggregate Float Adjusted Index Expense ratio 1 0.03% Dividend schedule Monthly ETF total net assets $159,816 million Fund total net assets $398,069 million Inception date 2007-04-03",
+      "expenseRatioPct": 0.03,
+      "asOf": null,
+      "documentDate": "2026-06-30",
+      "note": "Fact-sheet expense ratio; document date is not a fee-effective date. Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "BNDW": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F3061.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "4105f2b57f07585ae56af7f79dbe9f9a1a3609431368c21dff4240d375891797",
+      "identityMatched": true,
+      "fundFacts": "Benchmark Bloomberg Global Aggregate Float Adjusted Composite Index Expense ratio 1 0.05% Dividend schedule Monthly ETF total net assets $1,910 million Fund total net assets $1,910 million Inception date 2018-09-04",
+      "expenseRatioPct": 0.05,
+      "asOf": null,
+      "documentDate": "2026-06-30",
+      "note": "Fact-sheet expense ratio; document date is not a fee-effective date. Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "BNDX": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F3711.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "b1e9802bbf761c87f3259188ba0dae0b17b26073b8294ac638c08b76ffaf073f",
+      "identityMatched": true,
+      "fundFacts": "Benchmark Bloomberg Global Aggregate ex-USD Float Adjusted RIC Capped Index (Hedged) Expense ratio 1 0.07% Dividend schedule Monthly ETF total net assets $82,965 million Fund total net assets $123,286 million Inception date 2013-05-31",
+      "expenseRatioPct": 0.07,
+      "asOf": null,
+      "documentDate": "2026-06-30",
+      "note": "Fact-sheet expense ratio; document date is not a fee-effective date. Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "BSV": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F0924.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "ad7269ee2c5f7c7e48d1d815ace9b4454577f384ce5ea089ff07e6cfe5b23e85",
+      "identityMatched": true,
+      "fundFacts": "Benchmark Bloomberg U.S. 1\u20135 Year Government/Credit Float Adjusted Index Expense ratio 1 0.03% Dividend schedule Monthly ETF total net assets $44,842 million Fund total net assets $69,937 million Inception date 2007-04-03",
+      "expenseRatioPct": 0.03,
+      "asOf": null,
+      "documentDate": "2026-06-30",
+      "note": "Fact-sheet expense ratio; document date is not a fee-effective date. Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "IVOG": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F3343.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "1b98229db319815a38d08f8d9841bfae19d3d40a9d77b33fdad8b379fefc9e3c",
+      "identityMatched": true,
+      "fundFacts": "Benchmark S&P MidCap 400 Growth Index Expense ratio 1 0.10% Dividend schedule Annually ETF total net assets $1,696 million Fund total net assets $1,870 million Inception date 2010-09-07",
+      "expenseRatioPct": 0.1,
+      "asOf": null,
+      "documentDate": "2026-06-30",
+      "note": "Fact-sheet expense ratio; document date is not a fee-effective date. Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "IVOO": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F3342.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "bec4b68e316d5b76e5c6cb007954c049dbeacae26dd80f0569531f83316a08e1",
+      "identityMatched": true,
+      "fundFacts": "Benchmark S&P MidCap 400 Index Expense ratio 1 0.07% Dividend schedule Quarterly ETF total net assets $3,796 million Fund total net assets $5,863 million Inception date 2010-09-07",
+      "expenseRatioPct": 0.07,
+      "asOf": null,
+      "documentDate": "2026-06-30",
+      "note": "Fact-sheet expense ratio; document date is not a fee-effective date. Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "IVOV": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F3344.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "d949800c37aae9264c0c126cc92aa85b678e6ec5a4fc2c2dd15f03c69aa57ce3",
+      "identityMatched": true,
+      "fundFacts": "Benchmark S&P MidCap 400 Value Index Expense ratio 1 0.10% Dividend schedule Annually ETF total net assets $1,337 million Fund total net assets $1,489 million Inception date 2010-09-07",
+      "expenseRatioPct": 0.1,
+      "asOf": null,
+      "documentDate": "2026-06-30",
+      "note": "Fact-sheet expense ratio; document date is not a fee-effective date. Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "MGC": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F3137.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "c3915c055051033463ddbe7e15dd3fac49e4bed70f2293853582f3d95d7864ce",
+      "identityMatched": true,
+      "fundFacts": "Benchmark CRSP US Mega Cap Index Expense ratio 1 0.05% Dividend schedule Quarterly ETF total net assets $10,013 million Fund total net assets $10,575 million Inception date 2007-12-17",
+      "expenseRatioPct": 0.05,
+      "asOf": null,
+      "documentDate": "2026-06-30",
+      "note": "Fact-sheet expense ratio; document date is not a fee-effective date. Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "MGK": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F3138.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "f635cf03fc3bb90744a4989cacd06f3aeafbe608e87c31a14330310bc27aea17",
+      "identityMatched": true,
+      "fundFacts": "Benchmark CRSP US Mega Cap Growth Index Expense ratio 1 0.05% Dividend schedule Quarterly ETF total net assets $33,105 million Fund total net assets $33,301 million Inception date 2007-12-17",
+      "expenseRatioPct": 0.05,
+      "asOf": null,
+      "documentDate": "2026-06-30",
+      "note": "Fact-sheet expense ratio; document date is not a fee-effective date. Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "MGV": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F3139.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "651ad48fedd60ef642481f8e19dd52ec2df1308937bab8048176752a81f16460",
+      "identityMatched": true,
+      "fundFacts": "Benchmark CRSP US Mega Cap Value Index Expense ratio 1 0.05% Dividend schedule Quarterly ETF total net assets $13,183 million Fund total net assets $13,332 million Inception date 2007-12-17",
+      "expenseRatioPct": 0.05,
+      "asOf": null,
+      "documentDate": "2026-06-30",
+      "note": "Fact-sheet expense ratio; document date is not a fee-effective date. Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VASGX": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F0122.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "2d168120624c7205bd0cd6e7e4223b094318524ed333720c33509438a2a08f87",
+      "identityMatched": true,
+      "fundFacts": "Total net assets Expense ratio as of 02/27/26 Ticker symbol Turnover rate Inception date Fund number $26,916 MM 0.10 %* VASGX 5.5 % 09/30/94 0122",
+      "expenseRatioPct": 0.1,
+      "asOf": "2026-02-27",
+      "note": " Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VB": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F0969.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "b391c05775c0c5d7268d751bd516a0eef9df5e7f0e5e92e05fe530e753fbdcc5",
+      "identityMatched": true,
+      "fundFacts": "Benchmark CRSP US Small Cap Index Expense ratio 1 0.03% Dividend schedule Quarterly ETF total net assets $81,537 million Fund total net assets $188,249 million Inception date 2004-01-26",
+      "expenseRatioPct": 0.03,
+      "asOf": null,
+      "documentDate": "2026-06-30",
+      "note": "Fact-sheet expense ratio; document date is not a fee-effective date. Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VBIAX": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F0502.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "577855d73797ba1339ebd81eb502615bc3a99439914fedf366f4bace70905f9d",
+      "identityMatched": true,
+      "fundFacts": "Total net assets Expense ratio as of 04/28/26 Ticker symbol Turnover rate Inception date Fund number $51,408 MM 0.07 % VBIAX 31.5 % 11/13/00 0502 Benchmark Balanced Composite Index Growth of a $10,000 investment : December 31, 2015\u2014 December 31, 2025 $24,780 Fund as of 12/31/25 $25,211 Benchmark as of 12/31/25 Annual returns Balanced Composite Index: Weighted 60% Dow Jones U.S. Total Stock Market Index (formerly known as the Dow Jones Wilshire 5000 Index) and 40% Lehman Brothers U.S. Aggregate Bond Index through May 31, 2005; 60% MSCI US Broad Market Index and 40% Bloomberg U.S. Aggregate Bond Index through December 31, 2009; 60% MSCI US Broad Market Index and 40% Bloomberg U.S. Aggregate Float Adjusted Index through January 14, 2013; and 60% CRSP US Total Market Index and 40% Bloomberg U.S. Aggregate Float Adjusted Index thereafter. F0502 062026",
+      "expenseRatioPct": 0.07,
+      "asOf": "2026-04-28",
+      "note": " Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VBIRX": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F5132.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "8ac80b2db6931124a714edd0aa11c6356c4737d92b945490956e121fa4614bf0",
+      "identityMatched": true,
+      "fundFacts": "Total net assets Expense ratio as of 04/28/26 Ticker symbol Turnover rate Inception date Fund number $11,695 MM 0.06 % VBIRX 54.8 % 11/12/01 5132",
+      "expenseRatioPct": 0.06,
+      "asOf": "2026-04-28",
+      "note": " Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VBK": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F0938.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "aa3de01e698957d593821e325e062311b2131bd105b1e3a0a6450976d751e326",
+      "identityMatched": true,
+      "fundFacts": "Benchmark CRSP US Small Cap Growth Index Expense ratio 1 0.05% Dividend schedule Quarterly ETF total net assets $24,813 million Fund total net assets $47,007 million Inception date 2004-01-26",
+      "expenseRatioPct": 0.05,
+      "asOf": null,
+      "documentDate": "2026-06-30",
+      "note": "Fact-sheet expense ratio; document date is not a fee-effective date. Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VBR": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F0937.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "e74712fcf25f051f03fbc53c9688d16c9ab0d12a6a3be02d67b4f4b3349d2817",
+      "identityMatched": true,
+      "fundFacts": "Benchmark CRSP US Small Cap Value Index Expense ratio 1 0.05% Dividend schedule Quarterly ETF total net assets $36,874 million Fund total net assets $67,797 million Inception date 2004-01-26",
+      "expenseRatioPct": 0.05,
+      "asOf": null,
+      "documentDate": "2026-06-30",
+      "note": "Fact-sheet expense ratio; document date is not a fee-effective date. Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VBTLX": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F0584.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "7e4b34770727975c608e5ebf1b78a2ab2e7482f1ec4c75b81ff99af445e91fda",
+      "identityMatched": true,
+      "fundFacts": "Total net assets Expense ratio as of 04/28/26 Ticker symbol Turnover rate Inception date Fund number $102,432 MM 0.04 % VBTLX 37.6 % 11/12/01 0584",
+      "expenseRatioPct": 0.04,
+      "asOf": "2026-04-28",
+      "note": " Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VCIT": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F3146.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "73ee568314079d336a432990e8ebec85990bd1235ea11c5c44c67bdb6a35e194",
+      "identityMatched": true,
+      "fundFacts": "Benchmark Bloomberg U.S. 5\u201310 Year Corporate Bond Index Expense ratio 1 0.03% Dividend schedule Monthly ETF total net assets $67,268 million Fund total net assets $69,479 million Inception date 2009-11-19",
+      "expenseRatioPct": 0.03,
+      "asOf": null,
+      "documentDate": "2026-06-30",
+      "note": "Fact-sheet expense ratio; document date is not a fee-effective date. Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VCSH": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F3145.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "2c3e84e9a62bb7d808fd6abed52545db2b37ca25d5aebd6f91a67fcd8eed081b",
+      "identityMatched": true,
+      "fundFacts": "Benchmark Bloomberg U.S. 1\u20135 Year Corporate Bond Index Expense ratio 1 0.03% Dividend schedule Monthly ETF total net assets $44,947 million Fund total net assets $51,938 million Inception date 2009-11-19",
+      "expenseRatioPct": 0.03,
+      "asOf": null,
+      "documentDate": "2026-06-30",
+      "note": "Fact-sheet expense ratio; document date is not a fee-effective date. Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VEA": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F0936.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "1226544b381cce7bf86a84be8e81726f9c222f59cb13496857450c039629b14c",
+      "identityMatched": true,
+      "fundFacts": "Benchmark FTSE Developed All Cap ex US Index Expense ratio 1 0.03% Dividend schedule Quarterly ETF total net assets $230,949 million Fund total net assets $316,318 million Inception date 2007-07-20",
+      "expenseRatioPct": 0.03,
+      "asOf": null,
+      "documentDate": "2026-06-30",
+      "note": "Fact-sheet expense ratio; document date is not a fee-effective date. Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VEMAX": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F5533.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "d76ff6ddbe054abfc56a722bab73d58ca75542e86a6a5b752158b84bd10f58df",
+      "identityMatched": true,
+      "fundFacts": "Total net assets Expense ratio as of 02/27/26 Ticker symbol Turnover rate Inception date Fund number $22,026 MM 0.13 % VEMAX 5.9 % 06/23/06 5533",
+      "expenseRatioPct": 0.13,
+      "asOf": "2026-02-27",
+      "note": " Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VEU": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F0991.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "ac3effa3c97facb55a78240ffea81cff8bea667413dd3d4e3a56241eab7a29d6",
+      "identityMatched": true,
+      "fundFacts": "Benchmark FTSE All-World ex US Index Expense ratio 1 0.04% Dividend schedule Quarterly ETF total net assets $67,321 million Fund total net assets $94,915 million Inception date 2007-03-02",
+      "expenseRatioPct": 0.04,
+      "asOf": null,
+      "documentDate": "2026-06-30",
+      "note": "Fact-sheet expense ratio; document date is not a fee-effective date. Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VEURX": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F0079.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "a11a6d137a38bca263720846343aaddfa6e6fe72b45326e7e2e44091ccb9d970",
+      "identityMatched": true,
+      "fundFacts": "Total net assets Expense ratio as of 02/27/26 Ticker symbol Turnover rate Inception date Fund number $10 MM 0.23 % VEURX 4.7 % 06/18/90 0079",
+      "expenseRatioPct": 0.23,
+      "asOf": "2026-02-27",
+      "note": " Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VFFVX": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F1487.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "455a42213581a3f4627477e82aa1b8580ef3172cf850ceca035d8e5597c3f0be",
+      "identityMatched": true,
+      "fundFacts": "Total net assets Expense ratio as of 01/28/26 Ticker symbol Turnover rate Inception date Fund number $76,429 MM 0.08 %* VFFVX 1.6 % 08/18/10 1487",
+      "expenseRatioPct": 0.08,
+      "asOf": "2026-01-28",
+      "note": " Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VFIAX": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F0540.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "6f66c98af049d375908bd7f0b40427ee7a53490ada527487037fc7b57a54d1d1",
+      "identityMatched": true,
+      "fundFacts": "Total net assets Expense ratio as of 04/28/26 Ticker symbol Turnover rate Inception date Fund number $680,539 MM 0.04 % VFIAX 2.4 % 11/13/00 0540",
+      "expenseRatioPct": 0.04,
+      "asOf": "2026-04-28",
+      "note": " Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VFICX": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F0071.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "ec462762257d2bcac4c58eadaec751fbe89a23c6c43a410593da08a5f974778b",
+      "identityMatched": true,
+      "fundFacts": "Total net assets Expense ratio as of 05/28/26 Ticker symbol Turnover rate Inception date Fund number $1,403 MM 0.20 % VFICX 68.1 % 11/01/93 0071",
+      "expenseRatioPct": 0.2,
+      "asOf": "2026-05-28",
+      "note": " Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VFORX": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F0696.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "904e3c57e42fee82f022dbcc85110cfa3ccb3cf0a9a75b0c61d09aa0a0d8b886",
+      "identityMatched": true,
+      "fundFacts": "Total net assets Expense ratio as of 01/28/26 Ticker symbol Turnover rate Inception date Fund number $119,646 MM 0.08 %* VFORX 5.5 % 06/07/06 0696",
+      "expenseRatioPct": 0.08,
+      "asOf": "2026-01-28",
+      "note": " Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VFSTX": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F0039.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "d57e12db5fab4d7375e458bbe1fb2b6bffbfa741eafdae5e62911c1728d8cd19",
+      "identityMatched": true,
+      "fundFacts": "Total net assets Expense ratio as of 05/28/26 Ticker symbol Turnover rate Inception date Fund number $3,488 MM 0.20 % VFSTX 73.2 % 10/29/82 0039",
+      "expenseRatioPct": 0.2,
+      "asOf": "2026-05-28",
+      "note": " Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VGIT": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F3143.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "850df654c85cec56ac1be30256e40455954cd29d00fb6ff72de6a0470c1fb1fd",
+      "identityMatched": true,
+      "fundFacts": "Benchmark Bloomberg U.S. Treasury 3\u201310 Year Bond Index Expense ratio 1 0.03% Dividend schedule Monthly ETF total net assets $42,057 million Fund total net assets $50,430 million Inception date 2009-11-19",
+      "expenseRatioPct": 0.03,
+      "asOf": null,
+      "documentDate": "2026-06-30",
+      "note": "Fact-sheet expense ratio; document date is not a fee-effective date. Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VGK": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F0963.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "b9c671fdbed31257479bb1c7999054b5c89cb14e71c5d5432438ee2f8c26fe30",
+      "identityMatched": true,
+      "fundFacts": "Benchmark FTSE Developed Europe All Cap Index Expense ratio 1 0.06% Dividend schedule Quarterly ETF total net assets $29,980 million Fund total net assets $37,858 million Inception date 2005-03-04",
+      "expenseRatioPct": 0.06,
+      "asOf": null,
+      "documentDate": "2026-06-30",
+      "note": "Fact-sheet expense ratio; document date is not a fee-effective date. Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VGLT": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F3144.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "d24fc2d3a939dca72900021f0fdb3f1d07cb2428e68b74fa6cf70af42403ac42",
+      "identityMatched": true,
+      "fundFacts": "Benchmark Bloomberg U.S. Long Treasury Bond Index Expense ratio 1 0.03% Dividend schedule Monthly ETF total net assets $10,482 million Fund total net assets $15,152 million Inception date 2009-11-19",
+      "expenseRatioPct": 0.03,
+      "asOf": null,
+      "documentDate": "2026-06-30",
+      "note": "Fact-sheet expense ratio; document date is not a fee-effective date. Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VGSH": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F3142.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "2e656783bdb666f24af26e33f6f57d82a39aea1eee50419e244269c5abc59b14",
+      "identityMatched": true,
+      "fundFacts": "Benchmark Bloomberg U.S. Treasury 1\u20133 Year Bond Index Expense ratio 1 0.03% Dividend schedule Monthly ETF total net assets $29,356 million Fund total net assets $33,846 million Inception date 2009-11-19",
+      "expenseRatioPct": 0.03,
+      "asOf": null,
+      "documentDate": "2026-06-30",
+      "note": "Fact-sheet expense ratio; document date is not a fee-effective date. Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VGSLX": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F5123.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "392b068897e0edcd5ff82516c69213ef97475678f69c865870eb7023d7963a8c",
+      "identityMatched": true,
+      "fundFacts": "Total net assets Expense ratio as of 05/28/26 Ticker symbol Turnover rate Inception date Fund number $21,512 MM 0.13 % VGSLX 6.7 % 11/12/01 5123",
+      "expenseRatioPct": 0.13,
+      "asOf": "2026-05-28",
+      "note": " Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VGSTX": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F0056.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "a7ba51b2f60b9c6c69d7c4e9bdf0089a8041856ee6bc1d4646604d537042dafd",
+      "identityMatched": true,
+      "fundFacts": "Total net assets Expense ratio as of 02/27/26 Ticker symbol Turnover rate Inception date Fund number $23,973 MM 0.29 %* VGSTX 56.1 % 03/29/85 0056",
+      "expenseRatioPct": 0.29,
+      "asOf": "2026-02-27",
+      "note": " Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VGT": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F0958.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "255ee4d1536a74f3824b59dab42903372cd968330e7cbabb8fb6be45cbc83fb4",
+      "identityMatched": true,
+      "fundFacts": "Benchmark MSCI US IMI/Information Technology 25/50 Expense ratio 1 0.09% Dividend schedule Quarterly ETF total net assets $146,578 million Fund total net assets $169,218 million Inception date 2004-01-26",
+      "expenseRatioPct": 0.09,
+      "asOf": null,
+      "documentDate": "2026-06-30",
+      "note": "Fact-sheet expense ratio; document date is not a fee-effective date. Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VGVT": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/FV050.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "92adcd38f64e30c82b2d9a0262bc66e12ab74912aee6947ca546c1ae5e9a8968",
+      "identityMatched": true,
+      "fundFacts": "Benchmark Bloomberg U.S. Government Total Return Index Expense ratio 1 0.10% Dividend schedule Monthly ETF total net assets $39 million Fund total net assets $39 million Inception date 2025-07-07",
+      "expenseRatioPct": 0.1,
+      "asOf": null,
+      "documentDate": "2026-06-30",
+      "note": "Fact-sheet expense ratio; document date is not a fee-effective date. Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VIG": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F0920.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "f4303835d6e9f8013a3d7e0343fb742fdf813efa6a2d8533857ae65e64222cc7",
+      "identityMatched": true,
+      "fundFacts": "Benchmark S&P U.S. Dividend Growers Index TR Expense ratio 1 0.04% Dividend schedule Quarterly ETF total net assets $110,165 million Fund total net assets $129,566 million Inception date 2006-04-21",
+      "expenseRatioPct": 0.04,
+      "asOf": null,
+      "documentDate": "2026-06-30",
+      "note": "Fact-sheet expense ratio; document date is not a fee-effective date. Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VIMAX": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F5859.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "e1d4d4a7a988ddd37c7bf595792e0a2b827fc97209907349a3791a29fe223cc6",
+      "identityMatched": true,
+      "fundFacts": "Total net assets Expense ratio as of 04/28/26 Ticker symbol Turnover rate Inception date Fund number $71,960 MM 0.05 % VIMAX 15.6 % 11/12/01 5859",
+      "expenseRatioPct": 0.05,
+      "asOf": "2026-04-28",
+      "note": " Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VIOG": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F3347.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "c654dfc1f0ed2ae174eb7740e97f31c77b28b8c767a8e7e6c83b74a7add35736",
+      "identityMatched": true,
+      "fundFacts": "Benchmark S&P SmallCap 600 Growth Index Expense ratio 1 0.10% Dividend schedule Quarterly ETF total net assets $1,087 million Fund total net assets $1,087 million Inception date 2010-09-07",
+      "expenseRatioPct": 0.1,
+      "asOf": null,
+      "documentDate": "2026-06-30",
+      "note": "Fact-sheet expense ratio; document date is not a fee-effective date. Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VIOO": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F3345.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "2c6f2f8c404b3480efb145fcc2c0c15d858b3c7111ade11c00c4c5615d2b7840",
+      "identityMatched": true,
+      "fundFacts": "Benchmark S&P SmallCap 600 Index Expense ratio 1 0.07% Dividend schedule Annually ETF total net assets $4,232 million Fund total net assets $6,437 million Inception date 2010-09-07",
+      "expenseRatioPct": 0.07,
+      "asOf": null,
+      "documentDate": "2026-06-30",
+      "note": "Fact-sheet expense ratio; document date is not a fee-effective date. Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VIOV": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F3346.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "09cff96192f0fc91b04cecdf11a78b5f215833938dbe77aef29df4169fe5a077",
+      "identityMatched": true,
+      "fundFacts": "Benchmark S&P SmallCap 600 Value Index Expense ratio 1 0.10% Dividend schedule Quarterly ETF total net assets $1,860 million Fund total net assets $1,970 million Inception date 2010-09-07",
+      "expenseRatioPct": 0.1,
+      "asOf": null,
+      "documentDate": "2026-06-30",
+      "note": "Fact-sheet expense ratio; document date is not a fee-effective date. Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VLXVX": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F1791.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "59d8a301b7aeaf0acb4a71884d1129b93386052af83490ff80e614fdfab9c3a6",
+      "identityMatched": true,
+      "fundFacts": "Total net assets Expense ratio as of 01/28/26 Ticker symbol Turnover rate Inception date Fund number $16,908 MM 0.08 %* VLXVX 1.0 % 07/12/17 1791",
+      "expenseRatioPct": 0.08,
+      "asOf": "2026-01-28",
+      "note": " Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VMBS": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F3148.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "050062b35ab2c910ff3cce3a14a913c0abca6a48b9c653dc92d1675efabac423",
+      "identityMatched": true,
+      "fundFacts": "Benchmark Bloomberg U.S. MBS Float Adjusted Index Expense ratio 1 0.03% Dividend schedule Monthly ETF total net assets $15,622 million Fund total net assets $17,339 million Inception date 2009-11-19",
+      "expenseRatioPct": 0.03,
+      "asOf": null,
+      "documentDate": "2026-06-30",
+      "note": "Fact-sheet expense ratio; document date is not a fee-effective date. Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VMFXX": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F0033.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "24fd3ab60307992ec27f8c781d54582cdceb6b088f72b82c83f54f38c97a4ee3",
+      "identityMatched": true,
+      "fundFacts": "Total net assets Expense ratio as of 12/19/25 Ticker symbol Inception date Fund number $375,654 MM 0.11 % VMFXX 07/13/81 0033",
+      "expenseRatioPct": 0.11,
+      "asOf": "2025-12-19",
+      "note": " Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VMRXX": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F0066.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "2d71a479a3fc5d2c0431f037c8c4899cbbae15a61b7204c6b0b529cca3724303",
+      "identityMatched": true,
+      "fundFacts": "Total net assets Expense ratio as of 12/19/25 Ticker symbol Inception date Fund number $117,840 MM 0.10 % VMRXX 10/03/89 0066",
+      "expenseRatioPct": 0.1,
+      "asOf": "2025-12-19",
+      "note": " Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VNQ": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F0986.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "6fe63c1b25615104f75bf13ed3496cc9383aac76cdff443ab7f2e21e21d49368",
+      "identityMatched": true,
+      "fundFacts": "Benchmark MSCI US Investable Market Real Estate 25/50 Index Expense ratio 1 0.13% Dividend schedule Quarterly ETF total net assets $38,203 million Fund total net assets $71,396 million Inception date 2004-09-23",
+      "expenseRatioPct": 0.13,
+      "asOf": null,
+      "documentDate": "2026-06-30",
+      "note": "Fact-sheet expense ratio; document date is not a fee-effective date. Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VNQI": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F3358.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "776917c8d85d72cfe91d5330542f6db3e62d58ad872af190cc0b5f4af3d07074",
+      "identityMatched": true,
+      "fundFacts": "Benchmark S&P Global ex-U.S. Property Index Expense ratio 1 0.12% Dividend schedule Annually ETF total net assets $3,421 million Fund total net assets $3,724 million Inception date 2010-11-01",
+      "expenseRatioPct": 0.12,
+      "asOf": null,
+      "documentDate": "2026-06-30",
+      "note": "Fact-sheet expense ratio; document date is not a fee-effective date. Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VO": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F0939.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "3079745502d15f4bc65504e5e2d156f02324fdc375764173bb609ed370ef2e1f",
+      "identityMatched": true,
+      "fundFacts": "Benchmark CRSP US Mid Cap Index Expense ratio 1 0.03% Dividend schedule Quarterly ETF total net assets $105,931 million Fund total net assets $224,020 million Inception date 2004-01-26",
+      "expenseRatioPct": 0.03,
+      "asOf": null,
+      "documentDate": "2026-06-30",
+      "note": "Fact-sheet expense ratio; document date is not a fee-effective date. Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VOE": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F0935.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "64bf339fe5c8f5da9c66ab8f62b5222c9b6cf964db1ecdfdc9dde4acf90f2473",
+      "identityMatched": true,
+      "fundFacts": "Benchmark CRSP US Mid Cap Value Index Expense ratio 1 0.05% Dividend schedule Quarterly ETF total net assets $22,911 million Fund total net assets $37,236 million Inception date 2006-08-17",
+      "expenseRatioPct": 0.05,
+      "asOf": null,
+      "documentDate": "2026-06-30",
+      "note": "Fact-sheet expense ratio; document date is not a fee-effective date. Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VONE": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F3348.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "37e3c2076f0a893d14440b0fa02332231c5318acbba202ab6f70c38e402b4479",
+      "identityMatched": true,
+      "fundFacts": "Benchmark Russell 1000 Index Expense ratio 1 0.06% Dividend schedule Quarterly ETF total net assets $8,298 million Fund total net assets $11,471 million Inception date 2010-09-20",
+      "expenseRatioPct": 0.06,
+      "asOf": null,
+      "documentDate": "2026-06-30",
+      "note": "Fact-sheet expense ratio; document date is not a fee-effective date. Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VONG": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F3350.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "802dd09d11c651782b7507bc8abbf03afc0f15f3d6f59d1100eed4d3b8a91ce0",
+      "identityMatched": true,
+      "fundFacts": "Benchmark Russell 1000 Growth Index Expense ratio 1 0.06% Dividend schedule Quarterly ETF total net assets $44,912 million Fund total net assets $53,425 million Inception date 2010-09-20",
+      "expenseRatioPct": 0.06,
+      "asOf": null,
+      "documentDate": "2026-06-30",
+      "note": "Fact-sheet expense ratio; document date is not a fee-effective date. Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VONV": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F3349.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "1b1bc1a1a3fc131a9c3f29c2ba56f38428a3263d29dca4af302fecdae1bfcfdb",
+      "identityMatched": true,
+      "fundFacts": "Benchmark Russell 1000 Value Index Expense ratio 1 0.06% Dividend schedule Quarterly ETF total net assets $19,928 million Fund total net assets $21,520 million Inception date 2010-09-20",
+      "expenseRatioPct": 0.06,
+      "asOf": null,
+      "documentDate": "2026-06-30",
+      "note": "Fact-sheet expense ratio; document date is not a fee-effective date. Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VOO": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F0968.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "e61ed989f327c2742ee91ba9267ce30907a7e6c1b067f4d1688d228e28d79bd4",
+      "identityMatched": true,
+      "fundFacts": "Benchmark S&P 500 Index Expense ratio 1 0.03% Dividend schedule Quarterly ETF total net assets $978,960 million Fund total net assets $1,675,038 million Inception date 2010-09-07",
+      "expenseRatioPct": 0.03,
+      "asOf": null,
+      "documentDate": "2026-06-30",
+      "note": "Fact-sheet expense ratio; document date is not a fee-effective date. Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VOT": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F0932.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "0178f3b03e1d15eafc912a94be66c14bc194f355b8e53e561622f66867c99a36",
+      "identityMatched": true,
+      "fundFacts": "Benchmark CRSP US Mid Cap Growth Index Expense ratio 1 0.05% Dividend schedule Quarterly ETF total net assets $19,919 million Fund total net assets $34,813 million Inception date 2006-08-17",
+      "expenseRatioPct": 0.05,
+      "asOf": null,
+      "documentDate": "2026-06-30",
+      "note": "Fact-sheet expense ratio; document date is not a fee-effective date. Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VPL": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F0962.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "64bed2d00f441291a1e766eb6704acf720a50ea56749d26aaef18840f12ab779",
+      "identityMatched": true,
+      "fundFacts": "Benchmark FTSE Developed Asia Pacific All Cap Index Expense ratio 1 0.07% Dividend schedule Quarterly ETF total net assets $8,592 million Fund total net assets $13,826 million Inception date 2005-03-04",
+      "expenseRatioPct": 0.07,
+      "asOf": null,
+      "documentDate": "2026-06-30",
+      "note": "Fact-sheet expense ratio; document date is not a fee-effective date. Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VPMAX": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F0559.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "e342e0a3ded8a4c8ce4f5e57cf15a6d1a96747d7d6df4840bff3b6834d4644e8",
+      "identityMatched": true,
+      "fundFacts": "Total net assets Expense ratio as of 01/28/26 Ticker symbol Turnover rate Inception date Fund number $90,233 MM 0.27 % VPMAX 10.9 % 11/12/01 0559",
+      "expenseRatioPct": 0.27,
+      "asOf": "2026-01-28",
+      "note": " Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VSGX": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F4394.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "b8584ebecf5d542b9b1cc34f60004b0b1acaf4aa5b59d179b2492aa0c1c45769",
+      "identityMatched": true,
+      "fundFacts": "Benchmark FTSE Global All Cap ex US Choice Index Expense ratio 1 0.10% Dividend schedule Quarterly ETF total net assets $6,694 million Fund total net assets $6,694 million Inception date 2018-09-18",
+      "expenseRatioPct": 0.1,
+      "asOf": null,
+      "documentDate": "2026-06-30",
+      "note": "Fact-sheet expense ratio; document date is not a fee-effective date. Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VSMAX": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F0548.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "44ca4c1f99245da4b9c269a141b99efffa3f68edb8ea3cafa085e052599774c1",
+      "identityMatched": true,
+      "fundFacts": "Total net assets Expense ratio as of 04/28/26 Ticker symbol Turnover rate Inception date Fund number $66,227 MM 0.05 % VSMAX 16.8 % 11/13/00 0548",
+      "expenseRatioPct": 0.05,
+      "asOf": "2026-04-28",
+      "note": " Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VSMGX": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F0914.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "cdd65d68499df38ef484d721bf260cfb4abca5294fc80b55cad15262b7b3ed2d",
+      "identityMatched": true,
+      "fundFacts": "Total net assets Expense ratio as of 02/27/26 Ticker symbol Turnover rate Inception date Fund number $24,420 MM 0.10 %* VSMGX 8.0 % 09/30/94 0914",
+      "expenseRatioPct": 0.1,
+      "asOf": "2026-02-27",
+      "note": " Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VT": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F3141.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "8425755eb9bc80fbcf80e6d987de5920db9865959eb061f84464a5de68ee7eee",
+      "identityMatched": true,
+      "fundFacts": "Benchmark FTSE Global All Cap Index Expense ratio 1 0.06% Dividend schedule Quarterly ETF total net assets $77,627 million Fund total net assets $96,997 million Inception date 2008-06-24",
+      "expenseRatioPct": 0.06,
+      "asOf": null,
+      "documentDate": "2026-06-30",
+      "note": "Fact-sheet expense ratio; document date is not a fee-effective date. Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VTABX": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F0511.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "8a7f599978eaf2431a99e171de79cbb8d58c272de4dd87042a3069f50308fbaf",
+      "identityMatched": true,
+      "fundFacts": "Total net assets Expense ratio as of 02/27/26 Ticker symbol Turnover rate Inception date Fund number $24,192 MM 0.10 % VTABX 23.0 % 05/31/13 0511",
+      "expenseRatioPct": 0.1,
+      "asOf": "2026-02-27",
+      "note": " Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VTEB": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F4391.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "78d803dc8910d26f78a79df36fb687b24acbd41fcb4314165f56652b11e6fd50",
+      "identityMatched": true,
+      "fundFacts": "Benchmark S&P National AMT-Free Municipal Bond Index Expense ratio 1 0.03% Dividend schedule Monthly ETF total net assets $46,036 million Fund total net assets $48,844 million Inception date 2015-08-21",
+      "expenseRatioPct": 0.03,
+      "asOf": null,
+      "documentDate": "2026-06-30",
+      "note": "Fact-sheet expense ratio; document date is not a fee-effective date. Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VTHRX": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F0695.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "60a463181a0a3e4259e4f86c2c25e1e0bdcc04ba3d10a97bb3a22c64dc6ac775",
+      "identityMatched": true,
+      "fundFacts": "Total net assets Expense ratio as of 01/28/26 Ticker symbol Turnover rate Inception date Fund number $114,291 MM 0.08 %* VTHRX 9.0 % 06/07/06 0695",
+      "expenseRatioPct": 0.08,
+      "asOf": "2026-01-28",
+      "note": " Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VTI": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F0970.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "aa02df64705fcbf14056bcf1a9a320a852e9670b171acd2e3591289435f1ddfd",
+      "identityMatched": true,
+      "fundFacts": "Benchmark CRSP US Total Market Index Expense ratio 1 0.03% Dividend schedule Quarterly ETF total net assets $663,488 million Fund total net assets $2,298,312 million Inception date 2001-05-24",
+      "expenseRatioPct": 0.03,
+      "asOf": null,
+      "documentDate": "2026-06-30",
+      "note": "Fact-sheet expense ratio; document date is not a fee-effective date. Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VTIAX": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F0569.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "f7b51f1551a0561c1ef83c76ae3ab0afa6ed4d4eee1a2777c77ecedb31a677ef",
+      "identityMatched": true,
+      "fundFacts": "Total net assets Expense ratio as of 02/27/26 Ticker symbol Turnover rate Inception date Fund number $103,383 MM 0.09 % VTIAX 4.4 % 11/29/10 0569",
+      "expenseRatioPct": 0.09,
+      "asOf": "2026-02-27",
+      "note": " Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VTINX": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F0308.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "1395d84ce2ed401028d4f3f23266805ebe2ca4356fbdbc772469827711d98285",
+      "identityMatched": true,
+      "fundFacts": "Total net assets Expense ratio as of 01/28/26 Ticker symbol Turnover rate Inception date Fund number $36,038 MM 0.08 %* VTINX 7.2 % 10/27/03 0308",
+      "expenseRatioPct": 0.08,
+      "asOf": "2026-01-28",
+      "note": " Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VTIP": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F3365.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "1e84ca4c6f7bf9cb3dabb928e5d94293ae2f9fe7e5d61cfd0004aa9d5f9bccbc",
+      "identityMatched": true,
+      "fundFacts": "Benchmark Bloomberg U.S. Treasury Inflation-Protected Securities (TIPS) 0\u20135 Year Index Expense ratio 1 0.03% Dividend schedule Quarterly ETF total net assets $19,343 million Fund total net assets $71,133 million Inception date 2012-10-12",
+      "expenseRatioPct": 0.03,
+      "asOf": null,
+      "documentDate": "2026-06-30",
+      "note": "Fact-sheet expense ratio; document date is not a fee-effective date. Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VTIVX": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F0306.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "962ae68189571f036eeda27cf79c6691e49d8b188d39202d583f3d85ebb1f230",
+      "identityMatched": true,
+      "fundFacts": "Total net assets Expense ratio as of 01/28/26 Ticker symbol Turnover rate Inception date Fund number $121,069 MM 0.08 %* VTIVX 3.6 % 10/27/03 0306",
+      "expenseRatioPct": 0.08,
+      "asOf": "2026-01-28",
+      "note": " Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VTSAX": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F0585.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "42637807055e8aa31a067962996cf02f0c554ec673c320a1ad0d4a7e4e712ed1",
+      "identityMatched": true,
+      "fundFacts": "Total net assets Expense ratio as of 04/28/26 Ticker symbol Turnover rate Inception date Fund number $484,796 MM 0.04 % VTSAX 2.6 % 11/13/00 0585",
+      "expenseRatioPct": 0.04,
+      "asOf": "2026-04-28",
+      "note": " Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VTTSX": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F1691.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "e93665f72a311f43d27a226a4fa04f0f3e4b139b805c47af4ab4ba67c7374e78",
+      "identityMatched": true,
+      "fundFacts": "Total net assets Expense ratio as of 01/28/26 Ticker symbol Turnover rate Inception date Fund number $46,653 MM 0.08 %* VTTSX 1.4 % 01/19/12 1691",
+      "expenseRatioPct": 0.08,
+      "asOf": "2026-01-28",
+      "note": " Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VTTVX": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F0304.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "ab99c8d39ac758b6fa1e88c610d74b97ea14d97b10720102a5713253ed3b0582",
+      "identityMatched": true,
+      "fundFacts": "Total net assets Expense ratio as of 01/28/26 Ticker symbol Turnover rate Inception date Fund number $75,759 MM 0.08 %* VTTVX 8.2 % 10/27/03 0304",
+      "expenseRatioPct": 0.08,
+      "asOf": "2026-01-28",
+      "note": " Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VTV": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F0966.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "25535785f64d4dc8ce8f9e1e38e74304cb3bc8fdf43f888522a29d0a1675ed1e",
+      "identityMatched": true,
+      "fundFacts": "Benchmark CRSP US Large Cap Value Index Expense ratio 1 0.03% Dividend schedule Quarterly ETF total net assets $186,106 million Fund total net assets $254,207 million Inception date 2004-01-26",
+      "expenseRatioPct": 0.03,
+      "asOf": null,
+      "documentDate": "2026-06-30",
+      "note": "Fact-sheet expense ratio; document date is not a fee-effective date. Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VTWAX": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F5028.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "945590e535f5fe68dbf574107f3d2e68660f5a46f6c0fd795fad7706bae69e9a",
+      "identityMatched": true,
+      "fundFacts": "Total net assets Expense ratio as of 02/27/26 Ticker symbol Turnover rate Inception date Fund number $12,095 MM 0.09 % VTWAX 3.4 % 02/07/19 5028",
+      "expenseRatioPct": 0.09,
+      "asOf": "2026-02-27",
+      "note": " Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VTWNX": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F0682.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "6d2ceecc62c853779fba968fd2e56c3217d39aeccfa04b62be9186c4745913c1",
+      "identityMatched": true,
+      "fundFacts": "Total net assets Expense ratio as of 01/28/26 Ticker symbol Turnover rate Inception date Fund number $34,228 MM 0.08 %* VTWNX 7.7 % 06/07/06 0682",
+      "expenseRatioPct": 0.08,
+      "asOf": "2026-01-28",
+      "note": " Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VTWO": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F3351.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "fad557168b6e8bfe962a8308377275ea4650bfb2a737a5fcf4969ce1b7810b1b",
+      "identityMatched": true,
+      "fundFacts": "Benchmark Russell 2000 Index Expense ratio 1 0.06% Dividend schedule Quarterly ETF total net assets $17,874 million Fund total net assets $18,574 million Inception date 2010-09-20",
+      "expenseRatioPct": 0.06,
+      "asOf": null,
+      "documentDate": "2026-06-30",
+      "note": "Fact-sheet expense ratio; document date is not a fee-effective date. Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VUG": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F0967.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "309b3576948795a984e40a922c8bdcdd524566525a2519c29c07329802a3f1a4",
+      "identityMatched": true,
+      "fundFacts": "Benchmark CRSP US Large Cap Growth Index Expense ratio 1 0.03% Dividend schedule Quarterly ETF total net assets $223,246 million Fund total net assets $378,844 million Inception date 2004-01-26",
+      "expenseRatioPct": 0.03,
+      "asOf": null,
+      "documentDate": "2026-06-30",
+      "note": "Fact-sheet expense ratio; document date is not a fee-effective date. Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VUSB": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F0931.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "a63e0dd367d975fe1c6d07b494073ee296a054f1c4c0ba27ce9580c80626d5e6",
+      "identityMatched": true,
+      "fundFacts": "Benchmark Bloomberg U.S. Treasury Bellwethers: 1Year Index Expense ratio 1 0.10% Dividend schedule Monthly ETF total net assets $8,941 million Fund total net assets $8,941 million Inception date 2021-04-05",
+      "expenseRatioPct": 0.1,
+      "asOf": null,
+      "documentDate": "2026-06-30",
+      "note": "Fact-sheet expense ratio; document date is not a fee-effective date. Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VUSXX": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F0011.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "bec103d64703a1603bd0a84cf4beb9618fe1fb090b75554cfc58f914658839de",
+      "identityMatched": true,
+      "fundFacts": "Total net assets Expense ratio as of 12/19/25 Ticker symbol Inception date Fund number $108,764 MM 0.07 % VUSXX 12/14/92 0011",
+      "expenseRatioPct": 0.07,
+      "asOf": "2025-12-19",
+      "note": " Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VV": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F0961.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "e3bd6dae19607f293f2b1df15b34daecf9f6c2546dfed4424c67bcd0d61dbf66",
+      "identityMatched": true,
+      "fundFacts": "Benchmark CRSP US Large Cap Index Expense ratio 1 0.03% Dividend schedule Quarterly ETF total net assets $52,511 million Fund total net assets $73,819 million Inception date 2004-01-27",
+      "expenseRatioPct": 0.03,
+      "asOf": null,
+      "documentDate": "2026-06-30",
+      "note": "Fact-sheet expense ratio; document date is not a fee-effective date. Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VWEHX": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F0029.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "747f7b12f27a483d7535ac1d4f559c1dea0144bc4af402c5cc94b20e1e2fa7d6",
+      "identityMatched": true,
+      "fundFacts": "Total net assets Expense ratio as of 05/28/26 Ticker symbol Turnover rate Inception date Fund number $2,813 MM 0.22 % VWEHX 43.8 % 12/27/78 0029",
+      "expenseRatioPct": 0.22,
+      "asOf": "2026-05-28",
+      "note": " Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VWELX": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F0021.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "06099dc7e46fc27f55df11c8482d9eba3de6fcab0ce73b978731073eb2088ba4",
+      "identityMatched": true,
+      "fundFacts": "Total net assets Expense ratio as of 03/27/26 Ticker symbol Turnover rate Inception date Fund number $12,613 MM 0.24 % VWELX 62.5 % 07/01/29 0021",
+      "expenseRatioPct": 0.24,
+      "asOf": "2026-03-27",
+      "note": " Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VWENX": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F0521.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "6881d6e4a61d600928446de6c29cf7072205c68f3dcfc932d142fb401c8b18bf",
+      "identityMatched": true,
+      "fundFacts": "Total net assets Expense ratio as of 03/27/26 Ticker symbol Turnover rate Inception date Fund number $110,752 MM 0.16 % VWENX 62.5 % 05/14/01 0521",
+      "expenseRatioPct": 0.16,
+      "asOf": "2026-03-27",
+      "note": " Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VWIGX": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F0081.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "63cfe8b9475114b7a5f8536322b1f8b3af4d8d94d921a21836d7b0fdb73c7ac1",
+      "identityMatched": true,
+      "fundFacts": "Total net assets Expense ratio as of 12/19/25 Ticker symbol Turnover rate Inception date Fund number $5,602 MM 0.38 % VWIGX 22.5 % 09/30/81 0081",
+      "expenseRatioPct": 0.38,
+      "asOf": "2025-12-19",
+      "note": " Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VWINX": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F0027.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "33b00cd58aeb1f7f6b9f40cdb3be1276f405e969160c20004dc7643e3c925c71",
+      "identityMatched": true,
+      "fundFacts": "Total net assets Expense ratio as of 01/28/26 Ticker symbol Turnover rate Inception date Fund number $7,348 MM 0.22 % VWINX 62.9 % 07/01/70 0027",
+      "expenseRatioPct": 0.22,
+      "asOf": "2026-01-28",
+      "note": " Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VWIUX": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F0542.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "62b3dbecd9a1194f7c457a6a25709152cf19232bae0fb74309be3f4cbbb940bc",
+      "identityMatched": true,
+      "fundFacts": "Total net assets Expense ratio as of 02/27/26 Ticker symbol Turnover rate Inception date Fund number $87,544 MM 0.09 % VWIUX 19.6 % 02/12/01 0542",
+      "expenseRatioPct": 0.09,
+      "asOf": "2026-02-27",
+      "note": " Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VWO": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F0964.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "b111b71c23b95200dd38460491553df2d9e4a5be955f9dda8904318b93735d22",
+      "identityMatched": true,
+      "fundFacts": "Benchmark FTSE Emerging Markets All Cap China AInclusion Index Expense ratio 1 0.06% Dividend schedule Quarterly ETF total net assets $122,306 million Fund total net assets $163,327 million Inception date 2005-03-04",
+      "expenseRatioPct": 0.06,
+      "asOf": null,
+      "documentDate": "2026-06-30",
+      "note": "Fact-sheet expense ratio; document date is not a fee-effective date. Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VWOB": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F3820.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "900143e10269670e7a55a8b91c8d18469ff42ad239f3f5c84066bc9279923744",
+      "identityMatched": true,
+      "fundFacts": "Benchmark Bloomberg USD Emerging Markets Government RIC Capped Index Expense ratio 1 0.15% Dividend schedule Monthly ETF total net assets $6,278 million Fund total net assets $6,761 million Inception date 2013-05-31",
+      "expenseRatioPct": 0.15,
+      "asOf": null,
+      "documentDate": "2026-06-30",
+      "note": "Fact-sheet expense ratio; document date is not a fee-effective date. Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VXF": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F0965.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "8a19601eaeb3d3975ed92c6ab7c818939480d8756a8d80cccb74242162c8bc0d",
+      "identityMatched": true,
+      "fundFacts": "Benchmark S&P Completion Index Expense ratio 1 0.05% Dividend schedule Quarterly ETF total net assets $31,569 million Fund total net assets $97,661 million Inception date 2001-12-27",
+      "expenseRatioPct": 0.05,
+      "asOf": null,
+      "documentDate": "2026-06-30",
+      "note": "Fact-sheet expense ratio; document date is not a fee-effective date. Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VXUS": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F3369.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "2cc7563d353747993f000df1347c68606d7e2c5bb695ad224000ff723e05143c",
+      "identityMatched": true,
+      "fundFacts": "Benchmark FTSE Global All Cap ex US Index Expense ratio 1 0.05% Dividend schedule Quarterly ETF total net assets $156,510 million Fund total net assets $651,036 million Inception date 2011-01-26",
+      "expenseRatioPct": 0.05,
+      "asOf": null,
+      "documentDate": "2026-06-30",
+      "note": "Fact-sheet expense ratio; document date is not a fee-effective date. Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VYM": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F0923.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "a1b48aa0dcbe74cd03887127b92d033b0bf825816f76cb9b34dae20a43fae101",
+      "identityMatched": true,
+      "fundFacts": "Benchmark FTSE High Dividend Yield Index Expense ratio 1 0.04% Dividend schedule Quarterly ETF total net assets $78,990 million Fund total net assets $96,195 million Inception date 2006-11-10",
+      "expenseRatioPct": 0.04,
+      "asOf": null,
+      "documentDate": "2026-06-30",
+      "note": "Fact-sheet expense ratio; document date is not a fee-effective date. Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "VYMI": {
+      "source": "https://workplace.vanguard.com/assets/corp/fund_communications/pdf_publish/us-products/fact-sheet/F4430.pdf",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "sourceSHA256": "013230d514e518bd02ccaad00ff6897a82050488ebad20d245ce5823238e8d52",
+      "identityMatched": true,
+      "fundFacts": "Benchmark FTSE All-World ex US High Dividend Yield Index Expense ratio 1 0.07% Dividend schedule Quarterly ETF total net assets $19,502 million Fund total net assets $20,382 million Inception date 2016-02-25",
+      "expenseRatioPct": 0.07,
+      "asOf": null,
+      "documentDate": "2026-06-30",
+      "note": "Fact-sheet expense ratio; document date is not a fee-effective date. Issuer labels expense ratio without separately specifying gross/net; do not infer either."
+    },
+    "FXAIX": {
+      "expenseRatioPct": 0.015,
+      "asOf": "2026-02-01",
+      "source": "https://www.fidelity.com/mutual-funds/investing-ideas/index-funds",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "note": "Issuer comparison table labels expense ratio without distinguishing gross/net."
+    },
+    "FSKAX": {
+      "expenseRatioPct": 0.015,
+      "asOf": "2026-02-01",
+      "source": "https://www.fidelity.com/mutual-funds/investing-ideas/index-funds",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "note": "Issuer comparison table labels expense ratio without distinguishing gross/net."
+    },
+    "FSMDX": {
+      "expenseRatioPct": 0.025,
+      "asOf": "2026-02-01",
+      "source": "https://www.fidelity.com/mutual-funds/investing-ideas/index-funds",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "note": "Issuer comparison table labels expense ratio without distinguishing gross/net."
+    },
+    "FSSNX": {
+      "expenseRatioPct": 0.025,
+      "asOf": "2026-02-01",
+      "source": "https://www.fidelity.com/mutual-funds/investing-ideas/index-funds",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "note": "Issuer comparison table labels expense ratio without distinguishing gross/net."
+    },
+    "FSPSX": {
+      "expenseRatioPct": 0.035,
+      "asOf": "2026-02-01",
+      "source": "https://www.fidelity.com/mutual-funds/investing-ideas/index-funds",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "note": "Issuer comparison table labels expense ratio without distinguishing gross/net."
+    },
+    "FTIHX": {
+      "expenseRatioPct": 0.06,
+      "asOf": "2026-02-01",
+      "source": "https://www.fidelity.com/mutual-funds/investing-ideas/index-funds",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "note": "Issuer comparison table labels expense ratio without distinguishing gross/net."
+    },
+    "FPADX": {
+      "expenseRatioPct": 0.075,
+      "asOf": "2026-02-01",
+      "source": "https://www.fidelity.com/mutual-funds/investing-ideas/index-funds",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "note": "Issuer comparison table labels expense ratio without distinguishing gross/net."
+    },
+    "FXNAX": {
+      "expenseRatioPct": 0.025,
+      "asOf": "2026-02-01",
+      "source": "https://www.fidelity.com/mutual-funds/investing-ideas/index-funds",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "note": "Issuer comparison table labels expense ratio without distinguishing gross/net."
+    },
+    "FZIPX": {
+      "expenseRatioPct": 0,
+      "asOf": null,
+      "source": "https://www.fidelity.com/mutual-funds/investing-ideas/index-funds",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "note": "Issuer explicitly states zero expense ratio."
+    },
+    "FZROX": {
+      "expenseRatioPct": 0,
+      "asOf": null,
+      "source": "https://www.fidelity.com/mutual-funds/investing-ideas/index-funds",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "note": "Issuer explicitly states zero expense ratio."
+    },
+    "FZILX": {
+      "expenseRatioPct": 0,
+      "asOf": null,
+      "source": "https://www.fidelity.com/mutual-funds/investing-ideas/index-funds",
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "note": "Issuer explicitly states zero expense ratio."
+    },
+    "HODL": {
+      "grossPct": 0.2,
+      "netPct": 0.2,
+      "source": "https://www.vaneck.com/us/en/vaneck-etfs-fees.pdf",
+      "documentMonth": "2026-08",
+      "asOf": null,
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "waiverExpiresOn": null,
+      "note": "Published gross/net total expense ratios; expense caps can exclude acquired-fund and other expenses. Recheck expired waivers."
+    },
+    "DAPP": {
+      "grossPct": 0.52,
+      "netPct": 0.52,
+      "source": "https://www.vaneck.com/us/en/vaneck-etfs-fees.pdf",
+      "documentMonth": "2026-08",
+      "asOf": null,
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "waiverExpiresOn": "2027-02-01",
+      "note": "Published gross/net total expense ratios; expense caps can exclude acquired-fund and other expenses. Recheck expired waivers."
+    },
+    "ETHV": {
+      "grossPct": 0.2,
+      "netPct": 0.2,
+      "source": "https://www.vaneck.com/us/en/vaneck-etfs-fees.pdf",
+      "documentMonth": "2026-08",
+      "asOf": null,
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "waiverExpiresOn": null,
+      "note": "Published gross/net total expense ratios; expense caps can exclude acquired-fund and other expenses. Recheck expired waivers."
+    },
+    "SMH": {
+      "grossPct": 0.35,
+      "netPct": 0.35,
+      "source": "https://www.vaneck.com/us/en/vaneck-etfs-fees.pdf",
+      "documentMonth": "2026-08",
+      "asOf": null,
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "waiverExpiresOn": "2027-02-01",
+      "note": "Published gross/net total expense ratios; expense caps can exclude acquired-fund and other expenses. Recheck expired waivers."
+    },
+    "ANGL": {
+      "grossPct": 0.25,
+      "netPct": 0.25,
+      "source": "https://www.vaneck.com/us/en/vaneck-etfs-fees.pdf",
+      "documentMonth": "2026-08",
+      "asOf": null,
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "waiverExpiresOn": "2026-09-01",
+      "note": "Published gross/net total expense ratios; expense caps can exclude acquired-fund and other expenses. Recheck expired waivers."
+    },
+    "HYEM": {
+      "grossPct": 0.4,
+      "netPct": 0.4,
+      "source": "https://www.vaneck.com/us/en/vaneck-etfs-fees.pdf",
+      "documentMonth": "2026-08",
+      "asOf": null,
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "waiverExpiresOn": "2026-09-01",
+      "note": "Published gross/net total expense ratios; expense caps can exclude acquired-fund and other expenses. Recheck expired waivers."
+    },
+    "MORT": {
+      "grossPct": 0.43,
+      "netPct": 0.43,
+      "source": "https://www.vaneck.com/us/en/vaneck-etfs-fees.pdf",
+      "documentMonth": "2026-08",
+      "asOf": null,
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "waiverExpiresOn": "2026-09-01",
+      "note": "Published gross/net total expense ratios; expense caps can exclude acquired-fund and other expenses. Recheck expired waivers."
+    },
+    "OUNZ": {
+      "grossPct": 0.25,
+      "netPct": 0.25,
+      "source": "https://www.vaneck.com/us/en/vaneck-etfs-fees.pdf",
+      "documentMonth": "2026-08",
+      "asOf": null,
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "waiverExpiresOn": null,
+      "note": "Published gross/net total expense ratios; expense caps can exclude acquired-fund and other expenses. Recheck expired waivers."
+    },
+    "FDL": {
+      "grossPct": 0.43,
+      "netPct": 0.43,
+      "source": "https://www.ftportfolios.com/LoadContent/gc3dcpb3",
+      "documentMonth": "2026-08",
+      "asOf": null,
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "note": "Issuer table columns Net, Total. N/A is preserved as unknown, not zero."
+    },
+    "RDVY": {
+      "grossPct": 0.47,
+      "netPct": null,
+      "source": "https://www.ftportfolios.com/LoadContent/gc3dcpb3",
+      "documentMonth": "2026-08",
+      "asOf": null,
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "note": "Issuer table columns Net, Total. N/A is preserved as unknown, not zero."
+    },
+    "FVD": {
+      "grossPct": 0.62,
+      "netPct": 0.62,
+      "source": "https://www.ftportfolios.com/LoadContent/gc3dcpb3",
+      "documentMonth": "2026-08",
+      "asOf": null,
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "note": "Issuer table columns Net, Total. N/A is preserved as unknown, not zero."
+    },
+    "QQEW": {
+      "grossPct": 0.55,
+      "netPct": null,
+      "source": "https://www.ftportfolios.com/LoadContent/gc3dcpb3",
+      "documentMonth": "2026-08",
+      "asOf": null,
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "note": "Issuer table columns Net, Total. N/A is preserved as unknown, not zero."
+    },
+    "FTSL": {
+      "grossPct": 0.7,
+      "netPct": null,
+      "source": "https://www.ftportfolios.com/LoadContent/gc3dcpb3",
+      "documentMonth": "2026-08",
+      "asOf": null,
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "note": "Issuer table columns Net, Total. N/A is preserved as unknown, not zero."
+    },
+    "FDN": {
+      "grossPct": 0.49,
+      "netPct": 0.49,
+      "source": "https://www.ftportfolios.com/LoadContent/gc3dcpb3",
+      "documentMonth": "2026-08",
+      "asOf": null,
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "note": "Issuer table columns Net, Total. N/A is preserved as unknown, not zero."
+    },
+    "SKYY": {
+      "grossPct": 0.6,
+      "netPct": null,
+      "source": "https://www.ftportfolios.com/LoadContent/gc3dcpb3",
+      "documentMonth": "2026-08",
+      "asOf": null,
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "note": "Issuer table columns Net, Total. N/A is preserved as unknown, not zero."
+    },
+    "LEGR": {
+      "grossPct": 0.65,
+      "netPct": null,
+      "source": "https://www.ftportfolios.com/LoadContent/gc3dcpb3",
+      "documentMonth": "2026-08",
+      "asOf": null,
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "note": "Issuer table columns Net, Total. N/A is preserved as unknown, not zero."
+    },
+    "CIBR": {
+      "grossPct": 0.58,
+      "netPct": null,
+      "source": "https://www.ftportfolios.com/LoadContent/gc3dcpb3",
+      "documentMonth": "2026-08",
+      "asOf": null,
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "note": "Issuer table columns Net, Total. N/A is preserved as unknown, not zero."
+    },
+    "PCY": {
+      "grossPct": 0.5,
+      "netPct": 0.5,
+      "asOf": null,
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.invesco.com/be/nl/financial-products/etfs/invesco-emerging-markets-sovereign-debt-etf.html",
+      "bulkSource": "https://dng-api.invesco.com/product/search?q=countryCode%3AUS%20AND%20accountType%3AETF&rows=1000&wt=json",
+      "factSheet": null,
+      "cusip": "46138E784",
+      "status": "candidate",
+      "note": "Issuer product search gross (total) and net fees. Activation timestamp is not fee-effective date."
+    },
+    "PICB": {
+      "grossPct": 0.5,
+      "netPct": 0.5,
+      "asOf": null,
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.invesco.com/us/en/financial-products/etfs/invesco-international-corporate-bond-etf.html",
+      "bulkSource": "https://dng-api.invesco.com/product/search?q=countryCode%3AUS%20AND%20accountType%3AETF&rows=1000&wt=json",
+      "factSheet": "https://www.invesco.com/content/dam/invesco/us/en/product-documents/etf/fact-sheet/picb-invesco-international-corporate-bond-etf-fact-sheet.pdf",
+      "cusip": "46138E636",
+      "status": "candidate",
+      "note": "Issuer product search gross (total) and net fees. Activation timestamp is not fee-effective date."
+    },
+    "RSP": {
+      "grossPct": 0.2,
+      "netPct": 0.2,
+      "asOf": null,
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.invesco.com/us/en/financial-products/etfs/invesco-sp-500-equal-weight-etf.html",
+      "bulkSource": "https://dng-api.invesco.com/product/search?q=countryCode%3AUS%20AND%20accountType%3AETF&rows=1000&wt=json",
+      "factSheet": "https://www.invesco.com/content/dam/invesco/us/en/product-documents/etf/fact-sheet/rsp-invesco-s-p-500-equal-weight-etf-fact-sheet.pdf",
+      "cusip": "46137V357",
+      "status": "candidate",
+      "note": "Issuer product search gross (total) and net fees. Activation timestamp is not fee-effective date."
+    },
+    "QQQ": {
+      "grossPct": 0.18,
+      "netPct": 0.18,
+      "asOf": null,
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.invesco.com/us/en/financial-products/etfs/invesco-qqq-trust-series-1.html",
+      "bulkSource": "https://dng-api.invesco.com/product/search?q=countryCode%3AUS%20AND%20accountType%3AETF&rows=1000&wt=json",
+      "factSheet": "https://www.invesco.com/content/dam/invesco/us/en/product-documents/etf/fact-sheet/qqq-invesco-qqq-etf-fact-sheet.pdf",
+      "cusip": "46090E103",
+      "status": "candidate",
+      "note": "Issuer product search gross (total) and net fees. Activation timestamp is not fee-effective date."
+    },
+    "KBWY": {
+      "grossPct": 0.35,
+      "netPct": 0.35,
+      "asOf": null,
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.invesco.com/us/en/financial-products/etfs/invesco-kbw-premium-yield-equity-reit-etf.html",
+      "bulkSource": "https://dng-api.invesco.com/product/search?q=countryCode%3AUS%20AND%20accountType%3AETF&rows=1000&wt=json",
+      "factSheet": "https://www.invesco.com/content/dam/invesco/us/en/product-documents/etf/fact-sheet/kbwy-invesco-kbw-premium-yield-equity-reit-etf-fact-sheet.pdf",
+      "cusip": "46138E594",
+      "status": "candidate",
+      "note": "Issuer product search gross (total) and net fees. Activation timestamp is not fee-effective date."
+    },
+    "DBB": {
+      "grossPct": 0.81,
+      "netPct": 0.74,
+      "asOf": null,
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.invesco.com/us/en/financial-products/etfs/invesco-db-base-metals-fund.html",
+      "bulkSource": "https://dng-api.invesco.com/product/search?q=countryCode%3AUS%20AND%20accountType%3AETF&rows=1000&wt=json",
+      "factSheet": "https://www.invesco.com/content/dam/invesco/us/en/product-documents/etf/fact-sheet/dbb-invesco-db-base-metals-fund-fact-sheet.pdf",
+      "cusip": "46140H700",
+      "status": "candidate",
+      "note": "Issuer product search gross (total) and net fees. Activation timestamp is not fee-effective date."
+    },
+    "DBO": {
+      "grossPct": 0.81,
+      "netPct": 0.73,
+      "asOf": null,
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.invesco.com/us/en/financial-products/etfs/invesco-db-oil-fund.html",
+      "bulkSource": "https://dng-api.invesco.com/product/search?q=countryCode%3AUS%20AND%20accountType%3AETF&rows=1000&wt=json",
+      "factSheet": "https://www.invesco.com/content/dam/invesco/us/en/product-documents/etf/fact-sheet/dbo-invesco-db-oil-fund-fact-sheet.pdf",
+      "cusip": "46140H403",
+      "status": "candidate",
+      "note": "Issuer product search gross (total) and net fees. Activation timestamp is not fee-effective date."
+    },
+    "PSP": {
+      "grossPct": 1.75,
+      "netPct": 1.75,
+      "asOf": null,
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.invesco.com/us/en/financial-products/etfs/invesco-global-listed-private-equity-etf.html",
+      "bulkSource": "https://dng-api.invesco.com/product/search?q=countryCode%3AUS%20AND%20accountType%3AETF&rows=1000&wt=json",
+      "factSheet": "https://www.invesco.com/content/dam/invesco/us/en/product-documents/etf/fact-sheet/psp-invesco-global-listed-private-equity-etf-fact-sheet.pdf",
+      "cusip": "46137V118",
+      "status": "candidate",
+      "note": "Issuer product search gross (total) and net fees. Activation timestamp is not fee-effective date."
+    },
+    "GSY": {
+      "grossPct": 0.22,
+      "netPct": 0.22,
+      "asOf": null,
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.invesco.com/us/en/financial-products/etfs/invesco-ultra-short-duration-etf.html",
+      "bulkSource": "https://dng-api.invesco.com/product/search?q=countryCode%3AUS%20AND%20accountType%3AETF&rows=1000&wt=json",
+      "factSheet": "https://www.invesco.com/content/dam/invesco/us/en/product-documents/etf/fact-sheet/gsy-invesco-ultra-short-duration-etf-fact-sheet.pdf",
+      "cusip": "46090A887",
+      "status": "candidate",
+      "note": "Issuer product search gross (total) and net fees. Activation timestamp is not fee-effective date."
+    },
+    "BKLN": {
+      "grossPct": 0.67,
+      "netPct": 0.65,
+      "asOf": null,
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.invesco.com/us/en/financial-products/etfs/invesco-senior-loan-etf.html",
+      "bulkSource": "https://dng-api.invesco.com/product/search?q=countryCode%3AUS%20AND%20accountType%3AETF&rows=1000&wt=json",
+      "factSheet": "https://www.invesco.com/content/dam/invesco/us/en/product-documents/etf/fact-sheet/bkln-invesco-senior-loan-etf-fact-sheet.pdf",
+      "cusip": "46138G508",
+      "status": "candidate",
+      "note": "Issuer product search gross (total) and net fees. Activation timestamp is not fee-effective date."
+    },
+    "XMMO": {
+      "grossPct": 0.34,
+      "netPct": 0.34,
+      "asOf": null,
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.invesco.com/us/en/financial-products/etfs/invesco-sp-midcap-momentum-etf.html",
+      "bulkSource": "https://dng-api.invesco.com/product/search?q=countryCode%3AUS%20AND%20accountType%3AETF&rows=1000&wt=json",
+      "factSheet": "https://www.invesco.com/content/dam/invesco/us/en/product-documents/etf/fact-sheet/xmmo-invesco-s-p-midcap-momentum-etf-fact-sheet.pdf",
+      "cusip": "46137V464",
+      "status": "candidate",
+      "note": "Issuer product search gross (total) and net fees. Activation timestamp is not fee-effective date."
+    },
+    "PDBC": {
+      "grossPct": 0.74,
+      "netPct": 0.59,
+      "asOf": null,
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.invesco.com/us/en/financial-products/etfs/invesco-optimum-yield-diversified-commodity-strategy-no-k-1-etf.html",
+      "bulkSource": "https://dng-api.invesco.com/product/search?q=countryCode%3AUS%20AND%20accountType%3AETF&rows=1000&wt=json",
+      "factSheet": "https://www.invesco.com/content/dam/invesco/us/en/product-documents/etf/fact-sheet/pdbc-invesco-optimum-yield-diversified-commodity-strategy-no-k-1-etf-fact-sheet.pdf",
+      "cusip": "46090F100",
+      "status": "candidate",
+      "note": "Issuer product search gross (total) and net fees. Activation timestamp is not fee-effective date."
+    },
+    "SPLV": {
+      "grossPct": 0.25,
+      "netPct": 0.25,
+      "asOf": null,
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.invesco.com/us/en/financial-products/etfs/invesco-sp-500-low-volatility-etf.html",
+      "bulkSource": "https://dng-api.invesco.com/product/search?q=countryCode%3AUS%20AND%20accountType%3AETF&rows=1000&wt=json",
+      "factSheet": "https://www.invesco.com/content/dam/invesco/us/en/product-documents/etf/fact-sheet/splv-invesco-s-p-500-low-volatility-etf-fact-sheet.pdf",
+      "cusip": "46138E354",
+      "status": "candidate",
+      "note": "Issuer product search gross (total) and net fees. Activation timestamp is not fee-effective date."
+    },
+    "PGX": {
+      "grossPct": 0.5,
+      "netPct": 0.5,
+      "asOf": null,
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.invesco.com/us/en/financial-products/etfs/invesco-preferred-etf.html",
+      "bulkSource": "https://dng-api.invesco.com/product/search?q=countryCode%3AUS%20AND%20accountType%3AETF&rows=1000&wt=json",
+      "factSheet": "https://www.invesco.com/content/dam/invesco/us/en/product-documents/etf/fact-sheet/pgx-invesco-preferred-etf-fact-sheet.pdf",
+      "cusip": "46138E511",
+      "status": "candidate",
+      "note": "Issuer product search gross (total) and net fees. Activation timestamp is not fee-effective date."
+    },
+    "VRP": {
+      "grossPct": 0.5,
+      "netPct": 0.5,
+      "asOf": null,
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.invesco.com/us/en/financial-products/etfs/invesco-variable-rate-preferred-etf.html",
+      "bulkSource": "https://dng-api.invesco.com/product/search?q=countryCode%3AUS%20AND%20accountType%3AETF&rows=1000&wt=json",
+      "factSheet": "https://www.invesco.com/content/dam/invesco/us/en/product-documents/etf/fact-sheet/vrp-invesco-variable-rate-preferred-etf-fact-sheet.pdf",
+      "cusip": "46138G870",
+      "status": "candidate",
+      "note": "Issuer product search gross (total) and net fees. Activation timestamp is not fee-effective date."
+    },
+    "SPHQ": {
+      "grossPct": 0.2,
+      "netPct": 0.15,
+      "asOf": null,
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.invesco.com/us/en/financial-products/etfs/invesco-sp-500-quality-etf.html",
+      "bulkSource": "https://dng-api.invesco.com/product/search?q=countryCode%3AUS%20AND%20accountType%3AETF&rows=1000&wt=json",
+      "factSheet": "https://www.invesco.com/content/dam/invesco/us/en/product-documents/etf/fact-sheet/sphq-invesco-s-p-500-quality-etf-fact-sheet.pdf",
+      "cusip": "46137V241",
+      "status": "candidate",
+      "note": "Issuer product search gross (total) and net fees. Activation timestamp is not fee-effective date."
+    },
+    "BTCO": {
+      "grossPct": 0.25,
+      "netPct": null,
+      "asOf": null,
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.invesco.com/dk/en/financial-products/etfs/invesco-galaxy-bitcoin-etf.html",
+      "bulkSource": "https://dng-api.invesco.com/product/search?q=countryCode%3AUS%20AND%20accountType%3AETF&rows=1000&wt=json",
+      "factSheet": null,
+      "cusip": "46091J101",
+      "status": "candidate",
+      "note": "Issuer product search gross (total) and net fees. Activation timestamp is not fee-effective date."
+    },
+    "DBC": {
+      "grossPct": 0.89,
+      "netPct": 0.82,
+      "asOf": null,
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.invesco.com/us/en/financial-products/etfs/invesco-db-commodity-index-tracking-fund.html",
+      "bulkSource": "https://dng-api.invesco.com/product/search?q=countryCode%3AUS%20AND%20accountType%3AETF&rows=1000&wt=json",
+      "factSheet": "https://www.invesco.com/content/dam/invesco/us/en/product-documents/etf/fact-sheet/dbc-invesco-db-commodity-index-tracking-fund-fact-sheet.pdf",
+      "cusip": "46138B103",
+      "status": "candidate",
+      "note": "Issuer product search gross (total) and net fees. Activation timestamp is not fee-effective date."
+    },
+    "XSVM": {
+      "grossPct": 0.36,
+      "netPct": 0.36,
+      "asOf": null,
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.invesco.com/us/en/financial-products/etfs/invesco-sp-smallcap-value-with-momentum-etf.html",
+      "bulkSource": "https://dng-api.invesco.com/product/search?q=countryCode%3AUS%20AND%20accountType%3AETF&rows=1000&wt=json",
+      "factSheet": "https://www.invesco.com/content/dam/invesco/us/en/product-documents/etf/fact-sheet/xsvm-invesco-s-p-smallcap-value-with-momentum-etf-fact-sheet1.pdf",
+      "cusip": "46137V480",
+      "status": "candidate",
+      "note": "Issuer product search gross (total) and net fees. Activation timestamp is not fee-effective date."
+    },
+    "QQQM": {
+      "grossPct": 0.15,
+      "netPct": 0.15,
+      "asOf": null,
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.invesco.com/us/en/financial-products/etfs/invesco-nasdaq-100-etf.html",
+      "bulkSource": "https://dng-api.invesco.com/product/search?q=countryCode%3AUS%20AND%20accountType%3AETF&rows=1000&wt=json",
+      "factSheet": "https://www.invesco.com/content/dam/invesco/us/en/product-documents/etf/fact-sheet/qqqm-invesco-nasdaq-100-etf-fact-sheet.pdf",
+      "cusip": "46138G649",
+      "status": "candidate",
+      "note": "Issuer product search gross (total) and net fees. Activation timestamp is not fee-effective date."
+    },
+    "KBWD": {
+      "grossPct": 5.39,
+      "netPct": 5.39,
+      "asOf": null,
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.invesco.com/us/en/financial-products/etfs/invesco-kbw-high-dividend-yield-financial-etf.html",
+      "bulkSource": "https://dng-api.invesco.com/product/search?q=countryCode%3AUS%20AND%20accountType%3AETF&rows=1000&wt=json",
+      "factSheet": "https://www.invesco.com/content/dam/invesco/us/en/product-documents/etf/fact-sheet/kbwd-invesco-kbw-high-dividend-yield-financial-etf-fact-sheet.pdf",
+      "cusip": "46138E610",
+      "status": "candidate",
+      "note": "Issuer product search gross (total) and net fees. Activation timestamp is not fee-effective date."
+    },
+    "EQAL": {
+      "grossPct": 0.2,
+      "netPct": 0.2,
+      "asOf": null,
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.invesco.com/us/en/financial-products/etfs/invesco-russell-1000-equal-weight-etf.html",
+      "bulkSource": "https://dng-api.invesco.com/product/search?q=countryCode%3AUS%20AND%20accountType%3AETF&rows=1000&wt=json",
+      "factSheet": "https://www.invesco.com/content/dam/invesco/us/en/product-documents/etf/fact-sheet/eqal-invesco-russell-1000-equal-weight-etf-fact-sheet.pdf",
+      "cusip": "46138E420",
+      "status": "candidate",
+      "note": "Issuer product search gross (total) and net fees. Activation timestamp is not fee-effective date."
+    },
+    "SPHD": {
+      "grossPct": 0.3,
+      "netPct": 0.3,
+      "asOf": null,
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.invesco.com/us/en/financial-products/etfs/invesco-sp-500-high-dividend-low-volatility-etf.html",
+      "bulkSource": "https://dng-api.invesco.com/product/search?q=countryCode%3AUS%20AND%20accountType%3AETF&rows=1000&wt=json",
+      "factSheet": "https://www.invesco.com/content/dam/invesco/us/en/product-documents/etf/fact-sheet/sphd-invesco-s-p-500-high-dividend-low-volatility-etf-fact-sheet.pdf",
+      "cusip": "46138E362",
+      "status": "candidate",
+      "note": "Issuer product search gross (total) and net fees. Activation timestamp is not fee-effective date."
+    },
+    "XSMO": {
+      "grossPct": 0.35,
+      "netPct": 0.35,
+      "asOf": null,
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.invesco.com/us/en/financial-products/etfs/invesco-sp-smallcap-momentum-etf.html",
+      "bulkSource": "https://dng-api.invesco.com/product/search?q=countryCode%3AUS%20AND%20accountType%3AETF&rows=1000&wt=json",
+      "factSheet": "https://www.invesco.com/content/dam/invesco/us/en/product-documents/etf/fact-sheet/xsmo-invesco-s-p-smallcap-momentum-etf-fact-sheet.pdf",
+      "cusip": "46137V498",
+      "status": "candidate",
+      "note": "Issuer product search gross (total) and net fees. Activation timestamp is not fee-effective date."
+    },
+    "RWJ": {
+      "grossPct": 0.39,
+      "netPct": 0.39,
+      "asOf": null,
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.invesco.com/us/en/financial-products/etfs/invesco-sp-smallcap-600-revenue-etf.html",
+      "bulkSource": "https://dng-api.invesco.com/product/search?q=countryCode%3AUS%20AND%20accountType%3AETF&rows=1000&wt=json",
+      "factSheet": "https://www.invesco.com/content/dam/invesco/us/en/product-documents/etf/fact-sheet/rwj-invesco-s-p-smallcap-600-revenue-etf-fact-sheet.pdf",
+      "cusip": "46138G664",
+      "status": "candidate",
+      "note": "Issuer product search gross (total) and net fees. Activation timestamp is not fee-effective date."
+    },
+    "DBP": {
+      "grossPct": 0.76,
+      "netPct": 0.7,
+      "asOf": null,
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.invesco.com/us/en/financial-products/etfs/invesco-db-precious-metals-fund.html",
+      "bulkSource": "https://dng-api.invesco.com/product/search?q=countryCode%3AUS%20AND%20accountType%3AETF&rows=1000&wt=json",
+      "factSheet": "https://www.invesco.com/content/dam/invesco/us/en/product-documents/etf/fact-sheet/dbp-invesco-db-precious-metals-fund-fact-sheet.pdf",
+      "cusip": "46140H502",
+      "status": "candidate",
+      "note": "Issuer product search gross (total) and net fees. Activation timestamp is not fee-effective date."
+    },
+    "DBA": {
+      "grossPct": 0.9,
+      "netPct": 0.83,
+      "asOf": null,
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.invesco.com/us/en/financial-products/etfs/invesco-db-agriculture-fund.html",
+      "bulkSource": "https://dng-api.invesco.com/product/search?q=countryCode%3AUS%20AND%20accountType%3AETF&rows=1000&wt=json",
+      "factSheet": "https://www.invesco.com/content/dam/invesco/us/en/product-documents/etf/fact-sheet/dba-invesco-db-agriculture-fund-fact-sheet.pdf",
+      "cusip": "46140H106",
+      "status": "candidate",
+      "note": "Issuer product search gross (total) and net fees. Activation timestamp is not fee-effective date."
+    }
+  },
+  "sourceSHA256Note": "Original iShares bulk snapshot only; individual verification hashes are in separate research file."
+}

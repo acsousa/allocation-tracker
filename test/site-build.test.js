@@ -107,10 +107,12 @@ try {
     assert.equal(card.readUInt32BE(20), 630);
     for (const page of ['index.html', 'pricing.html', 'privacy.html']) {
       const html = fs.readFileSync(path.join(tmp, page), 'utf8');
-      assert.match(html, /property="og:image" content="https:\/\/realallocation\.com\/assets\/quartermaster-social\.png"/);
+      assert.match(html, /property="og:image" content="https:\/\/realallocation\.com\/assets\/quartermaster-social\.png\?v=[a-f0-9]{12}"/);
       assert.match(html, /property="og:image:width" content="1200"/);
       assert.match(html, /property="og:image:height" content="630"/);
       assert.match(html, /name="twitter:card" content="summary_large_image"/);
+      assert.match(html, /rel="canonical" href="https:\/\/realallocation\.com\//);
+      assert.match(fs.readFileSync(path.join(tmp, 'robots.txt'), 'utf8'), /User-agent: Twitterbot\nAllow: \//);
     }
   });
   check('landing tells one audited four-part story with accessible motion and a local start dialog', () => {
