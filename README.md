@@ -1,5 +1,17 @@
 # Quartermaster
 
+### Direct crypto versus crypto ETFs
+
+Entering BTC, ETH, or XRP prompts for ETF or directly held cryptocurrency.
+ETFs retain the exchange ticker. Direct holdings use distinct local labels
+(`BTC-DIRECT`, `ETH-DIRECT`, `XRP-DIRECT`) and names such as “Bitcoin (held directly)”.
+These local labels are not exchange tickers. CSV imports require the same choice
+per ambiguous row before matching holdings; both investments can coexist in one
+account. Existing saved holdings are not automatically renamed or reinterpreted.
+Unconfirmed legacy crypto symbols are left untouched during import rather than
+overwritten with an ETF's balance. Expense-ratio research remains separate from
+the app until its coverage and verification requirements pass.
+
 **Your real allocation, across all your accounts.** Quartermaster is a local-file
 portfolio tracker at [realallocation.com](https://realallocation.com).
 It combines allocation charts, quarterly reviews, tax estimates, and retirement
@@ -13,8 +25,12 @@ privacy commitments, planning direction, and desktop/mobile requirement.
 - **`index.html` is the public landing page.** It stays lightweight and links to
   the dedicated app at `/app/`.
 - **`app.html` is the application source.** Its JavaScript, styles, and charts
-  are inline; no framework or runtime dependencies are needed. The build emits
+  are inline; its instrument-catalog marker is filled at build time. No framework
+  or runtime dependencies are needed. The build emits
   it at `dist/app/index.html` and as the self-contained offline download.
+- **`data/instruments.json` is the editable offline instrument catalog.** The
+  build validates and embeds it; neither app fetches it at runtime. Rebuild after
+  edits and preview `dist`, rather than opening the source `app.html` directly.
 - **`scripts/marketing-shell.js`, `assets/marketing.css`, and
   `assets/marketing.js` are the shared public
   shell.** The build uses them to keep the landing, pricing, and privacy headers,
@@ -51,6 +67,31 @@ Finish an in-progress check-in with **Record check-in** before saving the file.
 Chrome/Edge can support saving back to a selected file; browsers without that
 capability download a new copy. Keep the latest copy and check where it was saved.
 There is no automatic portfolio backup or server recovery.
+
+## Maintaining instrument data
+
+Edit `data/instruments.json` for ticker classifications, illustrative tax
+assumptions, the US total-market split, and wash-sale review groups. User-defined
+classifications take priority. Catalog corrections do not rewrite saved holdings,
+custom compositions, historical balances, or user overrides.
+
+Some known mixed-exposure funds require a manual classification instead of an
+incorrect single-class guess. After adding a holding, click its class label to
+enter a percentage split. CSV imports place unresolved tickers in Other and tell
+the user to review their classifications.
+
+Run `npm run check` after edits. It validates the catalog and tests both hosted
+and standalone builds. The development address remains
+**http://127.0.0.1:8747/** (`npm run dev`).
+
+See [the instrument audit](docs/instrument-data-audit.md) and
+`data/instrument-audit.json` for the source checks, conservative fund universe,
+limitations, and the strict **greater than 90%** coverage requirement for each new
+fund field. Sourced fund names are now available for 418 of 448 audit records
+(93.3%). Expense ratios, historical returns, and automatic allocation splits remain
+disabled until their own coverage and correctness checks pass. Run `npm run audit:funds`
+for the current counts and missing symbols. Existing tax profiles are modeling estimates, not a
+current fund-data feed.
 
 **Explore the demo** opens a read-only sample portfolio. Navigation and temporary
 simulation adjustments are available; account, holding, target, and check-in
@@ -229,6 +270,20 @@ public-page chrome because the shared shell is applied at build time.
 
 ## Roadmap and limitations
 
+Queued for a future release (not implemented):
+
+- **Edit holding details:** update an existing fund's ticker and display name,
+  with explicit fund/direct-crypto identity, duplicate checks, and preservation
+  of historical check-ins. Keep value, cost basis, and classification editing.
+- **Expense ratios:** integrate the offline fee dataset only after validating
+  field definitions, source dates, and coverage. Show the applicable net expense
+  ratio when verified, gross and waiver details where available, and an explicit
+  unknown state otherwise. Keep unspecified published fees and sponsor-only
+  fees distinct; missing fees must never imply zero. Start with holding-level
+  fees and portfolio annual-cost estimates with a coverage indicator. Review
+  simulation treatment separately to avoid subtracting fees twice from returns.
+
+
 Optional cloud saving, review reminders, and ongoing downloadable reports are
 **coming soon**. Reports are free during the introductory release; there is no
 checkout or download quota yet.
@@ -248,3 +303,18 @@ See the [review summary](docs/review-summary.md),
 [financial review](docs/financial-review.md), [UX review](docs/ux-review.md), and
 [architecture roadmap](docs/architecture-review.md). Older review documents refer
 to the app's former source filename, `allocation-tracker.html`.
+
+### X link preview checks
+
+Run `npm run check:social` to check the public page and image with a Twitterbot
+user agent. The build includes explicit crawler rules and an image-content
+version in the preview URL. Deploy the full `dist` directory before testing X;
+localhost changes cannot affect X previews.
+
+On October 5, the live homepage and 1200×630 PNG both returned HTTP 200, and
+the homepage contained the expected large-image X card metadata. That does not
+prove X's own crawler can reach the site or that its cached card is current.
+If a new post still lacks a card, inspect Cloudflare Security Events for X's
+actual request before changing a firewall rule; do not disable bot protection
+globally. A profile website field is not a post preview. No X post was submitted
+as part of this check.

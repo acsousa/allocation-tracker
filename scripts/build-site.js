@@ -2,7 +2,9 @@
    CF_WEB_ANALYTICS_TOKEN is a public site identifier, never an API credential. */
 const fs = require('node:fs');
 const path = require('node:path');
+const { createHash } = require('node:crypto');
 const { applyMarketingShell } = require('./marketing-shell');
+const { readApp } = require('./instrument-catalog');
 const publicPages = [
   ['index.html', ''],
   ['pricing.html', 'pricing'],
@@ -54,7 +56,11 @@ function buildSite(output = path.join(root, 'dist'), token = process.env.CF_WEB_
     'quartermaster-lockup-dark.png',
   ];
   for (const name of productImages) write('assets/' + name, fs.readFileSync(path.join(root, 'assets', name)));
-  write('assets/quartermaster-social.png', fs.readFileSync(path.join(root, 'assets', 'quartermaster-social.png')));
+  const socialImage = fs.readFileSync(path.join(root, 'assets', 'quartermaster-social.png'));
+  const socialImageVersion = createHash('sha256').update(socialImage).digest('hex').slice(0, 12);
+  write('assets/quartermaster-social.png', socialImage);
+  // Allow link-preview crawlers explicitly; these rules do not override Cloudflare WAF settings.
+  write('robots.txt', 'User-agent: Twitterbot\nAllow: /\n\nUser-agent: *\nAllow: /\n');
   const marketingFonts = [
     'Barlow-Regular.ttf',
     'Barlow-SemiBold.ttf',
@@ -71,8 +77,9 @@ function buildSite(output = path.join(root, 'dist'), token = process.env.CF_WEB_
     const title = (html.match(/<title>([^<]+)<\/title>/) || [])[1] || 'Quartermaster';
     const description = (html.match(/<meta name="description" content="([^"]+)"/) || [])[1] || 'See your complete investment picture with Quartermaster.';
     const url = `https://realallocation.com/${current ? current + '.html' : ''}`;
-    const image = 'https://realallocation.com/assets/quartermaster-social.png';
-    const markup = `<meta property="og:type" content="website">
+    const image = `https://realallocation.com/assets/quartermaster-social.png?v=${socialImageVersion}`;
+    const markup = `<link rel="canonical" href="${url}">
+<meta property="og:type" content="website">
 <meta property="og:site_name" content="Quartermaster">
 <meta property="og:title" content="${title}">
 <meta property="og:description" content="${description}">
@@ -95,7 +102,7 @@ function buildSite(output = path.join(root, 'dist'), token = process.env.CF_WEB_
     const html = applyMarketingShell(fs.readFileSync(path.join(root, name), 'utf8'), current);
     write(name, socialMetadata(hostedIcons(html), current).replace('</body>', analytics + '</body>'));
   }
-  const app = fs.readFileSync(path.join(root, 'app.html'), 'utf8');
+  const app = readApp();
   const hostedApp = hostedIcons(productImages.reduce(
     (html, name) => html.replaceAll(`assets/${name}`, `/assets/${name}`),
     app.replace('src="site-analytics.js"', 'src="/site-analytics.js"')

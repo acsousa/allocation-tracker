@@ -1,0 +1,4529 @@
+{
+  "schemaVersion": 1,
+  "purpose": "research-only; not a declaration of full fee coverage",
+  "entries": {
+    "STIP": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239450/ishares-05-year-tips-bond-etf",
+      "comparedGrossPct": 0.03,
+      "comparedNetPct": 0.03,
+      "sourceSHA256": "346116884765aeb31ba4acf0e4294468c1b18c60e010b90c9a81868bb8dd709f",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.03%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.03%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Feb 27, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "SHY": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239452/ishares-13-year-treasury-bond-etf",
+      "comparedGrossPct": 0.15,
+      "comparedNetPct": 0.15,
+      "sourceSHA256": "f715748381650895039990f40c112962efe0c9bd356afc8da6c2b01b696828ad",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.15%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.15%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jun 29, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "TLH": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239453/ishares-1020-year-treasury-bond-etf",
+      "comparedGrossPct": 0.15,
+      "comparedNetPct": 0.15,
+      "sourceSHA256": "8c609c6fda12e124abbe462fff64cd4f4f68ea4cf3ac99c3a5248cb0939fae2a",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.15%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.15%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jun 29, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "TLT": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239454/ishares-20-year-treasury-bond-etf",
+      "comparedGrossPct": 0.15,
+      "comparedNetPct": 0.15,
+      "sourceSHA256": "6e151d25c729cc117cc1f91b7ae4969a83fcc7fda27d7ea8fd11b994f8a62ebd",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.15%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.15%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jun 29, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "IEI": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239455/ishares-37-year-treasury-bond-etf",
+      "comparedGrossPct": 0.15,
+      "comparedNetPct": 0.15,
+      "sourceSHA256": "51c8fa5084f7134199700ea79dae720de57bbdfe2bbf7ce005a7b1c330e13f9a",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.15%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.15%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jun 29, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "IEF": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239456/ishares-710-year-treasury-bond-etf",
+      "comparedGrossPct": 0.15,
+      "comparedNetPct": 0.15,
+      "sourceSHA256": "0c1cb383a570ff6f13f03e6443081778babdd6d338e715361c5a3c3d9c1365ab",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.15%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.15%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jun 29, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "AGG": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239458/ishares-core-total-us-bond-market-etf",
+      "comparedGrossPct": 0.03,
+      "comparedNetPct": 0.03,
+      "sourceSHA256": "70ceaab215ea11bfff36d090a91b4f146a348764698eacebb8c3c99073a86da4",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "Jun 30, 2026"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.03%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.03%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jun 27, 2025"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "GVI": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239464/ishares-intermediate-governmentcredit-bond-etf",
+      "comparedGrossPct": 0.2,
+      "comparedNetPct": 0.2,
+      "sourceSHA256": "f3345759b9c51fe8988e1ef6a3fb1b5e24aafb1a1725f660e14b657b6e2a8351",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.20%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.20%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jun 27, 2025"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "MBB": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239465/ishares-mbs-etf",
+      "comparedGrossPct": 0.04,
+      "comparedNetPct": 0.04,
+      "sourceSHA256": "23f0d1a8b669821b5ec74dd6105465018be961e14c45810b8d9d12ae35ad9fc1",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "Feb 28, 2027"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.04%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.04%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jun 27, 2025"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "SHV": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239466/ishares-short-treasury-bond-etf",
+      "comparedGrossPct": 0.15,
+      "comparedNetPct": 0.15,
+      "sourceSHA256": "8d4361f6d397293f30052de8aa3121143d8fc7116a2aa5f8a77db3ff7bacd9d1",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "Jun 30, 2027"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.15%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.15%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jun 29, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "TIP": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239467/ishares-tips-bond-etf",
+      "comparedGrossPct": 0.18,
+      "comparedNetPct": 0.18,
+      "sourceSHA256": "ad393c0b4db7ab43df5337190e0329ca99daa91f08828257b0fc4c4a2d531e11",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.18%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.18%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Feb 27, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "GOVT": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239468/ishares-us-treasury-bond-etf",
+      "comparedGrossPct": 0.05,
+      "comparedNetPct": 0.05,
+      "sourceSHA256": "86c812401b0254408f3ee0d287931bbfaa22ea61063fd13e74eabd7590dbc788",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.05%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.05%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Feb 27, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "ICF": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239482/ishares-cohen-steers-reit-etf",
+      "comparedGrossPct": 0.32,
+      "comparedNetPct": 0.32,
+      "sourceSHA256": "d935e24302036f912ac2deb55abc18f456da3f50e25b36c02694e4901d235578",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.32%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.32%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Aug 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "IDV": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239499/ishares-international-select-dividend-etf",
+      "comparedGrossPct": 0.5,
+      "comparedNetPct": 0.5,
+      "sourceSHA256": "e63145acf527d8af41972eace716779d02efa0bd95418068cc0449374dd9db66",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "Aug 30, 2030"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.50%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.01%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.49%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Aug 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "DVY": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239500/ishares-select-dividend-etf",
+      "comparedGrossPct": 0.38,
+      "comparedNetPct": 0.38,
+      "sourceSHA256": "38f68433d6c836075c5b514e0d286c67be77fb4b0b0e6a3b89590a53bd19f8b6",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.38%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.38%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Aug 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "IYR": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239520/ishares-us-real-estate-etf",
+      "comparedGrossPct": 0.37,
+      "comparedNetPct": 0.37,
+      "sourceSHA256": "19ec551927fb6f8bd6957919587de29b3090f043644a27b9d308af3daaff8cd9",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.37%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.37%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jul 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "IYW": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239522/ishares-us-technology-etf",
+      "comparedGrossPct": 0.37,
+      "comparedNetPct": 0.37,
+      "sourceSHA256": "14150f15fd6d2a4f750c585c2990ab08fb0fa4c9add20dacb9c754a41fd0cf0c",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.37%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.37%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Aug 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "LEMB": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239528/ishares-emerging-markets-local-currency-bond-etf",
+      "comparedGrossPct": 0.3,
+      "comparedNetPct": 0.3,
+      "sourceSHA256": "9347b5cb61706dcb0cc5be97cf31f68d3ccaab6fa9bb047e5640067aa4d97729",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.30%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.30%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Feb 27, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "FLOT": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239534/ishares-floating-rate-bond-etf",
+      "comparedGrossPct": 0.15,
+      "comparedNetPct": 0.15,
+      "sourceSHA256": "125bac71b0e9efba6bdc1ef6883bd8534a1fcbaa09f9f8e930d420ac6dbe6f0a",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.15%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.15%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Feb 27, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "FXI": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239536/ishares-china-largecap-etf",
+      "comparedGrossPct": 0.73,
+      "comparedNetPct": 0.73,
+      "sourceSHA256": "b1ff1c7cf0d28ab1a3876d98ad6235125c7ced64abdf44123c93dfcc6b8a7ecd",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.73%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.73%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jan 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "REM": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239543/ishares-mortgage-real-estate-capped-etf",
+      "comparedGrossPct": 0.48,
+      "comparedNetPct": 0.48,
+      "sourceSHA256": "913167bdd535634235e2c7e5e054bdf9b4a97be47dc0cac14479377f33e672f9",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.48%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.48%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Aug 01, 2025"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "USRT": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239544/ishares-real-estate-50-etf",
+      "comparedGrossPct": 0.08,
+      "comparedNetPct": 0.08,
+      "sourceSHA256": "fd8d0bb18d7f91e3ca0757dc646d8e723e3d53d495463dcf4b6376bec7ff8a01",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.08%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.08%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Aug 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "REZ": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239545/ishares-residential-real-estate-capped-etf",
+      "comparedGrossPct": 0.48,
+      "comparedNetPct": 0.48,
+      "sourceSHA256": "5ae8f85dbe5e3bae43622b2d0616cfa36d2574186873b1e5e460c6a0eae51bd0",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.48%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.48%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jul 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "IAU": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239561/ishares-gold-trust-fund",
+      "comparedGrossPct": 0.25,
+      "comparedNetPct": 0.25,
+      "sourceSHA256": "16bb099b377f620d523fd9eef3bd3fcd6c3f663358a080de812fa883a0bd11c7",
+      "identityMatched": true,
+      "status": "needs-review",
+      "feeTable": {},
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "HDV": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239563/ishares-high-dividend-etf",
+      "comparedGrossPct": 0.08,
+      "comparedNetPct": 0.08,
+      "sourceSHA256": "3744368144bab8736501b62aa023672405f4857305eb854aedd380830839e028",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.08%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.08%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Aug 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "HYG": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239565/ishares-iboxx-high-yield-corporate-bond-etf",
+      "comparedGrossPct": 0.49,
+      "comparedNetPct": 0.49,
+      "sourceSHA256": "f4ded06dc640eb8287b0a07a8cce7fbb41c14d19c6c15eb7038d1b68d57ed625",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.49%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.49%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jun 27, 2025"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "LQD": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239566/ishares-iboxx-investment-grade-corporate-bond-etf",
+      "comparedGrossPct": 0.14,
+      "comparedNetPct": 0.14,
+      "sourceSHA256": "086e559bbbbfecad028494a6a654d0ce8c91ec4606012912606d3d9437a29541",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.14%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.14%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jun 27, 2025"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "EMB": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239572/ishares-jp-morgan-usd-emerging-markets-bond-etf",
+      "comparedGrossPct": 0.39,
+      "comparedNetPct": 0.39,
+      "sourceSHA256": "7922809952c7ca1224bc4f1636cfabffe53e98e30ec02f241c3253c36eabe88b",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.39%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.39%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Feb 27, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "ACWX": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239594/ishares-msci-acwi-ex-us-etf",
+      "comparedGrossPct": 0.32,
+      "comparedNetPct": 0.32,
+      "sourceSHA256": "b7f5e0b12a85b72892c6a7ef3fc97ff818af15aa190d8d43851e09b4a63e842b",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "Nov 30, 2026"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.32%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.01%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.31%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jan 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "ACWI": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239600/ishares-msci-acwi-etf",
+      "comparedGrossPct": 0.32,
+      "comparedNetPct": 0.32,
+      "sourceSHA256": "7d9058927906c89de26771431ea815a22bb4002a4919a413362c290cacc46366",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "Nov 30, 2026"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.32%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.01%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.31%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jan 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "EWA": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239607/ishares-msci-australia-etf",
+      "comparedGrossPct": 0.5,
+      "comparedNetPct": 0.5,
+      "sourceSHA256": "b9b12fe126e509aee9db27085637e838dc8633a144c722f313506cc5359a441f",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.50%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.01%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.49%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Dec 30, 2025"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "EWO": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239609/ishares-msci-austria-capped-etf",
+      "comparedGrossPct": 0.49,
+      "comparedNetPct": 0.49,
+      "sourceSHA256": "950b37c357e4f7a320ad7f7205b11a0243073c851a8b4b34851f4882c5c7ee85",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.49%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.49%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Dec 30, 2025"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "EWK": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239610/ishares-msci-belgium-capped-etf",
+      "comparedGrossPct": 0.49,
+      "comparedNetPct": 0.49,
+      "sourceSHA256": "6abed17e1f074b983501bf1a52288ea4123e731355eb2e0be5d67e648391e342",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.49%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.49%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jan 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "EWZ": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239612/ishares-msci-brazil-capped-etf",
+      "comparedGrossPct": 0.59,
+      "comparedNetPct": 0.59,
+      "sourceSHA256": "2c570222b4ffe820780840626e2d6525509b64fb857c236fe35b1c2361b07f32",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.59%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.59%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jan 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "EWC": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239615/ishares-msci-canada-etf",
+      "comparedGrossPct": 0.5,
+      "comparedNetPct": 0.5,
+      "sourceSHA256": "d242eba93543be975a54d70d28600cdcb2ee402e12315d89b340b758d82a282e",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.50%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.01%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.49%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jan 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "ECH": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239618/ishares-msci-chile-capped-etf",
+      "comparedGrossPct": 0.59,
+      "comparedNetPct": 0.59,
+      "sourceSHA256": "1663f96c3b36294cd54915a1a74d04ccfa9f772f5c68624fd64b404eed2f285f",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.59%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.59%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jan 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "MCHI": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239619/ishares-msci-china-etf",
+      "comparedGrossPct": 0.59,
+      "comparedNetPct": 0.59,
+      "sourceSHA256": "0efeadb969aa44ba561ccbbca5a52b9dcc30da0b9c335a89e8dee7a541471372",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.59%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.59%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jan 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "EFG": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239622/ishares-msci-eafe-growth-etf",
+      "comparedGrossPct": 0.34,
+      "comparedNetPct": 0.34,
+      "sourceSHA256": "da2d36b4e3e49b23b70ba4db9c89ee1c5d6ceb81f616e3e5a22a3b96144759c9",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.34%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.34%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jan 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "EFA": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239623/ishares-msci-eafe-etf",
+      "comparedGrossPct": 0.32,
+      "comparedNetPct": 0.32,
+      "sourceSHA256": "a32981092bba41f7486f6bcd1031fe2aa0d5023015b1ae107899e549805de7e3",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.32%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.01%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.31%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jan 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "EFAV": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239626/ishares-msci-eafe-minimum-volatility-etf",
+      "comparedGrossPct": 0.2,
+      "comparedNetPct": 0.2,
+      "sourceSHA256": "725e296d26e12cc2e63256f9630e6fee29431f08d42eb50be3dbbf7649ee6326",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.20%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.20%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jan 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "EFV": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239628/ishares-msci-eafe-value-etf",
+      "comparedGrossPct": 0.31,
+      "comparedNetPct": 0.31,
+      "sourceSHA256": "47a2d70ca86fc8045d087532e830d3dc170e78829a3938f92321db5b69315e51",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.31%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.31%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jan 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "EEM": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239637/ishares-msci-emerging-markets-etf",
+      "comparedGrossPct": 0.72,
+      "comparedNetPct": 0.72,
+      "sourceSHA256": "371736e4916df9457c410649bed252992ce811cac8c1692204f568c881b1f4ea",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.72%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.72%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jan 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "EEMV": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239641/ishares-msci-emerging-markets-minimum-volatility-etf",
+      "comparedGrossPct": 0.25,
+      "comparedNetPct": 0.25,
+      "sourceSHA256": "b2f8cdd7960886d37d2e1a6d8fb065d8b6e093dcc0a38ba0e29e5d3d07ec4bf2",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.25%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.25%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jan 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "EWQ": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239648/ishares-msci-france-etf",
+      "comparedGrossPct": 0.5,
+      "comparedNetPct": 0.5,
+      "sourceSHA256": "19f0bcf52ec0c2547a79e66efabe2a87003dec0bef5a2cf5ceb21b6f5559ffdb",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.50%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.50%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jan 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "EWG": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239650/ishares-msci-germany-etf",
+      "comparedGrossPct": 0.49,
+      "comparedNetPct": 0.49,
+      "sourceSHA256": "782f83b0323216905df1eee57c9e1754a6ca82f857f63c3b36281756fbd66961",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.49%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.49%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jan 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "EWH": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239657/ishares-msci-hong-kong-etf",
+      "comparedGrossPct": 0.5,
+      "comparedNetPct": 0.5,
+      "sourceSHA256": "5ea7eecc1bfdcb0868b11f00c3c2a20deb05a2a1a1397d7f7c0fa0c839d2778e",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.50%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.01%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.49%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jan 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "INDA": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239659/ishares-msci-india-etf",
+      "comparedGrossPct": 0.61,
+      "comparedNetPct": 0.61,
+      "sourceSHA256": "30d7488885c069765976d09e70c22904907474dc40e38ae4a9d8e8a0a09b4b05",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.61%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.61%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jan 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "EIDO": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239661/ishares-msci-indonesia-etf",
+      "comparedGrossPct": 0.59,
+      "comparedNetPct": 0.59,
+      "sourceSHA256": "1fcdf46f47c5524115219f817860577c2487c059bc7b49010bc57c8d826203d1",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.59%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.59%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jan 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "EWI": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239664/ishares-msci-italy-capped-etf",
+      "comparedGrossPct": 0.5,
+      "comparedNetPct": 0.5,
+      "sourceSHA256": "105b6cc76b4002c433fa974e65dcca4afe05cbb5d558ef383ce7fd28b40226a7",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.50%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.01%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.49%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Dec 30, 2025"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "EWJ": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239665/ishares-msci-japan-etf",
+      "comparedGrossPct": 0.49,
+      "comparedNetPct": 0.49,
+      "sourceSHA256": "1c0edeea4067c16edd3d4cddbbeadd79164812591cfb47d3a513fd33083ff763",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.49%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.49%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jan 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "EWM": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239669/ishares-msci-malaysia-etf",
+      "comparedGrossPct": 0.5,
+      "comparedNetPct": 0.5,
+      "sourceSHA256": "f2b8589595bd112c6a87ecbdb4bc4e9018c7f34e9370cb7f8077c1d2f56c5376",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.50%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.50%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jan 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "EWW": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239670/ishares-msci-mexico-capped-etf",
+      "comparedGrossPct": 0.5,
+      "comparedNetPct": 0.5,
+      "sourceSHA256": "6d031cf22a00fdd1e31dc5bad0f21c7b3af0e9d1d0ba68e3ba9b7312616ff6d9",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.50%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.01%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.49%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Dec 30, 2025"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "EWN": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239671/ishares-msci-netherlands-etf",
+      "comparedGrossPct": 0.5,
+      "comparedNetPct": 0.5,
+      "sourceSHA256": "3cc1b2e1bc909a613cd8dc2e26216b7a137e29f16cba646a0d3be98faccb989e",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.50%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.01%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.49%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Dec 30, 2025"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "ENZL": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239672/ishares-msci-new-zealand-capped-etf",
+      "comparedGrossPct": 0.5,
+      "comparedNetPct": 0.5,
+      "sourceSHA256": "74b0b8c80bf56ee107a0a59be7740a65f7871661ab9c207e4fa6c564ab9a08f6",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.50%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.01%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.49%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jan 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "EPP": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239674/ishares-msci-pacific-ex-japan-etf",
+      "comparedGrossPct": 0.47,
+      "comparedNetPct": 0.47,
+      "sourceSHA256": "83fc6da651350df127955bd1c1febcb8e2a7431a20055cac8e47c20363f20661",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.47%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.47%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jan 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "EPHE": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239675/ishares-msci-philippines-etf",
+      "comparedGrossPct": 0.59,
+      "comparedNetPct": 0.59,
+      "sourceSHA256": "bbe979f2cbcfa463c51c1957af4bc8358f55cc20fc193347eccb47f6707aace7",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.59%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.59%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jan 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "EWS": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239678/ishares-msci-singapore-capped-etf",
+      "comparedGrossPct": 0.5,
+      "comparedNetPct": 0.5,
+      "sourceSHA256": "0bf2bdba89b89910329a8c750903c6651d00774e04e2f31baab317d0f96f675b",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.50%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.01%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.49%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jan 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "EZA": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239680/ishares-msci-south-africa-etf",
+      "comparedGrossPct": 0.59,
+      "comparedNetPct": 0.59,
+      "sourceSHA256": "2bf622bb3cd60de05f06417bcfefbd0e96443b2e04ca713a58e671c89f2f9b07",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.59%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.59%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jan 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "EWY": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239681/ishares-msci-south-korea-capped-etf",
+      "comparedGrossPct": 0.59,
+      "comparedNetPct": 0.59,
+      "sourceSHA256": "ce57b75d4db6ca19ad6e47c1b9f232ffd43378800a03078536204a003c8e51ce",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.59%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.59%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jan 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "EWP": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239683/ishares-msci-spain-capped-etf",
+      "comparedGrossPct": 0.5,
+      "comparedNetPct": 0.5,
+      "sourceSHA256": "85d2872de3cd648837e60605fbe8a734d410fd8ff35c5fc3bffabd0470b10a97",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.50%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.01%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.49%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jan 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "EWD": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239684/ishares-msci-sweden-etf",
+      "comparedGrossPct": 0.51,
+      "comparedNetPct": 0.51,
+      "sourceSHA256": "4e4cb01fb8084f298920636019a4bb66ed660084a8a044412a63146417712a71",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.51%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.02%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.49%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jan 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "EWL": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239685/ishares-msci-switzerland-capped-etf",
+      "comparedGrossPct": 0.5,
+      "comparedNetPct": 0.5,
+      "sourceSHA256": "d5cadf23f80cd7ce26d1a5f71f4172d49b808b89aeafdfef25358ea8832e4cb4",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.50%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.01%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.49%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jan 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "EWT": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239686/ishares-msci-taiwan-etf",
+      "comparedGrossPct": 0.59,
+      "comparedNetPct": 0.59,
+      "sourceSHA256": "db77329f85c19d6b9c2af9e0fa39118a5316753e1cfd03ee81826ddb260149fc",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.59%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.59%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jan 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "THD": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239688/ishares-msci-thailand-capped-etf",
+      "comparedGrossPct": 0.59,
+      "comparedNetPct": 0.59,
+      "sourceSHA256": "967ca69c0dc011379f26adb2a2ad016fc56df5ced14e1b8fa81d7154d8d6f809",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.59%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.59%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jan 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "TUR": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239689/ishares-msci-turkey-etf",
+      "comparedGrossPct": 0.59,
+      "comparedNetPct": 0.59,
+      "sourceSHA256": "83f322d3fc824058e6991d1b27e032deffb43e94a3b18025a8a1440f68cc5778",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.59%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.59%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Dec 30, 2025"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "EWU": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239690/ishares-msci-united-kingdom-etf",
+      "comparedGrossPct": 0.5,
+      "comparedNetPct": 0.5,
+      "sourceSHA256": "f319771038295b1fb247121746287a6ea1dc6fa73b53fc79fedf86268aa8e4f0",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.50%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.01%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.49%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jan 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "USMV": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239695/ishares-msci-usa-minimum-volatility-etf",
+      "comparedGrossPct": 0.15,
+      "comparedNetPct": 0.15,
+      "sourceSHA256": "fd99e9a24eb045d055fd7da3f2f489763cad0a03506889efb558b82d33eae707",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.15%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.15%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Nov 28, 2025"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "SOXX": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239705/ishares-phlx-semiconductor-etf",
+      "comparedGrossPct": 0.33,
+      "comparedNetPct": 0.33,
+      "sourceSHA256": "d78b1c380df1abcabdf73f8d2b90cd627a1e3c92136baf1dae9ea5dd1751a11d",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.33%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.33%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jul 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "IWF": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239706/ishares-russell-1000-growth-etf",
+      "comparedGrossPct": 0.18,
+      "comparedNetPct": 0.18,
+      "sourceSHA256": "ebf376b895737f8b5960a9bd1a1a8c100098f96be4229c42d980244ab4e3f173",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.18%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.18%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jul 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "IWB": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239707/ishares-russell-1000-etf",
+      "comparedGrossPct": 0.15,
+      "comparedNetPct": 0.15,
+      "sourceSHA256": "0caa695ae004fd93f35cb642d006fa456e975b1f324068824fdfb72373e219cd",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.15%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.15%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jul 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "IWD": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239708/ishares-russell-1000-value-etf",
+      "comparedGrossPct": 0.18,
+      "comparedNetPct": 0.18,
+      "sourceSHA256": "801df313e4fb51ed6b7dcbc3964af234eadee3190bd9c4021475bec6b846ad1c",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.18%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.18%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jul 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "IWM": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239710/ishares-russell-2000-etf",
+      "comparedGrossPct": 0.19,
+      "comparedNetPct": 0.19,
+      "sourceSHA256": "1c95fbebf812af11f92c373590982eeb72b8592664c0e2548b6ed243483d25d2",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.19%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.19%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jul 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "IWV": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239714/ishares-russell-3000-etf",
+      "comparedGrossPct": 0.2,
+      "comparedNetPct": 0.2,
+      "sourceSHA256": "f6b4b82466f4bdb5ae0172f5c430e46c0d9082cfb4c4abd24aa46b956af33c00",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.20%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.20%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jul 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "IWP": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239717/ishares-russell-midcap-growth-etf",
+      "comparedGrossPct": 0.23,
+      "comparedNetPct": 0.23,
+      "sourceSHA256": "e83bf143baf0c4ba01d2469ea28ecd785b3dbe307a5ec232ddc32169b72dfe39",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.23%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.23%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jul 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "IWR": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239718/ishares-russell-midcap-etf",
+      "comparedGrossPct": 0.18,
+      "comparedNetPct": 0.18,
+      "sourceSHA256": "2262e08f4626d510317b79dac017a2dd001919f14a87b668866d3255c0f711b4",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.18%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.18%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jul 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "IWS": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239719/ishares-russell-midcap-value-etf",
+      "comparedGrossPct": 0.23,
+      "comparedNetPct": 0.23,
+      "sourceSHA256": "4ec6b63cfea0ea1c4b78e634f282865f686402c5bc39630030d7567b1fa79c1b",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.23%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.23%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jul 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "IWL": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239721/ishares-russell-top-200-etf",
+      "comparedGrossPct": 0.15,
+      "comparedNetPct": 0.15,
+      "sourceSHA256": "c124f502fd4a2bfca8940853f5a9de97494744a148606bbbf5ac23f2219c57c8",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.15%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.15%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jul 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "OEF": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239723/ishares-sp-100-etf",
+      "comparedGrossPct": 0.2,
+      "comparedNetPct": 0.2,
+      "sourceSHA256": "2fcb4a95c4dffa5f6636e36c24dc1de626689d140e738457067b1614bf50c4a9",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.20%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.20%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jul 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "ITOT": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239724/ishares-core-sp-total-us-stock-market-etf",
+      "comparedGrossPct": 0.03,
+      "comparedNetPct": 0.03,
+      "sourceSHA256": "329408333885f024482c956ac5a37b38e56525470f586c155d6aff98d85c43da",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.03%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.03%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jul 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "IVV": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239726/ishares-core-sp-500-etf",
+      "comparedGrossPct": 0.03,
+      "comparedNetPct": 0.03,
+      "sourceSHA256": "f39cfe5d1d47cd6f04e0608a2d3a0d2479eb62b5eae92969d9c3fb15aa5d6e99",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.03%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.03%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jul 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "AOA": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239729/ishares-aggressive-allocation-etf",
+      "comparedGrossPct": 0.19,
+      "comparedNetPct": 0.15,
+      "sourceSHA256": "9fd6909e66bf42b975e8af7b6daf69af1d224b7028b3031618acd70f102e3508",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.04%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "Nov 30, 2026"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.19%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.15%"
+        },
+        "netr": {
+          "label": "Net Expense Ratio",
+          "value": "0.15%"
+        },
+        "wver": {
+          "label": "Fee Waivers",
+          "value": "0.04%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Nov 28, 2025"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "AOK": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239733/ishares-conservative-allocation-etf",
+      "comparedGrossPct": 0.2,
+      "comparedNetPct": 0.15,
+      "sourceSHA256": "ecb5954c629de3cbee59bf69eab9bb95179a7290cc9d11f11f4d6b5d19122702",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.05%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "Nov 30, 2026"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.20%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.15%"
+        },
+        "netr": {
+          "label": "Net Expense Ratio",
+          "value": "0.15%"
+        },
+        "wver": {
+          "label": "Fee Waivers",
+          "value": "0.05%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Nov 28, 2025"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "IEV": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239736/ishares-europe-etf",
+      "comparedGrossPct": 0.6,
+      "comparedNetPct": 0.6,
+      "sourceSHA256": "4e7e697630ed1d6f6ef33bc740fa5d6d5b10dc1bcfe68ab77a0244ae02d1a6c6",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.60%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.01%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.59%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jul 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "IOO": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239737/ishares-global-100-etf",
+      "comparedGrossPct": 0.4,
+      "comparedNetPct": 0.4,
+      "sourceSHA256": "d523dd652ba4473543eb398e2c1dde23750b83209860e0b8e084d335cbe9c086",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.40%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.40%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jul 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "AOR": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239756/ishares-growth-allocation-etf",
+      "comparedGrossPct": 0.2,
+      "comparedNetPct": 0.15,
+      "sourceSHA256": "a0d3052fb2e4e80c3a02017168d0bbff096d2c48994e3b24b93764b47d4c5933",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.05%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "Nov 30, 2026"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.20%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.15%"
+        },
+        "netr": {
+          "label": "Net Expense Ratio",
+          "value": "0.15%"
+        },
+        "wver": {
+          "label": "Fee Waivers",
+          "value": "0.05%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Nov 28, 2025"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "GSG": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239757/ishares-sp-gsci-commodityindexed-trust-fund",
+      "comparedGrossPct": 0.75,
+      "comparedNetPct": 0.75,
+      "sourceSHA256": "919d2eee366e2c3a5e56960ef5927d1164e60d33c67dd36a34359dc0047b9dbf",
+      "identityMatched": true,
+      "status": "needs-review",
+      "feeTable": {},
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "INDY": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239758/ishares-india-50-etf",
+      "comparedGrossPct": 0.65,
+      "comparedNetPct": 0.65,
+      "sourceSHA256": "56051e9f685cccb9525100451480022a53272a815fdf11b48552f9e790b59040",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.65%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.65%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jul 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "IJK": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239762/ishares-sp-midcap-400-growth-etf",
+      "comparedGrossPct": 0.16,
+      "comparedNetPct": 0.16,
+      "sourceSHA256": "f62982362be507ceb58608cc153e9221e6b1d5cc1a5ced34cb86cd06d3e43705",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.16%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.16%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jul 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "IJH": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239763/ishares-core-sp-midcap-etf",
+      "comparedGrossPct": 0.05,
+      "comparedNetPct": 0.05,
+      "sourceSHA256": "b3bcc1268925bb4fa7b294611897532a0941c7e1a3a124c664469a6466c6d49a",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.05%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.05%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jul 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "IJJ": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239764/ishares-sp-midcap-400-value-etf",
+      "comparedGrossPct": 0.18,
+      "comparedNetPct": 0.18,
+      "sourceSHA256": "ec64fe4368e5c9410c694b5340946e7373a906182b4fb69cee3596408896a1dc",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.18%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.18%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jul 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "AOM": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239765/ishares-moderate-allocation-etf",
+      "comparedGrossPct": 0.2,
+      "comparedNetPct": 0.15,
+      "sourceSHA256": "4ac6c98cf4dd4384ac10190165f8042647ff64f41f23607bdb304cbef5e8a61c",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.05%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "Nov 30, 2026"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.20%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.15%"
+        },
+        "netr": {
+          "label": "Net Expense Ratio",
+          "value": "0.15%"
+        },
+        "wver": {
+          "label": "Fee Waivers",
+          "value": "0.05%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Nov 28, 2025"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "MUB": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239766/ishares-national-amtfree-muni-bond-etf",
+      "comparedGrossPct": 0.05,
+      "comparedNetPct": 0.05,
+      "sourceSHA256": "10d8e72f7ae6da9c18f6f927ce5f2193e6fa46f85ea731a8c0cc8fff4e0a83fe",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "Jun 30, 2027"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.05%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.05%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jun 29, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "IGV": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239771/ishares-north-american-techsoftware-etf",
+      "comparedGrossPct": 0.38,
+      "comparedNetPct": 0.38,
+      "sourceSHA256": "ac9f15fd74763fcfef7768ae7e925a3b64d02313e2dba28dc62fd465fcf50365",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.38%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.38%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jul 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "SUB": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239772/ishares-shortterm-national-amtfree-muni-bond-etf",
+      "comparedGrossPct": 0.07,
+      "comparedNetPct": 0.07,
+      "sourceSHA256": "e1de61c88b36dc35c9cf2ae182dd058a1f4dcbdb62a5cc0a0e04a49cb7ee4dce",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.07%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.07%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jun 29, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "IJT": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239773/ishares-sp-smallcap-600-growth-etf",
+      "comparedGrossPct": 0.18,
+      "comparedNetPct": 0.18,
+      "sourceSHA256": "60d4c1218358d728bddc9fb0bb8e33fc1cbff9e6609b01483e8c0ac7e4b9fc72",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.18%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.18%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jul 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "IJR": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239774/ishares-core-sp-smallcap-etf",
+      "comparedGrossPct": 0.06,
+      "comparedNetPct": 0.06,
+      "sourceSHA256": "74305cac354c42eeab6d433795da42f3771c1cfd86ce4d3aba926983ea23132a",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.06%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.06%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jul 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "IJS": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239775/ishares-sp-smallcap-600-value-etf",
+      "comparedGrossPct": 0.18,
+      "comparedNetPct": 0.18,
+      "sourceSHA256": "b25670a1cf117a14c903cb83af76240c6d4f2803c3a85ed3ab78bd4069220a40",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.18%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.18%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jul 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "PFF": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239826/ishares-us-preferred-stock-etf",
+      "comparedGrossPct": 0.45,
+      "comparedNetPct": 0.45,
+      "sourceSHA256": "e0481b70e12c0f73998a9c2293b69d7dd8524d0ef7fa472f88ad3f6ea2192c68",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.45%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.45%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jul 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "IGOV": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239830/ishares-international-treasury-bond-etf",
+      "comparedGrossPct": 0.35,
+      "comparedNetPct": 0.35,
+      "sourceSHA256": "4f7322e1de93ce78abe77d5037f13ef3aececc6e15f55c0367facbeb9758aa9c",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.35%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.35%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Feb 27, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "NEAR": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239854/ishares-short-maturity-bond-etf",
+      "comparedGrossPct": 0.25,
+      "comparedNetPct": 0.25,
+      "sourceSHA256": "0093e1b665ee8a5f2891068b1cb870245f4efbba0a272ed0850457951af04fb3",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "Feb 28, 2030"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.25%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.25%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Feb 27, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "SLV": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/239855/ishares-silver-trust-fund",
+      "comparedGrossPct": 0.5,
+      "comparedNetPct": 0.5,
+      "sourceSHA256": "d045b730821259b71ea4ddd2a1d2da921ef1a1e31b88ccb26eafb0067c02a7b4",
+      "identityMatched": true,
+      "status": "needs-review",
+      "feeTable": {},
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "IXUS": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/244048/ishares-core-msci-total-international-stock-etf",
+      "comparedGrossPct": 0.07,
+      "comparedNetPct": 0.07,
+      "sourceSHA256": "940a225295a3b669c18f53605d86cd04d732949afa0971e8fd867a377d092a18",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "Nov 30, 2026"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.07%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.07%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jan 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "IEFA": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/244049/ishares-core-msci-eafe-etf",
+      "comparedGrossPct": 0.07,
+      "comparedNetPct": 0.07,
+      "sourceSHA256": "a542af7113139e61580687d5eaf6affd8ec03cb01b6b2dcff5752b6ae388b6f7",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.07%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.07%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jan 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "IEMG": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/244050/ishares-core-msci-emerging-markets-etf",
+      "comparedGrossPct": 0.09,
+      "comparedNetPct": 0.09,
+      "sourceSHA256": "0553e6631f9937875916ae297a87af17e039f28d3691d440968fd7813ff3ba71",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "Dec 31, 2030"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.09%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.09%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jan 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "MTUM": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/251614/ishares-msci-usa-momentum-factor-etf",
+      "comparedGrossPct": 0.15,
+      "comparedNetPct": 0.15,
+      "sourceSHA256": "d0f38ce254253f2f9d9f60274a360310f7d3e12fa66ea806abae904d5db36140",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.15%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.15%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Nov 28, 2025"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "VLUE": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/251616/ishares-msci-usa-value-factor-etf",
+      "comparedGrossPct": 0.15,
+      "comparedNetPct": 0.15,
+      "sourceSHA256": "3e5ca3bd4124ae0c566200f175aa32cfc5dae59e18c14b033fb28da5def4a43a",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.15%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.15%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Nov 28, 2025"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "QUAL": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/256101/ishares-msci-usa-quality-factor-etf",
+      "comparedGrossPct": 0.15,
+      "comparedNetPct": 0.15,
+      "sourceSHA256": "e767bae485905b64aa33e4d817784865a0c78ebb0d6c985d04b3025303cf5f41",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.15%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.15%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Nov 28, 2025"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "SHYG": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/258100/ishares-05-year-high-yield-corporate-bond-etf",
+      "comparedGrossPct": 0.3,
+      "comparedNetPct": 0.3,
+      "sourceSHA256": "6d5bb0d13be726688b8ed263aefb8189cf3cd0cc5bb59c959e55ccfd0b7b0853",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.30%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.30%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Feb 27, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "ICSH": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/258806/ishares-liquidity-income-etf",
+      "comparedGrossPct": 0.08,
+      "comparedNetPct": 0.08,
+      "sourceSHA256": "51c37e4922408fb965642857b0a33806fa1bc0693f8de1ea1bf5deb597958f57",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.08%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.08%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Feb 27, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "HEFA": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/259622/ishares-currency-hedged-msci-eafe-etf",
+      "comparedGrossPct": 0.7,
+      "comparedNetPct": 0.35,
+      "sourceSHA256": "269c6c04156cfb15c8bea13425800ffbca85d28962f35ff7675981696ff52d24",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.32%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "Nov 29, 2030"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.70%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.38%"
+        },
+        "netr": {
+          "label": "Net Expense Ratio",
+          "value": "0.35%"
+        },
+        "wver": {
+          "label": "Fee Waivers",
+          "value": "0.35%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jan 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "TFLO": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/260652/ishares-treasury-floating-rate-bond-etf",
+      "comparedGrossPct": 0.15,
+      "comparedNetPct": 0.15,
+      "sourceSHA256": "dfd75153fb8e1b47e10d9a738c831c9c48ba99c3435708966eed76e473a51179",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.15%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.15%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Feb 27, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "IEUR": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/264617/ishares-core-msci-europe-etf",
+      "comparedGrossPct": 0.1,
+      "comparedNetPct": 0.1,
+      "sourceSHA256": "39e9cbb82bed235e623cd24e7c645983480a40c9c6eab9e5ed8f56b4b766889a",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.10%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.01%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.09%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jan 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "DGRO": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/264623/ishares-core-dividend-growth-etf",
+      "comparedGrossPct": 0.08,
+      "comparedNetPct": 0.08,
+      "sourceSHA256": "bd592d8ec1ea8158154b3e846ffc95adb649ea1befc8ecb4920ab633f0ac5dca",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.08%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.08%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Aug 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "REET": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/268752/ishares-global-reit-etf",
+      "comparedGrossPct": 0.14,
+      "comparedNetPct": 0.14,
+      "sourceSHA256": "3ed68b1f5ad27f33a0beb17348e6263ddaa9bc944bca61a57f90c32ab325b029",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.14%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.14%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Aug 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "COMT": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/270319/ishares-commodity-etf",
+      "comparedGrossPct": 0.49,
+      "comparedNetPct": 0.48,
+      "sourceSHA256": "a4d2711db4d8b3e7c819e97e43985858071ba15e3a22c5cc87bcb03bf705eb31",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.01%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "Feb 28, 2029"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.49%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.48%"
+        },
+        "netr": {
+          "label": "Net Expense Ratio",
+          "value": "0.48%"
+        },
+        "wver": {
+          "label": "Fee Waivers",
+          "value": "0.01%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Feb 27, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "IQLT": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/271540/ishares-msci-international-developed-quality-factor-etf",
+      "comparedGrossPct": 0.3,
+      "comparedNetPct": 0.3,
+      "sourceSHA256": "1e5f77be6cfd94f4893b6da31adf175d7e0f3967a5c7823a396d39916ccd8007",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.30%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.30%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jan 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "IAGG": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/279626/ishares-international-aggregate-bond-etf",
+      "comparedGrossPct": 0.07,
+      "comparedNetPct": 0.07,
+      "sourceSHA256": "7c71ae27a194d3166ad1d4fcf2fd436f94a71a8bacce575036baf5f21b2555ac",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.07%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.07%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Feb 27, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "FALN": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/283855/ishares-fallen-angels-usd-bond-etf",
+      "comparedGrossPct": 0.25,
+      "comparedNetPct": 0.25,
+      "sourceSHA256": "6c279fea58802c287472bc32539787e57efb23345e16259daa1a68246b621ef6",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.25%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.25%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Feb 27, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "IDEV": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/286762/ishares-core-msci-international-developed-markets-etf",
+      "comparedGrossPct": 0.04,
+      "comparedNetPct": 0.04,
+      "sourceSHA256": "c48481919d6db235cdad0a5bf0a9ed2dbe5aad5bac812c79ff7af11496feba00",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.04%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.04%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jan 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "EMXC": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/288504/ishares-msci-emerging-markets-ex-china-etf",
+      "comparedGrossPct": 0.25,
+      "comparedNetPct": 0.25,
+      "sourceSHA256": "e15ed21572494a7b0f2fd22acba9b324caf16d54e078eb7f64c88053c4ab60cf",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "Dec 31, 2027"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.25%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.25%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jan 31, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "USHY": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/291299/ishares-broad-usd-high-yield-corporate-bond-etf",
+      "comparedGrossPct": 0.08,
+      "comparedNetPct": 0.08,
+      "sourceSHA256": "d8971a375a64622e0b23411658002168865589e85d07504383d3e67a88546c69",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.08%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.08%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Feb 27, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "IAUM": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/306979/ishares-gold-trust-micro",
+      "comparedGrossPct": 0.09,
+      "comparedNetPct": 0.09,
+      "sourceSHA256": "c8d86d6ba387a81b33ad5b260a5aa3e82955689e6b3b00d466f94b8c78dab239",
+      "identityMatched": true,
+      "status": "needs-review",
+      "feeTable": {},
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "SGOV": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/314116/ishares-0-3-month-treasury-bond-etf",
+      "comparedGrossPct": 0.09,
+      "comparedNetPct": 0.09,
+      "sourceSHA256": "c737a3d8f40d5903739ba234ca55b4973efe111466bd51bcd2b9012a9f272a76",
+      "identityMatched": true,
+      "status": "matched",
+      "feeTable": {
+        "acqf": {
+          "label": "Acquired Fund Fees and Expenses",
+          "value": "0.00%"
+        },
+        "expirationDate": {
+          "label": "",
+          "value": "-"
+        },
+        "expr": {
+          "label": "Expense Ratio",
+          "value": "0.09%"
+        },
+        "ftoe": {
+          "label": "Other Expenses",
+          "value": "0.00%"
+        },
+        "mgt": {
+          "label": "Management Fee",
+          "value": "0.09%"
+        },
+        "yearEnd.asOf": {
+          "label": "",
+          "value": "Jun 29, 2026"
+        }
+      },
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "IBIT": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/333011/ishares-bitcoin-trust-etf",
+      "comparedGrossPct": 0.25,
+      "comparedNetPct": 0.25,
+      "sourceSHA256": "30452e24d5228243feab39d7794e2b440a9dea0d0995d5f0f5c926627ad652c2",
+      "identityMatched": true,
+      "status": "needs-review",
+      "feeTable": {},
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    },
+    "ETHA": {
+      "checkedOn": "2026-10-05",
+      "retrievedOn": "2026-10-05",
+      "source": "https://www.ishares.com/us/products/337614/ishares-ethereum-trust-etf",
+      "comparedGrossPct": 0.25,
+      "comparedNetPct": 0.25,
+      "sourceSHA256": "470a8459862dad790601d68d79a83a205027e4876afb574352b530bef357a0de",
+      "identityMatched": true,
+      "status": "needs-review",
+      "feeTable": {},
+      "note": "Product-page comparison with issuer screener. Fiscal year-end is not a fee-effective date."
+    }
+  }
+}

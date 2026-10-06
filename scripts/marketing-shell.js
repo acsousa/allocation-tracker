@@ -25,7 +25,7 @@ function marketingHeader(current = '') {
 function marketingFooter(current = '') {
   return `<footer class="marketing-footer">
     <a class="marketing-footer-home" href="/">realallocation.com</a>
-    <span>Informational only—no trade instructions and not investment, tax, or legal advice.</span>
+    <div class="marketing-disclaimer"><strong>Disclaimer</strong><p style="margin:4px 0 0;">All content and tools on this platform are for educational and informational purposes only. They do not constitute financial, investment, or tax advice. Please consult with a qualified, licensed professional before making any major financial decisions.</p></div>
     <a href="/privacy.html"${current === 'privacy' ? ' aria-current="page"' : ''}>Privacy</a>
     <a href="mailto:hello@realallocation.com">hello@realallocation.com</a>
   </footer>`;

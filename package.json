@@ -4,8 +4,10 @@
   "version": "0.0.0",
   "description": "Local-file portfolio allocation and planning application",
   "scripts": {
+    "audit:funds": "node scripts/audit-fund-coverage.js",
+    "check:social": "node scripts/check-social-preview.js",
     "build": "node scripts/build-site.js",
-    "test": "node test/analytics.test.js && node test/tax-engine.test.js && node test/persistence.test.js && node test/projection-display.test.js && node test/site-build.test.js && node test/onboarding.test.js && node test/growth-savings.test.js && node test/landing-demo.test.js",
+    "test": "node test/instruments.test.js && node test/analytics.test.js && node test/tax-engine.test.js && node test/persistence.test.js && node test/projection-display.test.js && node test/site-build.test.js && node test/onboarding.test.js && node test/growth-savings.test.js && node test/landing-demo.test.js",
     "check": "npm test && npm run build",
     "dev": "npm run build && python3 -m http.server 8747 --bind 127.0.0.1 --directory dist"
   },

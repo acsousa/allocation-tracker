@@ -2,7 +2,7 @@
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
-const html = fs.readFileSync(require('node:path').join(__dirname, '..', 'app.html'), 'utf8');
+const html = require('../scripts/instrument-catalog').readApp();
 const source = html.match(/\n<script>\n([\s\S]*)\n<\/script>/)[1];
 const handoffStore = new Map();
 const sessionStorage = {getItem:key=>handoffStore.has(key)?handoffStore.get(key):null,setItem:(key,value)=>handoffStore.set(key,String(value)),removeItem:key=>handoffStore.delete(key)};
@@ -11,7 +11,7 @@ const sandbox = {window, self:{}, console, URL, Blob, setTimeout(){}, requestAni
 vm.createContext(sandbox);
 vm.runInContext(source + `
 render = () => {}; toast = () => {}; openDialog = d => { ui.dialog = d; };
-window.test = {reviewSubtabs, selectedDashboardGoal, dashKpiHTML, dashToolbarHTML, driftControlsHTML, checkinAccountBlock, saveHoldingFromDialog, setHoldingClass, ensureCheckinDraft, setSetupGoalLevel, chooseSetupGoal, applySetupGoal, setupGoalTotal, taxProfileNeedsReview, beginSetup, reviewChanges, renderReviewChanges, renderSetup, renderOpenFile, dialogHTML, topTabOf, demoActionAllowed, onClick, onInput, onChange, syncHoldingClassField, saveCheckin, saveFile, handlePublicRoute, consumeLandingPortfolio, handoffKey:LANDING_FILE_HANDOFF_KEY,
+window.test = {importAccountTotals, checkinAccountUpdated, chartXAxis, renderCollege, reportCollegeSection, collegeModel, reviewSubtabs, selectedDashboardGoal, dashKpiHTML, dashToolbarHTML, driftControlsHTML, checkinAccountBlock, saveHoldingFromDialog, setHoldingClass, ensureCheckinDraft, setSetupGoalLevel, chooseSetupGoal, applySetupGoal, setupGoalTotal, taxProfileNeedsReview, beginSetup, reviewChanges, renderReviewChanges, renderSetup, renderOpenFile, dialogHTML, topTabOf, demoActionAllowed, onClick, onInput, onChange, syncHoldingClassField, saveCheckin, saveFile, handlePublicRoute, consumeLandingPortfolio, handoffKey:LANDING_FILE_HANDOFF_KEY,
 state:()=>({demoMode,setupStep,dirty,checkinDraftDirty,fileName}),
 setDraft: d => { ui.checkin=d; checkinDraftDirty=true; },
 setMode: (step, demo=false) => {setupStep=step;demoMode=demo;}
@@ -123,5 +123,70 @@ check('adding and updating holdings keeps their account expanded in onboarding a
       T.onClick(event('ci-toggle',{account:'second'}));assert.equal(A.ui.checkinOpen.second,false);
     }
   } finally {sandbox.document.getElementById=originalLookup;A.loadDemoData();}
+});
+check('holding dialog saves direct crypto and its ETF as separate holdings',()=>{
+ const lookup=sandbox.document.getElementById;
+ try {
+  A.portfolio=A.emptyPortfolio();T.setMode(0,false);A.ui.checkin=null;
+  A.portfolio.accounts.push({id:'crypto-a',name:'Crypto',category:'Non-Retirement',status:'active'});
+  const fields={'f-ticker':{value:'BTC'},'f-hname':{value:'',dataset:{},readOnly:false},'f-instrument-kind':{value:'direct',dataset:{symbol:'BTC'}},'holding-identity-field':{hidden:true},'holding-class-field':{classList:{remove(){},toggle(){}}},'f-cls-help':{},'f-cls':{value:'',disabled:true,removeAttribute(){},setAttribute(){}},'f-val':{value:'1000'},'f-basis':{value:''}};
+  sandbox.document.getElementById=id=>fields[id]||null;
+  T.syncHoldingClassField();
+  assert.equal(fields['f-hname'].value,'Bitcoin (held directly)');
+  assert.equal(fields['f-hname'].readOnly,true);
+  T.saveHoldingFromDialog('crypto-a');
+  fields['f-instrument-kind'].value='etf';T.syncHoldingClassField();
+  assert.equal(fields['f-hname'].value,'');assert.equal(fields['f-hname'].readOnly,false);
+  T.saveHoldingFromDialog('crypto-a');
+  assert.equal(A.portfolio.holdings[0].ticker,'BTC-DIRECT');
+  assert.equal(A.portfolio.holdings[1].ticker,'BTC');
+  assert.notEqual(A.portfolio.holdings[0].id,A.portfolio.holdings[1].id);
+ } finally {sandbox.document.getElementById=lookup;A.loadDemoData();}
+});
+check('account imports compare totals, retain missing positions, and mark same-value imports updated',()=>{
+ A.portfolio=A.emptyPortfolio();T.setMode(0,false);A.ui.checkin=null;
+ A.portfolio.accounts=[{id:'a1',name:'One',category:'Retirement',status:'active'},{id:'a2',name:'Two',category:'Retirement',status:'active'}];
+ A.portfolio.holdings=[{id:'h1',accountId:'a2',ticker:'VOO',assetClass:'us_large',status:'active'},{id:'h2',accountId:'a2',ticker:'BND',assetClass:'us_bond',status:'active'}];
+ A.portfolio.snapshots=[{date:'2026-01-01',values:[{holdingId:'h1',marketValue:100},{holdingId:'h2',marketValue:50}]}];
+ T.onClick(event('open-import',{account:'a2'}));assert.equal(A.ui.import.accountId,'a2');
+ A.ui.import.parsed=[{ticker:'VOO',value:100},{ticker:'VTI',value:25}];A.ui.import.addSet={VTI:false};
+ let totals=T.importAccountTotals();assert.equal(totals.previous,150);assert.equal(totals.resulting,150);assert.equal(totals.retained,50);
+ assert.match(T.dialogHTML(),/Last check-in/);assert.match(T.dialogHTML(),/After import/);
+ const selection=event('import-addnew',{ticker:'VTI'});selection.target.closest=()=>({dataset:{act:'import-addnew',ticker:'VTI'},checked:true});T.onChange(selection);assert.equal(T.importAccountTotals().resulting,175);
+ A.ui.import.addSet.VTI=false;T.onClick(event('import-apply'));
+ assert.equal(A.ui.checkin.imported.a2,true);assert.equal(A.ui.checkinOpen.a2,true);
+ assert.equal(T.checkinAccountUpdated(A.portfolio.accounts[1],A.ui.checkin,{}),true);
+ T.onClick(event('ci-collapse-all'));assert.equal(A.ui.checkinOpen.a2,false);
+ let block=T.checkinAccountBlock(A.portfolio.accounts[1],A.ui.checkin,{});assert.match(block,/account-import[^>]*disabled/);assert.match(block,/✓ updated/);
+ T.onClick(event('ci-expand-all'));assert.equal(A.ui.checkinOpen.a1,true);assert.equal(A.ui.checkinOpen.a2,true);
+ block=T.checkinAccountBlock(A.portfolio.accounts[1],A.ui.checkin,{});assert.ok(!/account-import[^>]*disabled/.test(block));assert.match(block,/✓ updated/);
+ T.onClick(event('open-import',{account:'a2'}));A.ui.import.parsed=[{ticker:'VOO',value:200}];T.onClick(event('import-apply'));assert.equal(Number(A.ui.checkin.values.h1.marketValue),200);assert.equal(T.state().checkinDraftDirty,true);
+ assert.match(T.renderReviewChanges(),/Continue to allocation overview/);
+ T.onClick(event('open-import',{account:'a2'}));A.ui.import.parsed=[{ticker:'VOO',value:300}];T.onInput(event('import-text'));assert.equal(A.ui.import.parsed,null);T.onClick(event('import-apply'));assert.equal(Number(A.ui.checkin.values.h1.marketValue),200);
+ A.loadDemoData();
+});
+check('unrealized gain share uses total assets and identifies incomplete basis',()=>{
+ A.portfolio=A.emptyPortfolio();A.ui.drill={level:'household'};
+ const snap={date:'2026-01-01',values:[]};A.portfolio.snapshots=[snap];
+ let markup=T.dashKpiHTML(snap,{total:1000,byHolding:[{gain:200},{gain:null}]},[],null);
+ assert.match(markup,/\+20.0% of assets/);assert.match(markup,/1 of 2 holdings with basis · partial estimate/);
+ markup=T.dashKpiHTML(snap,{total:1000,byHolding:[{gain:-100}]},[],null);
+ assert.match(markup,/−10.0% of assets/);assert.ok(!markup.includes('partial estimate'));
+ markup=T.dashKpiHTML(snap,{total:0,byHolding:[]},[],null);
+ assert.ok(!markup.includes('NaN'));assert.ok(!markup.includes('Infinity'));assert.ok(!markup.includes('% of assets'));
+ A.loadDemoData();
+});
+check('history timeline uses readable dates and spaces clustered labels',()=>{
+ const axis=T.chartXAxis([{date:'2024-01-01'},{date:'2024-01-02'},{date:'2025-01-01'}],[0,1,320]);
+ assert.match(axis,/Jan/);assert.match(axis,/2024/);assert.match(axis,/2025/);assert.equal((axis.match(/<circle/g)||[]).length,2);
+});
+check('college page and report agree on confidence and contributions',()=>{
+ A.loadDemoData();A.setSiteSimulationPaths(100);
+ for(const c of A.portfolio.children) T.collegeModel(c.id);
+ const page=T.renderCollege(),report=T.reportCollegeSection(A.latestSnapshot());
+ assert.match(page,/Funding confidence/);assert.match(page,/(High|Medium|Low) \(\d+%\)/);assert.ok(!page.includes('Average years'));
+ assert.match(page,/How to read this plan/);assert.match(report,/Annual contribution/);assert.match(report,/Funding confidence/);assert.ok(!report.includes('Avg years funded'));
+ const child=A.portfolio.children[0],cfg=A.buildCollegeConfig(child.id);assert.ok(report.includes(Math.round(cfg.annualContrib).toLocaleString('en-US')+'/yr'));
+ A.loadDemoData();
 });
 (async()=>{const r=await T.saveFile();assert.equal(r.ok,false);console.log('✓ demo file saving blocked');checks++;console.log(checks+' onboarding regression groups passed');})().catch(e=>{console.error(e);process.exitCode=1;});

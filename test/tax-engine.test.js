@@ -5,7 +5,7 @@ const fs = require('fs');
 const vm = require('vm');
 const path = require('path');
 
-const HTML = fs.readFileSync(path.join(__dirname, '..', 'app.html'), 'utf8');
+const HTML = require('../scripts/instrument-catalog').readApp();
 const m = HTML.match(/\n<script>\n([\s\S]*)\n<\/script>/);
 if (!m) { console.error('could not extract <script>'); process.exit(1); }
 
@@ -259,6 +259,18 @@ ok('import: skips Money-accounts cash row', !sa.some(r => /MONEY/i.test(r.ticker
 // cost basis: per-share Unit Cost × Quantity
 const perShare = P('Symbol,Quantity,Price,Value,Unit Cost\nVOO,10,"$700.00","$7,000.00","$400.00"');
 ok('import: per-share cost × qty = total basis', (perShare[0] || {}).costBasis === 4000);
+// Synthetic percent-of-par bond export, with the same dated quote format.
+const bondCSV = 'Positions,Quantity,Price,Value,Unit cost\nTEST29 EXAMPLE FIRST MORTGAGE GLB,"20,000","$98.7940 10/01/2026","$20,102.12",$99.66';
+const bondRow = P(bondCSV)[0];
+ok('import: bond face quantity uses cost per $100', bondRow.costBasis === 19932);
+ok('import: rounded bond estimate is disclosed', /rounded quote/.test(bondRow.basisNote));
+const explicitBond = P('Positions,Quantity,Price,Value,Unit cost,Total Cost Basis\nTEST29 EXAMPLE FIRST MORTGAGE GLB,20000,98.794,20102.12,99.66,19931.20')[0];
+ok('import: exact total bond basis takes precedence', explicitBond.costBasis === 19931.20 && !explicitBond.basisNote);
+ok('import: bond without price does not guess scale', P('Positions,Quantity,Value,Unit cost\nTEST29 EXAMPLE FIRST MORTGAGE GLB,20000,20102.12,99.66')[0].costBasis === undefined);
+ok('import: dollar-priced bond units retain ordinary multiplication', P('Positions,Quantity,Price,Value,Unit cost\nTEST29 EXAMPLE FIRST MORTGAGE GLB,20,1000,20000,996.60')[0].costBasis === 19932);
+ok('import: bond ETF uses shares, not face value', P('Symbol,Description,Quantity,Price,Value,Unit cost\nBND,Vanguard Total Bond Market ETF,100,75,7500,80')[0].costBasis === 8000);
+ok('import: large real stock loss is not rescaled', P('Symbol,Quantity,Price,Value,Unit cost\nTEST,100,1,100,100')[0].costBasis === 10000);
+ok('import: unconfirmed 100x scale leaves basis unknown', P('Symbol,Quantity,Price,Value,Unit cost\nTEST,20000,99,19800,98')[0].costBasis === undefined);
 // cost basis: explicit TOTAL column used as-is
 const totalCost = P('Symbol,Quantity,Value,Cost Basis\nVOO,10,"$7,000.00","$4,000.00"');
 ok('import: total cost basis used directly', (totalCost[0] || {}).costBasis === 4000);

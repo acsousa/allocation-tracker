@@ -1,0 +1,719 @@
+{
+  "schemaVersion": 1,
+  "status": "research-only",
+  "description": "Fee observations, not verified current usable fees. Missing fields are unknown, never zero. All percentages use percentage points.",
+  "entries": {
+    "AAAU": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "expenseRatioPct": 0.18,
+      "source": "https://am.gs.com/public-assets/documents/222d5e9c-284c-11f1-b90d-b792a2a51e07?view=true"
+    },
+    "ARKB": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "grossPct": 0.21,
+      "source": "https://www.21shares.com/en-us/products-us"
+    },
+    "ASHR": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "grossPct": 0.65,
+      "netPct": 0.65,
+      "source": "https://etf.dws.com/en-us/ASHR-harvest-csi-300-china-a-shares-etf/"
+    },
+    "AVDE": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "grossPct": 0.23,
+      "netPct": 0.23,
+      "source": "https://res.avantisinvestors.com/docs/avantis-international-equity-avde-etf-fact-sheet.pdf"
+    },
+    "AVEM": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": "2026-01-01",
+      "grossPct": 0.33,
+      "netPct": 0.33,
+      "source": "https://www.avantisinvestors.com/avantis-investments/avantis-emerging-markets-equity-etf/"
+    },
+    "AVES": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": "2026-01-01",
+      "grossPct": 0.36,
+      "netPct": 0.36,
+      "source": "https://www.avantisinvestors.com/avantis-investments/avantis-emerging-markets-value-etf/"
+    },
+    "AVIV": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "grossPct": 0.25,
+      "netPct": 0.25,
+      "documentDate": "2026-09-30",
+      "source": "https://res.avantisinvestors.com/docs/auth/avantis-investors-at-a-glance.pdf"
+    },
+    "AVUV": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": "2026-01-01",
+      "grossPct": 0.25,
+      "netPct": 0.25,
+      "source": "https://www.avantisinvestors.com/avantis-investments/avantis-us-small-cap-value-etf/AVUV/"
+    },
+    "BCI": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "grossPct": 0.32,
+      "netPct": 0.26,
+      "source": "https://www.aberdeeninvestments.com/docs?editionid=b834814a-fb0f-450e-99af-b02f0161b63a"
+    },
+    "BITB": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "sponsorFeePct": 0.2,
+      "source": "https://bitbetf.com/"
+    },
+    "BITO": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "expenseRatioPct": 0.95,
+      "source": "https://prod.proshares.com/our-etfs/strategic/bito"
+    },
+    "BITX": {
+      "retrievedOn": "2026-10-05",
+      "status": "primary-confirmed",
+      "asOf": null,
+      "grossPct": 2.75,
+      "managementFeePct": 1.85,
+      "documentDate": "2026-06-26",
+      "source": "https://www.sec.gov/Archives/edgar/data/1884021/000121390026072187/ea0295205-02_497k.htm",
+      "note": "SEC prospectus resolves issuer caption conflict: total operating expenses 2.75%; management component 1.85%."
+    },
+    "BLOK": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "expenseRatioPct": 0.7,
+      "source": "https://amplifyetfs.com/blok/"
+    },
+    "BNO": {
+      "retrievedOn": "2026-10-05",
+      "status": "needs-review",
+      "asOf": null,
+      "expenseRatioPct": 1.14,
+      "documentDate": "2026-03-02",
+      "source": "https://secure.alpsinc.com/MarketingAPI/api/v1/Content/uscfinvestments/uscfinvestments-hand-etpv2-20260302.pdf",
+      "note": "Issuer Q1 2026 report. Fee-effective date not supplied; current prospectus recheck required."
+    },
+    "BOND": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "grossPct": 0.56,
+      "netPct": 0.54,
+      "adjustedPct": 0.45,
+      "waiverExpiration": "2026-10-31",
+      "documentDate": "2026-03-31",
+      "source": "https://www.pimco.com/us/en/documents/59144abed4eff08608a1795abb7f24995835fe75754d94a5b2de52ae747e3e03a0484a00da3a59f799223b6307c30e37?app=dot"
+    },
+    "BRRR": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "sponsorFeePct": 0.25,
+      "source": "https://coinshares.com/us/etf/brrr/"
+    },
+    "BTAL": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "grossPct": 1.65,
+      "netPct": 1.4,
+      "adjustedPct": 0.45,
+      "waiverExpiration": "2028-11-01",
+      "documentDate": "2026-03-31",
+      "source": "https://www.agf.com/agf-files/us/regulatory-documents/fact-sheets/agf-btal-ann-en.pdf"
+    },
+    "BTC": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "sponsorFeePct": 0.15,
+      "source": "https://www.sec.gov/Archives/edgar/data/2015034/000119312525212880/btc_webpage_9.23.2025.htm",
+      "documentDate": "2025-09-23"
+    },
+    "BTCW": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "netPct": 0.25,
+      "source": "https://www.wisdomtree.com/us/products/crypto/btcw"
+    },
+    "CORN": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "grossPct": 3.63,
+      "documentDate": "2026-04-30",
+      "source": "https://teucrium.com/hubfs/Corn_Factsheet-2.pdf?hsLang=en",
+      "note": "Only gross expenses recorded. Advertised net figure may offset interest income and is not used as a conventional net expense ratio."
+    },
+    "CTA": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "grossPct": 0.75,
+      "source": "https://www.simplify.us/etfs"
+    },
+    "DBEF": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "grossPct": 0.35,
+      "netPct": 0.35,
+      "source": "https://etf.dws.com/en-us/DBEF-msci-eafe-hedged-equity-etf/"
+    },
+    "DBMF": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "expenseRatioPct": 0.85,
+      "documentDate": "2025-09-30",
+      "source": "https://www.imgp.com/wp-content/uploads/DBMF-3-Pager-Q3-25.pdf"
+    },
+    "DFAS": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "grossPct": 0.26,
+      "netPct": 0.26,
+      "source": "https://www.dimensional.com/us-en/funds/",
+      "note": "Issuer fund directory; fee-effective date not supplied."
+    },
+    "DFAX": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "grossPct": 0.28,
+      "netPct": 0.28,
+      "source": "https://www.dimensional.com/us-en/funds/",
+      "note": "Issuer fund directory; fee-effective date not supplied."
+    },
+    "DFEM": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "grossPct": 0.39,
+      "netPct": 0.39,
+      "source": "https://www.dimensional.com/us-en/funds/",
+      "note": "Issuer fund directory; fee-effective date not supplied."
+    },
+    "DFSV": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "grossPct": 0.3,
+      "netPct": 0.3,
+      "source": "https://www.dimensional.com/us-en/funds/",
+      "note": "Issuer fund directory; fee-effective date not supplied."
+    },
+    "DGRW": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "netPct": 0.28,
+      "source": "https://www.wisdomtree.com/us/products/equity/dgrw"
+    },
+    "DGS": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "grossPct": 0.58,
+      "netPct": 0.58,
+      "documentDate": "2026-03-31",
+      "source": "https://www.wisdomtree.com/us/media/wisdomtree-factsheet-dgs-1068"
+    },
+    "DHS": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "netPct": 0.38,
+      "source": "https://www.wisdomtree.com/us/products/equity/dhs"
+    },
+    "DIVO": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "expenseRatioPct": 0.56,
+      "source": "https://amplifyetfs.com/divo/"
+    },
+    "DODIX": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "expenseRatioPct": 0.41,
+      "documentDate": "2025-12-31",
+      "source": "https://www.dodgeandcox.com/content/dam/dc/us/en/pdf/fact-sheets/Dodge_Cox_Firm_Fact_Sheet.pdf"
+    },
+    "DSMC": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "expenseRatioPct": 0.55,
+      "source": "https://distillatecapital.com/distillate-small-mid-cash-flow-etf-ticker-dsmc/"
+    },
+    "EMQQ": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "expenseRatioPct": 0.86,
+      "source": "https://emqqglobaletfs.com/hubfs/Fund%20Documents/Fact%20Sheets/EMQQ%20ETF%20Fact%20Sheet.pdf?hsLang=en"
+    },
+    "EPI": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "grossPct": 0.84,
+      "netPct": 0.84,
+      "documentDate": "2025-09-30",
+      "source": "https://www.wisdomtree.com/-/media/us-media-files/documents/resource-library/fund-fact-sheets/international-equity/wisdomtree-factsheet-epi-1066.ashx"
+    },
+    "ETH": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "sponsorFeePct": 0.15,
+      "source": "https://www.sec.gov/Archives/edgar/data/2020455/000202045526000016/eth-20260630.htm",
+      "note": "Additional staking fee applies to staking rewards; sponsor fee is not total expense ratio."
+    },
+    "ETHE": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "expenseRatioPct": 2.5,
+      "source": "https://etfs.grayscale.com/ethe?aff_unique2=c10cRVPt1&code=c10cRVPt1",
+      "documentDate": "2025-08-22"
+    },
+    "ETHW": {
+      "retrievedOn": "2026-10-05",
+      "status": "primary-confirmed",
+      "asOf": null,
+      "sponsorFeePct": 0.2,
+      "source": "https://www.sec.gov/Archives/edgar/data/2013744/000119312526209331/ethw-20260331.htm",
+      "note": "SEC filing confirms 0.20%; issuer website footer conflict resolved against filing."
+    },
+    "EZBC": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "sponsorFeePct": 0.19,
+      "source": "https://www.franklintempleton.com/forms-literature/download/39639-FF",
+      "documentDate": "2026-03-31"
+    },
+    "FBND": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "expenseRatioPct": 0.36,
+      "source": "https://institutional.fidelity.com/app/item/RD_13569_30839/etf-daily-pricing-returns.html"
+    },
+    "FBTC": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "expenseRatioPct": 0.25,
+      "source": "https://institutional.fidelity.com/app/item/RD_13569_30839/etf-daily-pricing-returns.html"
+    },
+    "FREL": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "expenseRatioPct": 0.084,
+      "source": "https://institutional.fidelity.com/app/item/RD_13569_30839/etf-daily-pricing-returns.html"
+    },
+    "FTEC": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "expenseRatioPct": 0.084,
+      "source": "https://institutional.fidelity.com/app/item/RD_13569_30839/etf-daily-pricing-returns.html"
+    },
+    "GABXX": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "grossPct": 0.08,
+      "netPct": 0.08,
+      "source": "https://gabelli.com/ticker/gabxx/"
+    },
+    "GBTC": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "expenseRatioPct": 1.5,
+      "source": "https://etfs.grayscale.com/gbtc?0fad35da_page=22&74e29fd5_page=60",
+      "documentDate": "2025-09-19"
+    },
+    "GLTR": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "expenseRatioPct": 0.6,
+      "source": "https://www.aberdeeninvestments.com/docs?editionid=b834814a-fb0f-450e-99af-b02f0161b63a"
+    },
+    "HACK": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "expenseRatioPct": 0.6,
+      "source": "https://amplifyetfs.com/hack/"
+    },
+    "HYLB": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "grossPct": 0.05,
+      "netPct": 0.05,
+      "source": "https://etf.dws.com/en-us/etf-knowledge/focus-topics-etf-investment-strategies/high-yield-bond-etfs/"
+    },
+    "HYSA": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "grossPct": 1.11,
+      "netPct": 0.55,
+      "waiverExpiration": "2027-03-01",
+      "source": "https://bondbloxxetf.com/bondbloxx-high-yield-income-etf/"
+    },
+    "INDS": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": "2025-08-29",
+      "expenseRatioPct": 0.49,
+      "documentDate": "2026-06-30",
+      "source": "https://www.paceretfs.com/media/inds.pdf"
+    },
+    "JEPI": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "grossPct": 0.35,
+      "netPct": 0.35,
+      "documentDate": "2026-03-31",
+      "source": "https://am.jpmorgan.com/content/dam/jpm-am-aem/americas/us/en/literature/fund-story/STO-JEPI.pdf"
+    },
+    "JEPQ": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "grossPct": 0.35,
+      "netPct": 0.35,
+      "documentDate": "2026-03-31",
+      "source": "https://am.jpmorgan.com/content/dam/jpm-am-aem/americas/us/en/literature/fact-sheet/etfs/FS-JEPQ.PDF"
+    },
+    "JPST": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "grossPct": 0.18,
+      "netPct": 0.18,
+      "documentDate": "2026-03-31",
+      "source": "https://am.jpmorgan.com/content/dam/jpm-am-aem/americas/us/en/literature/fact-sheet/etfs/FS-JPST.PDF"
+    },
+    "KMLM": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "expenseRatioPct": 0.9,
+      "source": "https://kraneshares.com/etf/kmlm/"
+    },
+    "KWEB": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "expenseRatioPct": 0.69,
+      "source": "https://kraneshares.com/etf/kweb/"
+    },
+    "LIFEX": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "grossPct": 1.51,
+      "netPct": 1.05,
+      "waiverExpiration": "2026-11-30",
+      "documentDate": "2025-11-30",
+      "source": "https://domini.com/wp-content/uploads/2025/11/Domini-Funds-Prospectus-2025-1130.pdf",
+      "note": "Domini Sustainable Solutions Institutional share class; not the LifeX income ETF family."
+    },
+    "MINT": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "grossPct": 0.36,
+      "adjustedPct": 0.35,
+      "documentDate": "2026-03-31",
+      "source": "https://www.pimco.com/us/en/documents/f67aec88085c324bcdae7fdb1694127e0b0c477bf4175a1cf8cd4da06a0ea1eff30a8dd357e3d010b5bfc8e92b80d6b1?app=dot",
+      "note": "Adjusted expense ratio excludes specified investment expenses; not a net expense ratio."
+    },
+    "MNA": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "grossPct": 0.77,
+      "source": "https://www.nylim.com/assets/documents/etf/mna-nylim-merger-arbitrage-etf-fs.pdf"
+    },
+    "NETL": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "expenseRatioPct": 0.6,
+      "source": "https://netleaseetf.com/net-lease-fund-summary/"
+    },
+    "NOBL": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "expenseRatioPct": 0.35,
+      "source": "https://www.proshares.com/our-etfs/strategic/nobl"
+    },
+    "NTSX": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "grossPct": 0.2,
+      "netPct": 0.2,
+      "documentDate": "2026-03-31",
+      "source": "https://www.wisdomtree.com/us/media/en-us-asset-allocation-ntsx"
+    },
+    "ONEQ": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "expenseRatioPct": 0.21,
+      "source": "https://institutional.fidelity.com/app/item/RD_13569_30839/etf-daily-pricing-returns.html"
+    },
+    "PALL": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "expenseRatioPct": 0.6,
+      "source": "https://www.aberdeeninvestments.com/docs?editionid=b834814a-fb0f-450e-99af-b02f0161b63a"
+    },
+    "PONAX": {
+      "retrievedOn": "2026-10-05",
+      "status": "needs-review",
+      "asOf": null,
+      "grossPct": 0.94,
+      "documentDate": "2025-08-01",
+      "source": "https://www.pimco.com/us/en/documents/28cdf58c-060b-4ed2-b6d1-b30dedc18a58",
+      "note": "Class A only. Operating expenses exclude sales loads. Net fee requires current prospectus check."
+    },
+    "PPLT": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "expenseRatioPct": 0.6,
+      "source": "https://www.aberdeeninvestments.com/docs?editionid=b834814a-fb0f-450e-99af-b02f0161b63a"
+    },
+    "PRGFX": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "expenseRatioPct": 0.66,
+      "source": "https://www.troweprice.com/literature/public/country/us/language/en/literature-type/quarterly-review/sub-type/single-class?currency=USD&productCode=GSF"
+    },
+    "PRWCX": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "grossPct": 0.74,
+      "netPct": 0.71,
+      "source": "https://www.troweprice.com/literature/public/country/us/language/en/literature-type/quarterly-factsheet/sub-type/mf-single-class?currency=USD&productCode=CAF"
+    },
+    "PTTRX": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "grossPct": 0.53,
+      "adjustedPct": 0.46,
+      "documentDate": "2026-06-30",
+      "source": "https://www.pimco.com/us/en/documents/9f9eb2387611ff684c81dbd73d8f6204c964fcfc3c311ff90af148de4405d97b8e9f4d533df52437400635e9607e831b?app=dot"
+    },
+    "QAI": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "grossPct": 1.1,
+      "netPct": 0.88,
+      "documentDate": "2025-09-30",
+      "source": "https://www.newyorklifeinvestments.com/assets/documents/index-nyli/qai-nyli-hedge-multi-strategy-tracker-etf-fs.pdf"
+    },
+    "RPAR": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "netPct": 0.52,
+      "source": "https://rparetf.com/rpar"
+    },
+    "SGOL": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "grossPct": 0.17,
+      "netPct": 0.17,
+      "source": "https://www.aberdeeninvestments.com/en-us/investor/funds/view-all-funds/abrdn-physical-gold-shares-etf-us00326a1043?subTab=keyInformationTab"
+    },
+    "SIVR": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "grossPct": 0.45,
+      "netPct": 0.3,
+      "waiverExpiration": "2027-02-28",
+      "note": "Voluntary waiver may end early.",
+      "source": "https://www.aberdeeninvestments.com/docs?editionId=7690ff0f-7aed-44f1-b573-3146cc0d5c1e"
+    },
+    "SOYB": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "grossPct": 3.61,
+      "documentDate": "2026-04-30",
+      "source": "https://teucrium.com/hubfs/SOYB_Factsheet%20%282%29.pdf?hsLang=en",
+      "note": "Only gross expenses recorded. Advertised net figure may offset interest income and is not used as a conventional net expense ratio."
+    },
+    "SRVR": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": "2025-08-29",
+      "expenseRatioPct": 0.49,
+      "documentDate": "2026-03-31",
+      "source": "https://www.paceretfs.com/media/srvr.pdf"
+    },
+    "SVOL": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "grossPct": 0.66,
+      "source": "https://www.simplify.us/etfs"
+    },
+    "SWAN": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "expenseRatioPct": 0.49,
+      "source": "https://amplifyetfs.com/swan/"
+    },
+    "SWYGX": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "grossPct": 0.12,
+      "netPct": 0.08,
+      "source": "https://www.schwabassetmanagement.com/products/stir?product=swygx"
+    },
+    "SWYJX": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "grossPct": 0.13,
+      "netPct": 0.08,
+      "source": "https://www.schwabassetmanagement.com/products/stir?product=swyjx"
+    },
+    "SWYMX": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "grossPct": 0.13,
+      "netPct": 0.08,
+      "source": "https://www.schwabassetmanagement.com/products/stir?product=swymx"
+    },
+    "TMFC": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "grossPct": 0.5,
+      "source": "https://fooletfs.com/fees"
+    },
+    "UGA": {
+      "retrievedOn": "2026-10-05",
+      "status": "needs-review",
+      "asOf": null,
+      "expenseRatioPct": 1.02,
+      "documentDate": "2026-03-02",
+      "source": "https://secure.alpsinc.com/MarketingAPI/api/v1/Content/uscfinvestments/uscfinvestments-hand-etpv2-20260302.pdf",
+      "note": "Issuer Q1 2026 report. Fee-effective date not supplied; current prospectus recheck required."
+    },
+    "UNG": {
+      "retrievedOn": "2026-10-05",
+      "status": "needs-review",
+      "asOf": null,
+      "expenseRatioPct": 1.24,
+      "documentDate": "2026-03-02",
+      "source": "https://secure.alpsinc.com/MarketingAPI/api/v1/Content/uscfinvestments/uscfinvestments-hand-etpv2-20260302.pdf",
+      "note": "Issuer Q1 2026 report. Fee-effective date not supplied; current prospectus recheck required."
+    },
+    "USFR": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "netPct": 0.15,
+      "source": "https://www.wisdomtree.com/us/products/fixed-income/usfr"
+    },
+    "USO": {
+      "retrievedOn": "2026-10-05",
+      "status": "needs-review",
+      "asOf": null,
+      "expenseRatioPct": 0.7,
+      "documentDate": "2026-03-02",
+      "source": "https://secure.alpsinc.com/MarketingAPI/api/v1/Content/uscfinvestments/uscfinvestments-hand-etpv2-20260302.pdf",
+      "note": "Issuer Q1 2026 report. Fee-effective date not supplied; current prospectus recheck required."
+    },
+    "VNLA": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "grossPct": 0.25,
+      "netPct": 0.23,
+      "waiverExpiration": "2027-02-28",
+      "source": "https://www.janushenderson.com/en-us/advisor/product/vnla-short-duration-income-etf/"
+    },
+    "WEAT": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "grossPct": 3.64,
+      "documentDate": "2026-04-30",
+      "source": "https://teucrium.com/hubfs/Teucrium%20WEAT%20Fund%20Factsheet.pdf?hsLang=en",
+      "note": "Issuer gross expense ratio. Advertised 0.62% net matches prospectus break-even return after income; not stored as conventional net expenses."
+    },
+    "WTMF": {
+      "retrievedOn": "2026-10-05",
+      "status": "needs-review",
+      "asOf": null,
+      "grossPct": 0.67,
+      "netPct": 0.66,
+      "waiverExpiration": "2026-12-31",
+      "documentDate": "2026-03-31",
+      "note": "Fee table and fact sheet agree; product-page headline says 0.65%, conflicting with detailed 0.66% net. Needs reconciliation.",
+      "source": "https://www.wisdomtree.com/investments/-/media/us-media-files/documents/resource-library/fund-fact-sheets/alternative/wisdomtree-factsheet-wtmf.pdf"
+    },
+    "XRP": {
+      "retrievedOn": "2026-10-05",
+      "status": "candidate",
+      "asOf": null,
+      "sponsorFeePct": 0.34,
+      "source": "https://bitwiseinvestments.com/newsroom/bitwise-xrp-etf-ticker-xrp-begins-trading-on-nyse",
+      "note": "Management fee after introductory waiver; ETF only, not direct XRP."
+    }
+  }
+}
