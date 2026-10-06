@@ -898,10 +898,7 @@
   }
 .checkin-progress { font-size:18px; line-height:1.4; padding:10px 14px; white-space:normal; }
 .checkin-expand-controls { display:inline-flex;align-items:center;gap:4px; }
-.checkin-expand-controls .btn { padding:6px;width:32px;height:32px; }
-.checkin-expand-controls svg { width:18px;height:18px; }
-.checkin-toolbar { display:flex;align-items:center;gap:9px;flex-wrap:wrap;width:100%; }
-.checkin-toolbar-actions { display:flex;gap:9px;margin-left:auto;flex-wrap:wrap; }
+.checkin-expand-controls .btn { font-size:12px;padding:4px 7px;min-height:28px; }
 .account-import { min-height:28px; }
 .college-plan-help p { font-size:12px;line-height:1.6;margin:0;color:var(--color-ink-2); }
 .account-import:disabled { background:var(--color-surface);color:var(--color-ink-3);border-color:var(--color-divider);opacity:1; }
@@ -3386,7 +3383,7 @@ function parseImportRows(text) {
   if (!rows.length) return [];
   // Pick the BEST positions header, not the first — a brokerage summary block
   // often has its own "Value" column above the real holdings table.
-  let headerIdx = -1, valueCol = -1, symbolCol = -1, descCol = -1, qtyCol = -1, costCol = -1, costKind = '', bestScore = 0;
+  let headerIdx = -1, valueCol = -1, symbolCol = -1, descCol = -1, qtyCol = -1, priceCol = -1, costCol = -1, costKind = '', bestScore = 0;
   for (let i = 0; i < rows.length; i++) {
     const cells = rows[i].map(c => c.trim().toLowerCase());
     const vi = cells.findIndex(c => /^(market value|current value|market val|value)$/.test(c));
@@ -3400,6 +3397,7 @@ function parseImportRows(text) {
     if (score > bestScore) {
       bestScore = score; headerIdx = i; valueCol = vi; symbolCol = sym; descCol = desc;
       qtyCol = cells.findIndex(c => /^(quantity|qty|shares)$/.test(c));
+      priceCol = cells.findIndex(c => /^(price|last price|current price)$/.test(c));
       // Cost column: prefer an explicit TOTAL cost basis; else a PER-SHARE (unit) cost; else generic.
       const perShareIdx = cells.findIndex(c => /(unit cost|cost per share|per[\s-]?share|avg\.? ?cost|average cost|cost ?\/ ?share|unit price|unit cost basis)/.test(c));
       const totalIdx = cells.findIndex(c => /(total cost|cost basis total|amount invested|book value)/.test(c) || c === 'cost basis' || c === 'cost');
@@ -3423,18 +3421,36 @@ function parseImportRows(text) {
     // Cost basis (optional): grab a TOTAL cost basis, or derive it from a
     // per-share unit cost × quantity. For an ambiguous "Cost" column, pick the
     // candidate whose magnitude best matches the market value.
-    let costBasis = null;
+    let costBasis = null, basisNote = '';
     if (costCol >= 0) {
       const cr = parseNum(cells[costCol]);
       if (cr != null && cr > 0) {
         const qty = qtyCol >= 0 ? parseNum(cells[qtyCol]) : null;
-        if (costKind === 'perShare') costBasis = (qty != null && qty > 0) ? cr * qty : null;
+        if (costKind === 'perShare') {
+          // A bond's quantity can be face dollars and its unit cost a quote per
+          // $100 par. Verify the scale against PRICE × quantity, not the cost
+          // (which can legitimately be far above or below market value).
+          const quoteMatch = priceCol >= 0 ? String(cells[priceCol] || '').trim().match(/^\$?([\d,]+(?:\.\d+)?)(?:\s|$)/) : null;
+          const quote = quoteMatch ? parseNum(quoteMatch[1]) : null;
+          const scale = qty > 0 && quote > 0 ? qty * quote / value : null;
+          const bond = /\b(treasury|treas|mortgage|debenture|note|bond|bill)\b/i.test(name)
+            && !/\b(etf|fund|index|ishares|vanguard|spdr)\b/i.test(name);
+          if (qty > 0 && scale >= 90 && scale <= 110) {
+            if (bond) {
+              costBasis = cr * qty / 100;
+              basisNote = 'Bond basis estimated from a rounded quote per $100 face value; confirm against your statement.';
+            } else basisNote = 'Unit-cost scale is unclear; cost basis was not imported. Enter the total from your statement.';
+          } else if (bond && !(scale >= 0.9 && scale <= 1.1)) {
+            basisNote = 'Bond unit-cost scale could not be verified; cost basis was not imported.';
+          } else costBasis = qty > 0 ? cr * qty : null;
+        }
         else if (costKind === 'total') costBasis = cr;
         else if (qty != null && qty > 0 && value > 0) { const pst = cr * qty; costBasis = Math.abs(Math.log(pst / value)) <= Math.abs(Math.log(cr / value)) ? pst : cr; }
         else costBasis = cr;
       }
     }
     const row = { ticker, name, value };
+    if (basisNote) row.basisNote = basisNote;
     if (costBasis != null && costBasis > 0) row.costBasis = Math.round(costBasis * 100) / 100;
     out.push(row);
   }
@@ -5144,7 +5160,7 @@ function renderCheckin() {
   return `${intro}${steps}<div class="checkin-workspace"><div class="panel checkin-panel">
     <div style="display:flex;align-items:flex-end;gap:20px;padding:18px 20px;border-bottom:1px solid var(--color-divider);flex-wrap:wrap;">
       <div><h3 style="margin:0 0 4px;">${setupStep ? 'Your first holdings' : 'Accounts & holdings'}</h3><span class="text-muted" style="font-size:13px;">${ci.baseDate ? `Prefilled from ${esc(ci.baseDate)} · update or clear cost basis when a value changes.` : 'First snapshot — enter current values'}</span></div>
-      <div class="checkin-toolbar"><span class="checkin-expand-controls" role="group" aria-label="Expand or collapse accounts"><button class="btn btn-ghost btn-sm" data-act="ci-expand-all" aria-label="Expand all accounts" title="Expand all accounts"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 6 4-4 4 4M12 2v7m-4 9 4 4 4-4m-4 4v-7"/></svg></button><button class="btn btn-ghost btn-sm" data-act="ci-collapse-all" aria-label="Collapse all accounts" title="Collapse all accounts"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 5 4 4 4-4m-4 4V2m-4 17 4-4 4 4m-4-4v7"/></svg></button></span><div class="checkin-toolbar-actions"><button class="btn btn-secondary btn-sm" data-act="add-account">Add account</button><button class="btn btn-secondary btn-sm" data-act="open-import" title="Paste or upload a brokerage export to fill values">Import holdings</button></div></div>
+      <div style="margin-left:auto;display:flex;gap:9px;flex-wrap:wrap;"><span class="checkin-expand-controls" role="group" aria-label="Expand or collapse accounts"><button class="btn btn-ghost btn-sm" data-act="ci-expand-all">Expand all</button><button class="btn btn-ghost btn-sm" data-act="ci-collapse-all">Collapse all</button></span><button class="btn btn-secondary btn-sm" data-act="add-account">Add account</button><button class="btn btn-secondary btn-sm" data-act="open-import" title="Paste or upload a brokerage export to fill values">Import holdings</button></div>
     </div>
     ${acctBlocks || '<div class="text-muted" style="padding:20px;">No accounts. Add one to start.</div>'}
   </div><aside class="panel checkin-summary" aria-label="Check-in summary">
@@ -7063,7 +7079,7 @@ function dialogHTML() {
       </div>
       <div id="import-preview">${imp.parsed ? `<div class="import-totals"><div><span class="kicker">Last check-in</span><strong>${fmtMoney2(totals.previous)}</strong></div><div><span class="kicker">After import</span><strong>${totals.ready ? fmtMoney2(totals.resulting) : 'Choose identities'}</strong></div></div><p class="text-muted" style="font-size:12px;">${totals.ready ? `Selected import: ${fmtMoney2(totals.imported)} · Kept: ${fmtMoney2(totals.retained)}` : 'Confirm fund or direct crypto to calculate the total.'}</p>` : ''}
       ${identityChoices ? `<div style="margin-top:12px;"><p>Confirm these symbols before importing. Direct crypto will use its own label.</p>${identityChoices}</div>` : ''}
-      ${preview}</div>
+      ${preview}${(imp.parsed || []).filter(r => r.basisNote).map(r => `<p class="text-muted" style="font-size:12px;"><strong>${esc(r.ticker)}:</strong> ${esc(r.basisNote)}</p>`).join('')}</div>
       <div class="dialog-actions"><button class="btn btn-secondary" data-act="close-dialog">Cancel</button>${canApply ? `<button class="btn btn-primary" id="import-apply" data-act="import-apply">Fill check-in</button>` : ''}</div>`;
   } else if (d.type === 'save-file') {
     inner = `<div class="dialog-title">Your portfolio lives in this file</div>
