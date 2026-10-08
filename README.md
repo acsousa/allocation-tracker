@@ -76,7 +76,7 @@ classifications take priority. Catalog corrections do not rewrite saved holdings
 custom compositions, historical balances, or user overrides.
 
 Some known mixed-exposure funds require a manual classification instead of an
-incorrect single-class guess. After adding a holding, click its class label to
+incorrect single-class guess. After adding a holding, click its ticker and expand Fund allocation details to
 enter a percentage split. CSV imports place unresolved tickers in Other and tell
 the user to review their classifications.
 
@@ -87,9 +87,9 @@ and standalone builds. The development address remains
 See [the instrument audit](docs/instrument-data-audit.md) and
 `data/instrument-audit.json` for the source checks, conservative fund universe,
 limitations, and the strict **greater than 90%** coverage requirement for each new
-fund field. Sourced fund names are now available for 418 of 448 audit records
-(93.3%). Expense ratios, historical returns, and automatic allocation splits remain
-disabled until their own coverage and correctness checks pass. Run `npm run audit:funds`
+fund field. Sourced fund names are available for 2,074 of 2,104 audit records
+(98.6%); validated expense observations cover 1,995 (94.8%). Historical returns
+and automatic allocation splits remain disabled pending independent checks. Run `npm run audit:funds`
 for the current counts and missing symbols. Existing tax profiles are modeling estimates, not a
 current fund-data feed.
 
@@ -105,9 +105,18 @@ enter setup with empty data. Printed demo reports are labeled as sample data.
 - **Check-in:** enter balances for a dated snapshot, starting from prior values.
 - **Review:** compare the latest two check-ins by account. Changes include market
   moves and cash flows, so they are **balance changes, not investment returns**.
-  Holdings, Targets, Tax, and History are available here too.
+  The review tabs are Since last check-in, Allocation, Holdings, Cost, History, and Goals.
 - **Plan:** explore proposed changes based on your inputs and record decisions.
-- **Report:** printable allocation summaries and CSV exports.
+- **Report:** a responsive review workspace with four summary cards, nested
+  allocations, changes, committed moves, and complete fund-cost/tax tables.
+  Retirement and college projections sit inside their respective account sections.
+  Print / Save PDF (or Cmd/Ctrl+P) runs configured simulations before printing;
+  their latest-check-in basis is labeled separately from the report snapshot.
+  The PDF uses US Letter portrait, 0.55-inch margins and major-section page breaks.
+  Print at 100% with backgrounds on and browser headers/footers off. Column headings
+  repeat on continuation pages; the largest-three screen toggle never removes PDF
+  rows. The demo fits seven pages; larger portfolios can require more.
+  Report styles and licensed fonts are embedded for both hosted and offline use.
 - **Outlook:** retirement and college simulations with adjustable assumptions.
 - **Settings:** accounts, children, tax profile, retirement inputs, and file tools.
 
@@ -268,20 +277,61 @@ for testing; use the demo or a throwaway copy.
 `dist/` is generated and ignored by Git. Use the built output when reviewing
 public-page chrome because the shared shell is applied at build time.
 
+## v14: Costs and holding editor
+
+Branch: `codex/drag-analyzer-holding-editor`. Preview at **http://127.0.0.1:8747/app/**.
+
+- Review → **Cost** opens the Drag analyzer. Fund expenses and current
+  distribution-tax estimates are separate; scope includes all accounts and 529s.
+- Click a blue underlined holding in Check-in, Holdings, or the analyzer to edit.
+  The compact editor exposes original position inputs, expense ratio, yield, and
+  the long-term holding checkbox. Fee/yield changes apply across all accounts;
+  Reset restores the bundled value. Unknown holding periods stay unknown unless edited.
+- `data/fund-fees.json` supplies one offline expense ratio for **1,995/2,104 funds
+  (94.82%)**. Net total is preferred, followed by issuer total or gross without a
+  known waiver. Basis and sources remain in the dataset; no extra form fields.
+  See `data/fund-fees-audit.md` for source samples and excluded records.
+- Unknown or expired fees are excluded, never zero. Cards show annual costs,
+  weighted ratio and assessed-asset coverage; all fee/tax table columns sort.
+  Coverage includes unresolved investments, excludes confirmed direct holdings,
+  and shows covered instrument counts alongside the dollar-weighted percentage.
+  It never rounds incomplete coverage up to 100%.
+- The overview shows total annual costs as dollars | return impact, with Fund
+  and Tax links inside their cards. Helpers sit within each detailed section.
+  Demo funds use the same bundled fees as real portfolios. Dialogs lock background
+  scrolling and restore the previous page position on close.
+- Recorded check-ins are read-only. Start/resume a check-in to change identity,
+  account, value, basis, classification, allocation split, or holding-period status.
+  Record on an unused date. Reopening an editor preserves staged edits; discarding
+  the check-in discards its position and assumption edits.
+- When a position changes, historical identity is preserved separately. Historical
+  fee/tax estimates explicitly use current assumptions, not reconstructed past fees.
+- Yield/tax assumptions affect current tax analysis and related planning estimates.
+  Fees are not deducted from balances, gains, or retirement/college simulation
+  returns. Those simulations retain their existing asset-class assumptions.
+- Portfolio format **v8** preserves overrides and historical identities. Existing
+  files migrate on open. Use a separate copy when testing: v13 of the app cannot
+  open files saved in this newer format.
+
+The editor model, UI, and CSS live in `assets/holding-editor-model.js`,
+`assets/holding-editor-ui.js`, and `assets/holding-editor.css`. The build embeds
+these into both app versions; no extra runtime requests are required.
+`npm run check` includes dedicated editor, expense, history, and file-validation
+regressions in `test/holding-editor.test.js`.
+
 ## Roadmap and limitations
 
 Queued for a future release (not implemented):
 
-- **Edit holding details:** update an existing fund's ticker and display name,
-  with explicit fund/direct-crypto identity, duplicate checks, and preservation
-  of historical check-ins. Keep value, cost basis, and classification editing.
-- **Expense ratios:** integrate the offline fee dataset only after validating
-  field definitions, source dates, and coverage. Show the applicable net expense
-  ratio when verified, gross and waiver details where available, and an explicit
-  unknown state otherwise. Keep unspecified published fees and sponsor-only
-  fees distinct; missing fees must never imply zero. Start with holding-level
-  fees and portfolio annual-cost estimates with a coverage indicator. Review
-  simulation treatment separately to avoid subtracting fees twice from returns.
+- **Fund data:** expand validated bundled expense data and refine the prototype
+  editor based on usability feedback.
+- **Expense ratios:** reconcile the remaining excluded records and maintain
+  issuer data freshness. Review simulation treatment separately to avoid
+  subtracting fees twice from returns.
+- **Tax characterization:** broaden independently audited issuer tax-year data
+  before replacing modeling defaults. Expense-ratio observations do not provide
+  qualified-dividend shares, distribution yields, or state exemptions.
+
 
 
 Optional cloud saving, review reminders, and ongoing downloadable reports are
@@ -318,3 +368,36 @@ If a new post still lacks a card, inspect Cloudflare Security Events for X's
 actual request before changing a firewall rule; do not disable bot protection
 globally. A profile website field is not a post preview. No X post was submitted
 as part of this check.
+
+
+### Vanguard / Fidelity directory expansion (2026-10-07)
+
+The offline catalog covers every public ticker found in the collected U.S.
+Vanguard investor/workplace and Fidelity retail, advisor, money-market and ETF
+lists: **418 Vanguard** and **1,350 Fidelity** entries. Share classes remain
+separate. Non-ticker employer trusts and non-U.S. products are excluded. This is
+completeness against these named directories, not a guarantee that every legacy
+or newly launched product appears in them.
+
+See [the coverage and sample audit](data/issuer-directory-audit.md). Directory
+facts are in `data/research/issuer-directory-expansion.json`; no portfolio data
+is involved. New mixed/global/sector funds with uncertain allocations require
+review rather than receiving an invented split. Existing classifications and
+modeled tax assumptions remain unchanged. Advisor sales loads and account fees
+are not included in expense ratios.
+
+Collection/import workflow (research only; never run by a browser):
+
+1. Download the public URLs recorded in the snapshot's `sources` array, preserving
+   their listed filenames. Verify current responses, dates and expected counts.
+2. Run `python3 scripts/collect-issuer-directories.py <download-folder> YYYY-MM-DD`.
+3. Run `python3 scripts/verify-issuer-directory-gaps.py` for exact-CUSIP fee gaps.
+4. Independently sample issuer product pages and review any temporary fee waivers.
+   Update `issuer-directory-waivers.json` only with confirmed terms.
+5. Run `node scripts/import-issuer-directories.js`, update the normalization review
+   date in `scripts/fund-fees.js`, then run `node scripts/fund-fees.js` and
+   `npm run audit:funds`. Review exclusions and maintain >90% usable fee coverage.
+6. Refresh expected counts and audit notes, then run `npm run check`.
+
+The build embeds the audited catalog and fees; this expansion adds no runtime
+requests or live market-data dependency.

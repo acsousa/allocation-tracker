@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "description": "Context-required broker and 529 labels. Never apply these by ticker alone.",
+  "entries": [
+    {"symbols":["MA FID500","MA FID 500"],"name":"MA FIDELITY 500 INDEX","accountCategory":"529","kind":"fund","expenseRatio":0.08,"asOf":"2026-01-02","reviewedOn":"2026-10-05","source":"https://www.fidelity.com/529-plans/massachusetts","note":"MA Fidelity 500 Index Portfolio total annual asset-based fee, including underlying expenses, program and state fees; not the FXAIX mutual-fund fee."},
+    {"symbols":["IIAXX"],"name":"BANK OF AMERICA, NA RASP","assetClass":"cash","kind":"direct","reviewedOn":"2026-10-05","source":"https://olui2.fs.ml.com/publish/content/application/pdf/GWMOL/BASIC-account-agreement-program-description-MESD.pdf","note":"Name identifies Retirement Asset Savings Program bank deposit. IIAXX alone is not sufficient."},
+    {"symbols":["990156937"],"name":"ML DIRECT DEPOSIT PROGRM","assetClass":"cash","kind":"direct","reviewedOn":"2026-10-05","source":"https://oaui.fs.ml.com/Publish/Content/application/pdf/GWMOL/ICCRateSheet.pdf"},
+    {"symbols":["MLPDA"],"name":"PREFERRED DEPOSIT","assetClass":"cash","kind":"direct","reviewedOn":"2026-10-05","source":"https://olui2.fs.ml.com/Publish/Content/application/pdf/GWMOL/PreferredDepositDisclosure-446700PM.pdf"}
+  ]
+}

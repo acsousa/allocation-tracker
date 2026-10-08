@@ -1,0 +1,36 @@
+const assert=require('node:assert/strict'),vm=require('node:vm'),fs=require('node:fs');
+const html=require('../scripts/instrument-catalog').readApp();
+const context={self:{},getComputedStyle(){return{getPropertyValue(){return '#123456';}};},window:{addEventListener(){}},document:{addEventListener(){}},console,setTimeout(){}};
+vm.createContext(context);vm.runInContext(html.match(/\n<script>\n([\s\S]*)\n<\/script>/)[1]+`
+render=()=>{};
+window.designTest={renderPositions,reportSection,formatCheckinDate,computeDrift,retirementScopeLabel,renderHistory,reportHTML,reportCollegeSection,reportKpis,reportChangesSection,renderReport,renderPlan,pageIntroHTML,latestSnapshot,prime(){setSiteSimulationPaths(100);portfolio.retirementSettings.mappingConfirmed=true;retireModel();portfolio.children.forEach(c=>collegeModel(c.id));},toggle(){ui.reportLargest={funds:true,taxes:true};},addSecondAccount(){const first=portfolio.accounts.find(a=>a.category==='529');portfolio.accounts.push({...first,id:'second529',name:'Second college account'});portfolio.holdings.push({id:'secondcollegeholding',accountId:'second529',ticker:'BND',assetClass:'us_bond',status:'active'});latestSnapshot().values.push({holdingId:'secondcollegeholding',marketValue:1234});invalidateCollegeCache();},addUnlinked(){portfolio.children.push({id:'unlinked-child',label:'Unlinked child',birthYear:2020});}};
+`,context);
+const A=context.window.__AAT__,T=context.window.designTest;A.loadDemoData();T.prime();
+assert.equal(T.formatCheckinDate('2026-05-15'),'May 15, 2026');
+assert.equal(T.computeDrift([{id:'cash',pct:100}],100,{cash:100},5,'detail')[0].label,'Cash & Equivalents');
+assert.equal(T.computeDrift([{id:'cash',pct:100}],100,{cash:100},5,'group')[0].label,'Cash');
+assert.ok(!T.renderPlan().includes('plan-retirement-preview'),'Plan must not include the removed simulation block');
+assert.ok(T.renderHistory().indexOf('Annualized balance growth') < T.renderHistory().indexOf('history-controls'));
+assert.ok(!T.renderReport().includes('Latest rationale:'));
+const snapshot=T.latestSnapshot(),before=JSON.stringify(A.portfolio),report=T.reportHTML(snapshot);
+assert.equal(JSON.stringify(A.portfolio),before,'Rendering must not mutate portfolio data');
+assert.equal((report.match(/class="rep-kpi /g)||[]).length,4);
+for(const id of ['report-changes','report-allocation','report-plan','report-costs'])assert.ok(report.includes(`id="${id}"`));
+assert.ok(report.indexOf('id="report-plan"')<report.indexOf('id="report-costs"'));
+assert.ok(report.includes('reportfan'));assert.ok(report.includes('report-college-'));
+assert.ok(report.includes('fill="var(--color-accent-100)"'));assert.ok(report.includes('stroke="var(--color-accent-700)"'));assert.ok(report.includes('drawdown years'));
+for(const method of ['renderPlan','renderReport']){const out=T[method]();assert.ok(out.includes('page-intro-copy'));assert.ok(out.includes('<h1>'));}
+assert.equal((report.match(/rep-cost-card rep-largest-only/g)||[]).length,2,'Fund costs and tax drag default to largest three');
+const fund={id:'intl-test',accountId:A.portfolio.accounts.find(a=>a.category==='Retirement').id,ticker:'BNDX',assetClass:'intl_bond',status:'active'};
+A.portfolio.holdings.push(fund);snapshot.values.push({holdingId:fund.id,marketValue:1000});
+assert.ok(T.renderPositions().includes('International Bonds'),'International bonds with a balance appear in Holdings');
+assert.ok(T.reportSection('Test','',[fund],snapshot,null,5,null,null).includes('International Bonds'),'International bonds appear without a goal');
+A.portfolio.holdings.pop();snapshot.values.pop();
+const fullRows=(report.match(/<tr/g)||[]).length;T.toggle();assert.equal((T.reportHTML(snapshot).match(/<tr/g)||[]).length,fullRows,'Top-three display must retain all rows for print');
+T.addSecondAccount();T.prime();const combined=T.reportHTML(snapshot);
+assert.equal((combined.match(/data-fanwrap="report-college-/g)||[]).length,A.portfolio.children.length,'A child with two accounts has one projection');
+assert.ok(combined.includes('Second college account'));
+T.addUnlinked();assert.ok(T.reportHTML(snapshot).includes('529 — Unlinked child'),'Configured unlinked children must not disappear');
+const first=A.portfolio.snapshots.slice().sort((a,b)=>a.date.localeCompare(b.date))[0];assert.ok(T.reportChangesSection(first).includes('id="report-changes"'),'First-check-in KPI link must have a target');
+assert.match(html,/data:font\/ttf;base64,/,'Report fonts must work offline without a font request');
+console.log('Report design: live KPIs, links, section order, shared chart colors, headers, print-complete filters, grouped 529s, unlinked children and offline fonts passed.');

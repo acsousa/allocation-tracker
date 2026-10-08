@@ -60,6 +60,8 @@ check('all legacy ticker mappings preserved except source-reviewed changes', () 
     if (entry.before === null) delete map[entry.symbol];
     else map[entry.symbol] = entry.before;
   }
+  for(const symbol of audit.mutualFundExpansion.addedSymbols)delete map[symbol];
+  for(const symbol of audit.issuerDirectoryExpansion.addedSymbols)delete map[symbol];
   assert.equal(Object.keys(map).length, 1966);
   const ordered = Object.fromEntries(Object.entries(map).sort(([a], [b]) => a.localeCompare(b)));
   assert.equal(crypto.createHash('sha256').update(JSON.stringify(ordered)).digest('hex'), '5c3d56628ece5e7a92ba451b0ab5a4871b8ee6312e9b4e585ae9329def47be0d');
@@ -90,7 +92,8 @@ check('saved holdings, custom compositions, and snapshot values do not change', 
 check('bundled tax profiles remain estimates and explicit user data wins', () => {
   assert.equal(A.profile('VOO', 'us_large', {}).estimated, true);
   const user = { divYield: 2, qualifiedPct: 80, capGainDistPct: 0 };
-  assert.equal(A.profile('VOO', 'us_large', { tickers: { VOO: user } }).profile, user);
+  assert.equal(JSON.stringify(A.profile('VOO', 'us_large', { tickers: { VOO: user } }).profile), JSON.stringify(user));
+  assert.equal(A.profile('VOO','us_large',{tickers:{VOO:{divYield:3}}}).profile.qualifiedPct,A.profile('VOO','us_large',{}).profile.qualifiedPct);
   assert.equal(A.profile('SPYM', 'us_large', {}).profile.divYield, A.profile('SPLG', 'us_large', {}).profile.divYield);
 });
 check('catalog rejects duplicates, invalid classes, incomplete reviews and unapproved fields', () => {
@@ -105,7 +108,7 @@ check('catalog rejects duplicates, invalid classes, incomplete reviews and unapp
   ]) { const c = copy(); mutate(c); assert.throws(() => validateCatalog(c), /Instrument catalog/); }
 });
 check('coverage includes all audited fund candidates and does not treat missing as zero', () => {
-  assert.equal(audit.fundUniverse.length, 448);
+  assert.equal(audit.fundUniverse.length, 2104);
   assert.equal(new Set(audit.fundUniverse).size, audit.fundUniverse.length);
   for (const s of audit.fundUniverse) assert.ok(catalog.instruments.some(r => r.symbol === s));
   for (const s of ['SPAXX', 'VMFXX', 'SPLG', 'FXAIX', 'VOO']) assert.ok(audit.fundUniverse.includes(s));
@@ -118,18 +121,19 @@ check('coverage includes all audited fund candidates and does not treat missing 
 check('sourced fund names exceed 90%; incomplete fields remain outside both builds', () => {
   const { auditFundCoverage } = require('../scripts/audit-fund-coverage');
   const report = auditFundCoverage();
-  assert.equal(report.names.populated, 418);
+  assert.equal(report.names.populated, 2074);
   assert.ok(report.names.ratio > 0.9);
   assert.equal(report.expenseRatios.enabled, false);
-  assert.equal(report.feeObservations.populated, 433);
-  assert.equal(report.accountedFor.populated, 448);
+  assert.equal(report.normalizedExpenseRatios.populated,1995);assert.ok(report.normalizedExpenseRatios.ratio>0.9);
+  assert.equal(report.feeObservations.populated, 2026);
+  assert.equal(report.accountedFor.populated, 2041);
   assert.equal(report.identityResolutions.AVB.status, 'not-a-fund');
   assert.ok(report.expenseRatios.missing.includes('BTC'), 'sponsor fee is not a total expense ratio');
   assert.ok(report.feeObservations.missing.includes('SPLG'), 'successor identity is not a fee observation');
   assert.ok(!report.expenseRatios.missing.includes('FZROX'), 'a sourced zero remains populated');
   assert.equal(report.allocationSplits.enabled, false);
   const c = copy();
-  c.instruments.filter(r => r.name).slice(0, 30).forEach(r => { delete r.name; });
+  c.instruments.filter(r => r.name && audit.fundUniverse.includes(r.symbol)).slice(0, 300).forEach(r => { delete r.name; });
   assert.throws(() => validateCatalog(c), /exceed 90% coverage/);
   const bad = copy(); delete bad.instruments.find(r => r.name).identitySource;
   assert.throws(() => validateCatalog(bad), /identity provenance/);

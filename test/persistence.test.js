@@ -22,7 +22,7 @@ function check(name, fn) { fn(); checks++; console.log('✓ ' + name); }
 check('migration is immutable and restores missing metadata defaults', () => {
   const p = { meta: { schemaVersion: 3 }, accounts: [{ id: 'a', name: 'IRA' }], holdings: [{id:'h',accountId:'a',ticker:'voo'}] };
   const before = JSON.stringify(p), next = A.migrate(p);
-  assert.equal(JSON.stringify(p), before); assert.equal(next.meta.driftBandPct, 5); assert.ok(next.accounts[0].vehicle); assert.equal(next.holdings[0].ticker,'VOO'); assert.equal(next.meta.schemaVersion,7);
+  assert.equal(JSON.stringify(p), before); assert.equal(next.meta.driftBandPct, 5); assert.ok(next.accounts[0].vehicle); assert.equal(next.holdings[0].ticker,'VOO'); assert.equal(next.meta.schemaVersion,8);
 });
 check('metadata-only legacy files and demo round-trip remain supported', () => {
   assert.equal(A.migrate({meta:{schemaVersion:5}}).holdings.length, 0);

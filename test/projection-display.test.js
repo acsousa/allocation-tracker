@@ -60,7 +60,7 @@ check('retirement sections use concise headings and inset detail tables', () => 
 
 check('simulation path count is configured in settings', () => {
   assert.match(html, /Simulation paths \(retirement &amp; college\)[\s\S]*data-act="sim-paths"/);
-  assert.match(html, /Default 10,000\. Runs only when you press a simulation button\./);
+  assert.match(html, /Default 10,000\. Runs when requested or before printing a report\./);
 });
 
 check('browser workers include every retirement projection dependency', () => {
@@ -148,7 +148,7 @@ check('projection language does not overstate percentile outcomes', () => {
 check('reports disclose the reference-data version and current-assumption treatment', () => {
   assert.match(html, /version: '2026\.1'/);
   assert.match(html, /referenceDataVersion: REFERENCE_DATA\.version/);
-  assert.match(html, /Historical balances are preserved as entered; tax and projection results use the currently bundled assumptions/);
+  assert.match(html, /Historical balances are preserved; current tax and fee assumptions are estimates/);
 });
 
 check('retirement and college keep milestones visible while the hover cursor moves', () => {
