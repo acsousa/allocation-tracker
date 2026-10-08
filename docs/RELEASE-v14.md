@@ -7,6 +7,7 @@
 - Expands the offline catalog to 3,624 instruments, including 418 Vanguard and 1,350 Fidelity public tickers/share classes from the audited directories. Accepted expense observations cover 1,995 of 2,104 funds (94.82%). Unknown fees remain unknown.
 - Redesigns the Report page and Letter-size PDF with allocation detail nested under rollups, Check-in comparisons, deploy/move/withdraw totals, full costs and taxes, and retirement/college projections using shared chart colors.
 - Prepares applicable simulations before printing, defaults screen cost/tax tables to the largest three entries, preserves all rows in print, and suggests `asset review [Check-in date]` for report filenames.
+- Includes additions, transfers, and sales in the committed-plan headline total, counting paired sell/buy transfers once.
 - Standardizes Check-in labels and readable dates, fixes asset-category label inconsistencies, and moves History controls inside their chart panel.
 - Fixes historical holding edits carrying assumptions onto a replacement fund and prevents invalid edits from opening a Check-in draft.
 - Removes the temporary Retirement simulation block from Plan; simulation controls remain in Outlook.
@@ -19,4 +20,4 @@ Fund fees are dated offline observations, not a live data feed. The dataset does
 
 ## Release preparation
 
-This release is prepared as a draft. Merge the v14 pull request, then create the `v14` tag on the reviewed main-branch merge commit and publish the draft release titled **v14 Quartermaster**. Do not publish a tag on pre-merge main. Confirm the Cloudflare deployment succeeds and smoke-test the app, file open/save, Costs, and Report on production.
+Merge the v14 pull request, then create the `v14` tag on the reviewed main-branch merge commit and publish the release titled **v14 Quartermaster**. Do not publish a tag on pre-merge main. Confirm the Cloudflare deployment succeeds and smoke-test the app, file open/save, Costs, and Report on production.

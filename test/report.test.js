@@ -5,7 +5,7 @@ const sandbox={self:{},getComputedStyle(){return{getPropertyValue(){return '#123
 vm.createContext(sandbox);
 vm.runInContext(html.match(/\n<script>\n([\s\S]*)\n<\/script>/)[1]+`
 render=()=>{};
-window.reportTest={reportCheckinComparison,reportChangesSection,reportCostOverview,reportExpensesSection,reportTaxSection,expenseAnalysis,expenseFundRows,taxScorecard,annualDragSummary,planMoveTotals,planMoveSummaryHTML,reportHTML,allocTableHTML,latestSnapshot,set529(v){portfolio.meta.include529InHousehold=v;}};`,sandbox);
+window.reportTest={reportKpis,activeGoal,reportCheckinComparison,reportChangesSection,reportCostOverview,reportExpensesSection,reportTaxSection,expenseAnalysis,expenseFundRows,taxScorecard,annualDragSummary,planMoveTotals,planMoveSummaryHTML,reportHTML,allocTableHTML,latestSnapshot,set529(v){portfolio.meta.include529InHousehold=v;}};`,sandbox);
 const A=sandbox.window.__AAT__,T=sandbox.window.reportTest;A.loadDemoData();
 const before=JSON.stringify(A.portfolio),report=T.reportHTML(T.latestSnapshot());
 assert.equal(JSON.stringify(A.portfolio),before,'Report generation must not mutate saved financial data');
@@ -25,6 +25,17 @@ assert.deepEqual(JSON.parse(JSON.stringify(T.planMoveTotals({...mixed,noAction:t
 assert.deepEqual(JSON.parse(JSON.stringify(T.planMoveTotals(null))),{deploy:0,move:0,withdraw:0});
 for(const label of ['Amount to deploy','Amount to move','Amount to withdraw (sell)'])assert.ok(report.includes(label));
 for(const value of ['$1,000','$2,000','$300']){assert.ok(T.planMoveSummaryHTML(mixed).includes(value));assert.ok(T.planMoveSummaryHTML(mixed,true).includes(value));}
+// Headline counts all planned activity, not just paired sell/buy transfers.
+const savedPlans=A.portfolio.plans;
+const planDate=T.latestSnapshot().date;
+A.portfolio.plans=[{snapshotDate:planDate,moves:[{sellTicker:'VTI',buyTicker:'BND',amount:100000},{buyTicker:'VTI',amount:50000},{sellTicker:'BND',amount:10000}]}];
+let kpi=T.reportKpis(T.latestSnapshot(),T.activeGoal(planDate),5).match(/href="#report-plan"[\s\S]*?<\/a>/)[0];
+assert.ok(kpi.includes('<strong>$160,000</strong>'));
+assert.ok(kpi.includes('$100,000 to move'));
+A.portfolio.plans[0].noAction=true;
+kpi=T.reportKpis(T.latestSnapshot(),T.activeGoal(planDate),5).match(/href="#report-plan"[\s\S]*?<\/a>/)[0];
+assert.ok(kpi.includes('<strong>$0</strong>'));
+A.portfolio.plans=savedPlans;
 console.log('Plan rollups passed: exclusive categories, completed moves, invalid/blank rows, no-action and shared report totals.');
 
 const snapshot=T.latestSnapshot(),fees=T.expenseAnalysis(snapshot),tax=T.taxScorecard(snapshot);
