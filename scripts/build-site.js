@@ -111,7 +111,7 @@ function buildSite(output = path.join(root, 'dist'), token = process.env.CF_WEB_
   // Stable legacy URL, plus a downloadable copy with no injected analytics.
   write('allocation-tracker.html', fs.readFileSync(path.join(root, 'allocation-tracker.html'), 'utf8'));
   const offlineApp = productImages.reduce((html, name) => html.replaceAll(`assets/${name}`, `data:image/png;base64,${fs.readFileSync(path.join(root, 'assets', name)).toString('base64')}`), app);
-  write('downloads/quartermaster.html', offlineApp.replace(/<!-- Google tag \(gtag\.js\) -->[\s\S]*?<!-- End Google tag -->\n?/, '').replace('<head>', `<head>\n<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; connect-src 'none'; worker-src blob:; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'">`));
+  write('downloads/quartermaster.html', offlineApp.replace(/<!-- Google tag \(gtag\.js\) -->[\s\S]*?<!-- End Google tag -->\n?/, '').replace('<head>', `<head>\n<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; font-src data:; connect-src 'none'; worker-src blob:; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'">`));
   const notFound = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Page not found — Quartermaster</title><link rel="icon" type="image/png" href="/assets/quartermaster-mark.png"><link rel="stylesheet" href="/assets/marketing.css"></head><body><a class="skip" href="#main">Skip to main content</a><div class="marketing-page"><!-- MARKETING_HEADER --><main id="main" class="landing-main"><section class="landing-section" style="min-height:58vh;display:grid;place-content:center;text-align:center;"><div><div class="eyebrow" style="--eyebrow:#45bfae">404</div><h1 style="margin:18px 0 12px;">That page isn’t here.</h1><p class="landing-section-copy" style="margin:0 auto 24px;">The address may have changed, or the link may be incomplete.</p><a class="landing-action primary" href="/">Return to Quartermaster</a></div></section></main><!-- MARKETING_FOOTER --></div></body></html>`;
   write('404.html', applyMarketingShell(notFound));
   write('_headers', `/*
@@ -125,7 +125,7 @@ function buildSite(output = path.join(root, 'dist'), token = process.env.CF_WEB_
 /downloads/*
   Cache-Control: public, max-age=0, must-revalidate, no-transform
   Content-Disposition: attachment; filename="quartermaster.html"
-  Content-Security-Policy: default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; connect-src 'none'; worker-src blob:; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'
+  Content-Security-Policy: default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; font-src data:; connect-src 'none'; worker-src blob:; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'
 `);
   // An explicit 404 avoids Pages' default SPA fallback turning typos into home views.
   return { output, analyticsMode: mode, analyticsEnabled: mode !== 'disabled' };

@@ -6,3 +6,12 @@ CLAUDE.md
 # Generated public deployment output
 dist/
 node_modules/
+
+# Local generated handoffs, exports and Python caches
+handoffs/
+output/
+outputs/
+deliverables/
+__pycache__/
+*.pyc
+.wrangler/

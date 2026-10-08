@@ -1,0 +1,289 @@
+{
+  "entries": {
+    "FXAIX": {
+      "source": "https://fundresearch.fidelity.com/mutual-funds/api/v1/investments/315911750/summary?funduniverse=retail&documentId=315911750",
+      "cusip": "315911750",
+      "retrievedOn": "2026-10-07",
+      "status": "candidate",
+      "identityMatched": true,
+      "sourceSHA256": "0dd1a181274bc2d60161c5906925cdba6437c5891d26c5a4363894db6410aa5e",
+      "grossPct": 0.015,
+      "grossPctAsOf": "2026-04-29",
+      "netPct": 0.015,
+      "netPctAsOf": "2026-04-29",
+      "note": "Issuer overview matches ticker to CUSIP. Prospectus gross/net expense fields used; historical annual expense fields excluded.",
+      "identitySource": "https://www.fidelity.com/mutual-funds/fidelity-funds/overview"
+    },
+    "FAGAX": {
+      "source": "https://fundresearch.fidelity.com/mutual-funds/api/v1/investments/315807834/summary?funduniverse=retail&documentId=315807834",
+      "cusip": "315807834",
+      "retrievedOn": "2026-10-07",
+      "status": "unavailable",
+      "error": "HTTP Error 404: Not Found"
+    },
+    "FACGX": {
+      "source": "https://fundresearch.fidelity.com/mutual-funds/api/v1/investments/315807768/summary?funduniverse=retail&documentId=315807768",
+      "cusip": "315807768",
+      "retrievedOn": "2026-10-07",
+      "status": "unavailable",
+      "error": "HTTP Error 404: Not Found"
+    },
+    "FZAJX": {
+      "source": "https://fundresearch.fidelity.com/mutual-funds/api/v1/investments/31618H465/summary?funduniverse=retail&documentId=31618H465",
+      "cusip": "31618H465",
+      "retrievedOn": "2026-10-07",
+      "status": "unavailable",
+      "error": "HTTP Error 404: Not Found"
+    },
+    "FAASX": {
+      "source": "https://fundresearch.fidelity.com/mutual-funds/api/v1/investments/316069525/summary?funduniverse=retail&documentId=316069525",
+      "cusip": "316069525",
+      "retrievedOn": "2026-10-07",
+      "status": "unavailable",
+      "error": "HTTP Error 404: Not Found"
+    },
+    "FTHRX": {
+      "source": "https://fundresearch.fidelity.com/mutual-funds/api/v1/investments/315912105/summary?funduniverse=retail&documentId=315912105",
+      "cusip": "315912105",
+      "retrievedOn": "2026-10-07",
+      "status": "candidate",
+      "identityMatched": true,
+      "sourceSHA256": "8132ac4d7b67508a913e0a1af660782a27a540a210eb062d366b46be6d8a6e75",
+      "grossPct": 0.45,
+      "grossPctAsOf": "2025-10-30",
+      "netPct": 0.45,
+      "netPctAsOf": "2025-10-30",
+      "note": "Issuer overview matches ticker to CUSIP. Prospectus gross/net expense fields used; historical annual expense fields excluded.",
+      "identitySource": "https://www.fidelity.com/mutual-funds/fidelity-funds/overview"
+    },
+    "FRESX": {
+      "source": "https://fundresearch.fidelity.com/mutual-funds/api/v1/investments/316138205/summary?funduniverse=retail&documentId=316138205",
+      "cusip": "316138205",
+      "retrievedOn": "2026-10-07",
+      "status": "candidate",
+      "identityMatched": true,
+      "sourceSHA256": "d56b4ca6a6df822c21bb292e420f5d2d36702b2a6d3998aef1e88355b955592c",
+      "grossPct": 0.62,
+      "grossPctAsOf": "2026-09-29",
+      "netPct": 0.62,
+      "netPctAsOf": "2026-09-29",
+      "note": "Issuer overview matches ticker to CUSIP. Prospectus gross/net expense fields used; historical annual expense fields excluded.",
+      "identitySource": "https://www.fidelity.com/mutual-funds/fidelity-funds/overview"
+    },
+    "FSIGX": {
+      "source": "https://fundresearch.fidelity.com/mutual-funds/api/v1/investments/316146729/summary?funduniverse=retail&documentId=316146729",
+      "cusip": "316146729",
+      "retrievedOn": "2026-10-07",
+      "status": "candidate",
+      "identityMatched": true,
+      "sourceSHA256": "b44109ed683d88ebf44624e3e5a1b5ecb3056390e71fc1407b50c4c81c9c62fc",
+      "grossPct": 0.0,
+      "grossPctAsOf": "2025-10-30",
+      "netPct": 0.0,
+      "netPctAsOf": "2025-10-30",
+      "note": "Issuer overview matches ticker to CUSIP. Prospectus gross/net expense fields used; historical annual expense fields excluded.",
+      "identitySource": "https://www.fidelity.com/mutual-funds/fidelity-funds/overview"
+    },
+    "FMPXX": {
+      "source": "https://fundresearch.fidelity.com/mutual-funds/api/v1/investments/316175207/summary?funduniverse=retail&documentId=316175207",
+      "cusip": "316175207",
+      "retrievedOn": "2026-10-07",
+      "status": "candidate",
+      "identityMatched": true,
+      "sourceSHA256": "48dbc653e28e954aaa8e55a510bf33ad8ca4d9c96570ad468785707741493952",
+      "grossPct": 0.21,
+      "grossPctAsOf": "2026-05-30",
+      "netPct": 0.18,
+      "netPctAsOf": "2026-05-30",
+      "note": "Issuer overview matches ticker to CUSIP. Prospectus gross/net expense fields used; historical annual expense fields excluded.",
+      "identitySource": "https://www.fidelity.com/mutual-funds/fidelity-funds/overview"
+    }
+  },
+  "reviewedOn": "2026-10-07",
+  "checks": [
+    {
+      "symbol": "FXAIX",
+      "status": "matched",
+      "source": "https://fundresearch.fidelity.com/mutual-funds/api/v1/investments/315911750/summary?funduniverse=retail&documentId=315911750",
+      "netPct": 0.015,
+      "method": "exact-CUSIP summary vs directory",
+      "sourceSHA256": "0dd1a181274bc2d60161c5906925cdba6437c5891d26c5a4363894db6410aa5e"
+    },
+    {
+      "symbol": "FTHRX",
+      "status": "matched",
+      "source": "https://fundresearch.fidelity.com/mutual-funds/api/v1/investments/315912105/summary?funduniverse=retail&documentId=315912105",
+      "netPct": 0.45,
+      "method": "exact-CUSIP summary vs directory",
+      "sourceSHA256": "8132ac4d7b67508a913e0a1af660782a27a540a210eb062d366b46be6d8a6e75"
+    },
+    {
+      "symbol": "FRESX",
+      "status": "matched",
+      "source": "https://fundresearch.fidelity.com/mutual-funds/api/v1/investments/316138205/summary?funduniverse=retail&documentId=316138205",
+      "netPct": 0.62,
+      "method": "exact-CUSIP summary vs directory",
+      "sourceSHA256": "d56b4ca6a6df822c21bb292e420f5d2d36702b2a6d3998aef1e88355b955592c"
+    },
+    {
+      "symbol": "FSIGX",
+      "status": "matched",
+      "source": "https://fundresearch.fidelity.com/mutual-funds/api/v1/investments/316146729/summary?funduniverse=retail&documentId=316146729",
+      "netPct": 0.0,
+      "method": "exact-CUSIP summary vs directory",
+      "sourceSHA256": "b44109ed683d88ebf44624e3e5a1b5ecb3056390e71fc1407b50c4c81c9c62fc"
+    },
+    {
+      "symbol": "FMPXX",
+      "status": "matched",
+      "source": "https://fundresearch.fidelity.com/mutual-funds/api/v1/investments/316175207/summary?funduniverse=retail&documentId=316175207",
+      "netPct": 0.18,
+      "method": "exact-CUSIP summary vs directory",
+      "sourceSHA256": "48dbc653e28e954aaa8e55a510bf33ad8ca4d9c96570ad468785707741493952"
+    },
+    {
+      "symbol": "VTI",
+      "status": "matched",
+      "source": "https://investor.vanguard.com/investment-products/etfs/profile/VTI",
+      "expenseRatioPct": 0.03,
+      "method": "individual product-page fee vs catalog",
+      "sourceSHA256": "46fffdc59e6ed0fd14bf1f8c7df832863026a168b7615a626bfc3d2d3c38802f"
+    },
+    {
+      "symbol": "VOO",
+      "status": "matched",
+      "source": "https://investor.vanguard.com/investment-products/etfs/profile/VOO",
+      "expenseRatioPct": 0.03,
+      "method": "individual product-page fee vs catalog",
+      "sourceSHA256": "1719f1f7b13c27a7b499c8ba30f632b2ea6a375bcc1e7e00199c513258608373"
+    },
+    {
+      "symbol": "BND",
+      "status": "matched",
+      "source": "https://investor.vanguard.com/investment-products/etfs/profile/BND",
+      "expenseRatioPct": 0.03,
+      "method": "individual product-page fee vs catalog",
+      "sourceSHA256": "cd1a96852d0ae4e4b9fd1ab30d05b235436ae277e7d9c1b0d9dae8c31017a529"
+    },
+    {
+      "symbol": "VUSXX",
+      "status": "matched",
+      "source": "https://investor.vanguard.com/investment-products/mutual-funds/profile/VUSXX",
+      "expenseRatioPct": 0.07,
+      "method": "individual product-page fee vs catalog",
+      "sourceSHA256": "947ac3dca5e2cfe48f3e1f836ff93e3d3d9e38d83a8ab7620575a401cfc86428"
+    },
+    {
+      "symbol": "VSIAX",
+      "status": "matched",
+      "source": "https://investor.vanguard.com/investment-products/mutual-funds/profile/VSIAX",
+      "expenseRatioPct": 0.07,
+      "method": "individual product-page fee vs catalog",
+      "sourceSHA256": "43d085573e72d6c31b7d68f32beb4ae65cbb6a741470aaed8c0a1bc02c472820"
+    },
+    {
+      "symbol": "VTTSX",
+      "status": "matched",
+      "source": "https://investor.vanguard.com/investment-products/mutual-funds/profile/VTTSX",
+      "expenseRatioPct": 0.08,
+      "method": "individual product-page fee vs catalog",
+      "sourceSHA256": "d4c8eee38b6b1375f59e455cf385b521de0b516076939228e775bae4ecd72ee3"
+    },
+    {
+      "symbol": "FBCG",
+      "status": "matched",
+      "source": "https://institutional.fidelity.com/app/proxy/content?literatureURL=%2F9867990.PDF",
+      "netPct": 0.57,
+      "method": "issuer published lineup vs ETF endpoint",
+      "sourceSHA256": "52f98a683278f62581a010a9f0089b921129ab7ec8115d780fcac71231ddc375"
+    },
+    {
+      "symbol": "FBCV",
+      "status": "matched",
+      "source": "https://institutional.fidelity.com/app/proxy/content?literatureURL=%2F9867990.PDF",
+      "netPct": 0.57,
+      "method": "issuer published lineup vs ETF endpoint",
+      "sourceSHA256": "52f98a683278f62581a010a9f0089b921129ab7ec8115d780fcac71231ddc375"
+    },
+    {
+      "symbol": "FBND",
+      "status": "matched",
+      "source": "https://institutional.fidelity.com/app/proxy/content?literatureURL=%2F9867990.PDF",
+      "netPct": 0.36,
+      "method": "issuer published lineup vs ETF endpoint",
+      "sourceSHA256": "52f98a683278f62581a010a9f0089b921129ab7ec8115d780fcac71231ddc375"
+    },
+    {
+      "symbol": "FCOM",
+      "status": "matched",
+      "source": "https://institutional.fidelity.com/app/proxy/content?literatureURL=%2F9867990.PDF",
+      "netPct": 0.084,
+      "method": "issuer published lineup vs ETF endpoint",
+      "sourceSHA256": "52f98a683278f62581a010a9f0089b921129ab7ec8115d780fcac71231ddc375"
+    },
+    {
+      "symbol": "FELC",
+      "status": "matched",
+      "source": "https://institutional.fidelity.com/app/proxy/content?literatureURL=%2F9867990.PDF",
+      "netPct": 0.18,
+      "method": "issuer published lineup vs ETF endpoint",
+      "sourceSHA256": "52f98a683278f62581a010a9f0089b921129ab7ec8115d780fcac71231ddc375"
+    },
+    {
+      "symbol": "FMDE",
+      "status": "matched",
+      "source": "https://institutional.fidelity.com/app/proxy/content?literatureURL=%2F9867990.PDF",
+      "netPct": 0.23,
+      "method": "issuer published lineup vs ETF endpoint",
+      "sourceSHA256": "52f98a683278f62581a010a9f0089b921129ab7ec8115d780fcac71231ddc375"
+    },
+    {
+      "symbol": "FEMG",
+      "status": "matched",
+      "source": "https://institutional.fidelity.com/app/proxy/content?literatureURL=%2F9867990.PDF",
+      "netPct": 0.23,
+      "method": "issuer published lineup vs ETF endpoint",
+      "sourceSHA256": "52f98a683278f62581a010a9f0089b921129ab7ec8115d780fcac71231ddc375"
+    },
+    {
+      "symbol": "FEMV",
+      "status": "matched",
+      "source": "https://institutional.fidelity.com/app/proxy/content?literatureURL=%2F9867990.PDF",
+      "netPct": 0.23,
+      "method": "issuer published lineup vs ETF endpoint",
+      "sourceSHA256": "52f98a683278f62581a010a9f0089b921129ab7ec8115d780fcac71231ddc375"
+    },
+    {
+      "symbol": "FSEG",
+      "status": "matched",
+      "source": "https://institutional.fidelity.com/app/proxy/content?literatureURL=%2F9867990.PDF",
+      "netPct": 0.28,
+      "method": "issuer published lineup vs ETF endpoint",
+      "sourceSHA256": "52f98a683278f62581a010a9f0089b921129ab7ec8115d780fcac71231ddc375"
+    },
+    {
+      "symbol": "FSEV",
+      "status": "matched",
+      "source": "https://institutional.fidelity.com/app/proxy/content?literatureURL=%2F9867990.PDF",
+      "netPct": 0.28,
+      "method": "issuer published lineup vs ETF endpoint",
+      "sourceSHA256": "52f98a683278f62581a010a9f0089b921129ab7ec8115d780fcac71231ddc375"
+    },
+    {
+      "symbol": "FAAA",
+      "status": "matched",
+      "source": "https://institutional.fidelity.com/app/proxy/content?literatureURL=%2F9867990.PDF",
+      "netPct": 0.0,
+      "method": "issuer published lineup vs ETF endpoint",
+      "sourceSHA256": "52f98a683278f62581a010a9f0089b921129ab7ec8115d780fcac71231ddc375"
+    },
+    {
+      "symbol": "FCLO",
+      "status": "matched",
+      "source": "https://institutional.fidelity.com/app/proxy/content?literatureURL=%2F9867990.PDF",
+      "netPct": 0.0,
+      "method": "issuer published lineup vs ETF endpoint",
+      "sourceSHA256": "52f98a683278f62581a010a9f0089b921129ab7ec8115d780fcac71231ddc375"
+    }
+  ]
+}

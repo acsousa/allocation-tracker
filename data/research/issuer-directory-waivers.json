@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "reviewedOn": "2026-10-07",
+  "entries": {
+    "FAAA": {
+      "status": "primary-confirmed",
+      "source": "https://www.sec.gov/Archives/edgar/data/1562565/000156256526000019/filing11195.htm",
+      "retrievedOn": "2026-10-07",
+      "identityMatched": true,
+      "grossPct": 0.2,
+      "netPct": 0,
+      "documentDate": "2026-01-30",
+      "waiverExpiresOn": "2027-01-31",
+      "note": "Prospectus confirms total net expenses of zero under a temporary management-fee waiver. Not a permanent zero-fee fund."
+    },
+    "FCLO": {
+      "status": "primary-confirmed",
+      "source": "https://www.sec.gov/Archives/edgar/data/945908/000094590826000036/filing11182.htm",
+      "retrievedOn": "2026-10-07",
+      "identityMatched": true,
+      "grossPct": 0.45,
+      "netPct": 0,
+      "documentDate": "2026-01-30",
+      "waiverExpiresOn": "2027-01-31",
+      "note": "Prospectus confirms total net expenses of zero under a temporary management-fee waiver. Not a permanent zero-fee fund."
+    }
+  }
+}

@@ -92,14 +92,14 @@
     --g-cash:        #8a949e;  /* gray */
     --g-blend_other: #a4566b;  /* rose */
 
-    /* 14 detail-class chart colors — grouped by family, multi-hue */
+    /* Detail shades inherit their rollup hue: blue stocks, plum bonds, gold real assets, teal crypto, gray cash, rose blend/other. */
     --c-us_large:  #114863; --c-us_mid:  #1b6f9b; --c-us_small: #3e92c4;
-    --c-us_total:  #1b6f9b; --c-intl_dev:#1e8175; --c-em:       #45bfae;
+    --c-us_total:  #1b6f9b; --c-intl_dev:#4a7d9a; --c-em:       #82aec7;
     --c-us_bond:   #6c5aa8; --c-intl_bond:#9b8dd0;
     --c-reit:      #c08a2e; --c-commod:  #e0b25a;
-    --c-crypto:    #a4566b;
+    --c-crypto:    var(--g-crypto);
     --c-cash:      #8a949e;
-    --c-blend:     #a0aab2; --c-other:   #c4ccd2;
+    --c-blend:     #a4566b; --c-other:   #c48c9c;
 
     /* landing/marketing chart accents (redesign c1–c6) */
     --c1: #1b6f9b; --c2: #1e8175; --c3: #c08a2e; --c4: #6c5aa8; --c5: #8a949e; --c6: #a4566b;
@@ -153,8 +153,8 @@
     --color-warn: #e5ae4c; --color-warn-soft: #332810;
     --color-crit: #e3826f; --color-crit-soft: #33191a;
     --g-stocks: #4fa0cb; --g-bonds: #a99be0; --g-real_assets: #dea94a; --g-crypto: #45bfae; --g-cash: #a6b0b9; --g-blend_other: #c97e92;
-    --c-us_large: #3f8fbf; --c-us_mid: #4fa0cb; --c-us_small: #79bde0; --c-us_total: #4fa0cb; --c-intl_dev: #45bfae; --c-em: #74d3c6;
-    --c-us_bond: #a99be0; --c-intl_bond: #c3b8ee; --c-reit: #dea94a; --c-commod: #ecc887; --c-crypto: #c97e92; --c-cash: #a6b0b9; --c-blend: #7b8694; --c-other: #5a636e;
+    --c-us_large: #3f8fbf; --c-us_mid: #4fa0cb; --c-us_small: #79bde0; --c-us_total: #4fa0cb; --c-intl_dev: #6ca5c5; --c-em: #a1cbe2;
+    --c-us_bond: #a99be0; --c-intl_bond: #c3b8ee; --c-reit: #dea94a; --c-commod: #ecc887; --c-crypto: var(--g-crypto); --c-cash: #a6b0b9; --c-blend: #c97e92; --c-other: #e4adbc;
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, .40), 0 14px 30px -26px rgba(0, 0, 0, .70);
     --shadow-md: 0 1px 2px rgba(0, 0, 0, .40), 0 20px 38px -24px rgba(0, 0, 0, .75);
     --shadow-lg: 0 22px 46px -34px rgba(0, 0, 0, .75);
@@ -342,7 +342,7 @@
 
   /* — dialog — */
   .dialog-backdrop { position: fixed; inset: 0; z-index: 40; display: grid; place-items: center; padding: var(--space-6); background: color-mix(in srgb, var(--color-neutral-900) 50%, transparent); }
-  .dialog { position:relative;width: min(560px, 100%); max-height: 88vh; overflow: auto; display: flex; flex-direction: column; gap: var(--space-3); padding: var(--space-6); border-radius: var(--radius-lg); background: var(--color-panel); border: 1px solid var(--color-divider); border-top: 3px solid var(--color-accent); box-shadow: var(--shadow-lg); }
+  .dialog { position:relative;width: min(560px, 100%); max-height: 88vh; overflow: auto; overscroll-behavior:contain; display: flex; flex-direction: column; gap: var(--space-3); padding: var(--space-6); border-radius: var(--radius-lg); background: var(--color-panel); border: 1px solid var(--color-divider); border-top: 3px solid var(--color-accent); box-shadow: var(--shadow-lg); }
   .dialog-title { font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 22px; }
   .dialog-actions { display: flex; justify-content: flex-end; gap: var(--space-2); margin-top: var(--space-2); }
   .dialog.start-dialog { width:min(680px,100%);padding:38px; }
@@ -455,35 +455,15 @@
   .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 60; background: var(--color-text); color: var(--color-bg); padding: 10px 16px; border-radius: var(--radius-pill); font-family: var(--font-heading); font-size: 14px; box-shadow: var(--shadow-lg); }
   .save-dirty { background: var(--color-accent); color: var(--color-bg); border-color: var(--color-accent); }
 
+  .asset-class-chip { gap:6px;color:var(--color-text);background:color-mix(in srgb,var(--asset-family) 12%,var(--color-panel));border:1px solid color-mix(in srgb,var(--asset-family) 38%,var(--color-divider)); }
+  .asset-class-chip .swatch { flex:none; }
   /* — print / F7 report (spec §10) — */
   .report { display: none; }
   .report.show-screen { display: block; }   /* on-screen preview in the Report view */
   .report-disclaimer { display:none; }
   @media print {
-    .report-disclaimer { display:block;font-size:12px;line-height:1.6;margin-top:20px; }
-    @page { margin: 15mm; }
-    html, body { background: #fff; }
-    /* print backgrounds/colors (swatches, tags, donut, accent rules) */
-    body, .report, .report * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    .no-print, .nav, .toolbar, .toast, .dialog-backdrop, #dialog-mount { display: none !important; }
-    .app-body > *:not(.report) { display: none !important; }
-    .report { display: block !important; }
-    .report.show-screen { border: 0 !important; padding: 0 !important; box-shadow: none !important; background: #fff !important; }
-    /* each section starts on a fresh page → pagination lines up with headers */
-    .report .rep-section { break-inside: auto; margin-bottom: 0; }
-    .report .rep-section:not(:first-of-type) { break-before: page; }
-    .report h1, .report h3, .report .rep-sub { break-after: avoid; }
-    .report .rep-chart, .report figure.blueprint { break-inside: avoid; }
-    /* tables: repeat headers across pages, never split a row */
-    .report thead { display: table-header-group; }
-    .report tr { break-inside: avoid; }
-    .report .table { font-size: 11.5px; }
-    .report .table th, .report .table td { padding: 4px 7px; }
-    .report .rep-tables { gap: 18px !important; }
-    .report header { break-after: avoid; }
-    .blueprint > .corner { display: none; }
-    a { color: var(--color-text); text-decoration: none; }
-  }
+  .app-body > *:not(.report) { display:none !important; }
+}
 
   /* Readable, keyboard-accessible layouts, from a phone to a wide desktop. */
   .skip-link { position: fixed; top: -100px; left: 16px; z-index: 100; padding: 12px 18px; background: var(--color-panel); }
@@ -907,6 +887,31 @@
 .import-totals strong { display:block;font-size:16px;margin-top:4px;overflow-wrap:anywhere;font-variant-numeric:tabular-nums; }
 .review-next { display:flex;justify-content:flex-end;margin-top:20px; }
 @media(max-width:600px) { .review-next .btn { width:100%;white-space:normal; }.account-import { min-height:32px; } }
+
+  /* Review pages share Allocation's heading, rhythm and restrained controls. */
+  .review-workspace { display:grid;gap:20px;min-width:0; }
+  .review-workspace > .page-intro,.review-workspace .drag-page > .page-intro { margin:0;padding:4px 0 8px; }
+  .review-workspace > .panel { margin-bottom:0 !important; }
+  .review-workspace .drag-page { gap:20px; }
+  .review-workspace .review-controls { min-height:0;padding:10px 14px;background:color-mix(in srgb,var(--color-panel) 35%,transparent);box-shadow:none;border-color:color-mix(in srgb,var(--color-divider) 45%,transparent);flex-wrap:wrap; }
+  .review-workspace .review-controls .field { margin:0; }
+  .review-workspace .panel-hd h3,.review-workspace .panel-hd h4 { font-family:var(--font-heading);font-size:16px;margin:0; }
+  .review-workspace .table th { font-size:11px; }
+  @media(max-width:600px){
+    .review-workspace { gap:16px; }
+    .review-workspace .review-controls .seg { margin-left:0 !important;flex-wrap:wrap; }
+    .review-workspace .review-controls .field { flex:1 1 140px;width:auto !important;min-width:0; }
+  }
+
+@media(max-width:600px){
+ .review-workspace .positions-controls .field { flex-basis:100%;width:100% !important; }
+ .review-workspace .positions-controls > .text-muted { order:2;margin-left:0 !important; }
+ .review-workspace .history-controls .seg { display:grid;grid-template-columns:1fr;width:100%;border-radius:var(--radius-md); }
+ .review-workspace .history-controls .seg-opt { min-height:40px;justify-content:center; }
+ .review-workspace .history-controls .seg-opt + .seg-opt { border-top:1px solid var(--color-divider); }
+}
+/* HOLDING_EDITOR_STYLES */
+/* REPORT_STYLES */
 </style>
 
 </head>
@@ -927,14 +932,14 @@
 const TAXONOMY = {
   // id: stable key stored in data; label: display; group: rollup; cssVar: color token
   detail: [
-    { id: 'us_large',  label: 'US Large Cap',            group: 'stocks',      cssVar: '--c-uslarge'  },
-    { id: 'us_mid',    label: 'US Mid Cap',              group: 'stocks',      cssVar: '--c-usmid'    },
-    { id: 'us_small',  label: 'US Small Cap',            group: 'stocks',      cssVar: '--c-ussmall'  },
-    { id: 'us_total',  label: 'US Total Market',         group: 'stocks',      cssVar: '--c-ustotal'  },
-    { id: 'intl_dev',  label: 'International Developed',  group: 'stocks',      cssVar: '--c-intl'     },
+    { id: 'us_large',  label: 'US Large Cap',            group: 'stocks',      cssVar: '--c-us_large'  },
+    { id: 'us_mid',    label: 'US Mid Cap',              group: 'stocks',      cssVar: '--c-us_mid'    },
+    { id: 'us_small',  label: 'US Small Cap',            group: 'stocks',      cssVar: '--c-us_small'  },
+    { id: 'us_total',  label: 'US Total Market',         group: 'stocks',      cssVar: '--c-us_total'  },
+    { id: 'intl_dev',  label: 'International Developed',  group: 'stocks',      cssVar: '--c-intl_dev'     },
     { id: 'em',        label: 'Emerging Markets',        group: 'stocks',      cssVar: '--c-em'       },
-    { id: 'us_bond',   label: 'US Bonds',                group: 'bonds',       cssVar: '--c-usbond'   },
-    { id: 'intl_bond', label: 'International Bonds',      group: 'bonds',       cssVar: '--c-intlbond' },
+    { id: 'us_bond',   label: 'US Bonds',                group: 'bonds',       cssVar: '--c-us_bond'   },
+    { id: 'intl_bond', label: 'International Bonds',      group: 'bonds',       cssVar: '--c-intl_bond' },
     { id: 'reit',      label: 'Real Estate / REITs',     group: 'real_assets', cssVar: '--c-reit'     },
     { id: 'commod',    label: 'Commodities',             group: 'real_assets', cssVar: '--c-commod'   },
     { id: 'crypto',    label: 'Crypto',                  group: 'crypto',      cssVar: '--c-crypto'   },
@@ -960,10 +965,22 @@ const GROUP_BY_ID  = Object.fromEntries(TAXONOMY.groups.map(g => [g.id, g]));
 // (editable per fund), and us_total is excluded from the goal matrix.
 /* INSTRUMENT_CATALOG: generated by scripts/instrument-catalog.js */
 const GOAL_DETAIL = TAXONOMY.detail.filter(d => d.id !== 'us_total');
+// Visible check-in dates use a fixed US format; saved values remain ISO dates.
+function formatCheckinDate(value) {
+  const iso=String(value||'');
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(iso))return iso||'—';
+  const date=new Date(iso+'T00:00:00Z');
+  if(!Number.isFinite(date.getTime()))return iso;
+  return new Intl.DateTimeFormat('en-US',{month:'long',day:'numeric',year:'numeric',timeZone:'UTC'}).format(date);
+}
 function detailLabel(id) { return (DETAIL_BY_ID[id] || {}).label || id; }
 function cssVarValue(name, fallback) {
   const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
   return v || fallback;
+}
+function assetClassChip(id, split = false) {
+  const group = rollupOf(id), label = id ? detailLabel(id) : 'Mixed';
+  return `<span class="tag asset-class-chip" style="--asset-family:var(--g-${group});" title="${esc(GROUP_BY_ID[group].label)} · ${esc(label)}"><span class="swatch" style="background:var(${DETAIL_BY_ID[id]?.cssVar || '--g-' + group})"></span>${split && id ? 'Split · ' : ''}${esc(label)}</span>`;
 }
 function detailColor(id) { return cssVarValue('--c-' + id, '#b7b7ba'); }
 function rollupOf(detailId) { return (DETAIL_BY_ID[detailId] || {}).group || 'blend_other'; }
@@ -1149,7 +1166,7 @@ function deriveRates(ref, taxSettings) {
 function tickerProfile(ticker, assetClass, taxData) {
   const t = (ticker || '').toUpperCase();
   const user = taxData && taxData.tickers && taxData.tickers[t];
-  if (user) return { profile: user, estimated: false, source: 'user' };
+  if (user) return { profile: {...(DEFAULT_TAX_PROFILE[assetClass] || DEFAULT_TAX_PROFILE.other),...(SEED_TAX_DATA[t]||{}),...user}, estimated: true, source: 'user' };
   if (SEED_TAX_DATA[t]) return { profile: SEED_TAX_DATA[t], estimated: true, source: 'bundled' };
   return { profile: DEFAULT_TAX_PROFILE[assetClass] || DEFAULT_TAX_PROFILE.other, estimated: true, source: 'default' };
 }
@@ -1943,7 +1960,7 @@ function setSiteSimulationPaths(value) {
 /* ---------------------------------------------------------------
    SCHEMA + MIGRATION (spec §10)
    --------------------------------------------------------------- */
-const SCHEMA_VERSION = 7;
+const SCHEMA_VERSION = 8;
 
 // Retirement modeler settings (spec §3). All real (today's dollars).
 function defaultRetirementSettings() {
@@ -1996,6 +2013,8 @@ function defaultTaxSettings() {
   };
 }
 
+/* HOLDING_EDITOR_SCRIPTS */
+
 function emptyPortfolio() {
   return {
     meta: { schemaVersion: SCHEMA_VERSION, driftBandPct: 5 },
@@ -2031,6 +2050,7 @@ function validatePortfolio(data) {
     }
   };
   walk(data, 'root', 0);
+  validateFundData(data.fundAssumptions);
   for (const key of ['meta', 'tickerMap', 'taxSettings', 'taxData', 'retirementSettings', 'collegeSettings']) {
     if (data[key] !== undefined) object(data[key], key);
   }
@@ -2054,6 +2074,18 @@ function validatePortfolio(data) {
       }
     });
   }
+  const checkHoldingMetadata=(records,path)=>{
+    object(records,path);
+    for(const [hid,h] of Object.entries(records)){
+      object(h,path+'.'+hid);
+      if(h.id!==hid||!ids.holdings.has(hid)||!ids.accounts.has(h.accountId))fail(path,'references an unknown holding/account');
+      if(typeof h.ticker!=='string'||typeof h.assetClass!=='string'||!DETAIL_BY_ID[h.assetClass])fail(path,'has invalid holding identity');
+      if(h.costBasis!=null)number(h.costBasis,path+'.costBasis');
+      if(h.composition!=null){object(h.composition,path+'.composition');let total=0;for(const [key,val] of Object.entries(h.composition)){if(!DETAIL_BY_ID[key])fail(path,'unknown allocation class');ranged(val,path+'.composition',0,100);total+=val;}if(Object.keys(h.composition).length&&Math.abs(total-100)>0.5)fail(path,'allocation must total 100%');}
+    }
+  };
+  if(data.holdingHistory!=null){object(data.holdingHistory,'holdingHistory');for(const [day,records] of Object.entries(data.holdingHistory)){date(day,'holdingHistory date');checkHoldingMetadata(records,'holdingHistory');}}
+  for(const snap of data.snapshots||[])if(snap.holdingDetails!=null)checkHoldingMetadata(snap.holdingDetails,'snapshot holdingDetails');
   for (const h of data.holdings || []) {
     if (!ids.accounts.has(h.accountId)) fail('holding ' + h.id + '.accountId', 'references a missing account');
     if (h.costBasis != null) number(h.costBasis, 'holding ' + h.id + '.costBasis');
@@ -2329,7 +2361,7 @@ function holdingsWhereAccount(pred) {
 function holdingsForSnapshot(snapshot, scope) {
   const referenced = new Set((snapshot && snapshot.values || []).map(v => v.holdingId));
   const include529 = !!portfolio.meta.include529InHousehold;
-  return portfolio.holdings.filter(h => {
+  return portfolio.holdings.map(h=>holdingAtSnapshot(h,snapshot)).filter(h => {
     if (!referenced.has(h.id)) return false;
     const account = accountById(h.accountId);
     if (!account) return false;
@@ -2350,7 +2382,8 @@ function allocate(holdings, snapshot) {
   const group = {};
   const byHolding = [];
   let total = 0;
-  for (const h of holdings) {
+  for (const rawHolding of holdings) {
+    const h = holdingAtSnapshot(rawHolding,snapshot);
     const v = idx[h.id];
     if (!v) continue;
     const mv = Number(v.marketValue) || 0;
@@ -2491,7 +2524,8 @@ function goalDetailTargets(goal) { return goalIsDetail(goal) ? goal.targets : nu
   targets keyed by the same level as actualRows (detail or group ids).
   Returns [{id,label,actualPct,targetPct,driftPct,breach,valueDelta}].
 */
-function computeDrift(actualRows, total, targets, band) {
+function computeDrift(actualRows, total, targets, band, level) {
+  level=level || ([...actualRows.map(r=>r.id),...Object.keys(targets||{})].some(id=>GROUP_BY_ID[id]&&!DETAIL_BY_ID[id])?'group':'detail');
   const bandPct = band != null ? band : (portfolio.meta.driftBandPct || 5);
   const byId = Object.fromEntries(actualRows.map(r => [r.id, r]));
   const ids = new Set([...Object.keys(targets || {}), ...actualRows.map(r => r.id)]);
@@ -2503,8 +2537,8 @@ function computeDrift(actualRows, total, targets, band) {
     const driftPct = actualPct - targetPct;
     out.push({
       id,
-      label: GROUP_BY_ID[id] ? GROUP_BY_ID[id].label : detailLabel(id),
-      color: GROUP_BY_ID[id] ? groupColor(id) : detailColor(id),
+      label: level === 'group' ? GROUP_BY_ID[id]?.label || detailLabel(id) : detailLabel(id),
+      color: level === 'group' ? groupColor(id) : detailColor(id),
       actualPct, targetPct, driftPct,
       breach: Math.abs(driftPct) > bandPct,
       valueDelta: total * (driftPct / 100), // ≈ $ over/under target
@@ -2570,13 +2604,13 @@ function holdingDragRows(snapshot, rates) {
   rates = rates || taxRates();
   const idx = valueIndex(snapshot);
   const rows = [];
-  for (const h of activeHoldings()) {
+  for (const h of holdingsForSnapshot(snapshot,'all')) {
     const v = idx[h.id];
     if (!v || !(Number(v.marketValue) > 0)) continue;
     const acct = accountById(h.accountId) || {};
     const shelter = accountShelter(acct);
     const mv = Number(v.marketValue);
-    const { profile, estimated, source } = tickerProfile(h.ticker, h.assetClass, portfolio.taxData);
+    const profile=fundTaxProfile(h),estimated=true,source='current assumptions';
     const wouldBeDrag = holdingDrag(mv, profile, rates); // drag if this holding sat in a taxable account
     const drag = shelter.sheltered ? 0 : wouldBeDrag;
     const cb = v.costBasis != null ? v.costBasis : (h.costBasis != null ? h.costBasis : null);
@@ -2858,7 +2892,7 @@ function underweightClasses(snapshot) {
   const detail = goalIsDetail(goal);
   const targets = detail ? goalDetailTargets(goal) : goalGroupTargets(goal);
   const rows = detail ? toRows(a.detail, a.total, 'detail') : toRows(a.group, a.total, 'group');
-  const drift = computeDrift(rows, a.total, targets, portfolio.meta.driftBandPct || 5);
+  const drift = computeDrift(rows, a.total, targets, portfolio.meta.driftBandPct || 5, detail?'detail':'group');
   const out = [];
   for (const d of drift) {
     if (d.driftPct < 0) { // underweight
@@ -2896,7 +2930,7 @@ function toCSV(rows) { return rows.map(r => r.map(csvEscape).join(',')).join('\r
 function snapshotCSV(snapshot) {
   const idx = valueIndex(snapshot);
   const rows = [['Account', 'Category', 'Ticker', 'Name', 'Asset Class', 'Rollup', 'Market Value', 'Cost Basis', 'Unrealized Gain']];
-  for (const h of portfolio.holdings) {
+  for (const h of holdingsForSnapshot(snapshot,'all')) {
     const v = idx[h.id];
     if (!v) continue;
     const acct = accountById(h.accountId) || {};
@@ -3467,7 +3501,7 @@ function importMatches() {
     return [{ ...r, ...identity }];
   }));
   const held = {};
-  for (const h of activeHoldings(imp.accountId)) {
+  for (const h of checkinHoldings(imp.accountId)) {
     // Legacy ambiguous holdings have no confirmed identity; never overwrite them
     // with an ETF import merely because the ticker matches.
     if (cryptoSymbol(h.ticker) && h.instrumentKind !== 'etf') continue;
@@ -3693,7 +3727,7 @@ function chartAccessibleTable(id) {
 
 function stackedAreaSVG(series, id) {
   const W = 320, H = 110, base = H, n = series.length;
-  if (n === 0) return '<div class="text-muted" style="padding:20px;">No snapshots yet.</div>';
+  if (n === 0) return '<div class="text-muted" style="padding:20px;">No Check-ins yet.</div>';
   CHART_DATA[id] = { series, kind: 'value' };
   const maxTotal = Math.max(1, ...series.map(s => s.total));
   const xs = seriesXs(series, W);
@@ -3721,7 +3755,7 @@ function stackedAreaSVG(series, id) {
 /* Multi-line chart: lines = [{label,color,points:[v...]}] aligned to series. */
 function multiLineSVG(series, lines, id) {
   const W = 320, H = 110, base = H, n = series.length;
-  if (n === 0) return '<div class="text-muted" style="padding:20px;">No snapshots yet.</div>';
+  if (n === 0) return '<div class="text-muted" style="padding:20px;">No Check-ins yet.</div>';
   CHART_DATA[id] = { series, kind: 'growth', lines };
   const maxV = Math.max(1, ...lines.flatMap(l => l.points));
   const xs = seriesXs(series, W);
@@ -3741,7 +3775,7 @@ function multiLineSVG(series, lines, id) {
 /* 100% stacked bars for allocation-% over time, placed on the time axis. */
 function pctStackSVG(series, id) {
   const W = 320, H = 110, n = series.length;
-  if (n === 0) return '<div class="text-muted" style="padding:20px;">No snapshots yet.</div>';
+  if (n === 0) return '<div class="text-muted" style="padding:20px;">No Check-ins yet.</div>';
   CHART_DATA[id] = { series, kind: 'pct' };
   const xs = seriesXs(series, W);
   let minGap = W; for (let i = 1; i < n; i++) minGap = Math.min(minGap, xs[i] - xs[i - 1]);
@@ -3843,6 +3877,18 @@ function render() {
     case 'data':       body = renderDataPrivacy(); break;
     default:           body = renderDashboard();
   }
+  const introFallbacks = {
+    accounts:['Accounts','Organize your accounts.','Manage the accounts that make up your portfolio.'],
+    household:['Household','Your household at a glance.','Keep your household details and planning inputs together.'],
+    taxprofile:['Tax profile','Set your tax assumptions.','Review the inputs used to estimate taxes across your accounts.'],
+    retirement:['Retirement inputs','Shape your retirement plan.','Set the assumptions behind your retirement outlook.'],
+    data:['Data & privacy','Keep control of your data.','Manage your local portfolio file and preferences.'],
+    checkin:['Check-in','Update what changed.','Refresh your accounts and record a clean Check-in for review.'],
+    retire:['Outlook','Retirement planning','Explore possible futures using your own assumptions.'],
+    college:['Outlook','College planning','Explore possible futures using your own assumptions.']
+  };
+  if(introFallbacks[ui.view] && !body.includes('class="page-intro')) body=pageIntroHTML(...introFallbacks[ui.view])+body;
+  if(['allocation','positions','goal','tax','history'].includes(ui.view))body=`<div class="review-workspace">${body}</div>`;
   // The report markup is always in the DOM (hidden) so print + preview share it.
   const reportHidden = (ui.view === 'report') ? '' : reportHTML(currentSnapshot());
   // The marketing landing is a standalone page with its own header — no app file-bar/tab-bar.
@@ -3850,7 +3896,7 @@ function render() {
   const chrome = entryView ? '' : navHTML();
   const bodyPad = entryView ? 'padding:24px 24px 64px;' : '';
   const baseFooter = entryView ? '' : appBaseFooter();
-  app.innerHTML = shellHTML(chrome + `<main id="main-content" tabindex="-1" class="app-body" style="${bodyPad}">${body}${reportHidden ? `<div class="report">${reportHidden}</div>` : ''}${baseFooter}</main>`);
+  app.innerHTML = shellHTML(chrome + `<main id="main-content" tabindex="-1" class="app-body" style="${bodyPad}">${body}${reportHidden ? `<div class="report" data-demo="${demoMode}">${reportHidden}</div>` : ''}${baseFooter}</main>`);
   afterRender();
   try { window.quartermasterAnalytics?.view(ui.view, demoMode ? 'demo' : ui.view === 'welcome' ? 'visitor' : 'personal', setupStep); } catch (_) {}
 }
@@ -3876,8 +3922,8 @@ const APP_TABS = [
 ];
 function reviewSubtabs() {
   return [
-    ['review', 'Since last check-in'], ['allocation', 'Allocation'], ['positions', 'Holdings'], ['goal', 'Targets'],
-    ['tax', 'Tax'], ['history', 'History'],
+    ['review', 'Since last check-in'], ['allocation', 'Allocation'], ['positions', 'Holdings'], ['tax', 'Cost'],
+    ['history', 'History'], ['goal', 'Goals'],
   ];
 }
 // Outlook sub-tabs. College planning appears only when the household has children.
@@ -3889,7 +3935,7 @@ function outlookSubtabs() {
 // Reference drawer entry points (Settings folded in, plus goals/import).
 const REFERENCE_LINKS = [
   ['accounts', 'Accounts'], ['household', 'Household'], ['taxprofile', 'Tax profile'],
-  ['retirement', 'Retirement'], ['goal', 'Target &amp; glide'], ['data', 'Data &amp; privacy'],
+  ['retirement', 'Retirement'], ['goal', 'Goals'], ['data', 'Data &amp; privacy'],
 ];
 // Total portfolio + days since last check-in, for the tab-bar metrics.
 function navTotals() {
@@ -4065,11 +4111,11 @@ function renderSetup() {
       <div class="field"><label>Portfolio allocation goal</label><select class="input" data-act="setup-goal-mode">${[['none','Decide later (default)'],['80','Example: 80% stocks / 20% bonds'],['60','Example: 60% stocks / 40% bonds'],['custom','Custom allocation']].map(([value,label]) => `<option value="${value}" ${goal.mode === value ? 'selected' : ''}>${label}</option>`).join('')}</select></div>
       ${goal.mode !== 'none' ? `<div class="setup-goals">${fields.map(d => `<div class="field"><label for="setup-target-${d.id}">${esc(d.label)} (%)</label><input id="setup-target-${d.id}" class="input" type="number" min="0" max="100" step="any" data-act="setup-goal-value" data-class="${d.id}" value="${goal.targets[d.id] || 0}"></div>`).join('')}</div><p id="setup-goal-total">Total: ${setupGoalTotal()}% · targets must add up to 100%.</p>` : '<p class="text-muted">No target will be applied. Your dashboard will show what you own without judging it against a goal.</p>'}
       <button class="btn btn-secondary" data-act="setup-goal-reset">Reset to default</button>
-      <p class="text-muted">You can adjust targets later in Review → Targets. The review band stays at its default of ±5 percentage points.</p>`;
+      <p class="text-muted">You can adjust targets later in Review → Goals. The review band stays at its default of ±5 percentage points.</p>`;
   } else {
     content = `<h2>Enter your holdings</h2><p>Add the investments in each account and their current values from your statements.</p><p>When you’re ready, choose <strong>Finish setup · view dashboard</strong>. This records the first check-in in this session. Save your portfolio file when you finish using the app.</p>${renderCheckin()}`;
   }
-  return `<section class="setup-shell"><div class="page-intro"><div class="kicker">Build your portfolio</div><h1>Three steps to a clearer picture.</h1></div>${progress}<div class="setup-content">${content}</div><div class="setup-actions">${setupStep > 1 ? '<button class="btn btn-secondary" data-act="setup-back">Back</button>' : ''}${setupStep < 3 ? '<button class="btn btn-primary" data-act="setup-next">Continue</button>' : ''}</div></section>`;
+  return `<section class="setup-shell">${pageIntroHTML('Build your portfolio','Three steps to a clearer picture.','Add accounts, choose your goals, and enter your holdings.')}${progress}<div class="setup-content">${content}</div><div class="setup-actions">${setupStep > 1 ? '<button class="btn btn-secondary" data-act="setup-back">Back</button>' : ''}${setupStep < 3 ? '<button class="btn btn-primary" data-act="setup-next">Continue</button>' : ''}</div></section>`;
 }
 function reviewChanges() {
   const snapshots = sortedSnapshots();
@@ -4088,12 +4134,12 @@ function reviewChanges() {
 function renderReviewChanges() {
   const comparison = reviewChanges();
   const next = '<div class="review-next"><button class="btn btn-primary" data-act="nav" data-view="allocation">Continue to allocation overview →</button></div>';
-  const intro = '<div class="page-intro"><h1>Review your changes</h1><p>See what changed between your latest two recorded check-ins.</p></div>';
+  const intro = pageIntroHTML('Since last check-in','Review your changes.','See what changed between your latest two recorded check-ins.');
   if (!comparison) return `${intro}<div class="panel" style="padding:28px;"><h2>${latestSnapshot() ? 'Your first check-in is the starting point.' : 'Start with your first check-in.'}</h2><p>${latestSnapshot() ? 'Record another check-in when you next review your balances. Your account-by-account comparison will appear here.' : 'Add your balances to establish a starting point for future comparisons.'}</p><button class="btn btn-primary" data-act="nav" data-view="dashboard">View dashboard</button></div>${next}`;
   const { previous, current, rows, delta } = comparison;
-  return `${intro}<div class="panel" style="padding:24px;"><div class="kicker">${esc(previous.date)} → ${esc(current.date)}</div><h2 style="margin:12px 0;">${delta >= 0 ? '+' : '−'}${fmtMoney(Math.abs(delta))} in recorded balance</h2><p class="text-muted">Includes all accounts, including 529s. Balance changes combine market moves, contributions, withdrawals, and changes to recorded holdings. They are not investment returns. Unrecorded values count as zero in this comparison.</p><table class="table"><thead><tr><th>Account</th><th>Previous</th><th>Latest</th><th>Change</th></tr></thead><tbody>${rows.map(r => `<tr><td>${esc(r.name)}</td><td>${fmtMoney(r.prior)}</td><td>${fmtMoney(r.now)}</td><td>${r.delta >= 0 ? '+' : '−'}${fmtMoney(Math.abs(r.delta))}</td></tr>`).join('')}</tbody></table></div>${next}`;
+  return `${intro}<div class="panel" style="padding:24px;"><div class="kicker">${esc(previous.date)} → ${esc(current.date)}</div><h2 style="margin:12px 0;">${delta >= 0 ? '+' : '−'}${fmtMoney(Math.abs(delta))} in recorded balance</h2><p class="text-muted">Includes all accounts, including 529s. Balance changes combine market moves, contributions, withdrawals, and changes to recorded holdings. They are not investment returns. Unrecorded values count as zero in this comparison.</p><table class="table"><thead><tr><th>Account</th><th style="text-align:right;">Previous</th><th>Latest</th><th>Change</th></tr></thead><tbody>${rows.map(r => `<tr><td>${esc(r.name)}</td><td>${fmtMoney(r.prior)}</td><td>${fmtMoney(r.now)}</td><td>${r.delta >= 0 ? '+' : '−'}${fmtMoney(Math.abs(r.delta))}</td></tr>`).join('')}</tbody></table></div>${next}`;
 }
-const DEMO_ACTIONS = new Set(['nav','about','landing-open','onboard-scratch','setup-save-new','setup-discard-new','close-dialog','backdrop','open','load-demo','new-checkin','lp-scroll','toggle-drawer','toggle-mobile-nav','ci-toggle','ci-expand-all','ci-collapse-all','level','pick-snap','pick-goal','pos-snap','pos-category','pos-sort','pos-class','pos-class-clear','pos-expand','drill','htab','tax-sort','ov-toggle','dollar-mode','sim-paths','run-simulation','cancel-simulation','print','confirm-yes']);
+const DEMO_ACTIONS = new Set(['report-cost-toggle','nav','about','landing-open','onboard-scratch','setup-save-new','setup-discard-new','close-dialog','backdrop','open','load-demo','new-checkin','lp-scroll','toggle-drawer','toggle-mobile-nav','ci-toggle','ci-expand-all','ci-collapse-all','level','pick-snap','pick-goal','pos-snap','pos-category','pos-sort','pos-class','pos-class-clear','pos-expand','drill','htab','tax-sort','expense-sort','jump-costs','jump-taxes','ov-toggle','dollar-mode','sim-paths','run-simulation','cancel-simulation','print','confirm-yes']);
 function demoActionAllowed(action) {
   // Model assumptions may change temporarily; account mapping may not.
   return DEMO_ACTIONS.has(action) || ((action.startsWith('rd-') && !['rd-map-vehicle','rd-map-treatment'].includes(action)) || action.startsWith('cl-'));
@@ -4350,7 +4396,7 @@ function renderHighlights() {
   const rows = toRows(alloc.group, alloc.total, 'group');
   const goal = activeGoal(snap.date);
   const band = portfolio.meta.driftBandPct || 5;
-  const drift = goal ? computeDrift(rows, alloc.total, goalGroupTargets(goal), band) : [];
+  const drift = goal ? computeDrift(rows, alloc.total, goalGroupTargets(goal), band, 'group') : [];
   const breaches = drift.filter(d => d.breach);
   const grand = grandTotal(snap);
   const nAccts = accountsSorted(a => a.category !== '529').length;
@@ -4441,18 +4487,18 @@ function aboutDialogHTML() {
    =============================================================== */
 function renderDashboard() {
   const snap = currentSnapshot();
-  if (!snap) return dashNoSnapshotHTML();
+  if (!snap) return (ui.view==='allocation'?reviewPageIntro('Allocation','Your real allocation','See every account as one portfolio and compare the mix with your goal.'):'')+dashNoSnapshotHTML();
 
   const drill = ui.drill;
   const is529 = drill.level === 'category' && drill.category === '529';
   let holdings, scopeLabel, goalTargets, goalNote, glideInfo = null;
 
-  if (drill.level === 'household') { holdings = householdHoldings(); scopeLabel = 'Household'; }
+  if (drill.level === 'household') { holdings = holdingsForSnapshot(snap,'household'); scopeLabel = 'Household'; }
   else if (drill.level === 'category') {
-    holdings = categoryHoldingsLabeled(drill.category, drill.categoryLabel);
+    holdings = holdingsForSnapshot(snap,drill.category).filter(h=>!drill.categoryLabel||(accountById(h.accountId)?.categoryLabel||'Other')===drill.categoryLabel);
     scopeLabel = drill.categoryLabel || drill.category;
   } else {
-    holdings = accountHoldings(drill.accountId);
+    holdings = holdingsForSnapshot(snap,'all').filter(h=>h.accountId===drill.accountId);
     const acct = accountById(drill.accountId); scopeLabel = acct ? acct.name : 'Account';
   }
 
@@ -4483,12 +4529,12 @@ function renderDashboard() {
   // actualRows are the 14 detail classes (otherwise a "Stocks" target with no "Stocks" detail row read −100%).
   const targetsAreGroup = goalTargets && Object.keys(goalTargets).length > 0 && Object.keys(goalTargets).every(k => GROUP_BY_ID[k]);
   const driftRows = (targetsAreGroup && level !== 'group') ? toRows(alloc.group, alloc.total, 'group') : actualRows;
-  const drift = goalTargets ? computeDrift(driftRows, alloc.total, goalTargets, band) : [];
+  const drift = goalTargets ? computeDrift(driftRows, alloc.total, goalTargets, band, targetsAreGroup?'group':level) : [];
   const breaches = drift.filter(d => d.breach);
 
   const allocationView = ui.view === 'allocation';
   return `
-    <div class="page-intro dashboard-intro"><div class="page-intro-copy"><div class="kicker">${allocationView ? 'Review your mix' : 'Household command center'}</div><h1>${allocationView ? 'Your real allocation' : 'Good to see the whole picture.'}</h1><p>${allocationView ? 'See every account as one portfolio, compare the mix with your target, and identify the classes that deserve attention.' : 'A concise view of what you own, how it compares with the plan, and where to focus at your next review.'}</p></div><div class="page-intro-actions">${!portfolio.goals.length ? '<button class="btn btn-secondary" data-act="nav" data-view="goal">Set a target</button>' : ''}${allocationView ? '<button class="btn btn-secondary" data-act="nav" data-view="positions">View all holdings</button>' : ''}<button class="btn btn-primary" data-act="new-checkin">New check-in</button></div></div>
+    <div class="page-intro dashboard-intro"><div class="page-intro-copy"><div class="kicker">${allocationView ? 'Allocation' : 'Household command center'}</div><h1>${allocationView ? 'Your real allocation' : 'Good to see the whole picture.'}</h1><p>${allocationView ? 'See every account as one portfolio, compare the mix with your target, and identify the classes that deserve attention.' : 'A concise view of what you own, how it compares with the plan, and where to focus at your next review.'}</p></div><div class="page-intro-actions">${!portfolio.goals.length ? '<button class="btn btn-secondary" data-act="nav" data-view="goal">Set a target</button>' : ''}${allocationView ? reviewNextAction('Allocation') : '<button class="btn btn-primary" data-act="new-checkin">New check-in</button>'}</div></div>
     ${dashToolbarHTML(snap)}
     ${dashKpiHTML(snap, alloc, holdings, goal)}
     <div class="panel dashboard-layout">
@@ -4506,14 +4552,14 @@ function renderDashboard() {
 function dashHoldingsHTML(accountId, snap) {
   const a = allocate(accountHoldings(accountId), snap);
   if (!a.byHolding.length) {
-    return `<div class="panel"><div class="panel-hd"><h4>Holdings</h4></div><div style="padding:20px;" class="text-muted">No holdings with values in this snapshot.</div></div>`;
+    return `<div class="panel"><div class="panel-hd"><h4>Holdings</h4></div><div style="padding:20px;" class="text-muted">No holdings with values in this Check-in.</div></div>`;
   }
   const rows = a.byHolding.slice().sort((x, y) => y.marketValue - x.marketValue).map(h => {
     const pct = a.total > 0 ? (h.marketValue / a.total) * 100 : 0;
     const cls = (h.composed ? 'Split · ' : '') + detailLabel(h.holding.assetClass);
     return `<tr>
       <td style="padding-left:20px;font-family:var(--font-heading);font-size:15px;">${esc(h.holding.ticker)}</td>
-      <td><span class="tag ${h.composed ? 'tag-accent-2' : 'tag-accent'}">${esc(cls)}</span> ${h.holding.name ? `<span class="text-muted" style="font-size:11px;margin-left:6px;">${esc(h.holding.name)}</span>` : ''}</td>
+      <td>${assetClassChip(h.holding.assetClass, h.composed)} ${h.holding.name ? `<span class="text-muted" style="font-size:11px;margin-left:6px;">${esc(h.holding.name)}</span>` : ''}</td>
       <td class="tnum" style="text-align:right;">${fmtMoney(h.marketValue)}</td>
       <td class="tnum" style="text-align:right;">${pct.toFixed(1)}%</td>
       <td class="tnum" style="text-align:right;padding-right:20px;color:${h.gain != null && h.gain < 0 ? 'var(--color-crit)' : 'var(--color-accent-700)'};">${h.gain != null ? fmtMoneySigned(h.gain) : '—'}</td>
@@ -4537,7 +4583,7 @@ function rollupTargets(goal, level) {
 function dashToolbarHTML(snap) {
   const snaps = sortedSnapshots().slice().reverse();
   const opts = snaps.map((s, i) =>
-    `<option value="${s.date}" ${s.date === snap.date ? 'selected' : ''}>${s.date}${i === 0 ? ' (latest)' : ''}</option>`).join('');
+    `<option value="${s.date}" ${s.date === snap.date ? 'selected' : ''}>${formatCheckinDate(s.date)}${i === 0 ? ' (latest)' : ''}</option>`).join('');
   const d = ui.drill;
   let crumb = `<a data-act="drill" data-level="household">Household</a>`;
   if (d.level === 'household') {
@@ -4549,7 +4595,7 @@ function dashToolbarHTML(snap) {
     const catLbl = acct ? (acct.categoryLabel || catLabel(acct.category)) : '';
     crumb += `<span class="sep">›</span><a data-act="drill" data-level="category" data-category="${esc(acct ? acct.category : '')}" data-categorylabel="${esc(acct ? (acct.categoryLabel || '') : '')}">${esc(catLbl)}</a><span class="sep">›</span><span>${esc(acct ? acct.name : '')}</span>`;
   }
-  return `<div class="dashboard-context no-print"><div class="crumb">${crumb}</div><div class="field"><label>Snapshot</label><select class="input" data-act="pick-snap">${opts}</select></div></div>`;
+  return `<div class="dashboard-context no-print"><div class="crumb">${crumb}</div><div class="field"><label>Check-in</label><select class="input" data-act="pick-snap">${opts}</select></div></div>`;
 }
 // Goals form an append-only journal; more than one can share an effective date.
 // Use each entry's journal position for UI selection rather than its date.
@@ -4643,7 +4689,7 @@ function legendHTML(actualRows, goalTargets) {
 function dashDonutsHTML(actualRows, goalTargets, alloc, snap, scopeLabel, goalNote, level, glideInfo) {
   const goalRows = goalTargets ? Object.entries(goalTargets).map(([id, pct]) => ({
     id, color: level === 'group' ? groupColor(id) : detailColor(id), value: pct, pct,
-    label: GROUP_BY_ID[id] ? GROUP_BY_ID[id].label : detailLabel(id),
+    label: level === 'group' ? GROUP_BY_ID[id]?.label || detailLabel(id) : detailLabel(id),
   })) : null;
   const ringKey = goalRows
     ? `<div class="text-muted" style="font-size:11px;display:flex;gap:14px;justify-content:center;">
@@ -4666,7 +4712,7 @@ function dashDriftHTML(drift, band, breaches, goalTargets) {
   if (!goalTargets) {
     return `<div class="drift-panel" style="padding:20px;">
       <div class="panel-hd" style="padding:0 0 14px;border:0;"><h4>Drift vs goal</h4></div>${driftControlsHTML()}
-      <p class="text-muted" style="font-size:13px;">No target is available for this view yet. You can explore your current allocation now, then set a target in Review → Targets when you’re ready.</p>
+      <p class="text-muted" style="font-size:13px;">No target is available for this view yet. You can explore your current allocation now, then set a target in Review → Goals when you’re ready.</p>
     </div>`;
   }
   const rowsHTML = drift.map(d => `
@@ -4700,7 +4746,7 @@ function dashCategoriesHTML(snap) {
     const catName = drill.categoryLabel || catLabel(drill.category);
     const catTotal = allocate(inCat.flatMap(x => accountHoldings(x.id)), snap).total;
     const cards = inCat.map(acct => {
-      const av = allocate(accountHoldings(acct.id), snap);
+      const av = allocate(holdingsForSnapshot(snap,'all').filter(h=>h.accountId===acct.id), snap);
       const share = catTotal > 0 ? (av.total / catTotal) * 100 : 0;
       const n = activeHoldings(acct.id).length;
       return catCardHTML(acct.institution || 'Account', acct.name, av.total, share,
@@ -4780,7 +4826,7 @@ function dashHistoryStripHTML() {
     </div>`).join('') : '<span class="text-muted" style="font-size:13px;">No goal history yet.</span>';
   return `<div class="panel" style="display:grid;grid-template-columns:1.4fr 1fr;gap:0;">
     <div style="padding:20px;border-right:1px solid var(--color-divider);">
-      <div class="panel-hd" style="padding:0 0 14px;border:0;"><h4>Value by asset class</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">${series.length} snapshot${series.length > 1 ? 's' : ''}</span></div>
+      <div class="panel-hd" style="padding:0 0 14px;border:0;"><h4>Value by asset class</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">${series.length} Check-in${series.length > 1 ? 's' : ''}</span></div>
       <figure class="blueprint" style="padding:14px;">${corners()}${stackedAreaSVG(series, 'dash-value')}</figure>
       <div style="margin-top:12px;"><a data-act="nav" data-view="history" style="font-size:13px;cursor:pointer;">Open full history →</a></div>
     </div>
@@ -4794,7 +4840,7 @@ function dashHistoryStripHTML() {
 function dashNoSnapshotHTML() {
   return `${dashToolbarStubHTML()}
   <div class="empty" style="margin:6vh auto;">
-    <span class="tag tag-outline">No snapshots yet</span>
+    <span class="tag tag-outline">No Check-ins yet</span>
     <h2 style="margin:0;">You've got accounts — now record what's in them.</h2>
     <p class="text-muted" style="max-width:50ch;">A check-in captures each holding's current value. The first one takes a few minutes; after that they prefill.</p>
     <button class="btn btn-primary" data-act="new-checkin">Start your first check-in</button>
@@ -4830,15 +4876,23 @@ function positionsScopeHoldings() {
   if (c.indexOf('Other:') === 0) return categoryHoldingsLabeled('Other', c.slice(6));
   return categoryHoldings(c);
 }
+function reviewNextAction(label) {
+ const next={Allocation:['positions','Continue to Holdings'],Holdings:['tax','Continue to Cost'],Cost:['plan','Continue to Plan']}[label];
+ return next?`<button class="btn btn-primary" data-act="nav" data-view="${next[0]}">${next[1]} →</button>`:'<button class="btn btn-primary" data-act="new-checkin">New check-in</button>';
+}
+function reviewPageIntro(label,title,description) {
+ return `<div class="page-intro dashboard-intro"><div class="page-intro-copy"><div class="kicker">${label}</div><h1>${title}</h1><p>${description}</p></div><div class="page-intro-actions">${reviewNextAction(label)}</div></div>`;
+}
 function renderPositions() {
   const snap = positionsSnapshot();
-  if (!snap) return `<div class="toolbar no-print"><div class="crumb"><span>Positions</span></div></div>
-    <div class="empty" style="margin:6vh auto;"><span class="tag tag-outline">No snapshots yet</span>
+  if (!snap) return `${reviewPageIntro('Holdings','Your holdings','Explore your investments across accounts and asset classes.')}
+    <div class="empty" style="margin:6vh auto;"><span class="tag tag-outline">No Check-ins yet</span>
     <h2 style="margin:0;">Record a check-in to see your positions.</h2>
     <button class="btn btn-primary" data-act="new-checkin">Start a check-in</button></div>`;
   const idx = valueIndex(snap);
   const sort = ui.positionsSort || (ui.positionsSort = { key: 'value', dir: -1 });
-  const scoped = positionsScopeHoldings();
+  const selectedScope=ui.posCategory||'all';
+  const scoped = holdingsForSnapshot(snap,selectedScope.startsWith('Other:')?'Other':selectedScope).filter(h=>!selectedScope.startsWith('Other:') || (accountById(h.accountId)?.categoryLabel||'Other')===selectedScope.slice(6));
   const alloc = allocate(scoped, snap);           // scope total (decomposed)
   const gt = alloc.total;
 
@@ -4866,7 +4920,7 @@ function renderPositions() {
     if (compositionOf(h)) g.composedAny = true;
     g.value += value;
     if (gain != null) { g.gain += gain; g.gainAny = true; }
-    g.children.push({ account: acct.name || '', category: acct.category || '', categoryLabel: acct.categoryLabel, value, gain });
+    g.children.push({ hid:h.id, account: acct.name || '', category: acct.category || '', categoryLabel: acct.categoryLabel, value, gain });
   }
   let groups = Object.values(byTicker).map(g => ({
     ticker: g.ticker, name: g.name, children: g.children, value: g.value,
@@ -4890,11 +4944,10 @@ function renderPositions() {
     const acctCell = g.multi
       ? `<span class="tag tag-neutral">${g.children.length} accounts</span> ${esc(g.children.map(c => c.account).slice(0, 2).join(', '))}${g.children.length > 2 ? ' …' : ''}`
       : esc(g.children[0].account);
-    const tickerContent = `${caret}${esc(g.ticker)}${g.name ? ` <span class="text-muted" style="font-family:var(--font-body);font-size:11px;">${esc(g.name)}</span>` : ''}`;
     const main = `<tr>
-      <td style="font-family:var(--font-heading);font-size:15px;">${g.multi ? `<button type="button" class="table-row-action" data-act="pos-expand" data-ticker="${esc(g.ticker.toUpperCase())}" aria-expanded="${exp}">${tickerContent}</button>` : tickerContent}</td>
+      <td style="font-family:var(--font-heading);font-size:15px;">${g.multi?`<button type="button" class="table-row-action" data-act="pos-expand" data-ticker="${esc(g.ticker.toUpperCase())}" aria-expanded="${exp}" aria-label="Show accounts for ${esc(g.ticker)}">${caret}</button>`:''}${holdingEditLink(g.children[0].hid,g.ticker)}${g.name?` <span class="text-muted" style="font-size:11px;">${esc(g.name)}</span>`:''}</td>
       <td class="text-muted" style="font-size:13px;">${acctCell}</td>
-      <td><span class="tag ${g.composed ? 'tag-accent-2' : 'tag-accent'}">${g.composed && g.classId ? 'Split · ' : ''}${esc(g.className)}</span></td>
+      <td>${assetClassChip(g.classId, g.composed)}</td>
       <td class="tnum" style="text-align:right;">${fmtMoney(g.value)}</td>
       <td class="tnum" style="text-align:right;font-family:var(--font-heading);">${g.pct.toFixed(1)}%</td>
       <td class="tnum" style="text-align:right;color:${g.gainTotal != null ? gcolor(g.gainTotal) : ''};">${g.gainTotal != null ? fmtMoneySigned(g.gainTotal) : '—'}</td>
@@ -4902,7 +4955,7 @@ function renderPositions() {
     let kids = '';
     if (g.multi && exp) {
       kids = g.children.slice().sort((a, b) => b.value - a.value).map(c => `<tr style="background:color-mix(in srgb, var(--color-text) 3%, transparent);">
-        <td style="padding-left:34px;font-size:13px;">↳ ${esc(c.account)}</td>
+        <td style="padding-left:34px;font-size:13px;">↳ ${holdingEditLink(c.hid,g.ticker)} <span class="text-muted">${esc(c.account)}</span></td>
         <td class="text-muted" style="font-size:12px;">${esc(c.categoryLabel || catLabel(c.category))}</td>
         <td></td>
         <td class="tnum" style="text-align:right;font-size:13px;">${fmtMoney(c.value)}</td>
@@ -4920,14 +4973,14 @@ function renderPositions() {
   const catSel = `<div class="field" style="width:210px;"><label>Category</label><select class="input" data-act="pos-category">${catArr.map(([v, l]) => `<option value="${esc(v)}" ${(ui.posCategory || 'all') === v ? 'selected' : ''}>${esc(l)}</option>`).join('')}</select></div>`;
 
   const snaps = sortedSnapshots().slice().reverse();
-  const opts = snaps.map((s, i) => `<option value="${s.date}" ${s.date === snap.date ? 'selected' : ''}>${s.date}${i === 0 ? ' (latest)' : ''}</option>`).join('');
+  const opts = snaps.map((s, i) => `<option value="${s.date}" ${s.date === snap.date ? 'selected' : ''}>${formatCheckinDate(s.date)}${i === 0 ? ' (latest)' : ''}</option>`).join('');
   const totalLabel = (ui.posCategory && ui.posCategory !== 'all') ? 'scope total' : 'total';
 
-  return `<div class="toolbar no-print" style="flex-wrap:wrap;"><div class="crumb"><span>Positions</span></div>
+  return `${reviewPageIntro('Holdings','Your holdings','Explore your investments across accounts and asset classes.')}<div class="toolbar review-controls positions-controls no-print" style="flex-wrap:wrap;">
     ${catSel}
     ${ui.posClass ? `<span class="tag tag-accent-2" style="cursor:pointer;align-self:flex-end;margin-bottom:6px;" data-act="pos-class-clear">Class: ${esc(detailLabel(ui.posClass))} ✕</span>` : ''}
     <span class="text-muted" style="margin-left:auto;align-self:flex-end;margin-bottom:6px;font-size:12px;">${groups.length} position${groups.length !== 1 ? 's' : ''} · ${fmtMoney(gt)} ${totalLabel}</span>
-    <div class="field" style="width:150px;"><label>Snapshot</label><select class="input" data-act="pos-snap">${opts}</select></div>
+    <div class="field" style="width:230px;max-width:100%;"><label>Check-in</label><select class="input" data-act="pos-snap">${opts}</select></div>
   </div>
   <div style="display:grid;grid-template-columns:310px 1fr;gap:20px;align-items:start;">
     <div class="panel"><div class="panel-hd"><h4>By asset class</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">click to filter</span></div>
@@ -5059,7 +5112,7 @@ function checkinAccountUpdated(acct, ci, baseVals) {
 
 function checkinAccountBlock(acct, ci, baseVals) {
   const open = !!ui.checkinOpen[acct.id];
-  const holds = activeHoldings(acct.id);
+  const holds = checkinHoldings(acct.id);
   const updated = checkinAccountUpdated(acct, ci, baseVals);
   const reviewed = ui.checkin && ui.checkin.reviewed && ui.checkin.reviewed[acct.id];
   const acctIssues = holds.filter(h => holdingBasisIssue(h, baseVals)).length;
@@ -5098,9 +5151,9 @@ function checkinAccountBlock(acct, ci, baseVals) {
     const gain = (mv != null && cb != null) ? mv - cb : null;
     const issue = holdingBasisIssue(h, baseVals);
     return `<tr>
-        <td class="checkin-holding-ticker" style="padding-left:20px;font-family:var(--font-heading);font-size:15px;">${esc(h.ticker)}</td>
+        <td class="checkin-holding-ticker" style="padding-left:20px;font-family:var(--font-heading);font-size:15px;">${holdingEditLink(h.id,h.ticker,true)}</td>
         <td>
-          <span class="tag ${compositionOf(h) ? 'tag-accent-2' : 'tag-accent'}" style="cursor:pointer;gap:6px;" data-act="edit-class" data-hid="${esc(h.id)}">${compositionOf(h) ? 'Split · ' : ''}${esc(detailLabel(h.assetClass))}<span class="text-muted" style="font-size:10px;">edit</span></span>
+          ${assetClassChip(h.assetClass, !!compositionOf(h))}
           ${h.name ? `<span class="text-muted checkin-holding-name" style="font-size:11px;margin-left:8px;">${esc(h.name)}</span>` : ''}
         </td>
         <td class="text-muted tnum" style="text-align:right;">${prev}</td>
@@ -5155,27 +5208,28 @@ function renderCheckin() {
   const _doneCount = _allAccts.filter(a => checkinAccountUpdated(a, ci, baseVals) || (ci.reviewed && ci.reviewed[a.id])).length;
   const doneTag = _allAccts.length ? `<span id="ci-progress" class="tag checkin-progress ${_doneCount === _allAccts.length ? 'tag-ok' : 'tag-neutral'}" title="An account counts as done after an import, a value change, or marking it reviewed">${_doneCount} of ${_allAccts.length} accounts done</span>` : '';
 
-  const intro = setupStep ? '' : `<div class="page-intro"><div class="page-intro-copy"><div class="kicker">Quarterly ritual · refresh</div><h1>Update what changed.</h1><p>Your last check-in is already here. Refresh the balances, verify the accounts, and record a clean snapshot for review.</p></div></div>`;
-  const steps = setupStep ? '' : `<div class="ritual-steps" aria-label="Check-in steps"><div class="ritual-step active"><span class="n">1</span><span><strong>Choose the date</strong><small>Anchor this snapshot in time.</small></span></div><div class="ritual-step active"><span class="n">2</span><span><strong>Refresh balances</strong><small>Update only what changed.</small></span></div><div class="ritual-step"><span class="n">3</span><span><strong>Record &amp; review</strong><small>Save the snapshot, then inspect drift.</small></span></div></div>`;
+  const intro = setupStep ? '' : `<div class="page-intro"><div class="page-intro-copy"><div class="kicker">Quarterly ritual · refresh</div><h1>Update what changed.</h1><p>Your last check-in is already here. Refresh the balances, verify the accounts, and record a clean Check-in for review.</p></div></div>`;
+  const steps = setupStep ? '' : `<div class="ritual-steps" aria-label="Check-in steps"><div class="ritual-step active"><span class="n">1</span><span><strong>Choose the date</strong><small>Choose the date for this Check-in.</small></span></div><div class="ritual-step active"><span class="n">2</span><span><strong>Refresh balances</strong><small>Update only what changed.</small></span></div><div class="ritual-step"><span class="n">3</span><span><strong>Record &amp; review</strong><small>Record the Check-in, then review drift.</small></span></div></div>`;
   return `${intro}${steps}<div class="checkin-workspace"><div class="panel checkin-panel">
     <div style="display:flex;align-items:flex-end;gap:20px;padding:18px 20px;border-bottom:1px solid var(--color-divider);flex-wrap:wrap;">
-      <div><h3 style="margin:0 0 4px;">${setupStep ? 'Your first holdings' : 'Accounts & holdings'}</h3><span class="text-muted" style="font-size:13px;">${ci.baseDate ? `Prefilled from ${esc(ci.baseDate)} · update or clear cost basis when a value changes.` : 'First snapshot — enter current values'}</span></div>
+      <div><h3 style="margin:0 0 4px;">${setupStep ? 'Your first holdings' : 'Accounts & holdings'}</h3><span class="text-muted" style="font-size:13px;">${ci.baseDate ? `Prefilled from ${formatCheckinDate(ci.baseDate)} · update or clear cost basis when a value changes.` : 'First Check-in — enter current values'}</span></div>
       <div style="margin-left:auto;display:flex;gap:9px;flex-wrap:wrap;"><span class="checkin-expand-controls" role="group" aria-label="Expand or collapse accounts"><button class="btn btn-ghost btn-sm" data-act="ci-expand-all">Expand all</button><button class="btn btn-ghost btn-sm" data-act="ci-collapse-all">Collapse all</button></span><button class="btn btn-secondary btn-sm" data-act="add-account">Add account</button><button class="btn btn-secondary btn-sm" data-act="open-import" title="Paste or upload a brokerage export to fill values">Import holdings</button></div>
     </div>
     ${acctBlocks || '<div class="text-muted" style="padding:20px;">No accounts. Add one to start.</div>'}
   </div><aside class="panel checkin-summary" aria-label="Check-in summary">
     <div><div class="kicker">Snapshot details</div><h3 style="margin-top:6px;">Ready when the numbers are.</h3></div>
-    <div class="field"><label>Snapshot date</label><input class="input" type="date" value="${esc(ci.date)}" data-act="ci-date"></div>
+    <div class="field"><label>Check-in date</label><input class="input" type="date" value="${esc(ci.date)}" data-act="ci-date"><small class="text-muted">Recorded dates are read-only; choose an unused date.</small></div>
     <div class="checkin-summary-total"><div class="kicker">Snapshot total</div><div id="ci-total" class="value tnum">${fmtMoney2(total)}</div><div id="ci-sanity" style="margin-top:8px;">${sanity}</div></div>
     <div class="checkin-flags">${doneTag}<span id="ci-issue-badge">${issueCount ? `<span class="tag tag-warn">${issueCount} need cost basis</span>` : ''}</span></div>
     <div class="field"><label>Net worth tracker says</label><input class="input tnum" inputmode="decimal" placeholder="optional cross-check" value="${esc(ui.checkinNetWorth)}" data-act="ci-nw"></div>
-    <div class="field"><label>Snapshot note (optional)</label><textarea class="input" data-act="ci-note" placeholder="e.g. Bonds still light after top-up.">${esc(ci.note)}</textarea></div>
+    <div class="field"><label>Check-in note (optional)</label><textarea class="input" data-act="ci-note" placeholder="e.g. Bonds still light after top-up.">${esc(ci.note)}</textarea></div>
     <div class="checkin-summary-actions"><button class="btn btn-primary" data-act="ci-save">${setupStep ? 'Finish setup · view dashboard' : 'Record check-in'}</button>${setupStep ? '' : '<button class="btn btn-secondary" data-act="ci-discard">Discard check-in</button>'}</div>
   </aside></div>`;
 }
 
 function saveCheckin() {
   const ci = ui.checkin;
+  if(snapshotByDate(ci.date)){toast('Recorded check-ins are read-only. Choose a new check-in date.');return;}
   // Strict cost-basis rule: block save while any changed-value holding still has
   // an untouched cost basis. Expand the offending accounts so the flags show.
   const issues = checkinBasisIssues();
@@ -5200,9 +5254,9 @@ function saveCheckin() {
     values.push(entry);
   }
   if (!values.length) { toast('Enter at least one value before saving.'); return; }
-  const existing = snapshotByDate(ci.date);
-  if (existing) { existing.values = values; existing.note = ci.note; existing.referenceDataVersion = REFERENCE_DATA.version; }
-  else portfolio.snapshots.push({ date: ci.date, values, note: ci.note, referenceDataVersion: REFERENCE_DATA.version });
+  commitHoldingEdits(ci);
+  const holdingDetails=Object.fromEntries(activeHoldings().map(h=>[h.id,JSON.parse(JSON.stringify(h))]));
+  portfolio.snapshots.push({date:ci.date,values,note:ci.note,referenceDataVersion: REFERENCE_DATA.version,holdingDetails});
   markDirty();
   const completedSetup = setupStep > 0;
   trackUsage(completedSetup ? 'setup_complete' : 'checkin_complete');
@@ -5263,17 +5317,17 @@ function renderHistory() {
   </details>`;
   const checkinRows = sortedSnapshots().slice().reverse().map(s => {
     const a = allocate(holdingsForSnapshot(s, 'all'), s);
-    return `<tr><td class="tnum">${esc(s.date)}</td><td class="tnum" style="text-align:right;"><b>${fmtMoney(a.total)}</b></td><td class="tnum" style="text-align:right;">${s.values.length}</td><td>${s.note ? esc(s.note) : '<span class="text-muted">—</span>'}</td></tr>`;
+    return `<tr><td class="tnum">${formatCheckinDate(s.date)}</td><td class="tnum" style="text-align:right;"><b>${fmtMoney(a.total)}</b></td><td class="tnum" style="text-align:right;">${s.values.length}</td><td>${s.note ? esc(s.note) : '<span class="text-muted">—</span>'}</td></tr>`;
   }).join('');
   const checkinsPanel = `<details class="panel" style="margin-bottom:22px;"><summary class="panel-hd" style="cursor:pointer;list-style-position:outside;"><h4>Previous check-ins</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">${series.length} saved in this portfolio file</span></summary>
     <div class="table-scroll" role="region" aria-label="Previous check-ins"><table class="table"><thead><tr><th>Date</th><th style="text-align:right;">Recorded balance</th><th style="text-align:right;">Holdings</th><th>Note</th></tr></thead><tbody>${checkinRows || '<tr><td colspan="4" class="text-muted">No check-ins recorded.</td></tr>'}</tbody></table></div>
     <p class="text-muted" style="font-size:11px;line-height:1.55;margin:10px 20px 18px;">These are the check-ins stored in your current portfolio file. Archiving an account or holding does not change them.</p></details>`;
-  const chartPanel = `<div class="panel" style="margin-bottom:22px;"><div class="panel-hd"><h4>${esc(tabs.find(t => t[0] === ui.historyTab)[1])}</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">${series.length} snapshot${series.length !== 1 ? 's' : ''}</span></div>
+  const chartPanel = `<div class="panel" style="margin-bottom:22px;"><div class="panel-hd"><h4>${esc(tabs.find(t => t[0] === ui.historyTab)[1])}</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">${series.length} Check-in${series.length !== 1 ? 's' : ''}</span></div>
+      <div class="toolbar review-controls history-controls no-print"><div class="seg">${tabHTML}</div></div>
       <figure class="blueprint" style="margin:20px;padding:16px;">${corners()}${chart}</figure>
       <div class="legend" style="padding:0 20px 20px;">${legend}</div>
     </div>`;
-  return `<div class="toolbar no-print"><div class="crumb"><span>History</span></div>
-    <div class="seg" style="margin-left:auto;">${tabHTML}</div></div>
+  return `${reviewPageIntro('History','Your portfolio over time','Follow your balances, allocation, and recorded check-ins.')}
     ${growthPanel}${chartPanel}${checkinsPanel}`;
 }
 
@@ -5314,12 +5368,12 @@ function renderGoal() {
       <span class="text-muted tnum" style="font-size:12px;">${esc(g.effectiveDate)}${i === 0 ? ' <span class="tag tag-accent">current</span>' : ''}</span>
       <div>
         <input class="input" style="min-height:28px;padding:3px 8px;font-family:var(--font-heading);max-width:280px;margin-bottom:4px;" value="${esc(g.name || '')}" placeholder="Name this goal (optional)" data-act="rename-goal" data-date="${esc(g.effectiveDate)}">
-        <div style="font-size:13px;font-family:var(--font-heading);">${(() => { const gg = goalGroupTargets(g) || {}; return TAXONOMY.groups.filter(x => gg[x.id]).map(x => `${x.label.split(' ')[0]} ${Math.round(gg[x.id])}%`).join(' · '); })()}</div>
+        <div style="font-size:13px;font-family:var(--font-heading);">${(() => { const gg = goalGroupTargets(g) || {}; return TAXONOMY.groups.filter(x => gg[x.id]).map(x => `${x.label} ${Math.round(gg[x.id])}%`).join(' · '); })()}</div>
         <p class="text-muted" style="margin:2px 0 0;font-size:13px;">${esc(g.rationale || '(no rationale recorded)')}</p>
       </div>
     </div>`).join('') || '<span class="text-muted">No goals recorded yet.</span>';
 
-  return `<div class="toolbar no-print"><div class="crumb"><span>Goal &amp; journal</span></div></div>
+  return `${reviewPageIntro('Goals','Your allocation goals','Set your desired mix and keep a record of why it changes.')}
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start;">
     <div class="panel">
       <div class="panel-hd"><h4>Household target — 13 classes</h4><span id="goal-sum" class="tnum text-muted" style="margin-left:auto;font-size:13px;color:${sumOk ? '' : 'var(--color-crit)'};">sum ${Math.round(sum)}%</span></div>
@@ -5402,7 +5456,7 @@ function renderGlidePaths() {
     const age = childAge(child.birthYear, todayISO());
     const rows = bands.map((b, i) => {
       const active = age >= b.ageFrom && age <= b.ageTo;
-      const t = TAXONOMY.groups.filter(g => b.targets[g.id]).map(g => `${g.label.split(' ')[0]} ${b.targets[g.id]}%`).join(' · ');
+      const t = TAXONOMY.groups.filter(g => b.targets[g.id]).map(g => `${g.label} ${b.targets[g.id]}%`).join(' · ');
       return `<tr ${active ? 'style="background:var(--color-accent-100);"' : ''}>
         <td class="tnum">${b.ageFrom}–${b.ageTo}${active ? ' <span class="tag tag-accent">now</span>' : ''}</td>
         <td style="font-size:13px;">${t || '<span class="text-muted">—</span>'}</td>
@@ -5434,8 +5488,8 @@ function snapPickerHTML() {
   const snap = currentSnapshot();
   const snaps = sortedSnapshots().slice().reverse();
   if (!snaps.length) return '';
-  const opts = snaps.map((s, i) => `<option value="${s.date}" ${snap && s.date === snap.date ? 'selected' : ''}>${s.date}${i === 0 ? ' (latest)' : ''}</option>`).join('');
-  return `<div class="field" style="width:170px;margin-left:auto;"><select class="input" data-act="pick-snap">${opts}</select></div>`;
+  const opts = snaps.map((s, i) => `<option value="${s.date}" ${snap && s.date === snap.date ? 'selected' : ''}>${formatCheckinDate(s.date)}${i === 0 ? ' (latest)' : ''}</option>`).join('');
+  return `<div class="field" style="width:230px;max-width:100%;margin-left:auto;"><label for="report-snapshot">Check-in</label><select id="report-snapshot" class="input" data-act="pick-snap">${opts}</select></div>`;
 }
 function classForTicker(t) { return classifyTicker(t, portfolio.tickerMap) || 'other'; }
 
@@ -5450,8 +5504,8 @@ function taxProfileHelperHTML() {
 }
 function renderTax() {
   const snap = currentSnapshot();
-  if (!snap) return `${taxProfileHelperHTML()}<div class="toolbar no-print"><div class="crumb"><span>Tax Analysis</span></div></div>
-    <div class="panel"><div style="padding:44px 20px;text-align:center;" class="text-muted">The tax scorecard needs a snapshot. <a data-act="new-checkin" style="cursor:pointer;color:var(--color-accent);">Start a check-in →</a></div></div>`;
+  if (!snap) return `${reviewPageIntro('Cost','Drag analyzer','See how fund expenses and estimated taxes affect your returns.')}${taxProfileHelperHTML()}
+    <div class="panel"><div style="padding:44px 20px;text-align:center;" class="text-muted">The tax scorecard needs a Check-in. <a data-act="new-checkin" style="cursor:pointer;color:var(--color-accent);">Start a check-in →</a></div></div>`;
   const sc = taxScorecard(snap);
   const rates = sc.rates;
   const swaps = locationSwapRecs(snap);
@@ -5459,34 +5513,13 @@ function renderTax() {
   ui._taxRecs = [...swaps, ...munis];
   ui._rothRecs = rothPlacementRecs(snap);
 
-  const scoreCls = sc.locScore == null ? 'text-muted' : sc.locScore >= 90 ? 'ok' : sc.locScore >= 70 ? 'warn' : 'crit';
-  const scoreColor = sc.locScore == null ? 'inherit' : `var(--color-${scoreCls})`;
-  const tile = (label, big, sub, color) => `<div class="blueprint" style="flex:1;min-width:175px;padding:16px 18px;">
-      <div class="kicker" style="font-size:10px;">${label}</div>
-      <div class="tnum" style="font-family:var(--font-heading);font-size:28px;line-height:1.1;${color ? `color:${color};` : ''}">${big}</div>
-      <div class="text-muted" style="font-size:12px;">${sub}</div></div>`;
-
-  const scorecard = `<div style="display:flex;gap:14px;flex-wrap:wrap;">
-    ${tile('Location Efficiency', sc.locScore == null ? 'N/A' : fmtPct(sc.locScore, 0), sc.locScore == null ? 'no tax-inefficient assets' : `${fmtMoney(sc.locNum)} of ${fmtMoney(sc.locDen)} inefficient assets sheltered`, scoreColor)}
-    ${tile('Annual tax drag', fmtMoney(sc.totalDrag), `${fmtPct(sc.dragPct, 2)} of ${fmtMoney(sc.taxableAssets)} taxable`, sc.totalDrag > 0 ? 'var(--color-warn)' : 'var(--color-ok)')}
-    ${tile('Tax shielded ✓', fmtMoney(sc.taxShielded), `avoided/yr by sheltering ${fmtMoney(sc.shieldedAssets)}`, 'var(--color-ok)')}
-    ${tile('Effective rates', fmtPct(rates.r_qdi_eff * 100, 1), `${abbr('QDI', 'Qualified dividends')}/${abbr('LTCG', 'Long-term capital gains')} · ordinary ${fmtPct(rates.r_ord_eff * 100, 1)}`, '')}
-  </div>`;
+  const scorecard = `<div class="drag-metrics tax-summary">${dragMetricHTML('Annual distribution taxes',fmtMoney(sc.totalDrag),`${fmtPct(sc.dragPct,2)} of ${fmtMoney(sc.taxableAssets)} taxable assets`)}${dragMetricHTML('Location efficiency',sc.locScore==null?'N/A':fmtPct(sc.locScore,0),sc.locScore==null?'No tax-inefficient assets':`${fmtMoney(sc.locNum)} of ${fmtMoney(sc.locDen)} tax-inefficient assets sheltered`,sc.locScore==null?'neutral':sc.locScore>=90?'ok':sc.locScore>=70?'warn':'crit')}${dragMetricHTML('Current tax deferred / avoided',fmtMoney(sc.taxShielded),`Illustrative · ${fmtMoney(sc.shieldedAssets)} sheltered`)}</div>`;
 
   const rateLine = `<div class="panel"><div style="padding:12px 18px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;font-size:12px;">
       <span class="tag tag-accent">TY ${REFERENCE_DATA.taxYear}</span>
       <span class="text-muted">${esc(FILING_STATUS_LABELS[rates.fs] || rates.fs)} · ${esc(REFERENCE_DATA.incomeBands.find(b => b.income === rates.income)?.label || '')}${portfolio.taxSettings.state ? ' · ' + esc(portfolio.taxSettings.state) : ''}</span>
       <span class="text-muted">Ordinary ${fmtPct(rates.r_ord * 100, 0)} · ${abbr('QDI', 'Qualified dividends')}/${abbr('LTCG', 'Long-term capital gains')} ${fmtPct(rates.r_qdi * 100, 0)} · ${abbr('NIIT', 'Net Investment Income Tax (3.8%)')} ${fmtPct(rates.niit * 100, 1)} · State ${fmtPct(rates.r_state * 100, 2)}${rates.surtax ? ' · ' + abbr('MA', 'Massachusetts') + ' surtax ' + fmtPct(rates.surtax * 100, 0) : ''}</span>
       <a data-act="nav" data-view="taxprofile" style="margin-left:auto;cursor:pointer;color:var(--color-accent);">Edit tax profile →</a>
-    </div></div>`;
-
-  const ineffList = INEFFICIENT_CLASSES.map(c => detailLabel(c)).join(', ');
-  const guide = `<div class="panel"><div class="panel-hd"><h4>How to read this</h4></div>
-    <div style="padding:14px 20px;font-size:12.5px;line-height:1.65;" class="text-muted">
-      <p style="margin:0 0 8px;"><b>${abbr('Yield', 'Dividend yield')}</b> = the fund’s annual dividends as a % of its value. <b>${abbr('Qual', 'Qualified dividends')}</b> = the share of those dividends taxed at the lower long-term rate instead of your ordinary rate (bond interest is 0% qualified; broad stock funds ≈ 95–100%). <b>${abbr('Cap Gain', 'Capital-gains distributions')}</b> = gains the fund pays out each year as a % of value (index funds ≈ 0; active funds higher).</p>
-      <p style="margin:0 0 8px;"><b>Annual drag</b> = Value × [ Yield×Qual×${abbr('QDI', 'Qualified-dividend / long-term rate')} + Yield×(1−Qual)×ordinary + Cap&nbsp;Gain×long-term ], at your effective rates. Sheltered accounts (${abbr('IRA', 'Individual Retirement Account')} / 401k / ${abbr('HSA', 'Health Savings Account')} / 529) pay $0 now — the “Tax shielded” tile is that saving (what those holdings <em>would</em> cost if held in taxable). Fund figures come from bundled ${REFERENCE_DATA.taxYear} data or asset-class defaults (rows marked “est.”).</p>
-      <p style="margin:0 0 8px;"><b>Location Efficiency</b> = ($ of tax-<b>inefficient</b> assets held in sheltered accounts) ÷ (total $ of tax-inefficient assets) — i.e. how much of the stuff that belongs in a shelter actually is. <b>Inefficient</b> classes (flagged in the Efficiency column): ${esc(ineffList)}. Stock index funds are <b>efficient</b> (fine in taxable); cash &amp; crypto are <b>neutral</b>. Colored ≥90% green · 70–90% yellow · &lt;70% red.</p>
-      <p style="margin:0;"><b>Commodities</b> are inefficient for a different reason than yield: physical-metal ETFs (GLD, IAU, SLV) are taxed as <b>collectibles</b> — long-term gains at your ordinary rate capped at ${Math.round((REFERENCE_DATA.collectiblesMaxRate || 0.28) * 100)}% (plus ${abbr('NIIT', 'Net Investment Income Tax')}), not the 15/20% long-term rate — and futures funds issue ${abbr('K-1', 'Schedule K-1 partnership tax form')}s. The drag shown uses that collectibles rate; the bigger cost lands when you sell, so shelter them.</p>
     </div></div>`;
 
   // Sortable per-holding drag table.
@@ -5503,7 +5536,7 @@ function renderTax() {
     const c = typeof va === 'string' ? va.localeCompare(vb) : (va - vb);
     return c * tsort.dir;
   });
-  const sortTh = (key, label, align) => `<th data-act="tax-sort" data-key="${key}" style="cursor:pointer;user-select:none;${align ? 'text-align:' + align + ';' : ''}" title="Sort by ${key}">${label}${tsort.key === key ? `<span style="font-size:9px;opacity:0.7;"> ${tsort.dir < 0 ? '▼' : '▲'}</span>` : ''}</th>`;
+  const sortTh = (key,label,align) => `<th aria-sort="${tsort.key===key?(tsort.dir<0?'descending':'ascending'):'none'}"${align?` style="text-align:${align};"`:''}><button type="button" class="table-sort" data-act="tax-sort" data-key="${key}">${label}${tsort.key===key?(tsort.dir<0?' ▼':' ▲'):''}</button></th>`;
   const dragRows = sortedRows.map(r => {
     const p = r.profile;
     const eff = classEfficiency(r.assetClass);
@@ -5511,7 +5544,7 @@ function renderTax() {
       ? `<span class="text-muted" title="${esc(r.reason)} — would cost ${fmtMoney2(r.wouldBeDrag)}/yr if held in a taxable account">$0</span>`
       : `<span class="tnum">${fmtMoney2(r.drag)}</span>`;
     return `<tr>
-      <td style="font-family:var(--font-heading);">${esc(r.ticker || '—')}${r.estimated ? ' <span class="tag tag-neutral" style="font-size:9px;padding:1px 5px;" title="Illustrative bundled or asset-class assumption; not current fund-reported tax data">est.</span>' : ''}</td>
+      <td style="font-family:var(--font-heading);">${holdingEditLink(r.holdingId,r.ticker||'—')}${r.estimated ? ' <span class="tag tag-neutral" style="font-size:9px;padding:1px 5px;" title="Illustrative bundled or asset-class assumption; not current fund-reported tax data">est.</span>' : ''}</td>
       <td class="text-muted" style="font-size:12px;">${esc(r.accountName)}</td>
       <td class="text-muted" style="font-size:12px;">${esc(detailLabel(r.assetClass))}</td>
       <td>${eff.key === 'efficient' ? `<span class="text-muted" style="font-size:11px;">Efficient</span>` : `<span class="tag ${eff.cls}" style="font-size:9px;" title="${eff.key === 'inefficient' ? 'Tax-inefficient — belongs in a sheltered account (counts toward Location Efficiency)' : 'Neutral — placement doesn’t matter much'}">${eff.label}</span>`}</td>
@@ -5521,7 +5554,7 @@ function renderTax() {
       <td class="tnum text-muted" style="text-align:right;">${(p.capGainDistPct || 0).toFixed(1)}%</td>
       <td style="text-align:right;">${dragCell}</td>
     </tr>`;
-  }).join('') || '<tr><td colspan="9" class="text-muted" style="padding:14px 20px;">No holdings in this snapshot.</td></tr>';
+  }).join('') || '<tr><td colspan="9" class="text-muted" style="padding:14px 20px;">No holdings in this Check-in.</td></tr>';
 
   // Materiality = return improvement: annual $ saved ÷ total portfolio value =
   // the percentage points the move adds to your return (e.g. $100 saved on a
@@ -5562,10 +5595,18 @@ function renderTax() {
         <button class="btn btn-sm btn-primary" data-act="send-roth-to-plan" data-rec="${i}">Send to Plan →</button>
       </div></div>`).join('') : '';
 
-  return `${taxProfileHelperHTML()}<div class="toolbar no-print"><div class="crumb"><span>Tax Analysis</span></div>${snapPickerHTML()}</div>
+  return `<div class="drag-page">${reviewPageIntro('Cost','Drag analyzer','See how fund expenses and estimated taxes affect your returns.')}
+    ${dragOverviewHTML(snap,sc)}
+    <section class="drag-section" aria-labelledby="drag-costs"><header class="drag-section-heading"><span class="drag-section-number" aria-hidden="true">01</span><div><h2 id="drag-costs" tabindex="-1">Fund costs</h2><p class="drag-section-description">What your funds charge to manage your investments.</p></div></header>
+    ${expenseSummaryHTML(snap)}
+    <details class="projection-how"><summary>How fund costs are estimated</summary><p>Balance × expense ratio. Fees are already embedded in fund returns, not an extra bill. We use an issuer-reported total ratio where available; your edits apply across accounts. Unknown or expired fees are excluded, never zero. 529 plan and adviser fees may be additional.</p></details>
+    ${expensePanelHTML(snap)}</section>
+    <section class="drag-section" aria-labelledby="drag-taxes"><header class="drag-section-heading"><span class="drag-section-number" aria-hidden="true">02</span><div><h2 id="drag-taxes" tabindex="-1">Taxes &amp; account placement</h2><p class="drag-section-description">Estimated taxes on distributions and where your assets are held.</p></div></header>
     ${scorecard}
+    <details class="projection-how"><summary>How taxes are estimated</summary><p>Annual distributions × your estimated tax rates. Yield, qualified-dividend share, capital-gain distributions and exemptions use fund or asset-class assumptions. Yield is income, not total return. Sheltered accounts show no current distribution tax; deferred/avoided tax is an illustrative comparison with taxable placement.</p><p>These estimates exclude taxes on sales or withdrawals and use current assumptions on recorded balances. Retirement and college simulations keep their separate assumptions.</p></details>
+    ${taxProfileHelperHTML()}
     ${rateLine}
-    <div class="panel"><div class="panel-hd"><h4>Per-holding tax drag</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">click a header to sort · sheltered rows show $0</span></div>
+    <div class="panel"><div class="panel-hd"><h3>By holding</h3><span class="drag-helper">Select a column to sort · sheltered rows show $0</span></div>
       <div style="overflow-x:auto;"><table class="table" style="table-layout:fixed;min-width:760px;">
         <colgroup><col style="width:11%"><col style="width:17%"><col style="width:16%"><col style="width:11%"><col style="width:11%"><col style="width:7%"><col style="width:7%"><col style="width:8%"><col style="width:12%"></colgroup>
         <thead><tr>
@@ -5578,11 +5619,10 @@ function renderTax() {
           ${sortTh('drag', 'Drag $/yr', 'right')}
         </tr></thead>
         <tbody>${dragRows}</tbody></table></div></div>
-    ${guide}
     <div class="panel"><div class="panel-hd"><h4>Recommendations</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">allocation-neutral · not advice</span>
       <button class="btn btn-sm btn-secondary" data-act="nav" data-view="plan" style="margin-left:12px;">${planMoveCount ? `View Plan (${planMoveCount}) →` : 'Open Plan →'}</button></div>
       <div style="padding:16px 20px;display:flex;flex-direction:column;gap:12px;">${recsHTML}</div></div>
-    ${rothHTML}`;
+    ${rothHTML}</section></div>`;
 }
 
 /* ===============================================================
@@ -5609,7 +5649,7 @@ function driftMoves(snap) {
   const targets = detail ? goalDetailTargets(goal) : goalGroupTargets(goal);
   const rows = detail ? toRows(a.detail, a.total, 'detail') : toRows(a.group, a.total, 'group');
   const band = portfolio.meta.driftBandPct || 5;
-  const drift = computeDrift(rows, a.total, targets, band);
+  const drift = computeDrift(rows, a.total, targets, band, detail?'detail':'group');
   const over = drift.filter(d => d.driftPct > band).sort((x, y) => y.driftPct - x.driftPct);
   const under = drift.filter(d => d.driftPct < -band).sort((x, y) => x.driftPct - y.driftPct);
   const idx = valueIndex(snap);
@@ -5726,16 +5766,49 @@ function simulateAfter(snap, moves) {
   return { detail, group, total };
 }
 
+// Mutually exclusive totals: a paired sale/purchase counts once, not twice.
+function planMoveTotals(plan) {
+  const totals = { deploy: 0, move: 0, withdraw: 0 };
+  if (!plan || plan.noAction) return totals;
+  for (const row of plan.moves || []) {
+    const amount = Number(row.amount);
+    if (!Number.isFinite(amount) || amount <= 0) continue;
+    const sell = !!String(row.sellTicker || '').trim();
+    const buy = !!String(row.buyTicker || '').trim();
+    if (sell && buy) totals.move += amount;
+    else if (buy) totals.deploy += amount;
+    else if (sell) totals.withdraw += amount;
+  }
+  return totals;
+}
+function planMoveSummaryHTML(plan, report = false) {
+  const totals = planMoveTotals(plan);
+  return `<div class="plan-move-summary${report ? ' rep-summary' : ''}" aria-label="Plan move totals">
+    <div><span>Amount to deploy</span><strong class="tnum">${fmtMoney(totals.deploy)}</strong><small>Buy only</small></div>
+    <div><span>Amount to move</span><strong class="tnum">${fmtMoney(totals.move)}</strong><small>Sell and buy · counted once</small></div>
+    <div><span>Amount to withdraw (sell)</span><strong class="tnum">${fmtMoney(totals.withdraw)}</strong><small>Sell only · proceeds before tax</small></div>
+  </div><p class="plan-move-summary-note${report ? ' rep-note' : ''}">Full plan, including completed moves. Sell-only entries do not confirm a withdrawal from the account.</p>`;
+}
+
+function pageIntroHTML(kicker, title, description, actions = '') {
+  return `<div class="page-intro no-print"><div class="page-intro-copy"><div class="kicker">${esc(kicker)}</div><h1>${esc(title)}</h1><p>${esc(description)}</p></div>${actions ? `<div class="page-intro-actions">${actions}</div>` : ''}</div>`;
+}
+function retirementScopeLabel() {
+  return portfolio.retirementSettings?.accountScope==='all'
+    ? 'All active accounts, excluding 529 accounts'
+    : 'Tax-advantaged accounts, including HSA; taxable and 529 accounts excluded';
+}
 function renderPlan() {
   const snap = currentSnapshot();
-  if (!snap) return `<div class="toolbar no-print"><div class="crumb"><span>Quarterly Plan</span></div></div>
-    <div class="panel"><div style="padding:44px 20px;text-align:center;" class="text-muted">A plan attaches to a snapshot. <a data-act="new-checkin" style="cursor:pointer;color:var(--color-accent);">Start a check-in →</a></div></div>`;
+  const intro = pageIntroHTML('Plan', 'Turn your review into action.', 'Choose your next moves, direct new savings, and keep a clear record of your decisions.');
+  if (!snap) return `${intro}<div class="toolbar no-print"><div class="crumb"><span>Quarterly Plan</span></div></div>
+    <div class="panel"><div style="padding:44px 20px;text-align:center;" class="text-muted">A plan attaches to a Check-in. <a data-act="new-checkin" style="cursor:pointer;color:var(--color-accent);">Start a check-in →</a></div></div>`;
   const plan = planForSnapshot(snap.date);
   const dir = savingsDirective(snap);
   const title = planTitle(snap.date);
 
   if (!plan) {
-    return `<div class="toolbar no-print"><div class="crumb"><span>${title}</span></div>${snapPickerHTML()}</div>
+    return `${intro}<div class="toolbar no-print"><div class="crumb"><span>${title}</span></div>${snapPickerHTML()}</div>
       <div class="panel"><div class="panel-hd"><h4>Auto-generate this quarter’s plan</h4></div>
         <div style="padding:20px;">
           <p class="text-muted" style="margin:0 0 14px;max-width:74ch;font-size:13px;">Builds a plan automatically from your <b>tax posture</b> (location swaps &amp; muni) and your <b>drift vs goal</b>, plus a <b>savings directive</b> for new contributions. You can then edit every move. Or record an explicit no-action decision.</p>
@@ -5748,8 +5821,9 @@ function renderPlan() {
 
   // No-action record.
   if (plan.noAction) {
-    return `<div class="toolbar no-print"><div class="crumb"><span>${title}</span></div>${snapPickerHTML()}</div>
+    return `${intro}<div class="toolbar no-print"><div class="crumb"><span>${title}</span></div>${snapPickerHTML()}</div>
       <div class="panel"><div class="panel-hd"><h4>Decision recorded</h4></div>
+        ${planMoveSummaryHTML(plan)}
         <div style="padding:24px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
           <span class="tag tag-ok" style="font-size:13px;">No action — within bands</span>
           <span class="text-muted" style="font-size:13px;">Recorded for ${esc(snap.date)}. This is a decision, not an absence.</span>
@@ -5805,8 +5879,8 @@ function renderPlan() {
   const goal = activeGoal(snap.date);
   const gTargets = goal ? (goalIsDetail(goal) ? goalGroupTargets(goal) : goalGroupTargets(goal)) : {};
   const band = portfolio.meta.driftBandPct || 5;
-  const dBefore = computeDrift(beforeRows, base.total, gTargets, band);
-  const dAfter = computeDrift(afterRows, after.total, gTargets, band);
+  const dBefore = computeDrift(beforeRows, base.total, gTargets, band, 'group');
+  const dAfter = computeDrift(afterRows, after.total, gTargets, band, 'group');
   const afterById = Object.fromEntries(dAfter.map(d => [d.id, d]));
   const simRows = dBefore.map(d => {
     const af = afterById[d.id] || { actualPct: 0, driftPct: 0 };
@@ -5836,8 +5910,9 @@ function renderPlan() {
         <span class="text-muted" style="font-size:12px;margin-left:auto;">est. tax ${fmtMoney(gainUsed * taxRates().r_ltcg_eff)}</span>
       </div></div>`
     : '';
-  return `<div class="toolbar no-print"><div class="crumb"><span>${title}</span></div>${snapPickerHTML()}
+  return `${intro}<div class="toolbar no-print"><div class="crumb"><span>${title}</span></div>${snapPickerHTML()}
       <button class="btn btn-secondary" data-act="plan-noaction">Mark no-action</button></div>
+    ${planMoveSummaryHTML(plan)}
     ${explain}
     ${gainTracker}
     <div class="panel"><div class="panel-hd"><h4>Moves</h4><span class="text-muted" style="font-size:12px;margin-left:auto;">${doneCount}/${plan.moves.length} done</span></div>
@@ -5857,47 +5932,94 @@ function renderPlan() {
 /* ===============================================================
    REPORT (F7) — screen preview + print
    =============================================================== */
+let reportPreparing = false;
+function reportFileName(date) { return `asset review ${formatCheckinDate(date)}`; }
+async function printReportWithSimulations() {
+  if (reportPreparing) return;
+  if (ui.simRunning) { toast('Wait for the current simulation to finish, then print.'); return; }
+  if (!currentSnapshot()) { toast('Create a check-in before printing a report.'); return; }
+  reportPreparing = true;
+  const selectedDate = currentSnapshot().date;
+  const source = JSON.stringify(portfolio);
+  render();
+  try {
+    // Recompute applicable projections with current inputs, sequentially: one worker at a time.
+    if (portfolio.retirementSettings?.mappingConfirmed && retireAccounts().length) {
+      await retireModelAsync();
+    }
+    for (const child of portfolio.children) await collegeModelAsync(child.id);
+    if (source !== JSON.stringify(portfolio) || currentSnapshot()?.date !== selectedDate)
+      throw new Error('Inputs changed while preparing. Please print again.');
+    if (portfolio.retirementSettings?.mappingConfirmed && retireAccounts().length && !retireCacheIsCurrent())
+      throw new Error('Retirement results are not current. Please print again.');
+    if (!portfolio.children.every(child => collegeCacheIsCurrent(child.id)))
+      throw new Error('College results are not current. Please print again.');
+    render();
+    if (window.document?.fonts?.ready) await window.document.fonts.ready;
+    // Give the browser a paint after inserting the completed charts.
+    await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    if (source !== JSON.stringify(portfolio) || currentSnapshot()?.date !== selectedDate)
+      throw new Error('Inputs changed while preparing. Please print again.');
+    const previousTitle = document.title;
+    document.title = reportFileName(selectedDate);
+    try { window.print(); } finally { document.title = previousTitle; }
+  } catch (error) {
+    toast('Report not printed: ' + (error.message || error));
+  } finally { reportPreparing = false; render(); }
+}
+
 function renderReport() {
   const snap = currentSnapshot();
-  const snaps = sortedSnapshots().slice().reverse();
-  const opts = snaps.map((s, i) => `<option value="${s.date}" ${snap && s.date === snap.date ? 'selected' : ''}>${s.date}${i === 0 ? ' (latest)' : ''}</option>`).join('');
-  return `<div class="toolbar no-print"><div class="crumb"><span>your real allocation · report</span></div>
-    <div class="field" style="width:170px;margin-left:auto;"><select class="input" data-act="pick-snap">${opts}</select></div>
-    <button class="btn btn-secondary" data-act="report-csv">Export CSV</button>
-    <button class="btn btn-primary" data-act="print">Print / Save PDF</button>
-  </div>
-  <div class="no-print" style="padding:14px 20px;margin-bottom:14px;border-left:3px solid var(--color-teal);background:var(--color-teal-soft);font-size:13px;">Report downloads are included during the free introductory release. Ongoing report access is a planned paid capability. ${publicSiteLink('pricing.html', 'See pricing and upcoming features')}.</div>
-  <div class="report show-screen panel" style="padding:28px;">${reportHTML(snap)}</div>`;
+  const opts = sortedSnapshots().slice().reverse().map((s,i) => `<option value="${s.date}" ${snap?.date === s.date ? 'selected' : ''}>${formatCheckinDate(s.date)}${i===0?' (latest)':''}</option>`).join('');
+  const actions = `<label class="report-snapshot">Check-in <select class="input" data-act="pick-snap">${opts}</select></label><button class="btn btn-secondary" data-act="report-csv">Export CSV</button><button class="btn btn-primary" data-act="print" ${reportPreparing?'disabled aria-busy="true"':''}>${reportPreparing?'Preparing simulations…':'Print / Save PDF'}</button>`;
+  return `<div class="report-workspace">${pageIntroHTML('Report','Portfolio review','Review your allocation, costs, and next steps.',actions)}<div class="report show-screen" data-demo="${demoMode}">${reportHTML(snap)}</div><p class="report-download-note no-print">Report downloads are included during the free introductory release. Ongoing report access is a planned paid capability. ${publicSiteLink('pricing.html','See upcoming features')}.</p></div>`;
 }
 
-function allocTableHTML(rows, goalTargets, band) {
-  const drift = goalTargets ? computeDrift(rows, rows.reduce((s, r) => s + r.value, 0), goalTargets, band) : null;
-  const driftById = drift ? Object.fromEntries(drift.map(d => [d.id, d])) : {};
-  const actualById = Object.fromEntries(rows.map(r => [r.id, r]));
-  const tableRows = drift ? drift.map(d => actualById[d.id] || {id: d.id, label: d.label, color: d.color, value: 0, pct: 0}) : rows;
-  const body = tableRows.map(r => {
-    const d = driftById[r.id];
-    return `<tr>
-      <td><span class="swatch" style="background:${r.color};margin-right:6px;"></span>${esc(r.label)}</td>
+function allocTableHTML(rows, goalTargets, band, detailRows = null, detailTargets = null) {
+  const completeRows = (actual, targets, level) => {
+    const index = new Map(actual.map(r => [r.id, r]));
+    for (const id of Object.keys(targets || {})) if (!index.has(id)) index.set(id, {
+      id, label: level === 'group' ? GROUP_BY_ID[id]?.label || detailLabel(id) : DETAIL_BY_ID[id]?.label || GROUP_BY_ID[id]?.label || id,
+      color: level === 'group' ? groupColor(id) : detailColor(id), value: 0, pct: 0
+    });
+    return [...index.values()];
+  };
+  const rowHTML = (r, targets, kind = '') => {
+    const drift = targets ? r.pct - Number(targets[r.id] || 0) : null;
+    const breach = drift != null && Math.abs(drift) > band;
+    return `<tr class="${kind}" data-asset="${esc(r.id)}" ${kind === 'rep-detail-row' ? `data-rollup="${esc(rollupOf(r.id))}"` : ''}>
+      <th scope="row"><span class="swatch" style="background:${r.color};margin-right:6px;"></span>${esc(r.label)}</th>
       <td class="tnum" style="text-align:right;">${fmtMoney(r.value)}</td>
       <td class="tnum" style="text-align:right;">${fmtPct(r.pct)}</td>
-      <td class="tnum" style="text-align:right;">${goalTargets && goalTargets[r.id] != null ? goalTargets[r.id] + '%' : '—'}</td>
-      <td class="tnum" style="text-align:right;color:${d && d.breach ? 'var(--color-crit)' : ''}">${d ? fmtPctSigned(d.driftPct) + (d.breach ? ' ⚠' : '') : '—'}</td>
+      <td class="tnum" style="text-align:right;">${targets ? Number(targets[r.id] || 0) + '%' : '—'}</td>
+      <td class="tnum" style="text-align:right;color:${breach ? 'var(--color-warn)' : ''}">${drift != null ? fmtPctSigned(drift).replace('%', '') + (breach ? ' ⚠' : '') : '—'}</td>
     </tr>`;
-  }).join('');
-  return `<table class="table"><thead><tr><th>Asset class</th><th style="text-align:right;">Value</th><th style="text-align:right;">Actual</th><th style="text-align:right;">Goal</th><th style="text-align:right;">Drift</th></tr></thead><tbody>${body}</tbody></table>`;
+  };
+  let body;
+  if (detailRows) {
+    const details = completeRows(detailRows, detailTargets, 'detail');
+    const groups = new Map(completeRows(rows, goalTargets, 'group').map(r => [r.id, r]));
+    for (const r of details) if (!groups.has(rollupOf(r.id))) {
+      const id=rollupOf(r.id);groups.set(id,{id,label:GROUP_BY_ID[id].label,color:groupColor(id),value:0,pct:0});
+    }
+    body = TAXONOMY.groups.filter(g => groups.has(g.id)).map(g => {
+      const children = TAXONOMY.detail.map(d => details.find(r => r.id === d.id)).filter(r => r && rollupOf(r.id) === g.id);
+      return `<tbody data-rollup-group="${g.id}">${rowHTML(groups.get(g.id), goalTargets, 'rep-rollup-row')}${children.map(r => rowHTML(r, detailTargets, 'rep-detail-row')).join('')}</tbody>`;
+    }).join('');
+  } else body = `<tbody>${completeRows(rows, goalTargets, 'detail').map(r => rowHTML(r, goalTargets)).join('')}</tbody>`;
+  return `<table class="table rep-allocation-table"><thead><tr><th>Asset class</th><th style="text-align:right;">Value</th><th style="text-align:right;">Actual</th><th style="text-align:right;">Goal</th><th style="text-align:right;">Drift (pp)</th></tr></thead>${body}</table>`;
 }
 
-function reportSection(title, subtitle, holdings, snap, goalTargets, band, showAccounts, detailTargets) {
+function reportSection(title, subtitle, holdings, snap, goalTargets, band, showAccounts, detailTargets, projection = '', anchor = '') {
   const a = allocate(holdings, snap);
   const rollup = toRows(a.group, a.total, 'group');
   const detail = toRows(a.detail, a.total, 'detail');
   let accountsHTML = '';
   if (showAccounts && showAccounts.length) {
-    accountsHTML = '<div style="margin-top:12px;"><div class="kicker" style="margin-bottom:6px;">Accounts</div>' +
+    accountsHTML = '<div class="rep-accounts"><h4>Accounts</h4>' +
       showAccounts.map(acct => {
-        const av = allocate(accountHoldings(acct.id), snap);
-        return `<div style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0;border-bottom:1px solid color-mix(in srgb,var(--color-text) 8%,transparent);"><span>${esc(acct.name)} <span class="text-muted">${esc(acct.institution || '')}</span></span><span class="tnum">${fmtMoney(av.total)}</span></div>`;
+        const av = allocate(holdingsForSnapshot(snap,'all').filter(h=>h.accountId===acct.id), snap);
+        return `<div class="rep-account-row"><span>${esc(acct.name)} <span class="text-muted">${esc(acct.institution || '')}</span></span><span class="tnum">${fmtMoney(av.total)}</span></div>`;
       }).join('') + '</div>';
   }
   const goalRows = goalTargets
@@ -5907,32 +6029,27 @@ function reportSection(title, subtitle, holdings, snap, goalTargets, band, showA
     const gt = goalTargets && goalTargets[r.id];
     return `<div class="legend-item"><span class="swatch" style="background:${r.color}"></span>${esc(r.label)} <span class="text-muted tnum">${r.pct.toFixed(0)}%${gt != null ? ' / ' + Math.round(gt) + '%' : ''}</span></div>`;
   }).join('');
-  return `<section class="rep-section" style="margin-bottom:26px;">
-    <h3 style="margin:0 0 2px;">${esc(title)}</h3>
-    <div class="rep-sub text-muted" style="font-size:13px;margin-bottom:12px;">${esc(subtitle)} · ${fmtMoney(a.total)}</div>
-    <div class="rep-chart" style="display:flex;gap:24px;align-items:center;margin-bottom:16px;">
-      <figure class="blueprint" style="padding:12px;flex:none;">${corners()}${concentricDonutSVG(rollup, goalRows)}</figure>
-      <div style="flex:1;"><div class="kicker" style="margin-bottom:8px;">${goalRows ? 'Outer ring = actual · inner ring = goal · figures: actual % / goal %' : 'Allocation'}</div><div class="legend" style="flex-direction:column;gap:7px;">${legend}</div></div>
-    </div>
-    <div class="rep-tables" style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
-      <div><div class="kicker" style="margin-bottom:6px;">Rollup</div>${allocTableHTML(rollup, goalTargets, band)}</div>
-      <div><div class="kicker" style="margin-bottom:6px;">Detail</div>${allocTableHTML(detail, detailTargets || null, band)}</div>
-    </div>
-    ${accountsHTML}
+  return `<section class="rep-section rep-allocation" ${anchor ? `id="${esc(anchor)}"` : ''}>
+    <div class="rep-section-header"><div><h3>${esc(title)}</h3><div class="rep-sub">${esc(subtitle)}</div></div><strong class="rep-allocation-total tnum">${fmtMoney(a.total)}</strong></div>
+    <div class="rep-allocation-body"><div class="rep-chart-column">
+      <figure class="rep-donut">${concentricDonutSVG(rollup, goalRows)}</figure>
+      <div class="rep-legend"><div class="kicker">${goalRows ? 'Outer = actual · inner = goal' : 'Actual allocation'}</div><div class="legend">${legend}</div><p class="rep-note">${goalRows?'Figures: actual % / goal %':''}</p></div>${accountsHTML}
+    </div><div class="rep-tables"><div class="rep-table-block"><h4 class="rep-allocation-heading">Allocation by group and asset class</h4>${allocTableHTML(rollup, goalTargets, band, detail, detailTargets || null)}<p class="rep-note">Indented rows make up the group above. Percentages use this section’s total.${goalTargets&&!detailTargets?' Group-only goal: detail targets and drift are not inferred.':''}</p></div></div></div>
+    ${projection ? `<div class="rep-projection">${projection}</div>` : ''}
   </section>`;
 }
 
 /* F7 report — tax scorecard summary section. */
 function reportTaxSection(snap) {
-  const sc = taxScorecard(snap);
-  if (!sc.rows.length) return '';
-  const scoreTxt = sc.locScore == null ? 'N/A' : fmtPct(sc.locScore, 0);
-  const top = sc.rows.filter(r => !r.sheltered && r.drag > 0).slice(0, 6).map(r =>
-    `<tr><td>${esc(r.ticker || '—')}</td><td class="text-muted" style="font-size:12px;">${esc(r.accountName)}</td><td class="tnum" style="text-align:right;">${fmtMoney(r.mv)}</td><td class="tnum" style="text-align:right;">${fmtMoney2(r.drag)}</td></tr>`).join('');
-  return `<section class="rep-section" style="margin-bottom:26px;">
-    <h3 style="margin:0 0 2px;">Tax posture</h3>
-    <div class="rep-sub text-muted" style="font-size:13px;margin-bottom:12px;">Location efficiency ${scoreTxt} · annual drag ${fmtMoney(sc.totalDrag)} (${fmtPct(sc.dragPct, 2)} of ${fmtMoney(sc.taxableAssets)} taxable)</div>
-    ${top ? `<table class="table"><thead><tr><th>Ticker</th><th>Account</th><th style="text-align:right;">Value</th><th style="text-align:right;">Drag $/yr</th></tr></thead><tbody>${top}</tbody></table>` : ''}
+  const sc = taxScorecard(snap), r=sc.rates;
+  const rows=sc.rows.slice().sort((a,b)=>b.drag-a.drag).map(row=>`<tr><td>${esc(row.ticker||'—')}<small>${esc(detailLabel(row.assetClass))}</small></td><td>${esc(row.accountName)}<small>${row.sheltered?'Sheltered':'Taxable'}</small></td><td class="tnum">${fmtMoney(row.mv)}</td><td class="tnum">${fmtPct(row.profile.divYield||0,1)}<small>${fmtPct(row.profile.qualifiedPct||0,0)} / ${fmtPct(row.profile.capGainDistPct||0,1)}</small></td><td class="tnum">${fmtMoney2(row.drag)}</td></tr>`).join('');
+  return `<section class="rep-section rep-analysis rep-long-table"><h3>Distribution tax drag</h3>
+    <div class="rep-summary"><div><span>Annual distribution taxes</span><strong>${fmtMoney(sc.totalDrag)}</strong><small>${fmtPct(sc.dragPct,2)} of ${fmtMoney(sc.taxableAssets)} taxable assets</small></div><div><span>Location efficiency</span><strong>${sc.locScore==null?'N/A':fmtPct(sc.locScore,0)}</strong><small>${fmtMoney(sc.locNum)} of ${fmtMoney(sc.locDen)} tax-inefficient assets sheltered</small></div><div><span>Current tax deferred / avoided</span><strong>${fmtMoney(sc.taxShielded)}</strong><small>Illustrative · ${fmtMoney(sc.shieldedAssets)} sheltered</small></div></div>
+    ${taxProfileNeedsReview()?'<p class="rep-note"><strong>Tax profile not confirmed.</strong> Starting assumptions are in use; review filing status, income band and state.</p>':''}
+    <p class="rep-note">TY ${REFERENCE_DATA.taxYear} · ${esc(FILING_STATUS_LABELS[r.fs]||r.fs)}${portfolio.taxSettings.state?' · '+esc(portfolio.taxSettings.state):''} · Ordinary ${fmtPct(r.r_ord*100,0)} · Qualified dividends / long-term gains ${fmtPct(r.r_qdi*100,0)} · NIIT ${fmtPct(r.niit*100,1)} · State ${fmtPct(r.r_state*100,2)}${r.surtax?' · Surtax '+fmtPct(r.surtax*100,0):''}.</p>
+    <p class="rep-note">Current fund / asset-class assumptions and user inputs, not verified current distributions. Yield = annual income yield; QDI = qualified share of dividends; CG = capital-gain distribution yield. Sheltered holdings have no modeled current distribution tax; deferred tax may be due later.</p>
+    <table class="table rep-data-table"><thead><tr><th>Holding / class</th><th>Account / treatment</th><th>Value</th><th>Yield<br>QDI / CG</th><th>Annual tax drag</th></tr></thead><tbody>${rows||'<tr><td colspan="5">No positions in this check-in.</td></tr>'}</tbody></table>
+    <p class="rep-note">Estimates exclude taxes on sales and withdrawals. Deferred / avoided tax compares sheltered holdings with hypothetical taxable placement; it is not additional savings to subtract from the cost total.</p>
   </section>`;
 }
 
@@ -5940,7 +6057,7 @@ function reportTaxSection(snap) {
 function reportPlanSection(snap) {
   const plan = planForSnapshot(snap.date);
   if (!plan) return '';
-  if (plan.noAction) return `<section class="rep-section" style="margin-bottom:26px;"><h3 style="margin:0 0 2px;">${esc(planTitle(snap.date))}</h3><div class="rep-sub text-muted" style="font-size:13px;">Decision: no action — within bands.</div></section>`;
+  if (plan.noAction) return `<section class="rep-section rep-analysis"><h3 style="margin:0 0 2px;">${esc(planTitle(snap.date))}</h3><div class="rep-sub text-muted" style="font-size:13px;">Decision: no action — within bands.</div>${planMoveSummaryHTML(plan, true)}</section>`;
   const rows = (plan.moves || []).map(m => `<tr>
       <td>${m.done ? '✓' : '☐'}</td><td>${esc(accountById(m.accountId) ? accountById(m.accountId).name : '—')}</td>
       <td>${esc(m.sellTicker || '')} → ${esc(m.buyTicker || '')}</td>
@@ -5948,9 +6065,10 @@ function reportPlanSection(snap) {
       <td class="text-muted" style="font-size:12px;">${esc(m.taxNote || '')}</td></tr>`).join('');
   const dir = plan.directive && plan.directive.text ? `<div class="text-muted" style="font-size:13px;margin-top:8px;">Savings directive: ${esc(plan.directive.text)}</div>` : '';
   if (!rows && !dir) return '';
-  return `<section class="rep-section" style="margin-bottom:26px;">
+  return `<section class="rep-section rep-analysis">
     <h3 style="margin:0 0 2px;">${esc(planTitle(snap.date))}</h3>
     <div class="rep-sub text-muted" style="font-size:13px;margin-bottom:12px;">Committed plan</div>
+    ${planMoveSummaryHTML(plan, true)}
     ${rows ? `<table class="table"><thead><tr><th>Done</th><th>Account</th><th>Move</th><th style="text-align:right;">Amount</th><th>Tax note</th></tr></thead><tbody>${rows}</tbody></table>` : ''}
     ${dir}
   </section>`;
@@ -5961,7 +6079,7 @@ function reportRetireSection(snap) {
   const rs = portfolio.retirementSettings;
   if (!rs || !rs.mappingConfirmed) return '';
   if (!retireAccounts().length || !latestSnapshot()) return '';
-  if (!retireCacheIsCurrent()) return `<section class="rep-section" style="margin-bottom:26px;">
+  if (!retireCacheIsCurrent()) return `<section class="rep-section rep-analysis">
     <h3 style="margin:0 0 2px;">Retirement projection</h3>
     <div class="rep-sub text-muted" style="font-size:13px;">Run the retirement simulation in Outlook to include current projection results in this report.</div>
   </section>`;
@@ -5971,10 +6089,10 @@ function reportRetireSection(snap) {
   const convLine = cfg.conversionFill > 0 && conv
     ? `<br>Roth conversion window (${esc(rs.conversionFillBracket)}): convert ${fmtMoney(conv.converted)} for ${fmtMoney(conv.convTax)} tax; first RMD ${fmtMoney(conv.firstRmdWithout)} → ${fmtMoney(conv.firstRmdWith)}.`
     : '';
-  return `<section class="rep-section" style="margin-bottom:26px;">
+  return `<section class="rep-section rep-analysis">
     <h3 style="margin:0 0 2px;">Retirement projection</h3>
-    <div class="rep-sub text-muted" style="font-size:13px;margin-bottom:12px;">Real dollars · retire at ${cfg.retireAge} · ${cfg.paths.toLocaleString()} paths · to age ${cfg.endAge}</div>
-    <div style="margin-bottom:10px;">${fanChartSVG(base.bands, { age: cfg.retireAge, label: 'Retire at' }, 'reportfan', { static: true })}</div>
+    <div class="rep-sub text-muted" style="font-size:13px;margin-bottom:12px;">Projection basis: latest check-in ${formatCheckinDate(latestSnapshot().date)}, current inputs.<br>Uses: ${retirementScopeLabel()}.<br>Real dollars · retire at ${cfg.retireAge} · ${cfg.paths.toLocaleString()} paths · to age ${cfg.endAge}</div>
+    <div class="rep-projection-chart">${fanChartSVG(base.bands, { age: cfg.retireAge, label: 'Retire at' }, 'reportfan', { static: true, compact: true })}</div>
     <div style="font-size:13px;line-height:1.7;">
       Withdrawal confidence: <b>${withdrawalConfidenceLevel(base.success)}</b> for ${fmtMoney(cfg.spend)}/yr spending through age ${cfg.endAge} · median ending balance ${fmtMoney(endBand.p50)} (P10 ${fmtMoney(endBand.p10)}).<br>
       This year's contributions: <b>${verdict.verdict}</b> — rate now ${fmtPct(verdict.rNow * 100, 1)} vs peak modeled retirement marginal rate ${fmtPct(verdict.rThen * 100, 1)}${verdict.rThenSurvivor != null ? ` (survivor years from age ${cfg.survivorAtAge}: ${fmtPct(verdict.rThenSurvivor * 100, 0)})` : ''}.${convLine}
@@ -5983,70 +6101,115 @@ function reportRetireSection(snap) {
 }
 
 /* F7 report — College projection section (one line per child), when there are children + a snapshot. */
-function reportCollegeSection(snap) {
-  if (!portfolio.children.length || !latestSnapshot()) return '';
-  if (!portfolio.children.every(child => collegeCacheIsCurrent(child.id))) return `<section class="rep-section" style="margin-bottom:26px;">
-    <h3 style="margin:0 0 2px;">College projection</h3>
-    <div class="rep-sub text-muted" style="font-size:13px;">Run the college simulation in Outlook to include current projection results in this report.</div>
-  </section>`;
-  const rows = portfolio.children.map(child => {
-    const model = COLLEGE_CACHE.get(child.id).model, { cfg, base } = model;
-    return `<tr><td>${esc(child.label)}</td><td class="tnum" style="text-align:right;">${fmtMoney(collegeStartBalance(child.id))}</td>
-      <td class="tnum" style="text-align:right;">${fmtMoney(cfg.annualCost)}/yr × ${base.remainingYears}</td>
-      <td class="tnum" style="text-align:right;">${base.remainingYears ? withdrawalConfidenceLevel(base.fullSuccess) + ' (' + fmtPct(base.fullSuccess * 100, 0) + ')' : 'Not applicable'}</td>
-      <td class="tnum" style="text-align:right;">${fmtMoney(cfg.annualContrib)}/yr</td></tr>`;
+function reportCollegeSection(snap, childId = null) {
+  const children = portfolio.children.filter(c => !childId || c.id === childId);
+  if (!children.length || !latestSnapshot()) return '';
+  return children.map(child => {
+    if (!collegeCacheIsCurrent(child.id)) return `<section class="rep-section rep-analysis"><h3>College projection · ${esc(child.label)}</h3><p class="rep-note">Run the college simulation in Outlook to include current projection results in this report. Print / Save PDF runs it automatically.</p></section>`;
+    const {cfg,base}=COLLEGE_CACHE.get(child.id).model;
+    const from=Math.max(cfg.currentAge,cfg.startAge-1);
+    return `<section class="rep-section rep-analysis"><div class="kicker">College projection</div><h3>${esc(child.label)}’s college outlook</h3><p class="rep-sub">Projection basis: latest check-in ${formatCheckinDate(latestSnapshot().date)}, current inputs. Today’s dollars · ${cfg.paths.toLocaleString()} paths · contributions stop at college age.</p>
+    <div class="rep-summary"><div><span>529 today</span><strong>${fmtMoney(collegeStartBalance(child.id))}</strong></div><div><span>Annual contribution</span><strong>${fmtMoney(cfg.annualContrib)}/yr</strong></div><div><span>Funding confidence</span><strong>${base.remainingYears?withdrawalConfidenceLevel(base.fullSuccess)+' ('+fmtPct(base.fullSuccess*100,0)+')':'Not applicable'}</strong></div></div>
+    <div class="rep-projection-chart">${fanChartSVG(base.bands,{age:from,label:'Plan peak',showAge:false},'report-college-'+child.id,{static:true,compact:true,tickEvery:2,shadeFrom:from,shadeTo:cfg.startAge+cfg.years-1,shadeLabel:'drawdown years'})}</div>
+    <p class="rep-note">${fmtMoney(cfg.annualCost)}/yr × ${base.remainingYears} remaining college years. Confidence covers every remaining bill; chart balances during college are after tuition. Estimated outcomes, not guarantees.</p></section>`;
   }).join('');
-  return `<section class="rep-section" style="margin-bottom:26px;">
-    <h3 style="margin:0 0 2px;">College projection</h3>
-    <div class="rep-sub text-muted" style="font-size:13px;margin-bottom:12px;">Today’s dollars · contributions stop at college age · confidence covers remaining college years</div>
-    <table class="table"><thead><tr><th>Child</th><th style="text-align:right;">529 today</th><th style="text-align:right;">Cost</th><th style="text-align:right;">Funding confidence</th><th style="text-align:right;">Annual contribution</th></tr></thead><tbody>${rows}</tbody></table>
+}
+
+function reportCheckinComparison(snap) {
+  if (!snap) return null;
+  const previous=sortedSnapshots().filter(s=>s.date<snap.date).at(-1);
+  if (!previous) return null;
+  const totals=s=>{
+    const index=valueIndex(s),byAccount=new Map();
+    for(const h of holdingsForSnapshot(s,'all')) byAccount.set(h.accountId,(byAccount.get(h.accountId)||0)+(Number(index[h.id]?.marketValue)||0));
+    return byAccount;
+  };
+  const before=totals(previous),after=totals(snap);
+  const rows=[...new Set([...before.keys(),...after.keys()])].map(id=>({id,name:accountById(id)?.name||'Unknown account',before:before.get(id)||0,after:after.get(id)||0}));
+  const prior=rows.reduce((n,r)=>n+r.before,0),current=rows.reduce((n,r)=>n+r.after,0);
+  return {previous,current:snap,rows,prior,total:current,delta:current-prior};
+}
+function reportChangesSection(snap) {
+  const c=reportCheckinComparison(snap);
+  if(!c)return '<section id="report-changes" class="rep-section rep-changes"><h3>Since last check-in</h3><p class="rep-note">First recorded check-in: this report establishes the baseline for future comparisons.</p></section>';
+  const signed=n=>(n>=0?'+':'−')+fmtMoney(Math.abs(n));
+  return `<section id="report-changes" class="rep-section rep-changes rep-long-table"><h3>Since last check-in</h3><div class="rep-sub">${formatCheckinDate(c.previous.date)} → ${formatCheckinDate(snap.date)} · all accounts, including 529</div>
+  <div class="rep-summary"><div><span>Previous balance</span><strong>${fmtMoney(c.prior)}</strong></div><div><span>This check-in</span><strong>${fmtMoney(c.total)}</strong></div><div><span>Balance change</span><strong>${signed(c.delta)}</strong><small>${c.prior>0?fmtPctSigned(c.delta/c.prior*100)+' vs previous balance':'No prior balance for percentage comparison'}</small></div></div>
+  <div class="rep-table-scroll"><table class="table rep-data-table"><thead><tr><th>Account</th><th style="text-align:right;">Previous</th><th>This check-in</th><th>Change</th></tr></thead><tbody>${c.rows.map(r=>`<tr><td>${esc(r.name)}</td><td class="tnum">${fmtMoney(r.before)}</td><td class="tnum">${fmtMoney(r.after)}</td><td class="tnum">${signed(r.after-r.before)}</td></tr>`).join('')}</tbody><tfoot><tr><th scope="row">Total</th><td class="tnum">${fmtMoney(c.prior)}</td><td class="tnum">${fmtMoney(c.total)}</td><td class="tnum">${signed(c.delta)}</td></tr></tfoot></table></div>
   </section>`;
 }
 
+function reportKpis(snap, goal, band) {
+  const change=reportCheckinComparison(snap), all=allocate(holdingsForSnapshot(snap,'all'),snap);
+  const hh=allocate(holdingsForSnapshot(snap,'household'),snap), targets=goalGroupTargets(goal);
+  const drift=targets?computeDrift(toRows(hh.group,hh.total,'group'),hh.total,targets,band,'group'):[];
+  const largest=TAXONOMY.groups.map(g=>drift.find(d=>d.id===g.id)).filter(Boolean).reduce((a,b)=>!a||Math.abs(b.driftPct)>Math.abs(a.driftPct)?b:a,null);
+  const plan=planForSnapshot(snap.date), moves=planMoveTotals(plan), cost=annualDragSummary(snap,taxScorecard(snap));
+  const card=(href,label,value,note,kind='')=>`<a class="rep-kpi ${kind}" href="#${href}"><span class="kicker">${label}</span><strong>${value}</strong><span>${note}</span></a>`;
+  return `<div class="rep-kpis">${card('report-changes','This check-in',fmtMoney(all.total),change?`${fmtMoneySigned(change.delta)} since ${formatCheckinDate(change.previous.date)}. Balance change, not a return.`:'First check-in · baseline.')}
+  ${card('report-allocation','Largest group drift',largest?`${esc(largest.label)} ${fmtPctSigned(largest.driftPct).replace('%','pp')}`:'No goal',largest?`${fmtPct(largest.actualPct,1)} actual vs ${fmtPct(largest.targetPct,1)} goal · ${largest.breach?'⚠ outside':'within'} ±${band}pp. Household ${portfolio.meta.include529InHousehold?'includes':'excludes'} 529s.`:'Set a goal to compare allocation.','rep-kpi-drift')}
+  ${card('report-plan','Committed plan · total moves',plan?fmtMoney(moves.deploy + moves.move + moves.withdraw):'Not recorded',plan?`${fmtMoney(moves.deploy)} to deploy · ${fmtMoney(moves.move)} to move · ${fmtMoney(moves.withdraw)} to sell. Sell-and-buy moves counted once.`:'No committed plan for this check-in.')}
+  ${card('report-costs',cost.partial?'Known annual costs · partial':'Estimated annual costs',fmtMoney(cost.total),`${cost.impact==null?'—':(cost.impact>0?'−':'')+fmtPct(cost.impact,2)} return impact. Fund costs ${fmtMoney(cost.fees.total)} + distribution tax drag ${fmtMoney(cost.total-cost.fees.total)}.`,'rep-kpi-cost')}</div>`;
+}
+function reportCostCard(html, kind) {
+  html=html.replace(/(<table[\s\S]*?<\/table>)/g,'<div class="rep-table-scroll">$1</div>');
+  const limited=ui.reportLargest?.[kind] !== false;
+  return `<div class="rep-cost-card ${limited?'rep-largest-only':''}"><button class="btn btn-sm btn-secondary rep-cost-toggle no-print" data-act="report-cost-toggle" data-kind="${kind}" aria-pressed="${limited}">${limited?'Show all holdings':'Show largest 3 only'}</button>${html}</div>`;
+}
 function reportHTML(snap) {
-  if (!snap) return '<p class="text-muted">No snapshot to report on yet.</p>';
+  if (!snap) return '<p class="text-muted">No Check-in to report on yet.</p>';
+  const historyHoldings=holdingsForSnapshot(snap,'all');
+  const historyAccountHoldings=id=>historyHoldings.filter(h=>h.accountId===id);
+  const historyAccounts=predicate=>portfolio.accounts.filter(a=>historyHoldings.some(h=>h.accountId===a.id)&&predicate(a)).sort((a,b)=>(a.sortOrder||0)-(b.sortOrder||0));
   const band = portfolio.meta.driftBandPct || 5;
   const goal = activeGoal(snap.date);
   const ggt = goal ? goalGroupTargets(goal) : null;
   const gdt = goal ? goalDetailTargets(goal) : null;
-  let out = `<header style="border-bottom:2px solid var(--color-text);padding-bottom:10px;margin-bottom:20px;">
-    <div class="kicker">Quartermaster · your real allocation${demoMode ? ' · DEMO — SAMPLE DATA' : ''}</div>
-    <h1 style="margin:2px 0 0;font-size:34px;">As of ${esc(snap.date)}</h1>
-    <div class="text-muted" style="font-size:12px;margin-top:5px;">Goal effective ${goal ? esc(goal.effectiveDate) : '—'} · Drift band ±${band}% absolute · Tax figures TY ${REFERENCE_DATA.taxYear}, reference data ${REFERENCE_DATA.version} (estimates, not advice). Historical balances are preserved as entered; tax and projection results use the currently bundled assumptions.</div>
-    ${goal && goal.rationale ? `<div class="text-muted" style="font-size:12px;margin-top:2px;">Latest rationale: ${esc(goal.rationale)}</div>` : ''}
-  </header>`;
+  let out = `<header class="rep-cover print-only"><div class="kicker">Quartermaster${demoMode?' · DEMO — SAMPLE DATA':''}</div><h1>Portfolio review</h1><div class="rep-meta">Check-in: ${formatCheckinDate(snap.date)}</div></header>`;
+
+  out += reportKpis(snap,goal,band);
+  out += reportChangesSection(snap);
+  out += '<div class="rep-section-heading no-print"><div class="kicker">Allocation</div><h2>Allocation vs goal</h2></div>';
 
   // Order: Household → Investments (non-retirement) → Retirement → 529 → Others
-  out += reportSection('your real allocation', 'Household · excludes 529s · vs goal', householdHoldings(), snap, ggt, band, null, gdt);
+  out += reportSection('Your real allocation', `Household · ${portfolio.meta.include529InHousehold ? 'includes' : 'excludes'} 529s · vs goal`, holdingsForSnapshot(snap,'household'), snap, ggt, band, null, gdt, '', 'report-allocation');
 
-  const nonret = accountsSorted(a => a.category === 'Non-Retirement');
-  if (nonret.length) out += reportSection(catLabel('Non-Retirement'), 'vs household goal', nonret.flatMap(a => accountHoldings(a.id)), snap, ggt, band, nonret, gdt);
+  const nonret = historyAccounts(a => a.category === 'Non-Retirement');
+  if (nonret.length) out += reportSection(catLabel('Non-Retirement'), 'vs household goal', nonret.flatMap(a => historyAccountHoldings(a.id)), snap, ggt, band, nonret, gdt);
 
-  const savings = accountsSorted(a => a.category === 'Savings');
-  if (savings.length) out += reportSection('Savings', 'vs household goal', savings.flatMap(a => accountHoldings(a.id)), snap, ggt, band, savings, gdt);
+  const savings = historyAccounts(a => a.category === 'Savings');
+  if (savings.length) out += reportSection('Savings', 'vs household goal', savings.flatMap(a => historyAccountHoldings(a.id)), snap, ggt, band, savings, gdt);
 
-  const ret = accountsSorted(a => a.category === 'Retirement');
-  if (ret.length) out += reportSection('Retirement', 'vs household goal', ret.flatMap(a => accountHoldings(a.id)), snap, ggt, band, ret, gdt);
+  const ret = historyAccounts(a => a.category === 'Retirement');
+  if (ret.length) out += reportSection('Retirement', 'vs household goal', ret.flatMap(a => historyAccountHoldings(a.id)), snap, ggt, band, ret, gdt, reportRetireSection(snap));
+  else if (reportRetireSection(snap)) out += `<section class="rep-section rep-allocation"><h3>Retirement outlook</h3><div class="rep-projection">${reportRetireSection(snap)}</div></section>`;
 
-  for (const acct of accountsSorted(a => a.category === '529')) {
-    const child = childById(acct.childId);
-    const g = glideTargets(acct.childId, snap.date);
-    out += reportSection(`529 — ${child ? child.label : acct.name}`, `Age ${g ? g.age : '?'} · vs glide band`, accountHoldings(acct.id), snap, g && g.targets, band, [acct]);
+  const collegeGroups=new Map();
+  for(const acct of historyAccounts(a=>a.category==='529')) {
+    const key=acct.childId||'account-'+acct.id;
+    if(!collegeGroups.has(key))collegeGroups.set(key,[]);
+    collegeGroups.get(key).push(acct);
   }
+  const reportedChildren=new Set();
+  for(const accts of collegeGroups.values()) {
+    const child=childById(accts[0].childId), g=glideTargets(accts[0].childId,snap.date);
+    if(child)reportedChildren.add(child.id);
+    out += reportSection(`529 — ${child?child.label:accts[0].name}`,`Age ${g?g.age:'?'} · vs glide band`,accts.flatMap(a=>historyAccountHoldings(a.id)),snap,g&&g.targets,band,accts,null,child?reportCollegeSection(snap,child.id):'');
+  }
+  // Keep configured children with no linked 529 visible; their starting balance may be zero.
+  for(const child of portfolio.children.filter(c=>!reportedChildren.has(c.id)))
+    out += reportSection(`529 — ${child.label}`,'No linked account in this check-in',[],snap,null,band,null,null,reportCollegeSection(snap,child.id));
 
   // Other categories grouped by label
-  const others = accountsSorted(a => a.category === 'Other');
+  const others = historyAccounts(a => a.category === 'Other');
   const byLabel = {};
   for (const a of others) { const k = a.categoryLabel || 'Other'; (byLabel[k] = byLabel[k] || []).push(a); }
   for (const [label, accts] of Object.entries(byLabel)) {
-    out += reportSection(label, 'Other category · vs household goal', accts.flatMap(a => accountHoldings(a.id)), snap, ggt, band, accts, gdt);
+    out += reportSection(label, 'Other category · vs household goal', accts.flatMap(a => historyAccountHoldings(a.id)), snap, ggt, band, accts, gdt);
   }
 
-  out += reportTaxSection(snap);
-  out += reportPlanSection(snap);
-  out += reportRetireSection(snap);
-  out += reportCollegeSection(snap);
-  out += `<div class="report-disclaimer">${disclaimerHTML()}</div>`;
+  out += `<section id="report-plan" class="rep-major rep-plan"><div class="kicker">Committed plan</div>${reportPlanSection(snap)||'<h3>No plan recorded</h3><p class="rep-note">Record your next steps in Plan for this check-in.</p>'}</section>`;
+  out += `<section id="report-costs" class="rep-major rep-costs">${reportCostOverview(snap)}<div class="rep-cost-grid">${reportCostCard(reportExpensesSection(snap),'funds')}${reportCostCard(reportTaxSection(snap),'taxes')}</div><div class="report-disclaimer"><h3>Limitations &amp; disclaimer</h3><p>Projections model uncertain outcomes using current inputs. Historical balances are preserved; current tax and fee assumptions are estimates.</p>${disclaimerHTML()}</div></section>`;
 
   return out;
 }
@@ -6194,11 +6357,7 @@ function dollarModeIsFuture() { return ui.dollarMode === 'future'; }
 function outlookHeaderBlock(title, editView) {
   const future = dollarModeIsFuture();
   const seg = (mode, label, on, col) => `<button data-act="dollar-mode" data-mode="${mode}" style="border:0;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:600;font-family:var(--font-heading);letter-spacing:.02em;${on ? `background:${col};color:#fff;` : 'background:transparent;color:var(--color-ink-2);'}">${label}</button>`;
-  return `<div class="panel no-print outlook-header" style="border-top-color:${future ? 'var(--color-warn)' : 'var(--color-plum)'};">
-    <div class="outlook-header-main">
-      <div><div class="kicker" style="color:var(--color-plum);margin-bottom:7px;">Explore possible futures</div><span class="title">${esc(title)}</span></div>
-      ${editView ? `<a data-act="nav" data-view="${editView}" style="margin-left:auto;cursor:pointer;color:var(--color-accent);white-space:nowrap;">Edit inputs →</a>` : ''}
-    </div>
+  return `${pageIntroHTML('Outlook',title,'Explore possible futures using your own assumptions.',editView?`<button class="btn btn-secondary" data-act="nav" data-view="${editView}">Edit inputs →</button>`:'')}<div class="panel no-print outlook-header" style="border-top-color:${future ? 'var(--color-warn)' : 'var(--color-plum)'};">
     <div class="outlook-unitbar" style="background:${future ? 'var(--color-warn-soft)' : 'var(--color-teal-soft)'};">
       <span style="font-size:13px;font-weight:600;">Show amounts in</span>
       <div class="unit-toggle">${seg('today', "Today's dollars", !future, 'var(--color-teal)')}${seg('future', 'Future dollars', future, 'var(--color-warn)')}</div>
@@ -6214,7 +6373,7 @@ let FAN_STATE = {};
 function fanChartSVG(bands, marker, id, opts) {
   id = id || 'fan'; opts = opts || {};
   const isStatic = !!opts.static;
-  const W = 720, H = 280, padL = 60, padB = 30, padT = 22, plotW = W - padL - 14, plotH = H - padB - padT;
+  const W = 720, H = opts.compact ? 160 : 280, padL = 60, padB = 30, padT = 22, plotW = W - padL - 14, plotH = H - padB - padT;
   const a0 = bands[0].age, a1 = bands[bands.length - 1].age;
   const maxV = Math.max(1, ...bands.map(b => b.p90));
   const x = age => padL + (a1 === a0 ? plotW / 2 : (age - a0) / (a1 - a0) * plotW);
@@ -6433,7 +6592,7 @@ function renderRetire() {
   if (!portfolio.accounts.some(a => a.status !== 'archived' && a.category !== '529'))
     return retireEmptyState('Add a non-529 account and record a check-in, then set your retirement inputs to project your balances, spending success, and the Roth-vs-traditional answer.');
   if (!latestSnapshot())
-    return retireEmptyState('Record at least one check-in (snapshot) so the projection has starting balances to grow.');
+    return retireEmptyState('Record at least one Check-in so the projection has starting balances to grow.');
   const rs = portfolio.retirementSettings;
   const confirmed = !!rs.mappingConfirmed;
   const header = outlookHeaderBlock('Retirement planning', 'retirement');
@@ -6786,7 +6945,7 @@ function renderRetireSettings() {
         <select class="input" data-act="rd-conversion">${convOpt('off')}${convOpt('22%')}${convOpt('24%')}</select>
         <span class="text-muted" style="font-size:11px;">Move pre-tax → Roth up to the top of this bracket in the low-income years before required withdrawals.</span>
       </div>
-      <div class="field"><label>Simulation paths (retirement &amp; college)</label><input class="input tnum" type="number" min="100" max="20000" step="100" data-act="sim-paths" value="${siteSimulationPaths()}"><span class="text-muted" style="font-size:11px;">Default 10,000. Runs only when you press a simulation button.</span></div>
+      <div class="field"><label>Simulation paths (retirement &amp; college)</label><input class="input tnum" type="number" min="100" max="20000" step="100" data-act="sim-paths" value="${siteSimulationPaths()}"><span class="text-muted" style="font-size:11px;">Default 10,000. Runs when requested or before printing a report.</span></div>
       ${num('Random seed', 'rd-seed', rs.seed, '12345', 'Same seed reproduces the same result')}
     </div>
   </div>
@@ -6845,7 +7004,7 @@ function renderCollege() {
     let glideNote;
     if (gp && gp.bands && gp.bands.length) {
       const band = gp.bands.find(b => age >= b.ageFrom && age <= b.ageTo) || gp.bands[gp.bands.length - 1];
-      const alloc = band && band.targets ? TAXONOMY.groups.filter(g2 => band.targets[g2.id]).map(g2 => `${g2.label.split(' ')[0]} ${band.targets[g2.id]}%`).join(' · ') : '';
+      const alloc = band && band.targets ? TAXONOMY.groups.filter(g2 => band.targets[g2.id]).map(g2 => `${g2.label} ${band.targets[g2.id]}%`).join(' · ') : '';
       glideNote = `<p class="text-muted" style="font-size:12px;margin:0 0 14px;">Age-based mix: ${alloc || 'set in Goals'}. <a data-act="nav" data-view="goal" style="cursor:pointer;color:var(--color-accent);">Edit glide path</a></p>`;
     } else {
       glideNote = `<p class="text-muted" style="font-size:12px;margin:0 0 14px;">${collegeCurrentWeights(cid) ? 'Using current allocation.' : 'Using a default 60/40 mix.'} <a data-act="nav" data-view="goal" style="cursor:pointer;color:var(--color-accent);">Set a glide path</a></p>`;
@@ -6904,7 +7063,7 @@ function renderDataPrivacy() {
     <div style="padding:20px;display:flex;gap:12px;flex-wrap:wrap;align-items:center;">
       <button class="btn ${needsSave ? 'save-dirty' : 'btn-primary'}" data-act="save">${persistenceStatus === 'download-pending' && !dirty && !checkinDraftDirty ? 'Confirm download' : 'Save file'}</button>
       <button class="btn btn-secondary" data-act="open">Open file</button>
-      <button class="btn btn-secondary" data-act="export-csv" ${snap ? '' : 'disabled'}>Export snapshot CSV</button>
+      <button class="btn btn-secondary" data-act="export-csv" ${snap ? '' : 'disabled'}>Export Check-in CSV</button>
       <span class="text-muted" style="font-size:12px;margin-left:auto;">${esc(fileName)} · ${esc(persistenceLabel())}</span>
     </div>
     <div style="padding:0 20px 20px;"><span class="text-muted" style="font-size:12px;">Your numbers live only in the JSON file you save. Store it in an iCloud/Dropbox folder for automatic version history.</span></div>
@@ -6937,7 +7096,7 @@ function restoreFocus(identity) {
   if (el) el.focus({ preventScroll: true });
 }
 function openDialog(d) { dialogReturnFocus = focusIdentity(document.activeElement); ui.dialog = d; render(); }
-function closeDialog() { if (ui.dialog?.type === 'onboard' && portfolio.accounts.length) ui.view = setupStep ? 'setup' : 'dashboard'; ui.dialog = null; render(); restoreFocus(dialogReturnFocus); dialogReturnFocus = null; }
+function closeDialog() { if(ui.dialog?.parentEditor){ui.dialog=ui.dialog.parentEditor;renderHoldingEditor();document.querySelector('[data-act="he-open-split"]')?.focus();return;} if (ui.dialog?.type === 'onboard' && portfolio.accounts.length) ui.view = setupStep ? 'setup' : 'dashboard'; ui.dialog = null; render(); restoreFocus(dialogReturnFocus); dialogReturnFocus = null; }
 
 function classPickerGrid(selectedId, actAttr) {
   return `<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px;">` +
@@ -6949,18 +7108,20 @@ function dialogHTML() {
   const d = ui.dialog;
   if (!d) return '';
   let inner = '';
-  if (d.type === 'class-pick') {
-    const h = portfolio.holdings.find(x => x.id === d.hid);
+  if (d.type === 'holding-editor') { inner=holdingEditorHTML(d); }
+  else if (d.type === 'class-pick') {
+    const h = d.parentEditor ? {...d.parentEditor.baseHolding,...d.parentEditor.values} : portfolio.holdings.find(x => x.id === d.hid);
     const comp = (h && compositionOf(h)) || {};
     const composed = compositionOf(h);
     const compRows = TAXONOMY.detail.map(dc => `
       <div style="display:flex;align-items:center;gap:8px;">
         <span class="swatch" style="background:${detailColor(dc.id)}"></span>
-        <span style="font-size:12px;flex:1;">${esc(dc.label)}</span>
+        <label for="comp-${dc.id}" style="font-size:12px;flex:1;">${esc(dc.label)}</label>
         <input class="input tnum" id="comp-${dc.id}" data-act="comp-input" style="width:54px;text-align:right;min-height:26px;padding:2px 5px;" inputmode="numeric" value="${comp[dc.id] != null ? comp[dc.id] : ''}" placeholder="0">
       </div>`).join('');
-    inner = `<div class="dialog-title">Classify ${esc(h ? h.ticker : '')}</div>
+    inner = `<div class="dialog-title">Allocation split · ${esc(h ? h.ticker : '')}</div>
       <div class="dialog-body">Pick one class, or split a fund across classes (look-through) — ideal for target-date and balanced funds so their assets land in the right buckets.</div>
+      ${d.parentEditor&&!d.parentEditor.draft?'<p class="he-section-note">Changes go into a new or active check-in. Recorded check-ins stay unchanged.</p>':''}
       <div class="kicker" style="margin:2px 0 6px;">One class</div>
       ${classPickerGrid(composed ? null : (h ? h.assetClass : null), 'data-act="pick-class" data-hid="' + esc(d.hid) + '"')}
       <div class="kicker" style="margin:16px 0 6px;">Or split across classes (%)</div>
@@ -7147,7 +7308,23 @@ function toast(msg) {
   _toastTimer = setTimeout(() => { el.style.display = 'none'; }, 2600);
 }
 
+let dialogScrollState=null;
+function syncDialogScrollLock() {
+ if(ui.dialog&&!dialogScrollState){
+  const body=document.body,root=document.documentElement;
+  dialogScrollState={x:window.scrollX,y:window.scrollY,bodyStyle:body.getAttribute('style'),rootOverflow:root.style.overflow};
+  const gutter=Math.max(0,window.innerWidth-root.clientWidth);
+  body.style.position='fixed';body.style.top=`-${dialogScrollState.y}px`;body.style.left=`-${dialogScrollState.x}px`;body.style.width='100%';body.style.overflow='hidden';if(gutter)body.style.paddingRight=`${gutter}px`;
+  root.style.overflow='hidden';
+ }else if(!ui.dialog&&dialogScrollState){
+  const saved=dialogScrollState;dialogScrollState=null;
+  if(saved.bodyStyle==null)document.body.removeAttribute('style');else document.body.setAttribute('style',saved.bodyStyle);
+  document.documentElement.style.overflow=saved.rootOverflow;
+  window.scrollTo({left:saved.x,top:saved.y,behavior:'instant'});
+ }
+}
 function afterRender() {
+  syncDialogScrollLock();
   const app = document.getElementById('app');
   const existing = document.getElementById('dialog-mount');
   if (existing) existing.remove();
@@ -7160,8 +7337,8 @@ function afterRender() {
     if (title) title.id = 'dialog-title';
     const shell = app.querySelector('.shell');
     if (shell) shell.inert = true;
-    const first = mount.querySelector('input,select,textarea,button') || mount.querySelector('.dialog');
-    if (first) first.focus();
+    const first = Array.from(mount.querySelectorAll('input:not(:disabled),select:not(:disabled),textarea:not(:disabled),button:not(:disabled),summary')).find(el=>el.getClientRects().length) || mount.querySelector('.dialog');
+    if (first) first.focus({preventScroll:true});
   }
   enhanceAccessibility(app);
   updateDirtyIndicator();
@@ -7305,10 +7482,13 @@ function boot() {
     if (hid) updateBasisFlag(hid);
   });
   document.addEventListener('keydown', e => {
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'p') {
+      e.preventDefault(); printReportWithSimulations(); return;
+    }
     if (e.key === 'Escape' && ui.dialog) { e.preventDefault(); closeDialog(); return; }
     if (ui.dialog && e.key === 'Tab') {
       const modal = document.querySelector('[role="dialog"]');
-      const stops = modal ? Array.from(modal.querySelectorAll('button:not(:disabled),input:not(:disabled),select:not(:disabled),textarea:not(:disabled),[tabindex="0"],a[href]')).filter(el => el.getClientRects().length) : [];
+      const stops = modal ? Array.from(modal.querySelectorAll('button:not(:disabled),input:not(:disabled),select:not(:disabled),textarea:not(:disabled),[tabindex="0"],a[href],summary')).filter(el => el.getClientRects().length) : [];
       const first = stops[0], last = stops[stops.length - 1];
       if (!first) { e.preventDefault(); if (modal) modal.focus(); }
       else if (e.shiftKey && (document.activeElement === first || document.activeElement === modal)) { e.preventDefault(); last.focus(); }
@@ -7384,6 +7564,25 @@ function onClick(e) {
   const a = t.dataset.act, ds = t.dataset;
   if (demoMode && !demoActionAllowed(a)) { e.preventDefault(); toast('Demo is read only. Choose Start your portfolio to make it yours.'); return; }
   switch (a) {
+    case 'report-cost-toggle': { ui.reportLargest=ui.reportLargest||{};ui.reportLargest[ds.kind]=ui.reportLargest[ds.kind] === false;render();break; }
+    case 'expense-sort': {const prev=ui.expenseSort||{key:'cost',dir:-1};ui.expenseSort={key:ds.key,dir:prev.key===ds.key?-prev.dir:1};render();break;}
+    case 'jump-costs':
+    case 'jump-taxes': {const el=document.getElementById(a==='jump-costs'?'drag-costs':'drag-taxes');el?.scrollIntoView({behavior:window.matchMedia?.('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'});el?.focus({preventScroll:true});break;}
+    case 'he-allocation-preset': changeInlineAllocation(a,t);break;
+    case 'edit-holding': openHoldingEditor(ds.hid,ds.draft==='true');break;
+    case 'he-start-checkin': {
+      if(portfolio.holdings.find(h=>h.id===ds.hid)?.status==='archived'){toast('This holding is archived. Add a new position in an active account.');break;}
+      const d=ui.dialog;captureHoldingEditor();if(!ui.checkin)ensureCheckinDraft();ui.view=setupStep?'setup':'checkin';
+      openHoldingEditor(ds.hid,true);
+      const sameInstrument=carryEditorFundEdits(d,ui.dialog);
+      if(d.allocationEdited&&sameInstrument){ui.dialog.values.composition=d.values.composition;ui.dialog.values.assetClass=d.values.assetClass;ui.dialog.allocationEdited=true;ui.dialog.allocationOpen=d.allocationOpen;}
+      renderHoldingEditor();break;
+    }
+    case 'he-reset': captureHoldingEditor();delete ui.dialog.assumptions[ds.field];renderHoldingEditor();document.getElementById('he-a-'+ds.field)?.focus();break;
+    case 'he-apply': {
+      captureHoldingEditor();try{applyHoldingEditor(ui.dialog);closeDialog();toast('Changes applied. Save your portfolio file when finished.');}
+      catch(error){ui.dialog.error=error.message;renderHoldingEditor();document.getElementById('he-error')?.focus();}break;
+    }
     case 'toggle-mobile-nav': ui.mobileNavOpen = !ui.mobileNavOpen; render(); break;
     case 'nav': {
       ui.mobileNavOpen = false;
@@ -7513,7 +7712,7 @@ function onClick(e) {
     case 'edit-account': openDialog({ type: 'account', acctId: ds.account }); break;
     case 'add-child': openDialog({ type: 'child' }); break;
     case 'add-holding': openDialog({ type: 'holding', acctId: ds.account }); break;
-    case 'edit-class': openDialog({ type: 'class-pick', hid: ds.hid }); break;
+    case 'edit-class': openHoldingEditor(ds.hid,!!ui.checkin);break;
     case 'archive-holding': archiveHolding(ds.hid); break;
     case 'archive-account': confirmArchiveAccount(ds.account); break;
     case 'move-acct': moveAccount(ds.account, Number(ds.dir)); break;
@@ -7529,12 +7728,12 @@ function onClick(e) {
     case 'del-band': deleteBand(ds.child, Number(ds.idx)); break;
     case 'save-band': saveBandFromDialog(ds.child, ds.idx === '' ? null : Number(ds.idx)); break;
     case 'goal-save': saveGoalDraft(); break;
-    case 'start-fresh': openDialog({ type: 'confirm', title: 'Start fresh?', body: 'This clears all accounts, holdings, snapshots and goals in memory. Save your file first if you want to keep it. (Your saved file on disk is not touched.)', ok: 'Start fresh', danger: true, action: 'start-fresh' }); break;
-    case 'export-csv': { const s = currentSnapshot(); if (s) { triggerDownload(snapshotCSV(s), `snapshot-${s.date}.csv`, 'text/csv'); trackUsage('report_download', { report_format: 'csv' }); } else toast('No snapshot to export.'); break; }
-    case 'report-csv': { const s = currentSnapshot(); if (s) { triggerDownload(snapshotCSV(s), `report-${s.date}.csv`, 'text/csv'); trackUsage('report_download', { report_format: 'csv' }); } break; }
-    case 'print': trackUsage('report_print_click'); window.print(); break;
+    case 'start-fresh': openDialog({ type: 'confirm', title: 'Start fresh?', body: 'This clears all accounts, holdings, Check-ins and goals in memory. Save your file first if you want to keep it. (Your saved file on disk is not touched.)', ok: 'Start fresh', danger: true, action: 'start-fresh' }); break;
+    case 'export-csv': { const s = currentSnapshot(); if (s) { triggerDownload(snapshotCSV(s), `check-in-${s.date}.csv`, 'text/csv'); trackUsage('report_download', { report_format: 'csv' }); } else toast('No Check-in to export.'); break; }
+    case 'report-csv': { const s = currentSnapshot(); if (s) { triggerDownload(snapshotCSV(s), `${reportFileName(s.date)}.csv`, 'text/csv'); trackUsage('report_download', { report_format: 'csv' }); } break; }
+    case 'print': trackUsage('report_print_click'); printReportWithSimulations(); break;
     case 'send-to-plan': {
-      const snap = currentSnapshot(); if (!snap) { toast('No snapshot to plan against.'); break; }
+      const snap = currentSnapshot(); if (!snap) { toast('No Check-in to plan against.'); break; }
       const rec = (ui._taxRecs || [])[Number(ds.rec)]; if (!rec) break;
       if (rec.kind === 'location-swap') {
         planAddMove(snap.date, { accountId: rec.aAccountId, sellTicker: rec.aTicker, buyTicker: rec.bTicker, amount: Math.round(rec.amount), source: 'tax-swap', taxNote: `Location swap · realizes gain on ${rec.aTicker}` });
@@ -7549,7 +7748,7 @@ function onClick(e) {
       break;
     }
     case 'send-roth-to-plan': {
-      const snap = currentSnapshot(); if (!snap) { toast('No snapshot to plan against.'); break; }
+      const snap = currentSnapshot(); if (!snap) { toast('No Check-in to plan against.'); break; }
       const rec = (ui._rothRecs || [])[Number(ds.rec)]; if (!rec) break;
       planAddMove(snap.date, { accountId: rec.rothAccountId, sellTicker: rec.lowTicker, buyTicker: rec.highTicker, amount: Math.round(rec.amount), source: 'tax-roth', taxNote: 'Roth placement · hold the fastest grower in Roth' });
       planAddMove(snap.date, { accountId: rec.tradAccountId, sellTicker: rec.highTicker, buyTicker: rec.lowTicker, amount: Math.round(rec.amount), source: 'tax-roth', taxNote: 'Roth placement · tax-free side' });
@@ -7604,6 +7803,8 @@ function onClick(e) {
       invalidateRetireCache(); markDirty(); render(); toast('Contributions set to this year’s IRS maximums'); break;
     }
     case 'run-simulation': {
+      if (reportPreparing) { toast('The report is running simulations. Please wait until it finishes.'); break; }
+      if (ui.simRunning) return;
       const kind = ds.kind === 'college' ? 'college' : 'retire';
       ui.simRunning = kind; ui.simProgress = 0; render();
       const progress = value => {
@@ -7641,7 +7842,22 @@ function onChange(e) {
   const t = e.target.closest('[data-act]');
   if (!t) return;
   const a = t.dataset.act, ds = t.dataset;
+  if(holdingEditorRendering&&a.startsWith('he-'))return;
   if (demoMode && !demoActionAllowed(a)) { e.preventDefault(); toast('Demo is read only. Choose Start your portfolio to make it yours.'); return; }
+  if(['he-allocation-input','he-allocation-class'].includes(a)){changeInlineAllocation(a,t);return;}
+  if(a==='he-input'&&['ticker','instrumentKind'].includes(ds.field)){
+    captureHoldingEditor();const d=ui.dialog;const identity=holdingIdentity(d.values.ticker,d.values.instrumentKind==='direct-crypto'?'direct':d.values.instrumentKind,d.values.name);
+    if(identity){const key=instrumentKey({...d.baseHolding,...identity});if(key!==d.currentAssumptionKey){
+      d.assumptionDrafts ||= {};d.assumptionDrafts[d.currentAssumptionKey]={shared:d.sharedEdits,account:d.accountEdits};
+      const stored=d.assumptionDrafts[key],data=editorFundData();d.sharedEdits=stored?.shared||{...(data.shared?.[key]||{})};d.accountEdits=stored?.account||{...(data.accounts?.[d.values.accountId]?.[key]||{})};
+      d.currentAssumptionKey=key;d.loadedInstrumentKey=key;d.assumptions=d.scope==='account'?d.accountEdits:d.sharedEdits;
+      d.identityNotice='Assumptions now belong to '+identity.ticker+'. Other investments are unchanged.';renderHoldingEditor();return;
+    }}refreshEditorPreview();return;
+  }
+  if(a==='he-input'&&ds.field==='accountId'){captureHoldingEditor();const d=ui.dialog;d.loadedAccountId=t.value;d.accountEdits={...(editorFundData().accounts?.[t.value]?.[instrumentKey({...d.baseHolding,...d.values})]||{})};if(d.scope==='account')d.assumptions=d.accountEdits;renderHoldingEditor();return;}
+  if(a==='he-scope'){captureHoldingEditor();ui.dialog.scope=t.value;ui.dialog.assumptions=t.value==='account'?ui.dialog.accountEdits:ui.dialog.sharedEdits;ui.dialog.error='';renderHoldingEditor();document.getElementById('he-scope')?.focus();return;}
+  if(a==='he-allocation-input'){changeInlineAllocation(a,t);return;}
+  if(['he-input','he-assumption','he-split'].includes(a)){if(ds.field==='longTermHolding')ui.dialog.longTermTouched=true;if(a==='he-assumption')t.dataset.inherited='false';refreshEditorPreview();return;}
   if (a === 'setup-goal-level') { setSetupGoalLevel(ds.level); render(); return; }
   if (a === 'setup-goal-mode') { chooseSetupGoal(t.value); render(); return; }
   if (a === 'level') { ui.level = ds.level; render(); }
@@ -7786,7 +8002,10 @@ function onInput(e) {
   const t = e.target.closest('[data-act]');
   if (!t) return;
   const a = t.dataset.act, ds = t.dataset;
+  if(holdingEditorRendering&&a.startsWith('he-'))return;
   if (demoMode && !demoActionAllowed(a)) { e.preventDefault(); toast('Demo is read only. Choose Start your portfolio to make it yours.'); return; }
+  if(a==='he-allocation-input'){changeInlineAllocation(a,t);return;}
+  if(['he-input','he-assumption','he-split'].includes(a)){if(ds.field==='longTermHolding')ui.dialog.longTermTouched=true;if(a==='he-assumption')t.dataset.inherited='false';refreshEditorPreview();return;}
   if (a.startsWith('ci-') && a !== 'ci-nw' && !demoMode) { checkinDraftDirty = true; updateDirtyIndicator(); }
   if (a === 'setup-name') { portfolio.meta.name = t.value; markDirty(); return; }
   if (a === 'setup-goal-value') { ui.setupGoal.targets[ds.class] = t.value === '' ? 0 : Number(t.value); ui.setupGoal.mode = 'custom'; const picker = document.querySelector('[data-act="setup-goal-mode"]'); if (picker) picker.value = 'custom'; markDirty(); const total = document.getElementById('setup-goal-total'); if (total) total.textContent = `Total: ${setupGoalTotal()}% · targets must add up to 100%.`; return; }
@@ -7889,8 +8108,9 @@ async function openFileNow() {
 }
 
 function setHoldingClass(hid, cls) {
+  if(ui.dialog?.parentEditor){returnEditorSplit({},cls);return;}
   const h = portfolio.holdings.find(x => x.id === hid);
-  if (h) { keepCheckinAccountOpen(h.accountId); h.assetClass = cls; delete h.composition; if (h.ticker) portfolio.tickerMap[h.ticker.trim().toUpperCase()] = cls; markDirty(); }
+  if (h) { preserveHoldingHistory(h); keepCheckinAccountOpen(h.accountId); h.assetClass = cls; delete h.composition; if (h.ticker) portfolio.tickerMap[h.ticker.trim().toUpperCase()] = cls; markDirty(); }
   closeDialog();
 }
 
@@ -7912,13 +8132,14 @@ function applyCompPreset(name) {
 }
 function readCompInputs() {
   const comp = {};
-  let sum = 0;
+  let sum = 0, invalid=false;
   for (const dc of TAXONOMY.detail) {
     const el = document.getElementById('comp-' + dc.id);
     const v = el ? parseNum(el.value) : null;
+    if(el?.value.trim()&&(v==null||v<0||v>100))invalid=true;
     if (v && v > 0) { comp[dc.id] = v; sum += v; }
   }
-  return { comp, sum };
+  return { comp, sum, invalid };
 }
 function updateCompSum() {
   const { sum } = readCompInputs();
@@ -7928,9 +8149,12 @@ function updateCompSum() {
 function saveComposition(hid) {
   const h = portfolio.holdings.find(x => x.id === hid);
   if (!h) { closeDialog(); return; }
-  const { comp, sum } = readCompInputs();
+  const { comp, sum, invalid } = readCompInputs();
+  if(invalid){toast('Enter percentages between 0 and 100.');return;}
   if (Object.keys(comp).length === 0) { toast('Enter at least one class %, or pick a single class above.'); return; }
   if (Math.abs(sum - 100) > 0.5) { toast('Split must sum to 100% (now ' + Math.round(sum) + ').'); return; }
+  if(ui.dialog?.parentEditor){if(Math.abs(sum-100)>0.01){toast('Split must total 100%.');return;}returnEditorSplit(comp,Object.entries(comp).sort((a,b)=>b[1]-a[1])[0][0]);return;}
+  preserveHoldingHistory(h);
   h.composition = comp;
   keepCheckinAccountOpen(h.accountId);
   // primary class (chip label) = largest weight
@@ -7943,7 +8167,7 @@ function archiveHolding(hid) {
 }
 function confirmArchiveAccount(id) {
   const a = accountById(id);
-  openDialog({ type: 'confirm', title: 'Archive account?', body: `“${a ? a.name : ''}” and its holdings are archived (kept for history, hidden from entry). This never deletes past snapshots.`, ok: 'Archive', danger: true, action: 'archive-account', id });
+  openDialog({ type: 'confirm', title: 'Archive account?', body: `“${a ? a.name : ''}” and its holdings are archived (kept for history, hidden from entry). This never deletes past Check-ins.`, ok: 'Archive', danger: true, action: 'archive-account', id });
 }
 function moveAccount(id, dir) {
   const a = accountById(id);
