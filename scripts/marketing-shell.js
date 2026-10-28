@@ -2,10 +2,11 @@ const logo = `<span class="marketing-brand-art" aria-hidden="true"><img class="m
 
 const navigation = [
   ['whole', '/#lp-whole', 'Whole portfolio'],
-  ['tax', '/#lp-tax', 'Tax drag'],
+  ['tax', '/#lp-tax', 'Costs & tax drag'],
   ['goals', '/#lp-goals', 'Goals'],
   ['decisions', '/#lp-decisions', 'Decisions'],
   ['privacy-section', '/#lp-privacy', 'Privacy'],
+  ['retirement-calculator', '/retirement-calculator.html', 'Retirement calculator'],
   ['pricing', '/pricing.html', 'Pricing'],
 ];
 
@@ -17,7 +18,7 @@ function marketingHeader(current = '') {
     <a class="marketing-brand" href="/" aria-label="Quartermaster home">${logo}</a>
     <nav class="marketing-nav" aria-label="Main navigation">
       ${links}
-      <a class="marketing-open" data-analytics-event="start_here_click" href="/#start">Start here <span aria-hidden="true">→</span></a>
+      <a class="marketing-open" data-analytics-event="${current==='retirement-calculator'?'retirement_portfolio_click':'start_here_click'}" href="${current==='retirement-calculator'?'/app/#setup':'/#start'}">${current==='retirement-calculator'?'Build portfolio':'Start here'} <span aria-hidden="true">→</span></a>
     </nav>
   </header>`;
 }

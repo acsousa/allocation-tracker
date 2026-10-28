@@ -169,6 +169,16 @@ try {
     assert.match(css, /\.cadence-steps \{ display:grid;grid-template-columns:repeat\(4/);
     for (const [, heading] of html.matchAll(/(<header class="story-heading"[\s\S]*?<\/header>)/g)) assert.ok(!heading.includes('<p>'));
   });
+  check('standalone retirement page builds without the fund catalog and allows same-origin workers', () => {
+    const html = fs.readFileSync(path.join(tmp, 'retirement-calculator.html'),'utf8');
+    assert.match(html,/rs-form/);assert.match(html,/rel="canonical" href="https:\/\/realallocation.com\/retirement-calculator.html"/);
+    assert.ok(!html.includes('FUND_FEES'));
+    const model = fs.readFileSync(path.join(tmp,'assets/retirement-simulator-model.js'),'utf8');
+    assert.match(model,/function runProjection/);assert.ok(!model.includes('SEED_MAP'));
+    assert.match(fs.readFileSync(path.join(tmp,'_headers'),'utf8'),/worker-src 'self' blob:/);
+    for(const file of ['retirement-simulator.css','retirement-simulator.js','retirement-simulator-worker.js','retirement-handoff.js'])assert.ok(fs.existsSync(path.join(tmp,'assets',file)));
+    assert.match(fs.readFileSync(path.join(tmp,'index.html'),'utf8'),/href="\/retirement-calculator.html"/);
+  });
   check('dedicated app entry stays simple with one graphic and three actions', () => {
     const app = fs.readFileSync(path.join(tmp, 'app', 'index.html'), 'utf8');
     assert.match(app, /class="view app-entry"/);

@@ -5,9 +5,11 @@ const path = require('node:path');
 const { createHash } = require('node:crypto');
 const { applyMarketingShell } = require('./marketing-shell');
 const { readApp } = require('./instrument-catalog');
+const { buildRetirementSimulator } = require('./retirement-engine');
 const publicPages = [
   ['index.html', ''],
   ['pricing.html', 'pricing'],
+  ['retirement-calculator.html', 'retirement-calculator'],
   ['privacy.html', 'privacy'],
 ];
 const root = path.join(__dirname, '..');
@@ -42,6 +44,8 @@ function buildSite(output = path.join(root, 'dist'), token = process.env.CF_WEB_
     fs.mkdirSync(path.dirname(dest), { recursive: true });
     fs.writeFileSync(dest, text);
   };
+  write('assets/retirement-simulator-model.js', buildRetirementSimulator());
+  for (const file of ['retirement-simulator.css','retirement-simulator.js','retirement-simulator-worker.js','retirement-handoff.js']) write('assets/'+file, fs.readFileSync(path.join(root,'assets',file),'utf8'));
   write('site-analytics.js', fs.readFileSync(path.join(root, 'site-analytics.js'), 'utf8'));
   write('assets/marketing.css', fs.readFileSync(path.join(root, 'assets', 'marketing.css'), 'utf8'));
   write('assets/marketing.js', fs.readFileSync(path.join(root, 'assets', 'marketing.js'), 'utf8'));
@@ -120,7 +124,7 @@ function buildSite(output = path.join(root, 'dist'), token = process.env.CF_WEB_
   X-Frame-Options: DENY
   Strict-Transport-Security: max-age=86400
   Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com https://*.google-analytics.com https://cloudflareinsights.com; worker-src blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com https://*.google-analytics.com https://cloudflareinsights.com; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'
   Cache-Control: public, max-age=0, must-revalidate
 /downloads/*
   Cache-Control: public, max-age=0, must-revalidate, no-transform

@@ -29,3 +29,10 @@ assert.equal(pricing.calls.at(-1)[2].page_location,'https://realallocation.com/p
 pricing.listeners.click({target:{closest:()=>({dataset:{analyticsEvent:'paid_interest_click',analyticsFeature:'reports'}})}});
 assert.equal(pricing.calls.at(-1)[1],'paid_interest_click');assert.equal(pricing.calls.at(-1)[2].feature,'reports');
 console.log('Analytics checks passed: production hosts, deduplication, setup steps, payload allowlist, demo labeling and pricing clicks.');
+
+const retirement=load('realallocation.com','https:','/retirement-calculator.html');
+retirement.listeners.DOMContentLoaded();
+assert.ok(retirement.calls.some(c=>c[0]==='event'&&c[1]==='page_view'&&c[2].page_location==='https://realallocation.com/retirement-calculator.html'));
+retirement.analytics.event('retirement_comparison',{comparison_kind:'save-more',savings:12345,currentAge:40,monthlySpending:5000});
+const retirementSent=retirement.calls.at(-1)[2];assert.equal(retirementSent.comparison_kind,'save-more');
+for(const key of ['savings','currentAge','monthlySpending'])assert.equal(retirementSent[key],undefined);

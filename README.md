@@ -22,6 +22,10 @@ privacy commitments, planning direction, and desktop/mobile requirement.
 
 ## Separate public site and local app
 
+The [standalone retirement prototype](docs/retirement-prototype.md) is available
+at `/retirement-calculator.html`, linked from the public landing page. Its build
+shares the application's projection engine without loading the fund catalog.
+
 - **`index.html` is the public landing page.** It stays lightweight and links to
   the dedicated app at `/app/`.
 - **`app.html` is the application source.** Its JavaScript, styles, and charts

@@ -3878,12 +3878,12 @@ function render() {
     default:           body = renderDashboard();
   }
   const introFallbacks = {
-    accounts:['Accounts','Organize your accounts.','Manage the accounts that make up your portfolio.'],
-    household:['Household','Your household at a glance.','Keep your household details and planning inputs together.'],
-    taxprofile:['Tax profile','Set your tax assumptions.','Review the inputs used to estimate taxes across your accounts.'],
-    retirement:['Retirement inputs','Shape your retirement plan.','Set the assumptions behind your retirement outlook.'],
-    data:['Data & privacy','Keep control of your data.','Manage your local portfolio file and preferences.'],
-    checkin:['Check-in','Update what changed.','Refresh your accounts and record a clean Check-in for review.'],
+    accounts:['Accounts','Organize your accounts','Manage the accounts that make up your portfolio.'],
+    household:['Household','Your household at a glance','Keep your household details and planning inputs together.'],
+    taxprofile:['Tax profile','Set your tax assumptions','Review the inputs used to estimate taxes across your accounts.'],
+    retirement:['Retirement inputs','Shape your retirement plan','Set the assumptions behind your retirement outlook.'],
+    data:['Data & privacy','Keep control of your data','Manage your local portfolio file and preferences.'],
+    checkin:['Check-in','Update what changed','Refresh your accounts and record a clean Check-in for review.'],
     retire:['Outlook','Retirement planning','Explore possible futures using your own assumptions.'],
     college:['Outlook','College planning','Explore possible futures using your own assumptions.']
   };
@@ -4115,7 +4115,7 @@ function renderSetup() {
   } else {
     content = `<h2>Enter your holdings</h2><p>Add the investments in each account and their current values from your statements.</p><p>When you’re ready, choose <strong>Finish setup · view dashboard</strong>. This records the first check-in in this session. Save your portfolio file when you finish using the app.</p>${renderCheckin()}`;
   }
-  return `<section class="setup-shell">${pageIntroHTML('Build your portfolio','Three steps to a clearer picture.','Add accounts, choose your goals, and enter your holdings.')}${progress}<div class="setup-content">${content}</div><div class="setup-actions">${setupStep > 1 ? '<button class="btn btn-secondary" data-act="setup-back">Back</button>' : ''}${setupStep < 3 ? '<button class="btn btn-primary" data-act="setup-next">Continue</button>' : ''}</div></section>`;
+  return `<section class="setup-shell">${pageIntroHTML('Build your portfolio','Three steps to a clearer picture','Add accounts, choose your goals, and enter your holdings.')}${progress}<div class="setup-content">${content}</div><div class="setup-actions">${setupStep > 1 ? '<button class="btn btn-secondary" data-act="setup-back">Back</button>' : ''}${setupStep < 3 ? '<button class="btn btn-primary" data-act="setup-next">Continue</button>' : ''}</div></section>`;
 }
 function reviewChanges() {
   const snapshots = sortedSnapshots();
@@ -4134,7 +4134,7 @@ function reviewChanges() {
 function renderReviewChanges() {
   const comparison = reviewChanges();
   const next = '<div class="review-next"><button class="btn btn-primary" data-act="nav" data-view="allocation">Continue to allocation overview →</button></div>';
-  const intro = pageIntroHTML('Since last check-in','Review your changes.','See what changed between your latest two recorded check-ins.');
+  const intro = pageIntroHTML('Since last check-in','Review your changes','See what changed between your latest two recorded check-ins.');
   if (!comparison) return `${intro}<div class="panel" style="padding:28px;"><h2>${latestSnapshot() ? 'Your first check-in is the starting point.' : 'Start with your first check-in.'}</h2><p>${latestSnapshot() ? 'Record another check-in when you next review your balances. Your account-by-account comparison will appear here.' : 'Add your balances to establish a starting point for future comparisons.'}</p><button class="btn btn-primary" data-act="nav" data-view="dashboard">View dashboard</button></div>${next}`;
   const { previous, current, rows, delta } = comparison;
   return `${intro}<div class="panel" style="padding:24px;"><div class="kicker">${esc(previous.date)} → ${esc(current.date)}</div><h2 style="margin:12px 0;">${delta >= 0 ? '+' : '−'}${fmtMoney(Math.abs(delta))} in recorded balance</h2><p class="text-muted">Includes all accounts, including 529s. Balance changes combine market moves, contributions, withdrawals, and changes to recorded holdings. They are not investment returns. Unrecorded values count as zero in this comparison.</p><table class="table"><thead><tr><th>Account</th><th style="text-align:right;">Previous</th><th>Latest</th><th>Change</th></tr></thead><tbody>${rows.map(r => `<tr><td>${esc(r.name)}</td><td>${fmtMoney(r.prior)}</td><td>${fmtMoney(r.now)}</td><td>${r.delta >= 0 ? '+' : '−'}${fmtMoney(Math.abs(r.delta))}</td></tr>`).join('')}</tbody></table></div>${next}`;
@@ -4144,9 +4144,37 @@ function demoActionAllowed(action) {
   // Model assumptions may change temporarily; account mapping may not.
   return DEMO_ACTIONS.has(action) || ((action.startsWith('rd-') && !['rd-map-vehicle','rd-map-treatment'].includes(action)) || action.startsWith('cl-'));
 }
+// Explicit simulator transfer: take-and-delete, validate, and never invent holdings.
+function consumeRetirementSetup() {
+  let raw;
+  try { raw=window.sessionStorage.getItem('qm-retirement-setup-v1'); window.sessionStorage.removeItem('qm-retirement-setup-v1'); } catch(_) { return null; }
+  if(!raw)return null;
+  try {
+    const record=JSON.parse(raw),v=record.input,now=Date.now();
+    if(record.version!==1||!Number.isFinite(record.expiresAt)||record.expiresAt<now||record.expiresAt>now+5*60*1000||!v)return null;
+    if(![v.currentAge,v.retirementAge,v.planThroughAge].every(Number.isInteger)||!Number.isFinite(v.stocksPct))return null;
+    if(v.currentAge<18||v.currentAge>100||v.retirementAge<40||v.retirementAge>80||v.retirementAge<v.currentAge||v.planThroughAge<=v.retirementAge||v.planThroughAge>110||v.stocksPct<0||v.stocksPct>100)return null;
+    return {currentAge:v.currentAge,retirementAge:v.retirementAge,planThroughAge:v.planThroughAge,stocksPct:v.stocksPct};
+  }catch(_){return null;}
+}
+function startRetirementSetup() {
+  const input=consumeRetirementSetup();
+  if(portfolio.accounts.length||dirty||checkinDraftDirty){toast('Keep your current portfolio safe. Start a new portfolio before transferring an estimate.');return;}
+  if(!input){ui.view='welcome';render();openDialog({type:'onboard'});toast('The estimate transfer expired or was unavailable. You can start a portfolio here.');return;}
+  beginSetup();
+  portfolio.retirementSettings.birthYears=[new Date().getFullYear()-input.currentAge,null];
+  portfolio.retirementSettings.retirementAge=input.retirementAge;
+  portfolio.retirementSettings.planThroughAge=input.planThroughAge;
+  portfolio.retirementSettings.ssPIA='exclude';
+  ui.setupGoal={mode:'custom',level:'group',targets:{stocks:input.stocksPct,bonds:100-input.stocksPct}};
+  markDirty();render();
+  toast('Ages and mix carried over. Add real accounts and review spending, income, and contributions in Outlook.');
+  try{window.history.replaceState(null,'','#setup');}catch(_){}
+}
 function handlePublicRoute() {
   const hash = window.location.hash;
-  if (!['#start', '#setup', '#open', '#demo', '#demo/dashboard', '#demo/review/tax', '#demo/outlook', '#demo-retire', '#demo-college'].includes(hash)) return false;
+  if (!['#start', '#setup', '#retirement-start', '#open', '#demo', '#demo/dashboard', '#demo/review/tax', '#demo/outlook', '#demo-retire', '#demo-college'].includes(hash)) return false;
+  if (hash === '#retirement-start') { startRetirementSetup(); return true; }
   if (hash === '#setup') {
     beginSetup();
     return true;
@@ -4270,7 +4298,7 @@ function renderMarketingLanding() {
     <div class="landing-hero">
       <div class="landing-hero-copy">
         <div class="landing-trust-pill"><span class="landing-trust-status" aria-hidden="true"><span class="landing-trust-dot"></span></span>Runs on your machine · portfolio data stays in your file</div>
-        <h1 style="${cond}">Every account.<br><span class="landing-gradient-title">One real allocation.</span></h1>
+        <h1 style="${cond}">Every account<br><span class="landing-gradient-title">One real allocation</span></h1>
         <p style="font-size:16px;line-height:1.65;color:var(--color-ink-2);margin:24px auto 0;">Every institution shows you a reported allocation — its own slice, in isolation. Nobody shows you the whole. Quartermaster blends every account you hold into one real allocation, then helps you check it against your target and plan with a complete view.</p>
         <div class="landing-hero-actions" style="display:flex;gap:14px;margin-top:30px;flex-wrap:wrap;">
           <span class="landing-action primary" style="padding:14px 30px;background:var(--color-accent);color:#fff;font-weight:600;font-size:16px;cursor:pointer;" data-act="landing-open">Start here · free</span>
@@ -4534,7 +4562,7 @@ function renderDashboard() {
 
   const allocationView = ui.view === 'allocation';
   return `
-    <div class="page-intro dashboard-intro"><div class="page-intro-copy"><div class="kicker">${allocationView ? 'Allocation' : 'Household command center'}</div><h1>${allocationView ? 'Your real allocation' : 'Good to see the whole picture.'}</h1><p>${allocationView ? 'See every account as one portfolio, compare the mix with your target, and identify the classes that deserve attention.' : 'A concise view of what you own, how it compares with the plan, and where to focus at your next review.'}</p></div><div class="page-intro-actions">${!portfolio.goals.length ? '<button class="btn btn-secondary" data-act="nav" data-view="goal">Set a target</button>' : ''}${allocationView ? reviewNextAction('Allocation') : '<button class="btn btn-primary" data-act="new-checkin">New check-in</button>'}</div></div>
+    <div class="page-intro dashboard-intro"><div class="page-intro-copy"><div class="kicker">${allocationView ? 'Allocation' : 'Household command center'}</div><h1>${allocationView ? 'Your real allocation' : 'Good to see the whole picture'}</h1><p>${allocationView ? 'See every account as one portfolio, compare the mix with your target, and identify the classes that deserve attention.' : 'A concise view of what you own, how it compares with the plan, and where to focus at your next review.'}</p></div><div class="page-intro-actions">${!portfolio.goals.length ? '<button class="btn btn-secondary" data-act="nav" data-view="goal">Set a target</button>' : ''}${allocationView ? reviewNextAction('Allocation') : '<button class="btn btn-primary" data-act="new-checkin">New check-in</button>'}</div></div>
     ${dashToolbarHTML(snap)}
     ${dashKpiHTML(snap, alloc, holdings, goal)}
     <div class="panel dashboard-layout">
@@ -4897,7 +4925,12 @@ function renderPositions() {
   const gt = alloc.total;
 
   // per-asset-class summary of the scope; click a row to filter holdings by class
-  const classRows = toRows(alloc.detail, gt, 'detail').slice().sort((a, b) => b.value - a.value);
+  // Keep every terminal class visible, including an unheld International Bonds sleeve.
+  // US Total Market is decomposed into Large/Mid/Small rather than counted twice.
+  const classRows = TAXONOMY.detail.filter(d => d.id !== 'us_total').map(d => {
+    const value = alloc.detail[d.id] || 0;
+    return { id:d.id, label:d.label, color:detailColor(d.id), value, pct:gt > 0 ? value / gt * 100 : 0 };
+  }).sort((a, b) => b.value - a.value);
   const classTable = classRows.map(r => `<tr class="${ui.posClass === r.id ? 'pos-class-active' : ''}">
       <td><button type="button" class="table-row-action" data-act="pos-class" data-class="${r.id}"><span class="swatch" style="background:${r.color};margin-right:6px;"></span>${esc(r.label)}</button></td>
       <td class="tnum" style="text-align:right;">${fmtMoney(r.value)}</td>
@@ -5208,7 +5241,7 @@ function renderCheckin() {
   const _doneCount = _allAccts.filter(a => checkinAccountUpdated(a, ci, baseVals) || (ci.reviewed && ci.reviewed[a.id])).length;
   const doneTag = _allAccts.length ? `<span id="ci-progress" class="tag checkin-progress ${_doneCount === _allAccts.length ? 'tag-ok' : 'tag-neutral'}" title="An account counts as done after an import, a value change, or marking it reviewed">${_doneCount} of ${_allAccts.length} accounts done</span>` : '';
 
-  const intro = setupStep ? '' : `<div class="page-intro"><div class="page-intro-copy"><div class="kicker">Quarterly ritual · refresh</div><h1>Update what changed.</h1><p>Your last check-in is already here. Refresh the balances, verify the accounts, and record a clean Check-in for review.</p></div></div>`;
+  const intro = setupStep ? '' : `<div class="page-intro"><div class="page-intro-copy"><div class="kicker">Quarterly ritual · refresh</div><h1>Update what changed</h1><p>Your last check-in is already here. Refresh the balances, verify the accounts, and record a clean Check-in for review.</p></div></div>`;
   const steps = setupStep ? '' : `<div class="ritual-steps" aria-label="Check-in steps"><div class="ritual-step active"><span class="n">1</span><span><strong>Choose the date</strong><small>Choose the date for this Check-in.</small></span></div><div class="ritual-step active"><span class="n">2</span><span><strong>Refresh balances</strong><small>Update only what changed.</small></span></div><div class="ritual-step"><span class="n">3</span><span><strong>Record &amp; review</strong><small>Record the Check-in, then review drift.</small></span></div></div>`;
   return `${intro}${steps}<div class="checkin-workspace"><div class="panel checkin-panel">
     <div style="display:flex;align-items:flex-end;gap:20px;padding:18px 20px;border-bottom:1px solid var(--color-divider);flex-wrap:wrap;">
@@ -5800,7 +5833,7 @@ function retirementScopeLabel() {
 }
 function renderPlan() {
   const snap = currentSnapshot();
-  const intro = pageIntroHTML('Plan', 'Turn your review into action.', 'Choose your next moves, direct new savings, and keep a clear record of your decisions.');
+  const intro = pageIntroHTML('Plan', 'Turn your review into action', 'Choose your next moves, direct new savings, and keep a clear record of your decisions.');
   if (!snap) return `${intro}<div class="toolbar no-print"><div class="crumb"><span>Quarterly Plan</span></div></div>
     <div class="panel"><div style="padding:44px 20px;text-align:center;" class="text-muted">A plan attaches to a Check-in. <a data-act="new-checkin" style="cursor:pointer;color:var(--color-accent);">Start a check-in →</a></div></div>`;
   const plan = planForSnapshot(snap.date);
@@ -5972,7 +6005,7 @@ function renderReport() {
   const snap = currentSnapshot();
   const opts = sortedSnapshots().slice().reverse().map((s,i) => `<option value="${s.date}" ${snap?.date === s.date ? 'selected' : ''}>${formatCheckinDate(s.date)}${i===0?' (latest)':''}</option>`).join('');
   const actions = `<label class="report-snapshot">Check-in <select class="input" data-act="pick-snap">${opts}</select></label><button class="btn btn-secondary" data-act="report-csv">Export CSV</button><button class="btn btn-primary" data-act="print" ${reportPreparing?'disabled aria-busy="true"':''}>${reportPreparing?'Preparing simulations…':'Print / Save PDF'}</button>`;
-  return `<div class="report-workspace">${pageIntroHTML('Report','Portfolio review','Review your allocation, costs, and next steps.',actions)}<div class="report show-screen" data-demo="${demoMode}">${reportHTML(snap)}</div><p class="report-download-note no-print">Report downloads are included during the free introductory release. Ongoing report access is a planned paid capability. ${publicSiteLink('pricing.html','See upcoming features')}.</p></div>`;
+  return `<div class="report-workspace">${pageIntroHTML('Report','Summary overview','Review your allocation, costs, and next steps.',actions)}<div class="report show-screen" data-demo="${demoMode}">${reportHTML(snap)}</div><p class="report-download-note no-print">Report downloads are included during the free introductory release. Ongoing report access is a planned paid capability. ${publicSiteLink('pricing.html','See upcoming features')}.</p></div>`;
 }
 
 function allocTableHTML(rows, goalTargets, band, detailRows = null, detailTargets = null) {
@@ -6165,7 +6198,7 @@ function reportHTML(snap) {
   const goal = activeGoal(snap.date);
   const ggt = goal ? goalGroupTargets(goal) : null;
   const gdt = goal ? goalDetailTargets(goal) : null;
-  let out = `<header class="rep-cover print-only"><div class="kicker">Quartermaster${demoMode?' · DEMO — SAMPLE DATA':''}</div><h1>Portfolio review</h1><div class="rep-meta">Check-in: ${formatCheckinDate(snap.date)}</div></header>`;
+  let out = `<header class="rep-cover print-only"><div class="kicker">Quartermaster${demoMode?' · DEMO — SAMPLE DATA':''}</div><h1>Summary overview</h1><div class="rep-meta">Check-in: ${formatCheckinDate(snap.date)}</div></header>`;
 
   out += reportKpis(snap,goal,band);
   out += reportChangesSection(snap);

@@ -36,17 +36,18 @@
     <div class="hero-field" aria-hidden="true"><div class="hero-field-pass"></div><div class="hero-field-wash"></div></div>
     <div class="landing-hero-copy">
       <div class="landing-audience"><span aria-hidden="true"></span>Built for US investors with multiple accounts</div>
-      <h1>Every account.<br><span class="landing-gradient-title">One real allocation.</span></h1>
+      <h1>Every account<br><span class="landing-gradient-title">One real allocation</span></h1>
       <p class="landing-lead">See your whole portfolio in one place, spot tax drag hiding across accounts, and check if it can fund your actual goals.</p>
       <div class="landing-actions">
         <a class="landing-action primary" data-analytics-event="start_here_click" href="#start">Start here</a>
+        <a class="landing-action" href="/retirement-calculator.html">Try the retirement calculator</a>
         <a class="landing-action" data-analytics-event="demo_start" href="/app/#demo">Explore the demo profile</a>
       </div>
       <p class="landing-local"><span aria-hidden="true"></span>No account linking. Your portfolio data stays in a file you control. <a href="/privacy.html">Privacy</a></p>
     </div>
     <nav class="value-strip" aria-label="What Quartermaster helps you do" data-reveal-group>
       <a href="#lp-whole" class="value-signpost signpost-blue" data-reveal><span class="value-signpost-title"><span class="value-number">01</span><strong>See the whole picture</strong></span><small>Every brokerage, 401(k), IRA, Roth, and 529 in one allocation.</small></a>
-      <a href="#lp-tax" class="value-signpost signpost-teal" data-reveal><span class="value-signpost-title"><span class="value-number">02</span><strong>Find potential tax drag</strong></span><small>See when an investment may sit in a less tax-efficient account.</small></a>
+      <a href="#lp-tax" class="value-signpost signpost-teal" data-reveal><span class="value-signpost-title"><span class="value-number">02</span><strong>Understand fees & tax drag</strong></span><small>See fund expenses alongside estimated taxes across your accounts.</small></a>
       <a href="#lp-goals" class="value-signpost signpost-plum" data-reveal><span class="value-signpost-title"><span class="value-number">03</span><strong>Model your goals</strong></span><small>Explore retirement and college using your complete portfolio.</small></a>
       <a href="#lp-decisions" class="value-signpost signpost-gold" data-reveal><span class="value-signpost-title"><span class="value-number">04</span><strong>Make better decisions</strong></span><small>Review regularly and record why you made each change.</small></a>
     </nav>
@@ -76,9 +77,14 @@
 
   <section id="lp-tax" class="story-section tax-section" data-story="tax" data-story-finding="FXNAX in taxable · about $360 of modeled annual tax drag">
     <header class="story-heading" data-reveal>
-      <div class="story-heading-line"><div class="eyebrow">02 · Find potential tax drag</div><span class="sample-chip dark-chip">Same illustrative household</span></div>
-      <h2>See where account placement <em>may be costing you.</em></h2>
+      <div class="story-heading-line"><div class="eyebrow">02 · Understand fees & tax drag</div><span class="sample-chip dark-chip">Same illustrative household</span></div>
+      <h2>See what fees and taxes <em>may be costing you.</em></h2>
     </header>
+    <p class="landing-section-copy" style="max-width:760px;margin:0 0 24px;">Two costs, one clear view. Estimate annual ETF and mutual-fund expenses, then see how account placement affects distribution taxes. Unknown fund fees stay visible as unknown.</p>
+    <div class="landing-cost-panels" data-reveal>
+      <article><div class="eyebrow">Fund expenses</div><h3>Small percentages, real dollars</h3><p>See your weighted expense ratio, estimated annual fund costs, and how much of your portfolio has fee data. Combine the same fund across accounts.</p></article>
+      <article><div class="eyebrow">Distribution tax drag</div><h3>Location matters too</h3><p>Compare estimated ongoing taxes across taxable and sheltered accounts. Keep fund costs and tax estimates separate, with a combined annual view.</p></article>
+    </div>
     <div class="tax-flow" data-reveal>
       <article class="tax-flow-card holding-card"><small>Holding</small><strong>FXNAX</strong><span>Fidelity U.S. Bond Index · $20,000</span></article>
       <i class="tax-connector connector-one" aria-hidden="true"></i>
@@ -88,7 +94,7 @@
     </div>
     <div class="tax-lower" data-reveal>
       <div class="tax-result"><span class="tax-result-arrow" aria-hidden="true">↳</span><div><small>May be more tax-efficient after an exposure swap</small><strong>Traditional 401(k) <b>· about $298/year modeled reduction</b></strong><p>Hold the bond exposure in the 401(k) and the equity exposure in taxable. Future 401(k) withdrawals may be taxable.</p></div></div>
-      <div class="tax-next"><div class="tax-actions"><a class="landing-action tax-primary" href="#start">Start here</a><a class="tax-link" href="/app/#demo/review/tax">See the asset-location analysis →</a></div><p class="fine-print">Single · $200K–$400K income · Massachusetts. Illustrative estimate based on the assumptions shown in the app. Tax effects are simplified and may omit future taxes, plan restrictions, trading costs, and changes in yields or law.</p></div>
+      <div class="tax-next"><div class="tax-actions"><a class="landing-action tax-primary" href="#start">Start here</a><a class="tax-link" href="/app/#demo/review/tax">Explore costs & tax drag →</a></div><p class="fine-print">Single · $200K–$400K income · Massachusetts. Illustrative estimate based on the assumptions shown in the app. Tax effects are simplified and may omit future taxes, plan restrictions, trading costs, and changes in yields or law.</p></div>
     </div>
   </section>
 
@@ -96,7 +102,9 @@
     <header class="story-heading" data-reveal>
       <div class="eyebrow">03 · Model your goals</div>
       <h2>See what your portfolio <em>could support.</em></h2>
+
     </header>
+      <p><a class="landing-action" href="/retirement-calculator.html">Try retirement planning without building a portfolio →</a></p>
     <div class="goal-cards" data-reveal-group>
       <article class="goal-card retirement-goal" data-reveal>
         <div class="goal-card-top"><span>Retirement</span><small>10,000 simulated paths</small></div>
