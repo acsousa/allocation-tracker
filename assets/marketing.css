@@ -372,3 +372,18 @@ a:focus-visible,button:focus-visible { outline:3px solid var(--teal);outline-off
 .landing-cost-panels h3 { margin:12px 0;font-size:24px; }
 .landing-cost-panels p { margin:0;line-height:1.6; }
 @media(max-width:640px){.landing-cost-panels{grid-template-columns:1fr;}}
+
+/* Keep both planning calls to action aligned, with a distinct simulator invitation. */
+.goals-buttons { display:flex;flex-direction:row;align-items:stretch;gap:12px;max-width:100%; }
+.goals-buttons .landing-action { display:flex;flex:1;align-items:center;box-sizing:border-box;margin:0;text-align:center;justify-content:center;white-space:normal; }
+.goals-buttons .goals-simulator { display:flex;flex-direction:row;gap:8px;padding:15px 22px;background:linear-gradient(120deg,#086c82,#156f64);border-color:#086c82;color:#fff; }
+.goals-simulator > span { font-size:12px;font-weight:500; }
+.goals-simulator strong { font-size:14px;line-height:1.5; }
+.goals-buttons .goals-simulator:hover { background:linear-gradient(120deg,#07566a,#10564d);color:#fff; }
+.goals-simulator:focus-visible { outline:3px solid var(--plum);outline-offset:4px; }
+
+.marketing-nav .marketing-calculator-link,
+.marketing-nav .marketing-calculator-link:visited,
+.marketing-nav .marketing-calculator-link[aria-current="page"] { color:#086c72;font-weight:650;background:#e5f3ef;border-radius:8px;padding:10px 12px; }
+.marketing-nav .marketing-calculator-link:hover { color:#064e54;background:#d3ebe4; }
+.marketing-calculator-link:focus-visible { outline:3px solid #086c72;outline-offset:3px; }

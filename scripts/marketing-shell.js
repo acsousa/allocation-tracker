@@ -7,12 +7,11 @@ const navigation = [
   ['decisions', '/#lp-decisions', 'Decisions'],
   ['privacy-section', '/#lp-privacy', 'Privacy'],
   ['retirement-calculator', '/retirement-calculator.html', 'Retirement calculator'],
-  ['pricing', '/pricing.html', 'Pricing'],
 ];
 
 function marketingHeader(current = '') {
   const links = navigation.map(([id, href, label]) =>
-    `<a class="marketing-link" href="${href}"${current === id ? ' aria-current="page"' : ''}>${label}</a>`
+    `<a class="marketing-link${id === 'retirement-calculator' ? ' marketing-calculator-link' : ''}" href="${href}"${current === id ? ' aria-current="page"' : ''}>${label}</a>`
   ).join('');
   return `<header class="marketing-header">
     <a class="marketing-brand" href="/" aria-label="Quartermaster home">${logo}</a>
@@ -25,7 +24,6 @@ function marketingHeader(current = '') {
 
 function marketingFooter(current = '') {
   return `<footer class="marketing-footer">
-    <a class="marketing-footer-home" href="/">realallocation.com</a>
     <div class="marketing-disclaimer"><strong>Disclaimer</strong><p style="margin:4px 0 0;">All content and tools on this platform are for educational and informational purposes only. They do not constitute financial, investment, or tax advice. Please consult with a qualified, licensed professional before making any major financial decisions.</p></div>
     <a href="/privacy.html"${current === 'privacy' ? ' aria-current="page"' : ''}>Privacy</a>
     <a href="mailto:hello@realallocation.com">hello@realallocation.com</a>

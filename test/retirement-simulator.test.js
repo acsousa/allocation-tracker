@@ -54,3 +54,21 @@ assert.equal(M.config(base).pensions.length, 0);
 assert.equal(M.config(base).hasSpouse, false);
 assert.equal(M.config(base).start.pretax, 0);
 console.log('Standalone retirement model: validation, shared-engine equivalence, deterministic cash flows, comparisons, and retirement edge cases passed.');
+// Annual UI amounts preserve the monthly model/scenario-file contract, including old files.
+const ui = require('node:fs').readFileSync(require('node:path').join(__dirname, '../assets/retirement-simulator.js'), 'utf8');
+const fields = Object.fromEntries(Object.keys(base).map(k => [k, { value: '' }]));
+const uiContext = { names: Object.fromEntries(Object.keys(base).map(k => [k,k])),
+  form: { elements: { namedItem: k => fields[k] } }, updateMix() {} };
+vm.runInNewContext(ui.slice(ui.indexOf('  const annualFields='), ui.indexOf('  function updateMix()')), uiContext);
+uiContext.fill(base);
+assert.equal(fields.monthlyContribution.value, 12000);
+assert.equal(fields.monthlySpending.value, 60000);
+assert.equal(M.config(uiContext.values()).contrib.taxfree, 12000);
+assert.equal(M.config(uiContext.values()).spend, 60000);
+fields.monthlyContribution.value = '24000';
+fields.monthlySpending.value = '72000';
+assert.equal(M.config(uiContext.values()).contrib.taxfree, 24000);
+assert.equal(M.config(uiContext.values()).spend, 72000);
+fields.monthlyContribution.value = '';
+assert.equal(M.validate(uiContext.values()).valid, false);
+console.log('Annual UI units and existing monthly scenario-file compatibility passed.');

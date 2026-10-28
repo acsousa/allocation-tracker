@@ -4089,6 +4089,11 @@ function applySetupGoal() {
   portfolio.goals = [{effectiveDate:todayISO(), name:'My allocation goal', targets:{...goal.targets}, rationale:'Selected and reviewed during portfolio setup.'}];
   markDirty(); return true;
 }
+function retirementSetupSummaryHTML() {
+  const v=portfolio.retirementSettings?.simulatorInputs;
+  if(!v)return '';
+  return `<aside class="card" style="margin:16px 0;padding:18px"><strong>Your calculator starting point</strong><p style="margin:8px 0">Savings ${fmtMoney(v.savings)} · Contributions ${fmtMoney(v.monthlyContribution*12)}/year · Retirement budget ${fmtMoney(v.monthlySpending*12)}/year</p><p class="text-muted" style="margin:0">Ages, goal mix, budget and income assumptions carried over. Enter your actual holdings to account for your savings. In Outlook, split annual contributions across account types and review the budget’s tax allowance—the full planner calculates taxes separately. Save your portfolio file when you finish.</p></aside>`;
+}
 function renderSetup() {
   const labels = ['Accounts', 'Goals', 'Holdings'];
   const progress = setupStep === 3 ? '' : `<ol class="setup-progress" aria-label="Setup progress">${labels.map((label, i) => `<li ${setupStep === i + 1 ? 'aria-current="step"' : ''}><span>${i + 1}</span>${label}</li>`).join('')}</ol>`;
@@ -4115,7 +4120,7 @@ function renderSetup() {
   } else {
     content = `<h2>Enter your holdings</h2><p>Add the investments in each account and their current values from your statements.</p><p>When you’re ready, choose <strong>Finish setup · view dashboard</strong>. This records the first check-in in this session. Save your portfolio file when you finish using the app.</p>${renderCheckin()}`;
   }
-  return `<section class="setup-shell">${pageIntroHTML('Build your portfolio','Three steps to a clearer picture','Add accounts, choose your goals, and enter your holdings.')}${progress}<div class="setup-content">${content}</div><div class="setup-actions">${setupStep > 1 ? '<button class="btn btn-secondary" data-act="setup-back">Back</button>' : ''}${setupStep < 3 ? '<button class="btn btn-primary" data-act="setup-next">Continue</button>' : ''}</div></section>`;
+  return `<section class="setup-shell">${pageIntroHTML('Build your portfolio','Three steps to a clearer picture','Add accounts, choose your goals, and enter your holdings.')}${progress}${retirementSetupSummaryHTML()}<div class="setup-content">${content}</div><div class="setup-actions">${setupStep > 1 ? '<button class="btn btn-secondary" data-act="setup-back">Back</button>' : ''}${setupStep < 3 ? '<button class="btn btn-primary" data-act="setup-next">Continue</button>' : ''}</div></section>`;
 }
 function reviewChanges() {
   const snapshots = sortedSnapshots();
@@ -4151,10 +4156,16 @@ function consumeRetirementSetup() {
   if(!raw)return null;
   try {
     const record=JSON.parse(raw),v=record.input,now=Date.now();
-    if(record.version!==1||!Number.isFinite(record.expiresAt)||record.expiresAt<now||record.expiresAt>now+5*60*1000||!v)return null;
+    if(record.version!==2||!Number.isFinite(record.expiresAt)||record.expiresAt<now||record.expiresAt>now+5*60*1000||!v)return null;
     if(![v.currentAge,v.retirementAge,v.planThroughAge].every(Number.isInteger)||!Number.isFinite(v.stocksPct))return null;
     if(v.currentAge<18||v.currentAge>100||v.retirementAge<40||v.retirementAge>80||v.retirementAge<v.currentAge||v.planThroughAge<=v.retirementAge||v.planThroughAge>110||v.stocksPct<0||v.stocksPct>100)return null;
-    return {currentAge:v.currentAge,retirementAge:v.retirementAge,planThroughAge:v.planThroughAge,stocksPct:v.stocksPct};
+    const input={currentAge:v.currentAge,retirementAge:v.retirementAge,planThroughAge:v.planThroughAge,stocksPct:v.stocksPct};
+    for(const k of ['savings','monthlyContribution','monthlySpending','socialSecurityMonthly','socialSecurityAge','pensionMonthly','pensionAge']) {
+      if(!Number.isFinite(v[k])||v[k]<0||v[k]>10000000)return null;
+      input[k]=v[k];
+    }
+    if(!Number.isInteger(v.socialSecurityAge)||v.socialSecurityAge<62||v.socialSecurityAge>70||!Number.isInteger(v.pensionAge)||v.pensionAge<18||v.pensionAge>110||v.monthlySpending*12>10000000)return null;
+    return input;
   }catch(_){return null;}
 }
 function startRetirementSetup() {
@@ -4165,10 +4176,17 @@ function startRetirementSetup() {
   portfolio.retirementSettings.birthYears=[new Date().getFullYear()-input.currentAge,null];
   portfolio.retirementSettings.retirementAge=input.retirementAge;
   portfolio.retirementSettings.planThroughAge=input.planThroughAge;
-  portfolio.retirementSettings.ssPIA='exclude';
+  const rs=portfolio.retirementSettings;
+  rs.simulatorInputs={...input};
+  rs.spendingTargetRealAnnual=input.monthlySpending*12;
+  rs.ssClaimAge=[input.socialSecurityAge,67];
+  // The quick calculator takes the benefit at claiming age; the app stores the FRA benefit.
+  rs.ssPIA=input.socialSecurityMonthly>0?[input.socialSecurityMonthly/ssFactor(input.socialSecurityAge),0]:'exclude';
+  rs.pensions=input.pensionMonthly>0?[{label:'Pension from calculator',amountReal:input.pensionMonthly*12,startAge:input.pensionAge,cola:true,survivorPct:0}]:[];
+  portfolio.taxSettings.householdMonthlySavings=input.monthlyContribution;
   ui.setupGoal={mode:'custom',level:'group',targets:{stocks:input.stocksPct,bonds:100-input.stocksPct}};
   markDirty();render();
-  toast('Ages and mix carried over. Add real accounts and review spending, income, and contributions in Outlook.');
+  toast('Your calculator inputs are saved in this portfolio. Add your accounts and holdings, then review the planning assumptions.');
   try{window.history.replaceState(null,'','#setup');}catch(_){}
 }
 function handlePublicRoute() {

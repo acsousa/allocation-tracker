@@ -8,12 +8,14 @@
   const percent = n => (100*n).toFixed(1)+'%';
   const escape = s => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   let worker=null, runId=0, result=null, baselineInput=null, dirty=false, started=false, isExample=false;
-  const names={currentAge:'Current age',retirementAge:'Retirement age',planThroughAge:'Plan through age',savings:'Retirement savings',monthlyContribution:'Monthly contributions',monthlySpending:'Monthly retirement budget',stocksPct:'Investment mix',socialSecurityMonthly:'Social Security',socialSecurityAge:'Social Security start age',pensionMonthly:'Pension',pensionAge:'Pension start age'};
+  const names={currentAge:'Current age',retirementAge:'Retirement age',planThroughAge:'Plan through age',savings:'Retirement savings',monthlyContribution:'Annual contributions',monthlySpending:'Annual retirement budget',stocksPct:'Investment mix',socialSecurityMonthly:'Social Security',socialSecurityAge:'Social Security start age',pensionMonthly:'Pension',pensionAge:'Pension start age'};
   const compareKinds={save:'save-more',retire:'retire-later',spend:'spend-less'};
-  const compareTitles={save:'Save $250 more each month',retire:'Retire two years later',spend:'Spend up to $250 less each month'};
+  const compareTitles={save:'Save $3,000 more each year',retire:'Retire two years later',spend:'Spend up to $3,000 less each year'};
   function track(name){ if(globalThis.quartermasterAnalytics?.event) globalThis.quartermasterAnalytics.event(name); }
-  function values(){ return Object.fromEntries(Object.keys(names).map(k=>[k,form.elements.namedItem(k).value])); }
-  function fill(v){ for(const k of Object.keys(names)) if(v[k]!==undefined) form.elements.namedItem(k).value=v[k]; updateMix(); }
+  // Display annual contributions/budget; retain monthly model and version-1 file units.
+  const annualFields=new Set(['monthlyContribution','monthlySpending']);
+  function values(){ return Object.fromEntries(Object.keys(names).map(k=>{const value=form.elements.namedItem(k).value;return [k,annualFields.has(k)&&value!==''?Number(value)/12:value];})); }
+  function fill(v){ for(const k of Object.keys(names)) if(v[k]!==undefined) form.elements.namedItem(k).value=annualFields.has(k)?Math.round(v[k]*12*100)/100:v[k]; updateMix(); }
   function updateMix(){ const n=Number(form.elements.stocksPct.value); $('rs-mix').textContent=`${n}% stocks / ${100-n}% bonds`; }
   function showError(message){ $('rs-errors').textContent=message; $('rs-errors').hidden=!message; }
   function validate(){
@@ -76,14 +78,13 @@
     svg.addEventListener('pointerleave',()=>setAge(r.retirementAge));
     $('rs-chart-age').oninput=e=>setAge(Number(e.target.value)); setAge(r.retirementAge);
   }
-  function changed(){ if(worker)cancel('Inputs changed. Run again to update your outlook.'); dirty=!!result; if(dirty)$('rs-comparison').innerHTML=''; $('rs-stale').hidden=!dirty; $('rs-transfer').hidden=dirty||!result; updateComparisons(); updateMix(); if(!started){track('retirement_input_start');started=true;} }
+  function changed(){ if(worker)cancel('Inputs changed. Run again to update your outlook.'); dirty=!!result; if(dirty)$('rs-comparison').innerHTML=''; $('rs-stale').hidden=!dirty; updateComparisons(); updateMix(); if(!started){track('retirement_input_start');started=true;} }
   form.addEventListener('input',()=>{if(isExample){$('rs-example-label').textContent='Edited example — review every input before treating this as your own estimate.';}changed();});
   form.addEventListener('submit',e=>{e.preventDefault();if(!model){showError('The simulator did not load. Please reload this page.');return;}const v=validate();if(v)request(v);});
   $('rs-cancel').onclick=()=>cancel();
   $('rs-example').onclick=()=>{if(!model)return;track('retirement_example');fill(model.defaults);isExample=true;$('rs-example-label').textContent='Example scenario — change these numbers to explore your own.';$('rs-example-label').hidden=false;changed();const v=validate();if(v)request(v);};
   document.querySelectorAll('[data-compare]').forEach(b=>b.onclick=()=>{if(baselineInput&&!dirty)request(baselineInput,b.dataset.compare);});
   $('rs-export').onclick=()=>{const v=validate();if(!v)return;const blob=new Blob([JSON.stringify({format:'quartermaster-retirement-scenario',version:1,input:v},null,2)],{type:'application/json'});const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='retirement-scenario.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
-  $('rs-import').onchange=async e=>{const file=e.target.files[0];e.target.value='';if(!file)return;try{if(file.size>100000)throw Error('Choose a retirement scenario file smaller than 100 KB.');const parsed=JSON.parse(await file.text());if(parsed.format!=='quartermaster-retirement-scenario'||parsed.version!==1||!model.validate(parsed.input).valid)throw Error('Choose a valid Quartermaster retirement scenario file.');fill(model.validate(parsed.input).value);isExample=false;$('rs-example-label').hidden=true;changed();validate();$('rs-status').textContent='Scenario opened locally. Run it to see updated results.';}catch(err){showError(err.message);}};
   $('rs-transfer').onclick=()=>{const v=validate();if(!v)return;if(typeof globalThis.quartermasterRetirementHandoff!=='function'){showError('Could not transfer assumptions. Use Build my portfolio to start fresh.');return;}const answer=globalThis.quartermasterRetirementHandoff(v);if(answer?.ok===false){showError(answer.error);$('rs-errors').scrollIntoView({block:'center'});}else if(answer?.ok){track('retirement_handoff');}};
   $('rs-build').addEventListener('click',()=>track('retirement_portfolio_click'));
   if(model){const a=model.assumptions;$('rs-assumptions').innerHTML=`<p>Annual real return assumptions: stocks ${a.stockRealReturnPct}%, bonds ${a.bondRealReturnPct}%. Annual volatility: ${a.stockVolatilityPct}% / ${a.bondVolatilityPct}%. Stock/bond correlation: ${a.stockBondCorrelation}. Mix uses US Total Market stocks and US Bonds. High confidence ≥85%; medium ≥70%; low &lt;70%.</p>`;}else{showError('The simulator did not load. Please reload this page.');$('rs-run').disabled=true;}
